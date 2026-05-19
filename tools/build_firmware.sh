@@ -18,7 +18,7 @@ sed -i "s/const uint32_t FIRMWARE_VERSION = $CUR_VER;/const uint32_t FIRMWARE_VE
 
 # compile
 cd "$SKETCH"
-/home/callum/bin/arduino-cli compile --fqbn "esp32:esp32:esp32:PartitionScheme=min_spiffs" . | tail -3
+/home/callum/bin/arduino-cli compile --clean --fqbn "esp32:esp32:esp32:PartitionScheme=min_spiffs" . | tail -3
 BIN=$(find /home/callum/.cache/arduino/sketches -name "Geedo_Cloud_Prototype.ino.bin" | head -1)
 
 # copy + manifest

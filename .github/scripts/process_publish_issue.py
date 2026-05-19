@@ -10,7 +10,7 @@ Outputs via GITHUB_OUTPUT:
   hash=<sha8>
   error=<msg>
 """
-import os, re, sys, json, urllib.request, hashlib, subprocess, pathlib
+import os, re, sys, json, urllib.request, hashlib, subprocess, pathlib, datetime
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EXAMPLES = ROOT / 'animations' / 'examples'
@@ -36,8 +36,10 @@ def safe_id(s):
     return s or 'anim'
 
 def main():
-    body  = os.environ.get('ISSUE_BODY', '') or ''
-    title = os.environ.get('ISSUE_TITLE', '') or ''
+    body   = os.environ.get('ISSUE_BODY', '') or ''
+    title  = os.environ.get('ISSUE_TITLE', '') or ''
+    author = (os.environ.get('ISSUE_AUTHOR', '') or '').strip()
+    owner  = (os.environ.get('REPO_OWNER', '') or '').strip()
 
     # 1. Find a .geedo.json attachment URL in the issue body.
     # Accept any github user-attachments / repo-files / amazonaws asset URL ending with .geedo.json
@@ -79,6 +81,9 @@ def main():
     # Avoid clobbering reserved names
     if aid.startswith('animations_boot_'):
         aid = 'user_' + aid
+    # Namespace non-owner submissions to prevent clobbering each other
+    if author and owner and author.lower() != owner.lower():
+        aid = 'user_' + safe_id(author) + '_' + aid
 
     EXAMPLES.mkdir(parents=True, exist_ok=True)
     json_path = EXAMPLES / (aid + '.geedo.json')
@@ -96,7 +101,7 @@ def main():
         print(res.stderr, file=sys.stderr)
         fail(f'pack.py failed: {res.stderr.strip()[:200]}')
 
-    # 6. Pull the new manifest entry to surface stats
+    # 6. Pull the new manifest entry to surface stats; also stamp it
     try:
         with open(MANIFEST) as f: m = json.load(f)
         entry = next((a for a in m['animations'] if a['id'] == aid), None)
@@ -104,6 +109,12 @@ def main():
         entry = None
     if not entry:
         fail('pack ran but no manifest entry created')
+
+    # Stamp published_at + author into the entry, then resave
+    entry['published_at'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    if author:
+        entry['author'] = author
+    with open(MANIFEST, 'w') as f: json.dump(m, f, indent=2)
 
     out(
         success='true',

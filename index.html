@@ -98,8 +98,18 @@
     </div>
   </section>
 
+  <section id="new-anims">
+    <div class="section-head"><h2>🆕 NEW</h2><span class="meta">just dropped</span></div>
+    <div class="grid" id="grid-new"></div>
+  </section>
+
+  <section id="popular-anims">
+    <div class="section-head"><h2>🔥 POPULAR</h2><span class="meta">community favourites</span></div>
+    <div class="grid" id="grid-popular"></div>
+  </section>
+
   <section id="animations">
-    <div class="section-head"><h2>ANIMATIONS</h2><span class="meta" id="anim-meta">loading…</span></div>
+    <div class="section-head"><h2>ALL ANIMATIONS</h2><span class="meta" id="anim-meta">loading…</span></div>
     <div class="grid" id="grid"></div>
   </section>
 
@@ -152,8 +162,33 @@ async function load() {
     document.getElementById('fw-link').href = HUB + '/' + f.url;
   }
 
-  const grid = document.getElementById('grid');
-  for (const a of m.animations) {
+  // Build derived lists
+  const all = m.animations.slice();
+
+  // POPULAR: rank by (seed.likes + seed.stars + bonuses for liked/starred locally)
+  const popular = all
+    .map(a => {
+      const s = seedCounts(a.id);
+      const st = getState(a.id);
+      return { a, score: s.likes + s.stars + (st.liked?1:0) + (st.starred?1:0) };
+    })
+    .sort((x, y) => y.score - x.score)
+    .slice(0, 6)
+    .map(x => x.a);
+
+  // NEW: anims with published_at first (newest first), then take 6.
+  // Items without published_at fall back to manifest order (newest-added at end).
+  const dated = all.filter(a => a.published_at).sort((x, y) => y.published_at.localeCompare(x.published_at));
+  const undated = all.filter(a => !a.published_at).slice().reverse();
+  const newest = dated.concat(undated).slice(0, 6);
+
+  renderGrid(document.getElementById('grid-new'), newest);
+  renderGrid(document.getElementById('grid-popular'), popular);
+  renderGrid(document.getElementById('grid'), all);
+}
+
+function renderGrid(grid, list) {
+  for (const a of list) {
     const state = getState(a.id);
     const seed = seedCounts(a.id);
     const likes = seed.likes + (state.liked ? 1 : 0);

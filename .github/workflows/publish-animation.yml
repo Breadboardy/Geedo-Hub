@@ -1,0 +1,76 @@
+name: Publish animation from issue
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: github.event.label.name == 'publish-animation'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Process issue + pack animation
+        id: process
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: python3 .github/scripts/process_publish_issue.py
+
+      - name: Commit + push
+        if: steps.process.outputs.success == 'true'
+        run: |
+          git config user.name  "geedo-bot"
+          git config user.email "geedo-bot@users.noreply.github.com"
+          git add animations/
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "publish: ${{ steps.process.outputs.anim_id }} (#${{ github.event.issue.number }})"
+            git push
+          fi
+
+      - name: Comment success + close
+        if: steps.process.outputs.success == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const id  = '${{ steps.process.outputs.anim_id }}';
+            const sz  = '${{ steps.process.outputs.size }}';
+            const fc  = '${{ steps.process.outputs.frames }}';
+            const hsh = '${{ steps.process.outputs.hash }}';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `✅ Published **${id}**\n\n- frames: ${fc}\n- size: ${sz} bytes\n- hash: \`${hsh}\`\n\nGeedos worldwide will sync this within ~60 seconds. 🎉\n\n[View on hub](https://breadboardy.github.io/Geedo-Hub/#animations)`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed', state_reason: 'completed'
+            });
+
+      - name: Comment failure
+        if: steps.process.outputs.success != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const err = `${{ steps.process.outputs.error }}` || 'unknown error';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `❌ Publish failed: ${err}\n\nMake sure you dragged the **\`.geedo.json\`** file from Studio into the issue, then re-add the \`publish-animation\` label to retry.`
+            });

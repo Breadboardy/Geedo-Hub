@@ -46,6 +46,17 @@
   .card h3{margin:0 0 4px;font-size:14px;font-weight:500}
   .card .row{display:flex;justify-content:space-between;color:var(--mute);font-size:10px;letter-spacing:1px}
   .card .tag{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--mute);font-size:9px;letter-spacing:1px;margin-top:6px;margin-right:4px}
+  .browse-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 18px;flex-wrap:wrap}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px}
+  .tab{background:var(--panel);border:1px solid var(--line);border-radius:999px;color:var(--mute);padding:6px 14px;font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .12s}
+  .tab:hover{color:var(--text);border-color:var(--accent)}
+  .tab.on{background:var(--accent);color:#001018;border-color:var(--accent);font-weight:700}
+  #search{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:6px 12px;font-family:inherit;font-size:12px;min-width:160px;outline:none}
+  #search:focus{border-color:var(--accent)}
+  .load-more-wrap{text-align:center;margin:24px 0}
+  .load-more{background:var(--panel);border:1px solid var(--accent);color:var(--accent);padding:10px 24px;border-radius:10px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer;font-weight:700}
+  .load-more:hover{background:var(--accent);color:#001018}
+  .empty{grid-column:1/-1;text-align:center;color:var(--mute);padding:30px;font-size:12px}
   .reactions{display:flex;gap:8px;margin-top:8px;align-items:center}
   .react-btn{cursor:pointer;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;font-family:inherit;color:var(--mute);font-size:11px;transition:all .12s;user-select:none}
   .react-btn:hover{border-color:var(--accent);color:var(--text)}
@@ -109,8 +120,20 @@
   </section>
 
   <section id="animations">
-    <div class="section-head"><h2>ALL ANIMATIONS</h2><span class="meta" id="anim-meta">loading…</span></div>
+    <div class="section-head"><h2>BROWSE</h2><span class="meta" id="anim-meta">loading…</span></div>
+    <div class="browse-bar">
+      <div class="tabs" id="tabs">
+        <button class="tab on" data-filter="all">All</button>
+        <button class="tab" data-filter="community">👥 Community</button>
+        <button class="tab" data-filter="breadboard">⭐ Official</button>
+        <button class="tab" data-filter="eating">🍔 Eating</button>
+        <button class="tab" data-filter="activities">🎮 Activities</button>
+        <button class="tab" data-filter="boot">⚙️ System</button>
+      </div>
+      <input id="search" type="text" placeholder="search…" autocomplete="off">
+    </div>
     <div class="grid" id="grid"></div>
+    <div class="load-more-wrap"><button id="loadMore" class="load-more" style="display:none">Load more</button></div>
   </section>
 
   <section>
@@ -164,6 +187,7 @@ async function load() {
 
   // Build derived lists
   const all = m.animations.slice();
+  window.__ALL = all;
 
   // POPULAR: rank by (seed.likes + seed.stars + bonuses for liked/starred locally)
   const popular = all
@@ -182,12 +206,87 @@ async function load() {
   const undated = all.filter(a => !a.published_at).slice().reverse();
   const newest = dated.concat(undated).slice(0, 6);
 
-  renderGrid(document.getElementById('grid-new'), newest);
-  renderGrid(document.getElementById('grid-popular'), popular);
-  renderGrid(document.getElementById('grid'), all);
+  renderList(document.getElementById('grid-new'), newest);
+  renderList(document.getElementById('grid-popular'), popular);
+
+  // Browse grid: tabs + search + pagination
+  setupBrowse(all);
 }
 
-function renderGrid(grid, list) {
+// ===== Lazy-load IntersectionObserver: only fetch+decode when card scrolls into view =====
+const lazyObserver = new IntersectionObserver((entries) => {
+  for (const e of entries) {
+    if (e.isIntersecting) {
+      lazyObserver.unobserve(e.target);
+      const init = e.target.__init;
+      if (init) init();
+    }
+  }
+}, { rootMargin: '200px' });
+
+function passesFilter(a, filter) {
+  if (filter === 'all') return true;
+  const cat = (a.category || '').toLowerCase();
+  const id  = (a.id || '').toLowerCase();
+  if (filter === 'community')  return id.startsWith('user_');
+  if (filter === 'breadboard') return !id.startsWith('user_');
+  if (filter === 'boot')       return cat.includes('boot') || id.startsWith('animations_boot_');
+  return cat === filter;
+}
+
+function setupBrowse(all) {
+  const grid     = document.getElementById('grid');
+  const meta     = document.getElementById('anim-meta');
+  const searchEl = document.getElementById('search');
+  const tabs     = document.querySelectorAll('#tabs .tab');
+  const loadBtn  = document.getElementById('loadMore');
+  const PAGE     = 12;
+
+  let filter = 'all';
+  let query  = '';
+  let shown  = 0;
+  let filtered = [];
+
+  function applyFilters() {
+    const q = query.trim().toLowerCase();
+    filtered = all.filter(a => {
+      if (!passesFilter(a, filter)) return false;
+      if (!q) return true;
+      const hay = (a.name + ' ' + a.id + ' ' + (a.category||'') + ' ' + (a.author||'')).toLowerCase();
+      return hay.includes(q);
+    });
+    grid.innerHTML = '';
+    shown = 0;
+    meta.textContent = filtered.length + ' total';
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty">no animations match</div>';
+      loadBtn.style.display = 'none';
+      return;
+    }
+    renderMore();
+  }
+
+  function renderMore() {
+    const next = filtered.slice(shown, shown + PAGE);
+    renderList(grid, next);
+    shown += next.length;
+    loadBtn.style.display = (shown < filtered.length) ? 'inline-block' : 'none';
+    loadBtn.textContent = `Load more (${filtered.length - shown})`;
+  }
+
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('on'));
+    t.classList.add('on');
+    filter = t.dataset.filter;
+    applyFilters();
+  }));
+  searchEl.addEventListener('input', () => { query = searchEl.value; applyFilters(); });
+  loadBtn.addEventListener('click', renderMore);
+
+  applyFilters();
+}
+
+function renderList(grid, list) {
   for (const a of list) {
     const state = getState(a.id);
     const seed = seedCounts(a.id);
@@ -208,7 +307,9 @@ function renderGrid(grid, list) {
       </div>
     `;
     grid.appendChild(card);
-    setupCard(card, a);
+    // Lazy: only init (fetch+decode+listeners) when scrolled into view
+    card.__init = () => setupCard(card, a);
+    lazyObserver.observe(card);
   }
 }
 

@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "url": "firmware/geedo_v1.bin",
+  "notes": "First OTA-capable firmware. Cloud animations + WiFi setup."
+}

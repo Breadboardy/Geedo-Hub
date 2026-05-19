@@ -1,5 +1,5 @@
 {
-  "version": 2,
-  "url": "firmware/geedo_v2.bin",
+  "version": 3,
+  "url": "firmware/geedo_v3.bin",
   "notes": "Auto-built 2026-05-19"
 }

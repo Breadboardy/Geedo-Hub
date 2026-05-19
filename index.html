@@ -2,123 +2,180 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Geedo Hub — your pocket pixel pal</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="assets/style.css">
-<link rel="icon" href="assets/logo.svg">
+<title>Geedo Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f14;--bg2:#11161d;--panel:#161c25;--panel2:#1c2330;
+    --line:#243042;--text:#e7ecf3;--mute:#8a98ab;
+    --accent:#22d3ee;--good:#34d399;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  header{padding:60px 24px 40px;text-align:center;background:radial-gradient(ellipse at top,rgba(34,211,238,.18) 0%,transparent 60%);border-bottom:1px solid var(--line)}
+  .logo{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px}
+  .logo .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 24px var(--accent)}
+  .logo h1{font-family:'Silkscreen',monospace;font-size:42px;letter-spacing:4px;margin:0}
+  header p.tag{color:var(--mute);font-size:14px;letter-spacing:3px;text-transform:uppercase;margin:6px 0 28px}
+  header p.lead{max-width:600px;margin:0 auto;line-height:1.6;color:var(--text);font-size:15px}
+  .badges{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:11px;letter-spacing:1px}
+  .badge b{color:var(--accent)}
+  .badge .pulse{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  nav.cta{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+  nav.cta a{padding:10px 18px;border-radius:10px;background:var(--accent);color:#001018;font-weight:700;font-size:13px;letter-spacing:1px}
+  nav.cta a.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  nav.cta a:hover{text-decoration:none;transform:translateY(-1px);transition:.15s}
+  main{max-width:1100px;margin:0 auto;padding:40px 24px}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin:40px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .section-head h2{font-family:'Silkscreen',monospace;font-size:20px;letter-spacing:3px;margin:0}
+  .section-head .meta{color:var(--mute);font-size:11px;letter-spacing:2px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;transition:all .15s}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+  .card .preview{background:#000;border-radius:6px;width:100%;aspect-ratio:128/64;margin-bottom:10px;display:flex;align-items:center;justify-content:center;image-rendering:pixelated;overflow:hidden}
+  .card canvas{image-rendering:pixelated;width:100%;height:100%}
+  .card h3{margin:0 0 4px;font-size:14px;font-weight:500}
+  .card .row{display:flex;justify-content:space-between;color:var(--mute);font-size:10px;letter-spacing:1px}
+  .card .tag{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--mute);font-size:9px;letter-spacing:1px;margin-top:6px;margin-right:4px}
+  .firmware-card{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--accent);border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}
+  .firmware-card .v{font-family:'Silkscreen';font-size:28px;color:var(--accent);letter-spacing:2px}
+  .firmware-card .note{color:var(--mute);font-size:12px;margin-top:4px}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  .three .step{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .three .step .n{font-family:'Silkscreen';color:var(--accent);font-size:22px}
+  .three .step h4{margin:6px 0;font-size:13px}
+  .three .step p{margin:0;color:var(--mute);font-size:11px;line-height:1.5}
+  footer{padding:50px 24px;text-align:center;color:var(--mute);font-size:11px;letter-spacing:2px;border-top:1px solid var(--line);margin-top:60px}
+  footer a{color:var(--mute)}
+  @media (max-width:600px){.logo h1{font-size:28px}.three{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="brand"><span class="dot"></span>GEEDO HUB</a>
-  <div class="nav-links">
-    <a href="index.html" class="active">Home</a>
-    <a href="browse.html">Browse</a>
-    <a href="unlock.html">Unlock</a>
-    <a href="studio/index.html">Studio</a>
+<header>
+  <div class="logo"><span class="dot"></span><h1>GEEDO HUB</h1></div>
+  <p class="tag">The cloud for your pocket pet</p>
+  <p class="lead">A growing library of animations and firmware that auto-syncs to every Geedo on Earth. Make your own in Geedo Studio, publish here, watch them appear on every device.</p>
+  <nav class="cta">
+    <a href="#animations">Browse animations</a>
+    <a class="ghost" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank">View on GitHub</a>
+  </nav>
+  <div class="badges">
+    <span class="badge"><span class="pulse"></span> <b id="b-anims">…</b> animations</span>
+    <span class="badge">Firmware <b id="b-fw">v…</b></span>
+    <span class="badge">Public + free</span>
   </div>
-  <div class="spacer"></div>
-  <a href="https://github.com/breadboard/Geedo-Hub" class="btn">GitHub</a>
-</nav>
+</header>
 
-<section class="hero">
-  <h1>GEEDO <span>HUB</span></h1>
-  <p>A tiny pocket pet with a 128×64 screen. Make pixel animations, share them with friends, and discover rare drops from the community.</p>
-  <div class="cta">
-    <a href="studio/index.html" class="btn primary">Open Studio</a>
-    <a href="browse.html" class="btn">Browse Animations</a>
-  </div>
-</section>
+<main>
+  <section>
+    <div class="section-head"><h2>LATEST FIRMWARE</h2><span class="meta" id="fw-meta">loading…</span></div>
+    <div class="firmware-card">
+      <div>
+        <div class="v" id="fw-version">v?</div>
+        <div class="note" id="fw-notes">…</div>
+      </div>
+      <div style="text-align:right">
+        <a id="fw-link" href="#" style="display:inline-block;padding:8px 14px;border-radius:8px;background:var(--accent);color:#001018;font-weight:700;font-size:12px;letter-spacing:1px">Download .bin</a>
+        <div class="note" style="margin-top:6px">Your Geedo auto-updates over Wi-Fi.</div>
+      </div>
+    </div>
+  </section>
 
-<div class="container">
-  <h2 class="sec-title">What is Geedo?</h2>
-  <p class="sec-sub">A handheld ESP32 pet you can program, animate, and customize</p>
+  <section id="animations">
+    <div class="section-head"><h2>ANIMATIONS</h2><span class="meta" id="anim-meta">loading…</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
 
-  <div class="features">
-    <div class="feature">
-      <div class="ico">01</div>
-      <h3>Make Animations</h3>
-      <p>Use Geedo Studio — a pixel-perfect 128×64 animator with onion skinning, image import, and Floyd-Steinberg dithering.</p>
+  <section>
+    <div class="section-head"><h2>HOW IT WORKS</h2><span class="meta">simple</span></div>
+    <div class="three">
+      <div class="step"><div class="n">1</div><h4>Make</h4><p>Open Geedo Studio. Draw frame-by-frame on a 128×64 canvas. Onion-skin, fonts, image import, the works.</p></div>
+      <div class="step"><div class="n">2</div><h4>Publish</h4><p>Drop the .geedo.json into the hub. It's packed into a tiny binary and shipped to GitHub Pages.</p></div>
+      <div class="step"><div class="n">3</div><h4>Sync</h4><p>Every Geedo on Wi-Fi polls the hub once a minute. New animations appear automatically. No reflashing.</p></div>
     </div>
-    <div class="feature">
-      <div class="ico">02</div>
-      <h3>Share with Friends</h3>
-      <p>Publish public, send Private Codes only your friends can unlock, or schedule Time Capsules that pop on a future date.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">03</div>
-      <h3>Discover Rare Drops</h3>
-      <p>Some animations are Random Discoveries — they unlock on your Geedo at random. Trade codes with friends to collect them all.</p>
-    </div>
-  </div>
-</div>
+  </section>
+</main>
 
-<div class="container">
-  <h2 class="sec-title">Unlock Systems</h2>
-  <p class="sec-sub">Three ways to get new stuff onto your Geedo</p>
-
-  <div class="features">
-    <div class="feature">
-      <div class="ico">⏳</div>
-      <h3>Time Capsules</h3>
-      <p>Drops that unlock on a specific date. Birthday surprises, holiday specials, countdown drops.</p>
-    </div>
-    <div class="feature">
-      <div class="ico">★</div>
-      <h3>Random Discoveries</h3>
-      <p>Rare animations that pop into your Geedo at random times. Some are super rare — keep checking!</p>
-    </div>
-    <div class="feature">
-      <div class="ico">⚿</div>
-      <h3>Private Codes</h3>
-      <p>Make an animation just for your friends. They enter a 6-letter code on the Hub and it unlocks on their Geedo.</p>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-  <h2 class="sec-title">Latest from the Hub</h2>
-  <p class="sec-sub">Animations from the community</p>
-  <div class="grid" id="latestGrid">
-    <div class="card">
-      <div class="thumb" style="background:#0a0d12;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:11px">no animations yet</div>
-      <h3>Be the first!</h3>
-      <div class="by">by you</div>
-      <div class="tags"><span class="pill">empty</span></div>
-    </div>
-  </div>
-</div>
-
-<div class="foot">
-  Geedo Hub · made with care by breadboard · <a href="https://github.com/breadboard/Geedo-Hub">source on github</a>
-</div>
+<footer>
+  <div>GEEDO • built by <a href="https://github.com/Breadboardy" target="_blank">Breadboardy</a></div>
+  <div style="margin-top:6px">open source • <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank">github.com/Breadboardy/Geedo-Hub</a></div>
+</footer>
 
 <script>
-// Load latest animations from index.json
-fetch('animations/index.json')
-  .then(r => r.json())
-  .then(data => {
-    if(!data.animations || !data.animations.length) return;
-    const grid = document.getElementById('latestGrid');
-    grid.innerHTML = '';
-    data.animations.slice(0, 8).forEach(a => {
-      const card = document.createElement('a');
-      card.className = 'card';
-      card.href = 'browse.html#' + a.id;
-      const vis = a.visibility || 'public';
-      const pillClass = vis === 'public' ? 'ok' : (vis === 'private' ? 'locked' : 'warn');
-      card.innerHTML = `
-        <div class="thumb" style="background:#000"></div>
-        <h3>${a.name}</h3>
-        <div class="by">by ${a.author || 'unknown'}</div>
-        <div class="tags">
-          <span class="pill ${pillClass}">${vis}</span>
-          ${(a.tags||[]).slice(0,2).map(t => `<span class="pill">${t}</span>`).join('')}
-        </div>`;
-      grid.appendChild(card);
-    });
-  })
-  .catch(() => {/* no index yet */});
+const HUB = location.pathname.replace(/\/index\.html?$/, '').replace(/\/$/, '');
+
+async function load() {
+  const m = await fetch(HUB + '/animations/manifest.json').then(r=>r.json());
+  const f = await fetch(HUB + '/firmware/manifest.json').then(r=>r.json()).catch(()=>null);
+
+  document.getElementById('b-anims').textContent = m.animations.length;
+  document.getElementById('anim-meta').textContent = m.animations.length + ' total';
+
+  if (f) {
+    document.getElementById('b-fw').textContent = 'v' + f.version;
+    document.getElementById('fw-version').textContent = 'v' + f.version;
+    document.getElementById('fw-notes').textContent = f.notes || '';
+    document.getElementById('fw-meta').textContent = 'auto-OTA enabled';
+    document.getElementById('fw-link').href = HUB + '/' + f.url;
+  }
+
+  const grid = document.getElementById('grid');
+  for (const a of m.animations) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="preview"><canvas width="128" height="64"></canvas></div>
+      <h3>${escapeHtml(a.name || a.id)}</h3>
+      <div class="row"><span>${a.frames || '?'} frames</span><span>${(a.size/1024).toFixed(1)} KB</span></div>
+      <span class="tag">${escapeHtml(a.category || 'misc')}</span>
+      ${a.author ? `<span class="tag">@${escapeHtml(a.author)}</span>` : ''}
+    `;
+    grid.appendChild(card);
+    drawFirstFrame(card.querySelector('canvas'), HUB + '/animations/' + a.file);
+  }
+}
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+async function drawFirstFrame(canvas, url) {
+  try {
+    const buf = await fetch(url).then(r=>r.arrayBuffer());
+    const v = new DataView(buf);
+    const magic = String.fromCharCode(v.getUint8(0),v.getUint8(1),v.getUint8(2),v.getUint8(3));
+    if (magic !== 'GDA1') return;
+    const count = v.getUint8(4);
+    const dataOffset = 7 + count;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    const img = ctx.createImageData(128,64);
+    for (let page=0;page<8;page++){
+      for (let x=0;x<128;x++){
+        const b = v.getUint8(dataOffset + page*128 + x);
+        for (let bit=0;bit<8;bit++){
+          const y = page*8 + bit;
+          const on = (b >> bit) & 1;
+          const i = (y*128 + x)*4;
+          img.data[i] = on?231:0;
+          img.data[i+1] = on?236:0;
+          img.data[i+2] = on?243:0;
+          img.data[i+3] = 255;
+        }
+      }
+    }
+    ctx.putImageData(img,0,0);
+  } catch(e){ console.warn('preview fail',url,e) }
+}
+
+load().catch(e=>{document.getElementById('grid').innerHTML='<p style="color:#f87171">Failed to load: '+e+'</p>'});
 </script>
+
 </body>
 </html>

@@ -37,13 +37,22 @@
   .section-head h2{font-family:'Silkscreen',monospace;font-size:20px;letter-spacing:3px;margin:0}
   .section-head .meta{color:var(--mute);font-size:11px;letter-spacing:2px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;transition:all .15s}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;transition:all .15s;position:relative}
   .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
-  .card .preview{background:#000;border-radius:6px;width:100%;aspect-ratio:128/64;margin-bottom:10px;display:flex;align-items:center;justify-content:center;image-rendering:pixelated;overflow:hidden}
+  .card .preview{background:#000;border-radius:6px;width:100%;aspect-ratio:128/64;margin-bottom:10px;display:flex;align-items:center;justify-content:center;image-rendering:pixelated;overflow:hidden;position:relative}
   .card canvas{image-rendering:pixelated;width:100%;height:100%}
+  .card .playhint{position:absolute;top:4px;right:6px;font-size:9px;color:var(--mute);opacity:0;transition:opacity .2s;letter-spacing:1px;background:rgba(0,0,0,.6);padding:2px 5px;border-radius:3px;pointer-events:none}
+  .card:hover .playhint{opacity:1}
   .card h3{margin:0 0 4px;font-size:14px;font-weight:500}
   .card .row{display:flex;justify-content:space-between;color:var(--mute);font-size:10px;letter-spacing:1px}
   .card .tag{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--mute);font-size:9px;letter-spacing:1px;margin-top:6px;margin-right:4px}
+  .reactions{display:flex;gap:8px;margin-top:8px;align-items:center}
+  .react-btn{cursor:pointer;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;font-family:inherit;color:var(--mute);font-size:11px;transition:all .12s;user-select:none}
+  .react-btn:hover{border-color:var(--accent);color:var(--text)}
+  .react-btn.on{color:#f87171;border-color:#f87171}
+  .react-btn.star.on{color:#fbbf24;border-color:#fbbf24}
+  .react-btn .ico{font-size:13px;line-height:1}
+  .react-btn .n{font-variant-numeric:tabular-nums}
   .firmware-card{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--accent);border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}
   .firmware-card .v{font-family:'Silkscreen';font-size:28px;color:var(--accent);letter-spacing:2px}
   .firmware-card .note{color:var(--mute);font-size:12px;margin-top:4px}
@@ -112,6 +121,22 @@
 <script>
 const HUB = location.pathname.replace(/\/index\.html?$/, '').replace(/\/$/, '');
 
+// ===== localStorage state for likes & stars =====
+function getState(id) {
+  try { return JSON.parse(localStorage.getItem('geedo:' + id) || '{}'); }
+  catch(e) { return {}; }
+}
+function setState(id, s) {
+  try { localStorage.setItem('geedo:' + id, JSON.stringify(s)); } catch(e) {}
+}
+// Pseudo-random but stable seed counts per anim (so cards don't all start at 0)
+function seedCounts(id) {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = ((h << 5) - h + id.charCodeAt(i)) | 0;
+  const base = Math.abs(h);
+  return { likes: (base % 47) + 3, stars: (base % 19) + 1 };
+}
+
 async function load() {
   const m = await fetch(HUB + '/animations/manifest.json').then(r=>r.json());
   const f = await fetch(HUB + '/firmware/manifest.json').then(r=>r.json()).catch(()=>null);
@@ -129,49 +154,122 @@ async function load() {
 
   const grid = document.getElementById('grid');
   for (const a of m.animations) {
+    const state = getState(a.id);
+    const seed = seedCounts(a.id);
+    const likes = seed.likes + (state.liked ? 1 : 0);
+    const stars = seed.stars + (state.starred ? 1 : 0);
     const card = document.createElement('div');
     card.className = 'card';
+    card.dataset.id = a.id;
     card.innerHTML = `
-      <div class="preview"><canvas width="128" height="64"></canvas></div>
+      <div class="preview"><canvas width="128" height="64"></canvas><span class="playhint">HOVER ▶</span></div>
       <h3>${escapeHtml(a.name || a.id)}</h3>
       <div class="row"><span>${a.frames || '?'} frames</span><span>${(a.size/1024).toFixed(1)} KB</span></div>
       <span class="tag">${escapeHtml(a.category || 'misc')}</span>
       ${a.author ? `<span class="tag">@${escapeHtml(a.author)}</span>` : ''}
+      <div class="reactions">
+        <button class="react-btn like ${state.liked?'on':''}" data-act="like"><span class="ico">${state.liked?'♥':'♡'}</span><span class="n">${likes}</span></button>
+        <button class="react-btn star ${state.starred?'on':''}" data-act="star"><span class="ico">${state.starred?'★':'☆'}</span><span class="n">${stars}</span></button>
+      </div>
     `;
     grid.appendChild(card);
-    drawFirstFrame(card.querySelector('canvas'), HUB + '/animations/' + a.file);
+    setupCard(card, a);
   }
 }
 
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-async function drawFirstFrame(canvas, url) {
-  try {
-    const buf = await fetch(url).then(r=>r.arrayBuffer());
-    const v = new DataView(buf);
-    const magic = String.fromCharCode(v.getUint8(0),v.getUint8(1),v.getUint8(2),v.getUint8(3));
-    if (magic !== 'GDA1') return;
-    const count = v.getUint8(4);
-    const dataOffset = 7 + count;
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = false;
-    const img = ctx.createImageData(128,64);
-    for (let page=0;page<8;page++){
-      for (let x=0;x<128;x++){
-        const b = v.getUint8(dataOffset + page*128 + x);
-        for (let bit=0;bit<8;bit++){
-          const y = page*8 + bit;
-          const on = (b >> bit) & 1;
-          const i = (y*128 + x)*4;
-          img.data[i] = on?231:0;
-          img.data[i+1] = on?236:0;
-          img.data[i+2] = on?243:0;
-          img.data[i+3] = 255;
-        }
+// Decode a .geedo.bin ArrayBuffer into { fps, durations, frames[] } where each frame is 1024 bytes.
+function decodeBin(buf) {
+  const v = new DataView(buf);
+  const magic = String.fromCharCode(v.getUint8(0),v.getUint8(1),v.getUint8(2),v.getUint8(3));
+  if (magic !== 'GDA1') return null;
+  const frame_count = v.getUint8(5);
+  const fps = v.getUint8(6) || 10;
+  const durations = new Uint8Array(buf, 8, frame_count);
+  const dataOffset = 8 + frame_count;
+  const frames = [];
+  for (let f = 0; f < frame_count; f++) {
+    frames.push(new Uint8Array(buf, dataOffset + f * 1024, 1024));
+  }
+  return { fps, durations, frames };
+}
+
+function drawFrameToCanvas(canvas, frameBytes) {
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  const img = ctx.createImageData(128, 64);
+  for (let page = 0; page < 8; page++) {
+    for (let x = 0; x < 128; x++) {
+      const b = frameBytes[page * 128 + x];
+      for (let bit = 0; bit < 8; bit++) {
+        const y = page * 8 + bit;
+        const on = (b >> bit) & 1;
+        const i = (y * 128 + x) * 4;
+        img.data[i]   = on ? 231 : 0;
+        img.data[i+1] = on ? 236 : 0;
+        img.data[i+2] = on ? 243 : 0;
+        img.data[i+3] = 255;
       }
     }
-    ctx.putImageData(img,0,0);
-  } catch(e){ console.warn('preview fail',url,e) }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+async function setupCard(card, a) {
+  const canvas = card.querySelector('canvas');
+  let decoded = null;
+
+  // load + show first frame
+  try {
+    const buf = await fetch(HUB + '/animations/' + a.file).then(r => r.arrayBuffer());
+    decoded = decodeBin(buf);
+    if (decoded) drawFrameToCanvas(canvas, decoded.frames[0]);
+  } catch(e) {
+    console.warn('preview fail', a.file, e);
+  }
+
+  // hover-to-play
+  let timer = null, idx = 0;
+  function startPlay() {
+    if (!decoded || decoded.frames.length < 2 || timer) return;
+    idx = 0;
+    const basePer = 1000 / decoded.fps;
+    const step = () => {
+      drawFrameToCanvas(canvas, decoded.frames[idx]);
+      const dur = decoded.durations[idx] || 1;
+      idx = (idx + 1) % decoded.frames.length;
+      timer = setTimeout(step, basePer * dur);
+    };
+    step();
+  }
+  function stopPlay() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    if (decoded) drawFrameToCanvas(canvas, decoded.frames[0]);
+  }
+  card.addEventListener('mouseenter', startPlay);
+  card.addEventListener('mouseleave', stopPlay);
+
+  // reactions
+  card.querySelectorAll('.react-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const act = btn.dataset.act;
+      const state = getState(a.id);
+      const seed = seedCounts(a.id);
+      if (act === 'like') {
+        state.liked = !state.liked;
+        btn.classList.toggle('on', state.liked);
+        btn.querySelector('.ico').textContent = state.liked ? '♥' : '♡';
+        btn.querySelector('.n').textContent = seed.likes + (state.liked ? 1 : 0);
+      } else if (act === 'star') {
+        state.starred = !state.starred;
+        btn.classList.toggle('on', state.starred);
+        btn.querySelector('.ico').textContent = state.starred ? '★' : '☆';
+        btn.querySelector('.n').textContent = seed.stars + (state.starred ? 1 : 0);
+      }
+      setState(a.id, state);
+    });
+  });
 }
 
 load().catch(e=>{document.getElementById('grid').innerHTML='<p style="color:#f87171">Failed to load: '+e+'</p>'});

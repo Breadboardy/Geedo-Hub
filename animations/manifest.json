@@ -253,6 +253,105 @@
       "visibility": "public",
       "frames": 2,
       "category": "studio"
+    },
+    {
+      "id": "eating_burger",
+      "name": "Burger",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_burger.bin",
+      "size": 1033,
+      "hash": "4052fc73",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_chips",
+      "name": "Chips",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_chips.bin",
+      "size": 1033,
+      "hash": "7a5b8934",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_circut_board",
+      "name": "Circut Board",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_circut_board.bin",
+      "size": 1033,
+      "hash": "66478ae2",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_esp32",
+      "name": "Esp32",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_esp32.bin",
+      "size": 1033,
+      "hash": "4b594d17",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_fries",
+      "name": "Fries",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_fries.bin",
+      "size": 1033,
+      "hash": "1a5c6b51",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_pizza",
+      "name": "Pizza",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_pizza.bin",
+      "size": 1033,
+      "hash": "2351b1a2",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_ramen",
+      "name": "Ramen",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_ramen.bin",
+      "size": 1033,
+      "hash": "0a838e66",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_ribs",
+      "name": "Ribs",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_ribs.bin",
+      "size": 1033,
+      "hash": "5a44cfdb",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "eating_cupcake",
+      "name": "cupcake",
+      "category": "eating",
+      "author": "breadboard",
+      "file": "bin/eating_cupcake.bin",
+      "size": 1033,
+      "hash": "9c41ef55",
+      "visibility": "public",
+      "frames": 1
     }
   ]
 }

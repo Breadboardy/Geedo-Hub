@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Geedo Hub — your pocket pixel pal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="assets/logo.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand"><span class="dot"></span>GEEDO HUB</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="browse.html">Browse</a>
+    <a href="unlock.html">Unlock</a>
+    <a href="studio/index.html">Studio</a>
+  </div>
+  <div class="spacer"></div>
+  <a href="https://github.com/breadboard/Geedo-Hub" class="btn">GitHub</a>
+</nav>
+
+<section class="hero">
+  <h1>GEEDO <span>HUB</span></h1>
+  <p>A tiny pocket pet with a 128×64 screen. Make pixel animations, share them with friends, and discover rare drops from the community.</p>
+  <div class="cta">
+    <a href="studio/index.html" class="btn primary">Open Studio</a>
+    <a href="browse.html" class="btn">Browse Animations</a>
+  </div>
+</section>
+
+<div class="container">
+  <h2 class="sec-title">What is Geedo?</h2>
+  <p class="sec-sub">A handheld ESP32 pet you can program, animate, and customize</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="ico">01</div>
+      <h3>Make Animations</h3>
+      <p>Use Geedo Studio — a pixel-perfect 128×64 animator with onion skinning, image import, and Floyd-Steinberg dithering.</p>
+    </div>
+    <div class="feature">
+      <div class="ico">02</div>
+      <h3>Share with Friends</h3>
+      <p>Publish public, send Private Codes only your friends can unlock, or schedule Time Capsules that pop on a future date.</p>
+    </div>
+    <div class="feature">
+      <div class="ico">03</div>
+      <h3>Discover Rare Drops</h3>
+      <p>Some animations are Random Discoveries — they unlock on your Geedo at random. Trade codes with friends to collect them all.</p>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h2 class="sec-title">Unlock Systems</h2>
+  <p class="sec-sub">Three ways to get new stuff onto your Geedo</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="ico">⏳</div>
+      <h3>Time Capsules</h3>
+      <p>Drops that unlock on a specific date. Birthday surprises, holiday specials, countdown drops.</p>
+    </div>
+    <div class="feature">
+      <div class="ico">★</div>
+      <h3>Random Discoveries</h3>
+      <p>Rare animations that pop into your Geedo at random times. Some are super rare — keep checking!</p>
+    </div>
+    <div class="feature">
+      <div class="ico">⚿</div>
+      <h3>Private Codes</h3>
+      <p>Make an animation just for your friends. They enter a 6-letter code on the Hub and it unlocks on their Geedo.</p>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h2 class="sec-title">Latest from the Hub</h2>
+  <p class="sec-sub">Animations from the community</p>
+  <div class="grid" id="latestGrid">
+    <div class="card">
+      <div class="thumb" style="background:#0a0d12;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:11px">no animations yet</div>
+      <h3>Be the first!</h3>
+      <div class="by">by you</div>
+      <div class="tags"><span class="pill">empty</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  Geedo Hub · made with care by breadboard · <a href="https://github.com/breadboard/Geedo-Hub">source on github</a>
+</div>
+
+<script>
+// Load latest animations from index.json
+fetch('animations/index.json')
+  .then(r => r.json())
+  .then(data => {
+    if(!data.animations || !data.animations.length) return;
+    const grid = document.getElementById('latestGrid');
+    grid.innerHTML = '';
+    data.animations.slice(0, 8).forEach(a => {
+      const card = document.createElement('a');
+      card.className = 'card';
+      card.href = 'browse.html#' + a.id;
+      const vis = a.visibility || 'public';
+      const pillClass = vis === 'public' ? 'ok' : (vis === 'private' ? 'locked' : 'warn');
+      card.innerHTML = `
+        <div class="thumb" style="background:#000"></div>
+        <h3>${a.name}</h3>
+        <div class="by">by ${a.author || 'unknown'}</div>
+        <div class="tags">
+          <span class="pill ${pillClass}">${vis}</span>
+          ${(a.tags||[]).slice(0,2).map(t => `<span class="pill">${t}</span>`).join('')}
+        </div>`;
+      grid.appendChild(card);
+    });
+  })
+  .catch(() => {/* no index yet */});
+</script>
+</body>
+</html>

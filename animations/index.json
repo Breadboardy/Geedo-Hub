@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "updated": "2026-05-18",
+  "animations": [
+    {
+      "id": "hello_geedo",
+      "name": "Hello Geedo",
+      "author": "breadboard",
+      "visibility": "public",
+      "tags": ["greeting", "intro"],
+      "frames": 2,
+      "file": "examples/hello_geedo.geedo.json"
+    },
+    {
+      "id": "blink_eyes",
+      "name": "Blink Eyes",
+      "author": "breadboard",
+      "visibility": "public",
+      "tags": ["eyes", "idle"],
+      "frames": 3,
+      "file": "examples/blink_eyes.geedo.json"
+    }
+  ]
+}

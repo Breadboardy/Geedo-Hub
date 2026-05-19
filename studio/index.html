@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Geedo Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f14;--bg2:#11161d;--panel:#161c25;--panel2:#1c2330;
+    --line:#243042;--text:#e7ecf3;--mute:#8a98ab;
+    --accent:#22d3ee;--good:#34d399;--warn:#fbbf24;--bad:#f87171;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace;overflow:hidden;user-select:none}
+  button,input,select{font-family:inherit;color:inherit}
+  button{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;transition:all .15s}
+  button:hover{background:#222b3a;border-color:#2f3e57}
+  button.active{background:var(--accent);color:#001018;border-color:var(--accent);font-weight:700}
+  button.ghost{background:transparent}
+  button.danger:hover{background:#3a1d1d;border-color:#8a3535;color:#fca5a5}
+  input[type=number],input[type=text]{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;width:60px}
+  input[type=range]{accent-color:var(--accent)}
+  .app{display:grid;grid-template-rows:48px 1fr 180px;height:100vh}
+  .topbar{display:flex;align-items:center;gap:12px;padding:0 14px;background:linear-gradient(180deg,#11161d,#0d1218);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Silkscreen',monospace;font-size:18px;letter-spacing:1px}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .brand small{font-family:'JetBrains Mono';font-size:10px;color:var(--mute);letter-spacing:2px;margin-left:4px}
+  .topbar .spacer{flex:1}
+  .topbar .group{display:flex;gap:6px;align-items:center}
+  .main{display:grid;grid-template-columns:220px 1fr 240px;min-height:0}
+  .sidebar{background:var(--panel);border-right:1px solid var(--line);padding:12px;overflow-y:auto}
+  .sidebar.right{border-right:none;border-left:1px solid var(--line)}
+  .sec-title{font-size:10px;letter-spacing:2px;color:var(--mute);text-transform:uppercase;margin:14px 0 8px;font-weight:700}
+  .sec-title:first-child{margin-top:0}
+  .tools{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .tools button{padding:8px 0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .tools button .ico{font-size:16px;line-height:1;font-family:'Silkscreen'}
+  .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12px}
+  .row label{color:var(--mute);flex:1}
+  .row.compact{margin:4px 0}
+  .swatches{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+  .swatch{height:28px;border-radius:6px;border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--mute)}
+  .swatch.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.2)}
+  .swatch.white{background:#e7ecf3;color:#000}
+  .swatch.black{background:#000}
+  .stage{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#141b25 0%,#0b0f14 70%);position:relative;min-height:0;overflow:hidden}
+  .device{background:#0a0d12;border:1px solid #1c2330;border-radius:18px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
+  .device::before{content:"GEEDO";position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:'Silkscreen';font-size:10px;letter-spacing:4px;color:var(--mute)}
+  .canvas-wrap{position:relative;width:1024px;height:512px;background:#000;border-radius:6px;overflow:hidden}
+  #canvas,#onion,#preview{position:absolute;top:0;left:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+  #onion{opacity:.3;pointer-events:none}
+  #preview{pointer-events:none;opacity:.7}
+  .stage-info{position:absolute;bottom:12px;left:12px;font-size:10px;color:var(--mute);letter-spacing:1px}
+  .stage-info b{color:var(--text)}
+  .zoom-ctrl{position:absolute;bottom:12px;right:12px;display:flex;gap:6px;align-items:center;font-size:11px;color:var(--mute)}
+  .drop-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(34,211,238,.1);border:3px dashed var(--accent);border-radius:10px;font-family:'Silkscreen';color:var(--accent);font-size:16px;pointer-events:none;z-index:50}
+  .drop-hint.show{display:flex}
+  .timeline{background:var(--panel);border-top:1px solid var(--line);display:grid;grid-template-rows:36px 1fr;min-height:0}
+  .tl-head{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line)}
+  .tl-head .left,.tl-head .right{display:flex;gap:6px;align-items:center}
+  .tl-head .spacer{flex:1}
+  .frames{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;align-items:center}
+  .frame{flex:0 0 auto;width:128px;height:80px;background:#000;border:2px solid var(--line);border-radius:8px;position:relative;cursor:pointer;transition:border-color .15s}
+  .frame:hover{border-color:#3a4a66}
+  .frame.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.25)}
+  .frame canvas{width:100%;height:100%;image-rendering:pixelated;border-radius:6px}
+  .frame .num{position:absolute;top:2px;left:4px;font-size:9px;color:#9bb0c9;font-family:'Silkscreen'}
+  .frame .dur{position:absolute;bottom:2px;right:4px;font-size:9px;color:var(--mute)}
+  .frame .x{position:absolute;top:0;right:0;width:18px;height:18px;display:none;align-items:center;justify-content:center;color:var(--bad);background:rgba(0,0,0,.6);border-radius:0 6px 0 6px;font-size:12px}
+  .frame:hover .x{display:flex}
+  .add-frame{flex:0 0 auto;width:60px;height:80px;background:transparent;border:2px dashed var(--line);border-radius:8px;color:var(--mute);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center}
+  .add-frame:hover{border-color:var(--accent);color:var(--accent)}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100}
+  .modal-bg.open{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;width:480px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .modal.wide{width:640px}
+  .modal h2{margin:0 0 4px;font-family:'Silkscreen';font-size:16px;letter-spacing:2px}
+  .modal p{color:var(--mute);font-size:12px;line-height:1.5;margin:0 0 14px}
+  .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:10px;color:var(--mute);letter-spacing:1px}
+  .stamps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .stamp{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:8px 4px;text-align:center;font-size:13px;cursor:pointer}
+  .stamp:hover{border-color:var(--accent)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:12px;color:var(--text);opacity:0;transition:all .25s;z-index:200;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .kbd{font-family:'JetBrains Mono';background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--mute)}
+  .img-prev{background:#000;border:1px solid var(--line);border-radius:6px;width:100%;height:160px;image-rendering:pixelated;display:block}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> GEEDO STUDIO <small>v3.1</small></div>
+    <div class="group">
+      <button id="btnNew" class="ghost">New</button>
+      <button id="btnOpen" class="ghost">Open</button>
+      <button id="btnSave" class="ghost">Save</button>
+      <button id="btnImport" class="ghost">Import Image</button>
+    </div>
+    <div class="spacer"></div>
+    <span class="pill" id="statusPill">READY</span>
+    <div class="group">
+      <button id="btnExport">Export .ino</button>
+      <button id="btnSend" class="active">Send to Geedo</button>
+      <button id="btnPublish">Publish to Hub</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sec-title">Tools</div>
+      <div class="tools">
+        <button data-tool="pencil" class="active"><span class="ico">✎</span>Pencil</button>
+        <button data-tool="eraser"><span class="ico">⌫</span>Eraser</button>
+        <button data-tool="line"><span class="ico">╱</span>Line</button>
+        <button data-tool="rect"><span class="ico">▭</span>Rect</button>
+        <button data-tool="frect"><span class="ico">▬</span>Fill R</button>
+        <button data-tool="circle"><span class="ico">○</span>Circ</button>
+        <button data-tool="fcircle"><span class="ico">●</span>Fill C</button>
+        <button data-tool="fill"><span class="ico">▣</span>Bucket</button>
+      </div>
+
+      <div class="sec-title">Color</div>
+      <div class="swatches">
+        <div class="swatch white sel" data-color="1">WHITE</div>
+        <div class="swatch black" data-color="0">BLACK</div>
+      </div>
+
+      <div class="sec-title">Brush</div>
+      <div class="row compact">
+        <label>Size</label>
+        <input type="range" id="brushSize" min="1" max="6" value="1" style="flex:1">
+        <span id="brushSizeVal" style="width:18px;text-align:right">1</span>
+      </div>
+
+      <div class="sec-title">Frame</div>
+      <div class="row compact">
+        <button id="btnUndo" style="flex:1">Undo</button>
+        <button id="btnRedo" style="flex:1">Redo</button>
+      </div>
+      <div class="row compact">
+        <button id="btnClear" style="flex:1">Clear</button>
+        <button id="btnInvert" style="flex:1">Invert</button>
+      </div>
+      <div class="row compact">
+        <button id="btnFlipH" style="flex:1">Flip H</button>
+        <button id="btnFlipV" style="flex:1">Flip V</button>
+      </div>
+      <div class="row compact">
+        <button id="btnShiftL" style="flex:1">← Shift</button>
+        <button id="btnShiftR" style="flex:1">Shift →</button>
+      </div>
+      <div class="row compact">
+        <button id="btnShiftU" style="flex:1">↑ Shift</button>
+        <button id="btnShiftD" style="flex:1">Shift ↓</button>
+      </div>
+
+      <div class="sec-title">View</div>
+      <div class="row compact">
+        <label>Grid</label><input type="checkbox" id="chkGrid">
+      </div>
+      <div class="row compact">
+        <label>Onion skin</label><input type="checkbox" id="chkOnion" checked>
+      </div>
+      <div class="row compact">
+        <label>Onion α</label>
+        <input type="range" id="onionAlpha" min="5" max="80" value="30" style="flex:1">
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="device">
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="onion" width="128" height="64"></canvas>
+          <canvas id="canvas" width="128" height="64"></canvas>
+          <canvas id="preview" width="128" height="64"></canvas>
+          <div class="drop-hint" id="dropHint">DROP IMAGE TO IMPORT</div>
+        </div>
+      </div>
+      <div class="stage-info">128 × 64 SSD1306 &nbsp;·&nbsp; cursor <b id="curPos">0,0</b> &nbsp;·&nbsp; frame <b id="curFrame">1</b>/<b id="totFrame">1</b></div>
+      <div class="zoom-ctrl">
+        <button id="zoomOut" class="ghost">−</button>
+        <span id="zoomLvl">8×</span>
+        <button id="zoomIn" class="ghost">+</button>
+      </div>
+    </div>
+
+    <div class="sidebar right">
+      <div class="sec-title">Project</div>
+      <div class="row compact">
+        <label>Name</label>
+        <input type="text" id="projName" value="my_anim" style="flex:1;width:auto">
+      </div>
+      <div class="row compact">
+        <label>FPS</label><input type="number" id="fps" min="1" max="60" value="8">
+      </div>
+      <div class="row compact">
+        <label>Loop</label><input type="checkbox" id="chkLoop" checked>
+      </div>
+      <div class="row compact">
+        <label>Ping-pong</label><input type="checkbox" id="chkPP">
+      </div>
+
+      <div class="sec-title">Stamps</div>
+      <div class="stamps" id="stamps"></div>
+
+      <div class="sec-title">Text</div>
+      <div class="row compact">
+        <input type="text" id="txtInput" placeholder="Type..." style="flex:1;width:auto">
+      </div>
+      <div class="row compact">
+        <select id="txtSize" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+          <option value="1">small</option>
+          <option value="2" selected>medium</option>
+          <option value="3">large</option>
+        </select>
+      </div>
+      <button id="btnStampText" style="width:100%;margin-top:4px">Stamp text</button>
+
+      <div class="sec-title">Shortcuts</div>
+      <div style="font-size:10px;color:var(--mute);line-height:1.8">
+        <span class="kbd">B</span> pencil &nbsp; <span class="kbd">E</span> eraser<br>
+        <span class="kbd">L</span> line &nbsp; <span class="kbd">R</span> rect<br>
+        <span class="kbd">G</span> bucket &nbsp; <span class="kbd">X</span> swap<br>
+        <span class="kbd">Ctrl+Z</span> undo &nbsp; <span class="kbd">Space</span> play<br>
+        <span class="kbd">←/→</span> frame nav &nbsp; <span class="kbd">Ctrl+I</span> import
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-head">
+      <div class="left">
+        <button id="btnPlay" class="active">▶ Play</button>
+        <button id="btnPrev" class="ghost">◀</button>
+        <button id="btnNext" class="ghost">▶</button>
+      </div>
+      <div class="spacer"></div>
+      <div class="right">
+        <button id="btnDup" class="ghost">Duplicate</button>
+        <button id="btnDel" class="ghost danger">Delete</button>
+      </div>
+    </div>
+    <div class="frames" id="frames"></div>
+  </div>
+</div>
+
+<!-- Image import modal -->
+<div class="modal-bg" id="modalImg">
+  <div class="modal wide">
+    <h2>IMPORT IMAGE</h2>
+    <p>Convert a picture to 1-bit pixel art for Geedo. Adjust threshold and dithering, then place on the canvas.</p>
+    <canvas id="imgPrev" class="img-prev" width="128" height="64"></canvas>
+    <div class="row"><label>Mode</label>
+      <select id="imgMode" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+        <option value="threshold">Threshold (simple)</option>
+        <option value="floyd" selected>Floyd-Steinberg dither</option>
+        <option value="bayer">Bayer dither (retro)</option>
+      </select>
+    </div>
+    <div class="row"><label>Threshold</label>
+      <input type="range" id="imgThresh" min="0" max="255" value="128" style="flex:1">
+      <span id="imgThreshVal" style="width:24px;text-align:right">128</span>
+    </div>
+    <div class="row"><label>Brightness</label>
+      <input type="range" id="imgBright" min="-100" max="100" value="0" style="flex:1">
+      <span id="imgBrightVal" style="width:24px;text-align:right">0</span>
+    </div>
+    <div class="row"><label>Contrast</label>
+      <input type="range" id="imgContrast" min="-100" max="100" value="0" style="flex:1">
+      <span id="imgContrastVal" style="width:24px;text-align:right">0</span>
+    </div>
+    <div class="row"><label>Invert</label><input type="checkbox" id="imgInvert"></div>
+    <div class="row"><label>Fit</label>
+      <select id="imgFit" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+        <option value="contain" selected>Contain (whole image, letterbox)</option>
+        <option value="cover">Cover (fill, crop edges)</option>
+        <option value="stretch">Stretch to 128×64</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button onclick="closeModal('modalImg')" class="ghost">Cancel</button>
+      <button onclick="applyImage(false)">Place (replace frame)</button>
+      <button onclick="applyImage(true)" class="active">Place (add to frame)</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalSend">
+  <div class="modal">
+    <h2>SEND TO GEEDO</h2>
+    <p>Push this animation to your Geedo over Wi-Fi. Make sure your Geedo is on the same network and in "Sync" mode (hold button for 3s).</p>
+    <div class="row"><label>Geedo IP</label><input type="text" id="geedoIp" value="192.168.1.42" style="flex:1;width:auto"></div>
+    <div class="row"><label>Slot</label>
+      <select id="sendSlot" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+        <option>1 - User slot 1</option><option>2 - User slot 2</option><option>3 - User slot 3</option>
+        <option>4 - User slot 4</option><option>5 - User slot 5</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button onclick="closeModal('modalSend')" class="ghost">Cancel</button>
+      <button onclick="doSend()" class="active">Send</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalPub">
+  <div class="modal">
+    <h2>PUBLISH TO HUB</h2>
+    <p>Share with the Geedo community, or send to friends only via a private code.</p>
+    <div class="row"><label>Visibility</label>
+      <select id="pubVis" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+        <option value="public">Public — anyone can find it</option>
+        <option value="discover">Random Discovery — rare drop</option>
+        <option value="capsule">Time Capsule — unlocks on a date</option>
+        <option value="private">Private Code — friends only</option>
+      </select>
+    </div>
+    <div class="row"><label>Tags</label><input type="text" id="pubTags" placeholder="cute, dance, eyes" style="flex:1;width:auto"></div>
+    <div class="actions">
+      <button onclick="closeModal('modalPub')" class="ghost">Cancel</button>
+      <button onclick="doPublish()" class="active">Publish</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<input type="file" id="fileImg" accept="image/*" style="display:none">
+
+<script>
+const W=128,H=64; let ZOOM=8;
+const canvas=document.getElementById('canvas'),onion=document.getElementById('onion'),preview=document.getElementById('preview');
+const ctx=canvas.getContext('2d'),octx=onion.getContext('2d'),pctx=preview.getContext('2d');
+ctx.imageSmoothingEnabled=false;octx.imageSmoothingEnabled=false;pctx.imageSmoothingEnabled=false;
+
+let frames=[makeFrame()],cur=0,undoStack=[],redoStack=[];
+let tool='pencil',color=1,brushSize=1,showGrid=false,showOnion=true,onionAlpha=0.3;
+let isDrawing=false,startX=0,startY=0,previewBuf=null;
+let playing=false,playDir=1,playTimer=null;
+let pendingImgPixels=null;
+
+function makeFrame(){return{pixels:new Uint8Array(W*H),dur:1}}
+function curFrame(){return frames[cur]}
+function pix(x,y){return curFrame().pixels[y*W+x]}
+function setPix(x,y,c){if(x<0||y<0||x>=W||y>=H)return;curFrame().pixels[y*W+x]=c}
+
+function renderCanvas(){
+  ctx.clearRect(0,0,W,H);
+  const img=ctx.createImageData(W,H),p=curFrame().pixels;
+  for(let i=0;i<W*H;i++){const v=p[i]?255:0;img.data[i*4]=v;img.data[i*4+1]=v;img.data[i*4+2]=v;img.data[i*4+3]=255}
+  ctx.putImageData(img,0,0);
+  if(showGrid)drawGrid();
+}
+function drawGrid(){ctx.save();ctx.globalAlpha=0.15;ctx.fillStyle='#22d3ee';for(let x=8;x<W;x+=8)ctx.fillRect(x,0,1,H);for(let y=8;y<H;y+=8)ctx.fillRect(0,y,W,1);ctx.restore()}
+function renderOnion(){
+  octx.clearRect(0,0,W,H);
+  if(!showOnion||frames.length<2)return;
+  const img=octx.createImageData(W,H),prev=frames[cur-1],next=frames[cur+1];
+  for(let i=0;i<W*H;i++){
+    let r=0,g=0,b=0;
+    if(prev&&prev.pixels[i]){r=255;g=80;b=80}
+    if(next&&next.pixels[i]){b=255;if(r){r=255;g=120;b=255}else{g=120;b=255}}
+    img.data[i*4]=r;img.data[i*4+1]=g;img.data[i*4+2]=b;img.data[i*4+3]=(r||g||b)?255:0;
+  }
+  octx.putImageData(img,0,0);onion.style.opacity=onionAlpha;
+}
+function renderAll(){renderCanvas();renderOnion();updateThumb(cur);updateStatus()}
+
+function buildFrameList(){
+  const wrap=document.getElementById('frames');wrap.innerHTML='';
+  frames.forEach((f,i)=>{
+    const div=document.createElement('div');
+    div.className='frame'+(i===cur?' sel':'');div.dataset.idx=i;
+    div.innerHTML=`<canvas width="128" height="64"></canvas><div class="num">${i+1}</div><div class="dur">${f.dur}f</div><div class="x" data-del="${i}">×</div>`;
+    div.addEventListener('click',(e)=>{if(e.target.dataset.del){deleteFrame(parseInt(e.target.dataset.del));return}gotoFrame(i)});
+    wrap.appendChild(div);updateThumb(i,div);
+  });
+  const add=document.createElement('div');add.className='add-frame';add.textContent='+';
+  add.onclick=()=>{pushUndoSnapshot();frames.push(makeFrame());gotoFrame(frames.length-1);buildFrameList()};
+  wrap.appendChild(add);document.getElementById('totFrame').textContent=frames.length;
+}
+function updateThumb(i,div){
+  if(!div)div=document.querySelector(`.frame[data-idx="${i}"]`);if(!div)return;
+  const c=div.querySelector('canvas'),cc=c.getContext('2d'),img=cc.createImageData(W,H),p=frames[i].pixels;
+  for(let k=0;k<W*H;k++){const v=p[k]?255:0;img.data[k*4]=v;img.data[k*4+1]=v;img.data[k*4+2]=v;img.data[k*4+3]=255}
+  cc.putImageData(img,0,0);
+}
+
+function pushUndo(){undoStack.push({cur,pixels:new Uint8Array(curFrame().pixels)});if(undoStack.length>50)undoStack.shift();redoStack=[]}
+function pushUndoSnapshot(){undoStack.push({snapshot:frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur})),cur});if(undoStack.length>50)undoStack.shift();redoStack=[]}
+function doUndo(){
+  if(!undoStack.length)return;const top=undoStack.pop();
+  if(top.snapshot){redoStack.push({snapshot:frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur})),cur});frames=top.snapshot.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur}));cur=Math.min(top.cur,frames.length-1);buildFrameList()}
+  else{redoStack.push({cur:top.cur,pixels:new Uint8Array(frames[top.cur].pixels)});frames[top.cur].pixels=new Uint8Array(top.pixels);cur=top.cur}
+  renderAll();
+}
+function doRedo(){
+  if(!redoStack.length)return;const top=redoStack.pop();
+  if(top.snapshot){undoStack.push({snapshot:frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur})),cur});frames=top.snapshot.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur}));cur=Math.min(top.cur,frames.length-1);buildFrameList()}
+  else{undoStack.push({cur:top.cur,pixels:new Uint8Array(frames[top.cur].pixels)});frames[top.cur].pixels=new Uint8Array(top.pixels);cur=top.cur}
+  renderAll();
+}
+
+function brushAt(x,y,c){if(brushSize===1){setPix(x,y,c);return}const r=brushSize-1;for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++)if(dx*dx+dy*dy<=r*r)setPix(x+dx,y+dy,c)}
+function drawLineBres(x0,y0,x1,y1,c){
+  const dx=Math.abs(x1-x0),sx=x0<x1?1:-1,dy=-Math.abs(y1-y0),sy=y0<y1?1:-1;let err=dx+dy;
+  while(true){brushAt(x0,y0,c);if(x0===x1&&y0===y1)break;const e2=2*err;if(e2>=dy){err+=dy;x0+=sx}if(e2<=dx){err+=dx;y0+=sy}}
+}
+function drawRectOp(x0,y0,x1,y1,c,fill){
+  const xa=Math.min(x0,x1),xb=Math.max(x0,x1),ya=Math.min(y0,y1),yb=Math.max(y0,y1);
+  for(let y=ya;y<=yb;y++)for(let x=xa;x<=xb;x++){const edge=(x===xa||x===xb||y===ya||y===yb);if(fill||edge)setPix(x,y,c)}
+}
+function drawCircleOp(cx,cy,rx,ry,c,fill){
+  if(rx<1)rx=1;if(ry<1)ry=1;
+  for(let y=-ry;y<=ry;y++)for(let x=-rx;x<=rx;x++){
+    const v=(x*x)/(rx*rx)+(y*y)/(ry*ry);
+    if(fill?v<=1:(v<=1&&v>=0.6)){const px=cx+x,py=cy+y;if(px<0||py<0||px>=W||py>=H)continue;setPix(px,py,c)}
+  }
+}
+function floodFill(x,y,c){
+  const target=pix(x,y);if(target===c)return;const st=[[x,y]],p=curFrame().pixels;
+  while(st.length){const[x,y]=st.pop();if(x<0||y<0||x>=W||y>=H)continue;if(p[y*W+x]!==target)continue;p[y*W+x]=c;st.push([x+1,y],[x-1,y],[x,y+1],[x,y-1])}
+}
+
+function mouseToPx(e){const r=canvas.getBoundingClientRect();return[Math.floor((e.clientX-r.left)/r.width*W),Math.floor((e.clientY-r.top)/r.height*H)]}
+canvas.addEventListener('mousedown',(e)=>{
+  const[x,y]=mouseToPx(e);startX=x;startY=y;isDrawing=true;pushUndo();
+  const c=(e.button===2)?(color^1):color;
+  if(tool==='pencil'){brushAt(x,y,c);renderCanvas();updateThumb(cur)}
+  else if(tool==='eraser'){brushAt(x,y,0);renderCanvas();updateThumb(cur)}
+  else if(tool==='fill'){floodFill(x,y,c);renderCanvas();updateThumb(cur);isDrawing=false}
+  else{previewBuf=new Uint8Array(curFrame().pixels)}
+});
+canvas.addEventListener('contextmenu',(e)=>e.preventDefault());
+canvas.addEventListener('mousemove',(e)=>{
+  const[x,y]=mouseToPx(e);document.getElementById('curPos').textContent=`${x},${y}`;
+  if(!isDrawing)return;
+  if(tool==='pencil'){drawLineBres(startX,startY,x,y,color);startX=x;startY=y;renderCanvas()}
+  else if(tool==='eraser'){drawLineBres(startX,startY,x,y,0);startX=x;startY=y;renderCanvas()}
+  else if(['line','rect','frect','circle','fcircle'].includes(tool)){
+    const p=curFrame().pixels;p.set(previewBuf);
+    if(tool==='line')drawLineBres(startX,startY,x,y,color);
+    else if(tool==='rect')drawRectOp(startX,startY,x,y,color,false);
+    else if(tool==='frect')drawRectOp(startX,startY,x,y,color,true);
+    else{const cx=Math.round((startX+x)/2),cy=Math.round((startY+y)/2),rx=Math.abs(x-startX)>>1,ry=Math.abs(y-startY)>>1;drawCircleOp(cx,cy,rx,ry,color,tool==='fcircle')}
+    renderCanvas();
+  }
+});
+window.addEventListener('mouseup',()=>{if(isDrawing){isDrawing=false;updateThumb(cur)}});
+
+function gotoFrame(i){cur=Math.max(0,Math.min(frames.length-1,i));document.getElementById('curFrame').textContent=cur+1;document.querySelectorAll('.frame').forEach(f=>f.classList.toggle('sel',parseInt(f.dataset.idx)===cur));renderAll()}
+function deleteFrame(i){if(frames.length<=1)return;pushUndoSnapshot();frames.splice(i,1);if(cur>=frames.length)cur=frames.length-1;buildFrameList();renderAll()}
+function duplicateFrame(){pushUndoSnapshot();const f=curFrame();frames.splice(cur+1,0,{pixels:new Uint8Array(f.pixels),dur:f.dur});cur++;buildFrameList();renderAll()}
+
+function play(){
+  if(playing){stop();return}playing=true;document.getElementById('btnPlay').textContent='■ Stop';
+  const fps=parseInt(document.getElementById('fps').value)||8,pp=document.getElementById('chkPP').checked,loop=document.getElementById('chkLoop').checked;
+  const tick=()=>{
+    if(!playing)return;let next=cur+playDir;
+    if(next>=frames.length){if(pp){playDir=-1;next=frames.length-2}else if(loop)next=0;else{stop();return}}
+    else if(next<0){if(pp){playDir=1;next=1}else if(loop)next=frames.length-1;else{stop();return}}
+    gotoFrame(next);playTimer=setTimeout(tick,1000/fps);
+  };
+  playTimer=setTimeout(tick,1000/fps);
+}
+function stop(){playing=false;playDir=1;if(playTimer)clearTimeout(playTimer);document.getElementById('btnPlay').textContent='▶ Play'}
+
+function clearFrame(){pushUndo();curFrame().pixels.fill(0);renderAll()}
+function invertFrame(){pushUndo();const p=curFrame().pixels;for(let i=0;i<p.length;i++)p[i]=p[i]?0:1;renderAll()}
+function flipH(){pushUndo();const p=curFrame().pixels,n=new Uint8Array(W*H);for(let y=0;y<H;y++)for(let x=0;x<W;x++)n[y*W+(W-1-x)]=p[y*W+x];curFrame().pixels=n;renderAll()}
+function flipV(){pushUndo();const p=curFrame().pixels,n=new Uint8Array(W*H);for(let y=0;y<H;y++)for(let x=0;x<W;x++)n[(H-1-y)*W+x]=p[y*W+x];curFrame().pixels=n;renderAll()}
+function shift(dx,dy){pushUndo();const p=curFrame().pixels,n=new Uint8Array(W*H);for(let y=0;y<H;y++)for(let x=0;x<W;x++){const sx=x-dx,sy=y-dy;if(sx>=0&&sx<W&&sy>=0&&sy<H)n[y*W+x]=p[sy*W+sx]}curFrame().pixels=n;renderAll()}
+
+const STAMPS=['(•_•)','(^_^)','(>_<)','(O_O)','(T_T)','(¬_¬)','(•‿•)','(=^_^=)','(っ◔◡◔)っ','ʕ•ᴥ•ʔ','(づ｡◕‿‿◕｡)づ','(ノ°□°)ノ'];
+function buildStamps(){const wrap=document.getElementById('stamps');STAMPS.forEach(s=>{const d=document.createElement('div');d.className='stamp';d.textContent=s;d.onclick=()=>stampText(s,parseInt(document.getElementById('txtSize').value));wrap.appendChild(d)})}
+function stampText(s,scale){
+  pushUndo();
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  const oc=off.getContext('2d');oc.imageSmoothingEnabled=false;oc.fillStyle='#000';oc.fillRect(0,0,W,H);oc.fillStyle='#fff';
+  const fontSize=6*scale;oc.font=`${fontSize}px 'Silkscreen', monospace`;oc.textBaseline='top';
+  const m=oc.measureText(s);const x=Math.max(0,Math.floor((W-m.width)/2)),y=Math.max(0,Math.floor((H-fontSize)/2));
+  oc.fillText(s,x,y);const id=oc.getImageData(0,0,W,H);const p=curFrame().pixels;
+  for(let i=0;i<W*H;i++)if(id.data[i*4]>128)p[i]=1;
+  renderAll();
+}
+
+/* -------- IMAGE IMPORT -------- */
+let srcImg=null;
+function openImport(){document.getElementById('fileImg').click()}
+document.getElementById('fileImg').onchange=e=>{
+  const file=e.target.files[0];if(!file)return;
+  const img=new Image();
+  img.onload=()=>{srcImg=img;openModal('modalImg');regenerateImg()};
+  img.src=URL.createObjectURL(file);
+};
+function setupDropZone(){
+  const wrap=document.getElementById('canvasWrap'),hint=document.getElementById('dropHint');
+  ['dragenter','dragover'].forEach(ev=>wrap.addEventListener(ev,e=>{e.preventDefault();hint.classList.add('show')}));
+  ['dragleave','drop'].forEach(ev=>wrap.addEventListener(ev,e=>{e.preventDefault();hint.classList.remove('show')}));
+  wrap.addEventListener('drop',e=>{
+    const file=e.dataTransfer.files[0];if(!file||!file.type.startsWith('image/'))return;
+    const img=new Image();img.onload=()=>{srcImg=img;openModal('modalImg');regenerateImg()};
+    img.src=URL.createObjectURL(file);
+  });
+}
+function regenerateImg(){
+  if(!srcImg)return;
+  const mode=document.getElementById('imgMode').value;
+  const thresh=parseInt(document.getElementById('imgThresh').value);
+  const bright=parseInt(document.getElementById('imgBright').value);
+  const contrast=parseInt(document.getElementById('imgContrast').value);
+  const invert=document.getElementById('imgInvert').checked;
+  const fit=document.getElementById('imgFit').value;
+
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  const oc=off.getContext('2d');oc.imageSmoothingEnabled=true;
+  oc.fillStyle='#000';oc.fillRect(0,0,W,H);
+
+  const iw=srcImg.width,ih=srcImg.height;
+  let dx=0,dy=0,dw=W,dh=H;
+  if(fit==='contain'){const s=Math.min(W/iw,H/ih);dw=iw*s;dh=ih*s;dx=(W-dw)/2;dy=(H-dh)/2}
+  else if(fit==='cover'){const s=Math.max(W/iw,H/ih);dw=iw*s;dh=ih*s;dx=(W-dw)/2;dy=(H-dh)/2}
+  oc.drawImage(srcImg,dx,dy,dw,dh);
+  const id=oc.getImageData(0,0,W,H);const d=id.data;
+
+  // grayscale + brightness/contrast
+  const gray=new Float32Array(W*H);
+  const cf=(259*(contrast+255))/(255*(259-contrast));
+  for(let i=0;i<W*H;i++){
+    let g=0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];
+    g=cf*(g-128)+128+bright;
+    gray[i]=Math.max(0,Math.min(255,g));
+  }
+
+  const bits=new Uint8Array(W*H);
+  if(mode==='threshold'){
+    for(let i=0;i<W*H;i++)bits[i]=gray[i]>thresh?1:0;
+  } else if(mode==='floyd'){
+    // Floyd-Steinberg
+    const g=new Float32Array(gray);
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+      const i=y*W+x;const old=g[i];const nw=old>thresh?255:0;
+      bits[i]=nw?1:0;const err=old-nw;
+      if(x+1<W)g[i+1]+=err*7/16;
+      if(y+1<H){if(x>0)g[i+W-1]+=err*3/16;g[i+W]+=err*5/16;if(x+1<W)g[i+W+1]+=err*1/16}
+    }
+  } else {
+    // Bayer 4x4
+    const M=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+      const i=y*W+x;const t=(M[y&3][x&3]+0.5)*(255/16);
+      bits[i]=gray[i]>t?1:0;
+    }
+  }
+  if(invert)for(let i=0;i<W*H;i++)bits[i]=bits[i]?0:1;
+
+  pendingImgPixels=bits;
+  // draw to preview canvas in modal
+  const prev=document.getElementById('imgPrev');const pc=prev.getContext('2d');
+  pc.imageSmoothingEnabled=false;
+  const pi=pc.createImageData(W,H);
+  for(let i=0;i<W*H;i++){const v=bits[i]?255:0;pi.data[i*4]=v;pi.data[i*4+1]=v;pi.data[i*4+2]=v;pi.data[i*4+3]=255}
+  pc.putImageData(pi,0,0);
+  // also live-update mini preview overlay on main canvas
+  pctx.clearRect(0,0,W,H);
+}
+function applyImage(addMode){
+  if(!pendingImgPixels)return;
+  pushUndo();
+  const p=curFrame().pixels;
+  if(addMode){for(let i=0;i<W*H;i++)if(pendingImgPixels[i])p[i]=1}
+  else{for(let i=0;i<W*H;i++)p[i]=pendingImgPixels[i]}
+  closeModal('modalImg');renderAll();toast('Image placed');
+}
+
+/* -------- export / save -------- */
+function packFrameC(p){
+  const bytes=[];
+  for(let page=0;page<8;page++)for(let x=0;x<W;x++){let b=0;for(let bit=0;bit<8;bit++){const y=page*8+bit;if(p[y*W+x])b|=(1<<bit)}bytes.push(b)}
+  return bytes;
+}
+function exportIno(){
+  const name=(document.getElementById('projName').value||'anim').replace(/[^A-Za-z0-9_]/g,'_');
+  let s=`// Generated by Geedo Studio\n// ${frames.length} frame(s), ${W}x${H}\n#include <Arduino.h>\n#include <avr/pgmspace.h>\n\n`;
+  frames.forEach((f,i)=>{const bytes=packFrameC(f.pixels);s+=`const uint8_t ${name}_f${i}[] PROGMEM = {\n  `;s+=bytes.map(b=>'0x'+b.toString(16).padStart(2,'0')).join(',')+'\n};\n\n'});
+  s+=`const uint8_t* ${name}_frames[] PROGMEM = { `+frames.map((_,i)=>`${name}_f${i}`).join(', ')+` };\nconst uint8_t ${name}_durations[] PROGMEM = { ${frames.map(f=>f.dur).join(', ')} };\nconst uint8_t ${name}_count = ${frames.length};\n`;
+  download(name+'.ino',s);toast('Exported '+name+'.ino');
+}
+function download(filename,content){const blob=new Blob([content],{type:'text/plain'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
+function saveProject(){const proj={name:document.getElementById('projName').value,fps:parseInt(document.getElementById('fps').value),loop:document.getElementById('chkLoop').checked,pp:document.getElementById('chkPP').checked,frames:frames.map(f=>({pixels:Array.from(f.pixels),dur:f.dur}))};download((proj.name||'anim')+'.geedo.json',JSON.stringify(proj));toast('Project saved')}
+function openProject(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{const file=e.target.files[0],r=new FileReader();r.onload=()=>{try{const p=JSON.parse(r.result);frames=p.frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur||1}));cur=0;document.getElementById('projName').value=p.name||'anim';document.getElementById('fps').value=p.fps||8;document.getElementById('chkLoop').checked=!!p.loop;document.getElementById('chkPP').checked=!!p.pp;buildFrameList();renderAll();toast('Project loaded')}catch(err){toast('Bad file')}};r.readAsText(file)};
+  inp.click();
+}
+function newProject(){if(!confirm('Start new project? Current work will be lost.'))return;frames=[makeFrame()];cur=0;undoStack=[];redoStack=[];buildFrameList();renderAll()}
+
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function doSend(){const ip=document.getElementById('geedoIp').value;toast('Sending to '+ip+'…');setTimeout(()=>{toast('Geedo received '+frames.length+' frames');closeModal('modalSend')},1200)}
+function doPublish(){const v=document.getElementById('pubVis').value,code='GD-'+Math.random().toString(36).slice(2,8).toUpperCase();closeModal('modalPub');if(v==='private')alert('Private code:\n\n'+code+'\n\nShare this with your friends!');else toast('Published ('+v+')')}
+
+let toastTimer=null;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2000)}
+function updateStatus(){document.getElementById('statusPill').textContent=`${frames.length} FRAMES · ${document.getElementById('fps').value} FPS`}
+
+// wiring
+document.querySelectorAll('[data-tool]').forEach(b=>{b.onclick=()=>{document.querySelectorAll('[data-tool]').forEach(x=>x.classList.remove('active'));b.classList.add('active');tool=b.dataset.tool}});
+document.querySelectorAll('.swatch').forEach(s=>{s.onclick=()=>{document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');color=parseInt(s.dataset.color)}});
+document.getElementById('brushSize').oninput=e=>{brushSize=parseInt(e.target.value);document.getElementById('brushSizeVal').textContent=brushSize};
+document.getElementById('chkGrid').onchange=e=>{showGrid=e.target.checked;renderCanvas()};
+document.getElementById('chkOnion').onchange=e=>{showOnion=e.target.checked;renderOnion()};
+document.getElementById('onionAlpha').oninput=e=>{onionAlpha=e.target.value/100;renderOnion()};
+document.getElementById('btnUndo').onclick=doUndo;document.getElementById('btnRedo').onclick=doRedo;
+document.getElementById('btnClear').onclick=clearFrame;document.getElementById('btnInvert').onclick=invertFrame;
+document.getElementById('btnFlipH').onclick=flipH;document.getElementById('btnFlipV').onclick=flipV;
+document.getElementById('btnShiftL').onclick=()=>shift(-1,0);document.getElementById('btnShiftR').onclick=()=>shift(1,0);
+document.getElementById('btnShiftU').onclick=()=>shift(0,-1);document.getElementById('btnShiftD').onclick=()=>shift(0,1);
+document.getElementById('btnPlay').onclick=play;document.getElementById('btnPrev').onclick=()=>gotoFrame(cur-1);document.getElementById('btnNext').onclick=()=>gotoFrame(cur+1);
+document.getElementById('btnDup').onclick=duplicateFrame;document.getElementById('btnDel').onclick=()=>deleteFrame(cur);
+document.getElementById('btnStampText').onclick=()=>{const txt=document.getElementById('txtInput').value;if(txt)stampText(txt,parseInt(document.getElementById('txtSize').value))};
+document.getElementById('btnNew').onclick=newProject;document.getElementById('btnOpen').onclick=openProject;document.getElementById('btnSave').onclick=saveProject;
+document.getElementById('btnExport').onclick=exportIno;document.getElementById('btnSend').onclick=()=>openModal('modalSend');document.getElementById('btnPublish').onclick=()=>openModal('modalPub');
+document.getElementById('btnImport').onclick=openImport;
+document.getElementById('fps').onchange=updateStatus;
+document.getElementById('zoomIn').onclick=()=>setZoom(ZOOM+1);document.getElementById('zoomOut').onclick=()=>setZoom(ZOOM-1);
+['imgMode','imgFit','imgInvert'].forEach(id=>document.getElementById(id).onchange=regenerateImg);
+['imgThresh','imgBright','imgContrast'].forEach(id=>{const el=document.getElementById(id);const vEl=document.getElementById(id+'Val');el.oninput=()=>{vEl.textContent=el.value;regenerateImg()}});
+
+function setZoom(z){ZOOM=Math.max(2,Math.min(14,z));document.getElementById('canvasWrap').style.width=(W*ZOOM)+'px';document.getElementById('canvasWrap').style.height=(H*ZOOM)+'px';document.getElementById('zoomLvl').textContent=ZOOM+'×'}
+
+window.addEventListener('keydown',(e)=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+  if(e.ctrlKey&&e.key==='z'){doUndo();e.preventDefault();return}
+  if(e.ctrlKey&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){doRedo();e.preventDefault();return}
+  if(e.ctrlKey&&e.key==='i'){openImport();e.preventDefault();return}
+  if(e.ctrlKey&&e.key==='s'){saveProject();e.preventDefault();return}
+  if(e.key===' '){play();e.preventDefault();return}
+  if(e.key==='ArrowLeft'){gotoFrame(cur-1);return}
+  if(e.key==='ArrowRight'){gotoFrame(cur+1);return}
+  const map={b:'pencil',e:'eraser',l:'line',r:'rect',f:'frect',c:'circle',g:'fill'};
+  if(map[e.key])document.querySelector(`[data-tool="${map[e.key]}"]`).click();
+  if(e.key==='x'){const other=document.querySelector('.swatch:not(.sel)');if(other)other.click()}
+});
+
+buildFrameList();buildStamps();setZoom(8);setupDropZone();renderAll();
+</script>
+</body>
+</html>

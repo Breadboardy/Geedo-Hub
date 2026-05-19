@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "animations": [
+    {
+      "id": "activities_bath",
+      "name": "Bath",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_bath.bin",
+      "size": 20508,
+      "hash": "2f3019e9",
+      "visibility": "public",
+      "frames": 20
+    },
+    {
+      "id": "activities_campfire",
+      "name": "Campfire",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_campfire.bin",
+      "size": 4108,
+      "hash": "231900aa",
+      "visibility": "public",
+      "frames": 4
+    },
+    {
+      "id": "activities_chill_glasses",
+      "name": "Chill glasses",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_chill_glasses.bin",
+      "size": 8208,
+      "hash": "6ab2b782",
+      "visibility": "public",
+      "frames": 8
+    },
+    {
+      "id": "activities_chill_work",
+      "name": "Chill_Work",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_chill_work.bin",
+      "size": 1033,
+      "hash": "ac89a354",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "activities_dj",
+      "name": "DJ!",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_dj.bin",
+      "size": 5133,
+      "hash": "a7e5de4f",
+      "visibility": "public",
+      "frames": 5
+    },
+    {
+      "id": "activities_reading",
+      "name": "Reading",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_reading.bin",
+      "size": 9233,
+      "hash": "102708d3",
+      "visibility": "public",
+      "frames": 9
+    },
+    {
+      "id": "activities_sleeping",
+      "name": "Sleeping",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_sleeping.bin",
+      "size": 6158,
+      "hash": "abbffbaa",
+      "visibility": "public",
+      "frames": 6
+    },
+    {
+      "id": "activities_waking_up",
+      "name": "Waking up",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_waking_up.bin",
+      "size": 11283,
+      "hash": "87987e41",
+      "visibility": "public",
+      "frames": 11
+    },
+    {
+      "id": "activities__brushing_teeth",
+      "name": "brushing teeth",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities__brushing_teeth.bin",
+      "size": 5133,
+      "hash": "40e91dae",
+      "visibility": "public",
+      "frames": 5
+    },
+    {
+      "id": "activities_helloo",
+      "name": "helloo",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_helloo.bin",
+      "size": 10258,
+      "hash": "55f93b2d",
+      "visibility": "public",
+      "frames": 10
+    },
+    {
+      "id": "activities_pounds",
+      "name": "pounds",
+      "category": "activities",
+      "author": "breadboard",
+      "file": "bin/activities_pounds.bin",
+      "size": 8208,
+      "hash": "a05a84ca",
+      "visibility": "public",
+      "frames": 8
+    },
+    {
+      "id": "play_once_flying_bro",
+      "name": "Flying bro",
+      "category": "Play once",
+      "author": "breadboard",
+      "file": "bin/play_once_flying_bro.bin",
+      "size": 37933,
+      "hash": "ef746db0",
+      "visibility": "public",
+      "frames": 37
+    },
+    {
+      "id": "play_once_stickman_backflip",
+      "name": "Stickman_Backflip",
+      "category": "Play once",
+      "author": "breadboard",
+      "file": "bin/play_once_stickman_backflip.bin",
+      "size": 49208,
+      "hash": "38960f32",
+      "visibility": "public",
+      "frames": 48
+    },
+    {
+      "id": "animations_boot_boot_animation",
+      "name": "Boot_animation",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_boot_animation.bin",
+      "size": 12308,
+      "hash": "733613bd",
+      "visibility": "public",
+      "frames": 12
+    },
+    {
+      "id": "animations_boot_error_blue_screen_of_death",
+      "name": "Error! (blue screen of death)",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_error_blue_screen_of_death.bin",
+      "size": 1033,
+      "hash": "b62f5fec",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "animations_boot_turning_on",
+      "name": "Turning on",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_turning_on.bin",
+      "size": 11283,
+      "hash": "ca8bf86b",
+      "visibility": "public",
+      "frames": 11
+    },
+    {
+      "id": "animations_boot_update_animation",
+      "name": "Update animation",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_update_animation.bin",
+      "size": 2058,
+      "hash": "a82893d9",
+      "visibility": "public",
+      "frames": 2
+    },
+    {
+      "id": "animations_boot_charging",
+      "name": "charging",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_charging.bin",
+      "size": 6158,
+      "hash": "364c6bc2",
+      "visibility": "public",
+      "frames": 6
+    },
+    {
+      "id": "animations_boot_connecting_to_wifi",
+      "name": "connecting_to_wifi",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_connecting_to_wifi.bin",
+      "size": 21533,
+      "hash": "0cf3559d",
+      "visibility": "public",
+      "frames": 21
+    },
+    {
+      "id": "animations_boot_failed_to_connect",
+      "name": "failed_to_connect",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_failed_to_connect.bin",
+      "size": 2058,
+      "hash": "03d49dc6",
+      "visibility": "public",
+      "frames": 2
+    },
+    {
+      "id": "animations_boot_low_battery",
+      "name": "low battery",
+      "category": "animations_boot",
+      "author": "breadboard",
+      "file": "bin/animations_boot_low_battery.bin",
+      "size": 1033,
+      "hash": "1ae919e3",
+      "visibility": "public",
+      "frames": 1
+    },
+    {
+      "id": "blink_eyes",
+      "name": "Blink Eyes",
+      "author": "breadboard",
+      "file": "bin/blink_eyes.bin",
+      "size": 3083,
+      "hash": "68d6dfe6",
+      "visibility": "public",
+      "frames": 3,
+      "category": "studio"
+    },
+    {
+      "id": "hello_geedo",
+      "name": "Hello Geedo",
+      "author": "breadboard",
+      "file": "bin/hello_geedo.bin",
+      "size": 2058,
+      "hash": "79ab743b",
+      "visibility": "public",
+      "frames": 2,
+      "category": "studio"
+    }
+  ]
+}

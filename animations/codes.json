@@ -1,0 +1,13 @@
+{
+  "DEMO01": {
+    "name": "Demo Unlock",
+    "author": "breadboard",
+    "file": "examples/hello_geedo.geedo.json"
+  },
+  "CAPSUL": {
+    "name": "Future Drop",
+    "author": "breadboard",
+    "file": "examples/blink_eyes.geedo.json",
+    "unlockDate": "2026-12-25"
+  }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unlock · Geedo Hub</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="assets/logo.svg">
+<style>
+  .result{margin-top:24px;display:none}
+  .result.show{display:block}
+  .play-canvas{width:384px;height:192px;max-width:100%;background:#000;border-radius:8px;border:1px solid var(--line);image-rendering:pixelated;display:block;margin:0 auto 14px}
+  .status-msg{padding:10px;border-radius:8px;margin-top:12px;font-size:12px}
+  .status-msg.ok{background:#0e2a1c;border:1px solid #1f3a2c;color:var(--good)}
+  .status-msg.bad{background:#2a1414;border:1px solid #3a1d1d;color:var(--bad)}
+  .status-msg.warn{background:#2a2010;border:1px solid #3a2f13;color:var(--warn)}
+  .helper{font-size:11px;color:var(--mute);margin-top:14px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand"><span class="dot"></span>GEEDO HUB</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="browse.html">Browse</a>
+    <a href="unlock.html" class="active">Unlock</a>
+    <a href="studio/index.html">Studio</a>
+  </div>
+  <div class="spacer"></div>
+  <a href="https://github.com/breadboard/Geedo-Hub" class="btn">GitHub</a>
+</nav>
+
+<div class="container" style="max-width:640px">
+  <h2 class="sec-title" style="text-align:center">UNLOCK</h2>
+  <p class="sec-sub" style="text-align:center">Enter a 6-letter code from a friend or a Time Capsule</p>
+
+  <div class="unlock-box">
+    <input type="text" id="code" class="code-input" placeholder="XXXXXX" maxlength="9" autofocus>
+    <div class="helper">Codes look like <b>GD-X7K9PQ</b>. Type with or without the GD- prefix.</div>
+    <div style="margin-top:18px"><button class="btn primary" onclick="tryUnlock()">UNLOCK</button></div>
+    <div id="status"></div>
+
+    <div class="result" id="result">
+      <hr style="border:none;border-top:1px solid var(--line);margin:24px 0">
+      <h3 id="aName" style="margin:0 0 4px;font-family:'Silkscreen'"></h3>
+      <div class="by" id="aBy" style="color:var(--mute);font-size:12px;margin-bottom:14px"></div>
+      <canvas id="aCanvas" class="play-canvas" width="128" height="64"></canvas>
+      <a id="aDownload" class="btn primary" download>Download for Geedo</a>
+    </div>
+  </div>
+
+  <p class="helper" style="text-align:center;margin-top:28px">
+    Want to make a private code? <a href="studio/index.html">Open Studio</a>, click Publish to Hub, and choose "Private Code".
+  </p>
+</div>
+
+<div class="foot">
+  Geedo Hub · <a href="https://github.com/breadboard/Geedo-Hub">github</a>
+</div>
+
+<script>
+const codeInput=document.getElementById('code');
+const statusEl=document.getElementById('status');
+const result=document.getElementById('result');
+
+codeInput.oninput=e=>{
+  let v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(v.length>6) v=v.slice(0,6);
+  e.target.value=v;
+};
+codeInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock()});
+
+let playTimer=null;
+function showStatus(msg,kind){
+  statusEl.innerHTML=`<div class="status-msg ${kind}">${msg}</div>`;
+}
+
+function tryUnlock(){
+  const code=codeInput.value.trim().toUpperCase().replace(/^GD-?/,'');
+  if(code.length<4){showStatus('Code is too short. Try again.','bad');return}
+  showStatus('Checking…','warn');
+  fetch('animations/codes.json')
+    .then(r=>r.json())
+    .then(codes=>{
+      const entry=codes[code];
+      if(!entry){showStatus('Code not found. Double-check the letters.','bad');return}
+      // capsule check
+      if(entry.unlockDate){
+        const now=new Date(),unlock=new Date(entry.unlockDate);
+        if(now<unlock){
+          const days=Math.ceil((unlock-now)/(1000*60*60*24));
+          showStatus(`Time Capsule — unlocks in ${days} day(s) on ${entry.unlockDate}.`,'warn');
+          return;
+        }
+      }
+      showStatus('Unlocked!','ok');
+      loadAnim(entry);
+    })
+    .catch(()=>showStatus('Could not reach the Hub. Try again later.','bad'));
+}
+function loadAnim(entry){
+  fetch('animations/'+entry.file).then(r=>r.json()).then(d=>{
+    result.classList.add('show');
+    document.getElementById('aName').textContent=entry.name||'Animation';
+    document.getElementById('aBy').textContent='by '+(entry.author||'a friend')+' · '+d.frames.length+' frames';
+    document.getElementById('aDownload').href='animations/'+entry.file;
+    document.getElementById('aDownload').download=(entry.name||'anim')+'.geedo.json';
+    const c=document.getElementById('aCanvas');
+    let i=0;
+    const tick=()=>{
+      drawFrame(c, d.frames[i].pixels);
+      i=(i+1)%d.frames.length;
+      playTimer=setTimeout(tick, 1000/(d.fps||8));
+    };
+    if(playTimer) clearTimeout(playTimer);
+    tick();
+  });
+}
+function drawFrame(canvas, pixels){
+  const ctx=canvas.getContext('2d');
+  ctx.imageSmoothingEnabled=false;
+  const img=ctx.createImageData(128,64);
+  for(let i=0;i<128*64;i++){
+    const v=pixels[i]?255:0;
+    img.data[i*4]=v;img.data[i*4+1]=v;img.data[i*4+2]=v;img.data[i*4+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+}
+</script>
+</body>
+</html>

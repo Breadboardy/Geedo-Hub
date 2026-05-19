@@ -1,5 +1,5 @@
 {
-  "version": 1,
-  "url": "firmware/geedo_v1.bin",
-  "notes": "First OTA-capable firmware. Cloud animations + WiFi setup."
+  "version": 2,
+  "url": "firmware/geedo_v2.bin",
+  "notes": "Auto-built 2026-05-19"
 }

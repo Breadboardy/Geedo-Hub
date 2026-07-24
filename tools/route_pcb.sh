@@ -55,10 +55,18 @@ if [ -z "$JAR" ]; then
 fi
 echo "router:  $JAR"
 
-# --- 1. export Specctra DSN
-"$KIPY" - "$BOARD" "$DSN" <<'PY'
+# --- 1. export Specctra DSN  (FRESH=1 strips existing copper first, so the
+#        router starts from a blank board instead of tidying its own last run)
+"$KIPY" - "$BOARD" "$DSN" "${FRESH:-0}" <<'PY'
 import sys, pcbnew
 board = pcbnew.LoadBoard(sys.argv[1])
+if sys.argv[3] == "1":
+    old = [t for t in board.GetTracks()]
+    for t in old:
+        board.Remove(t)
+    board.BuildConnectivity()
+    pcbnew.SaveBoard(sys.argv[1], board)
+    print(f"fresh start: removed {len(old)} existing tracks/vias")
 if not pcbnew.ExportSpecctraDSN(board, sys.argv[2]):
     sys.exit("DSN export failed")
 print(f"exported {sys.argv[2]}")
@@ -97,6 +105,6 @@ print(f"imported: {len(tr)} tracks, {len(vi)} vias -> saved {sys.argv[1]}")
 PY
 
 echo
-echo "Done. Next:"
-echo "  kicad-cli pcb drc --schematic-parity $BOARD    # check it"
-echo "  open the board in KiCad, press B to refill zones, then commit"
+echo "Done (zones already filled). Next:"
+echo "  kicad-cli pcb drc --schematic-parity $BOARD"
+echo "  FRESH=1 ./tools/route_pcb.sh 500     # blank-slate re-route if items are unconnected"

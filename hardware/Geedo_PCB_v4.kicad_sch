@@ -848,14 +848,14 @@
 				(pin passive line
 					(at 7.62 2.54 180)
 					(length 2.54)
-					(name "IO12"
+					(name "IO18"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "13"
+					(number "26"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -866,14 +866,14 @@
 				(pin passive line
 					(at 7.62 0 180)
 					(length 2.54)
-					(name "IO13"
+					(name "IO19"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "14"
+					(number "27"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -891,7 +891,7 @@
 							)
 						)
 					)
-					(number "15"
+					(number "8"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -909,7 +909,7 @@
 							)
 						)
 					)
-					(number "16"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -927,7 +927,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -945,7 +945,7 @@
 							)
 						)
 					)
-					(number "4"
+					(number "6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -963,7 +963,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "18"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -981,7 +981,7 @@
 							)
 						)
 					)
-					(number "6"
+					(number "19"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -999,7 +999,547 @@
 							)
 						)
 					)
-					(number "9"
+					(number "22"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 -7.62 0)
+					(length 2.54)
+					(name "IO2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 -10.16 0)
+					(length 2.54)
+					(name "IO9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "23"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "14"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "36"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "37"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "38"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "39"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "40"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "41"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "42"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "43"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "44"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "45"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "46"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "47"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "48"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "49_9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "50"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "51"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "52"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "53"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1083,7 +1623,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1137,7 +1677,7 @@
 							)
 						)
 					)
-					(number "4"
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1155,7 +1695,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1257,7 +1797,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "A4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1275,7 +1815,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "A7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1293,7 +1833,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "A6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1311,7 +1851,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "A5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1329,7 +1869,7 @@
 							)
 						)
 					)
-					(number "6"
+					(number "B5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1347,7 +1887,169 @@
 							)
 						)
 					)
-					(number "6"
+					(number "A1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 5.08 180)
+					(length 2.54)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 5.08 180)
+					(length 2.54)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 5.08 180)
+					(length 2.54)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 2.54 180)
+					(length 2.54)
+					(name "DN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "DP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 5.08 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 5.08 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 5.08 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -7.62 5.08 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "S1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2310,16 +3012,6 @@
 			(type default)
 		)
 		(uuid "584c8c5a-ee18-41ec-adb8-dea4673083ac")
-	)
-	(wire
-		(pts
-			(xy 73.66 85.09) (xy 83.82 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5871e98b-75be-40b6-8693-a5c1cf91847a")
 	)
 	(wire
 		(pts
@@ -3879,7 +4571,7 @@
 		)
 		(uuid "44f20323-fad1-4988-a586-8d968e3346b1")
 	)
-	(label "IO8"
+	(label "IO9"
 		(at 160.02 111.76 0)
 		(effects
 			(font
@@ -3888,6 +4580,56 @@
 			(justify left bottom)
 		)
 		(uuid "6ccbbf82-d9ec-43ed-9fc7-3fb62a51429f")
+	)
+	(label "IO9"
+		(at 167.64 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d60b45dd-2706-4a59-b3ff-f8a6fd2cb103")
+	)
+	(label "IO2"
+		(at 167.64 67.31 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c4aaeb4e-14c0-4910-a0e7-ae05769e3321")
+	)
+	(label "STAT"
+		(at 73.66 85.09 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "14466886-46f8-4ee1-94e8-94bc19cd556c")
+	)
+	(label "IO2"
+		(at 204.47 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ab87d082-a2ee-421b-bd16-aa202824792a")
+	)
+	(label "VBUS"
+		(at 27.94 91.44 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "706b1a59-727f-4a99-82c8-a870b23133c8")
 	)
 	(label "IO8"
 		(at 182.88 54.61 0)
@@ -4081,23 +4823,53 @@
 				(hide yes)
 			)
 		)
-		(pin "3"
+		(pin "A6"
 			(uuid "0eb3faaa-f28e-47dd-a697-e488441f726c")
 		)
-		(pin "5"
+		(pin "A5"
 			(uuid "dd74cd2c-4359-4168-ab8d-a022476cef96")
 		)
-		(pin "2"
+		(pin "A7"
 			(uuid "5e43f808-1169-44c6-af2d-6b4045ba3242")
 		)
-		(pin "6"
+		(pin "B5"
 			(uuid "cb9b9a68-294b-48c0-9a01-541576227a71")
 		)
-		(pin "6"
+		(pin "B5"
 			(uuid "490b8f27-ad84-4f3c-b37b-d0edf037dd83")
 		)
-		(pin "1"
+		(pin "A4"
 			(uuid "4149a057-ea39-4881-9dd1-2115ca950e63")
+		)
+		(pin "A1"
+			(uuid "d561ebe4-f68f-413a-bb22-82ae09e6af23")
+		)
+		(pin "B1"
+			(uuid "2514ef14-d67b-4b79-bea9-d45883b61549")
+		)
+		(pin "A12"
+			(uuid "ccb5d343-4728-4a54-a96e-23956e5ce4b8")
+		)
+		(pin "B12"
+			(uuid "5efb2896-f85f-400c-9edb-b45ee494e794")
+		)
+		(pin "S1"
+			(uuid "46c58900-0e10-492b-8768-180c4adf4467")
+		)
+		(pin "B4"
+			(uuid "85e28db3-fe55-446b-bbfb-ac71ade89bf0")
+		)
+		(pin "A9"
+			(uuid "228bcf6c-a3f6-4637-8c58-88c58ca24a53")
+		)
+		(pin "B9"
+			(uuid "59f5716c-2cc8-432d-b2e5-5e65aa979d9d")
+		)
+		(pin "B7"
+			(uuid "00fde0c7-eee9-4ba8-8039-2c83eb25f6bc")
+		)
+		(pin "B6"
+			(uuid "c6c3f952-0794-4239-a790-fe7dd60d1d11")
 		)
 		(instances
 			(project "Geedo_PCB_v4"
@@ -4297,32 +5069,122 @@
 		(pin "1"
 			(uuid "01d60b1b-2da5-4697-acb6-b4536a8f3fe9")
 		)
-		(pin "13"
+		(pin "26"
 			(uuid "2556af1a-9fb8-4bd6-bd2e-05a5ccd8ade0")
 		)
-		(pin "14"
+		(pin "27"
 			(uuid "34f8942b-60e1-403b-bb37-1b075cd39a33")
 		)
-		(pin "15"
+		(pin "8"
 			(uuid "6cab5df1-0374-4795-bbe1-58d28c84303f")
 		)
-		(pin "16"
+		(pin "2"
 			(uuid "3d85461c-dcb7-41b0-b475-9bfbd543ad2d")
 		)
-		(pin "2"
+		(pin "3"
 			(uuid "753a1507-fa93-48a4-94a6-a98cab972bd1")
 		)
-		(pin "4"
+		(pin "6"
 			(uuid "b7a5dd7a-e6ae-41cd-ab54-9a23bca0f4e6")
 		)
-		(pin "5"
+		(pin "18"
 			(uuid "152f55b2-1f4b-4f99-aea9-8a32e28f1a1c")
 		)
-		(pin "6"
+		(pin "19"
 			(uuid "e14c97cc-16ec-461d-89bf-2ec5477e66c9")
 		)
-		(pin "9"
+		(pin "22"
 			(uuid "48e6b719-d0ea-4469-ba82-0e3c4cb4b7d5")
+		)
+		(pin "5"
+			(uuid "c447d5df-d59c-40f0-8e42-6746805b52db")
+		)
+		(pin "23"
+			(uuid "3cea06bd-fd62-40f7-bee4-867827b73b50")
+		)
+		(pin "11"
+			(uuid "e391c1a3-3cbc-41f1-8b51-736898810300")
+		)
+		(pin "14"
+			(uuid "c1df79e2-94f6-463a-a1bb-c3122da4ee4b")
+		)
+		(pin "36"
+			(uuid "750a6565-7e0e-4a25-88d4-1f9c68450d7c")
+		)
+		(pin "37"
+			(uuid "94ae3b82-1ac2-4931-a04d-af63c88d69fe")
+		)
+		(pin "38"
+			(uuid "4763b018-7826-4fa6-aadd-a6a24ac061c3")
+		)
+		(pin "39"
+			(uuid "bb4a9610-9388-4de7-8738-b799719d145f")
+		)
+		(pin "40"
+			(uuid "e10cd2f7-cfaf-435c-8fac-8c9c40403c1c")
+		)
+		(pin "41"
+			(uuid "0462259f-e351-4266-9550-6ede1188fd27")
+		)
+		(pin "42"
+			(uuid "8448dbee-c65d-4b45-b5fd-1100e907fb61")
+		)
+		(pin "43"
+			(uuid "053892af-b81a-4a3c-b5e7-d239dffbe981")
+		)
+		(pin "44"
+			(uuid "8c0e5fe3-a664-445e-a7fd-7c6f6a676724")
+		)
+		(pin "45"
+			(uuid "2b929c65-3c86-4fbd-9cc0-04eff31c6a09")
+		)
+		(pin "46"
+			(uuid "ebd77ffa-a222-4048-ac8e-fdc538320544")
+		)
+		(pin "47"
+			(uuid "f50d474d-80ad-4a3d-850e-64df3ca09cdd")
+		)
+		(pin "48"
+			(uuid "b043d923-a67c-4809-9c6b-3aff37ef7cf8")
+		)
+		(pin "49_1"
+			(uuid "e1146a87-2788-4341-aefd-29f97c00e6e0")
+		)
+		(pin "49_2"
+			(uuid "da2c7f80-47f4-494b-b26b-2162214849ca")
+		)
+		(pin "49_3"
+			(uuid "59ae296f-c1f9-4d32-b104-3b74b339fa4d")
+		)
+		(pin "49_4"
+			(uuid "9c2e2cc3-dbe3-4074-9cbb-d3bb838365b7")
+		)
+		(pin "49_5"
+			(uuid "f6926f4e-5f10-4aea-90b3-f720a6e0646d")
+		)
+		(pin "49_6"
+			(uuid "2d76712e-4b2b-4135-b9d5-01c07298c754")
+		)
+		(pin "49_7"
+			(uuid "b13e51fd-8ead-4226-afb9-977183c6296b")
+		)
+		(pin "49_8"
+			(uuid "a6521d57-aa72-4a24-b785-88123c702cdc")
+		)
+		(pin "49_9"
+			(uuid "40674db5-c3c0-492e-be8d-8407292a1d1d")
+		)
+		(pin "50"
+			(uuid "45926f31-b224-46ff-aa44-f6e2ccdc7806")
+		)
+		(pin "51"
+			(uuid "098c0e59-4a82-47f5-9fc9-6f5a2391f07c")
+		)
+		(pin "52"
+			(uuid "5cd09085-6f29-4eaf-9491-88f4a2806941")
+		)
+		(pin "53"
+			(uuid "3bd9dff4-d4ef-42d2-b589-85598274679a")
 		)
 		(instances
 			(project "Geedo_PCB_v4"
@@ -4385,7 +5247,7 @@
 				(hide yes)
 			)
 		)
-		(pin "1"
+		(pin "4"
 			(uuid "e29b3bcf-a4f1-4e82-970e-fb59aae74bf7")
 		)
 		(pin "2"
@@ -4394,10 +5256,10 @@
 		(pin "3"
 			(uuid "dc07c441-df2a-43cd-b0b0-faac86e43856")
 		)
-		(pin "4"
+		(pin "5"
 			(uuid "0bfd5342-fc1e-4465-9ad2-9c9911445ce7")
 		)
-		(pin "5"
+		(pin "1"
 			(uuid "8f163b7f-4146-46a3-8d05-a828d5c42776")
 		)
 		(pin "6"
@@ -4814,6 +5676,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+3V3")
+		(at 204.47 113.03 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9bc9c502-e76d-4925-b69f-012258a525e0")
+		(property "Reference" "#PWR3"
+			(at 204.47 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 204.47 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 204.47 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 204.47 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 204.47 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "76ec26cc-471f-4153-8e2a-62ad12bdc910")
+		)
+		(instances
+			(project ""
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "#PWR3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 153.67 71.12 0)
 		(unit 1)
@@ -4875,6 +5803,73 @@
 			(project "Geedo_PCB_v4"
 				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
 					(reference "C3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 27.94 95.25 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1e3691b6-6a6b-46ca-84f5-da5e53a25bb5")
+		(property "Reference" "C5"
+			(at 27.94 85.25 0)
+			(effects
+				(font
+					(size 1.5 1.5)
+				)
+			)
+		)
+		(property "Value" "4.7uF"
+			(at 27.94 87.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 27.94 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 27.94 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 27.94 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "26e796c5-dfcf-465a-9fca-a62e54ad6452")
+		)
+		(pin "2"
+			(uuid "6128b807-32c2-49f7-ab56-77da93850ad8")
+		)
+		(instances
+			(project "Geedo_PCB_v4"
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "C5")
 					(unit 1)
 				)
 			)
@@ -5292,6 +6287,73 @@
 		)
 	)
 	(symbol
+		(lib_name "GND_1")
+		(lib_id "power:GND")
+		(at 27.94 99.06 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "39dd48ec-0064-4e08-9205-aa31467cbaf0")
+		(property "Reference" "#PWR4"
+			(at 27.94 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 27.94 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 27.94 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 27.94 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 27.94 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "aec1a4e5-00ab-417f-b308-13cbff3208e7")
+		)
+		(instances
+			(project ""
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "#PWR4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 73.66 95.25 0)
 		(unit 1)
@@ -5308,7 +6370,7 @@
 				)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "4.7k"
 			(at 73.66 87.25 0)
 			(effects
 				(font
@@ -5487,6 +6549,73 @@
 			(project "Geedo_PCB_v4"
 				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
 					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 204.47 116.84 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "db15d8ec-f2d4-4671-8488-f4782ce44b6b")
+		(property "Reference" "R8"
+			(at 204.47 106.84 0)
+			(effects
+				(font
+					(size 1.5 1.5)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 204.47 108.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 204.47 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 204.47 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 204.47 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cbcda6b5-d779-44a8-ad3a-cb5149d1556a")
+		)
+		(pin "2"
+			(uuid "3a7086dc-cbce-48ae-8648-e179044002a7")
+		)
+		(instances
+			(project "Geedo_PCB_v4"
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "R8")
 					(unit 1)
 				)
 			)

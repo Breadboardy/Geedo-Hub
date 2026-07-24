@@ -37,21 +37,36 @@ ordering** — see "What you still need to do" below.
 - Removed 140 track segments/vias that were routed to the wrong physical pads.
   Power routing in the charger corner and the GND zones were kept.
 
-## What you still need to do in KiCad
+## Routing status: bare board, ready to autoroute
+
+All old copper was removed (it was routed to the wrong pads), so the board now has
+footprints, nets, and GND zones but **zero tracks**. Net classes are preset so an
+autorouter picks up sensible widths automatically:
+
+| Class | Nets | Track width |
+|-------|------|-------------|
+| Power | GND, +3V3, /VBAT, /VBUS | 0.50 mm |
+| USB | /USB_DP, /USB_DN | 0.30 mm |
+| Default | everything else | 0.25 mm |
+
+### Steps
 
 1. `git pull`, open `hardware/Geedo_PCB_v4.kicad_pro` (KiCad 8+).
-2. **Schematic → ERC.** Expect one known warning: U1 pin "TEMP" has no pad — the
-   5-pin MCP73831 has no TEMP pin; you can delete that symbol pin and its stub wire.
-3. **Board:** refill zones (`B`), run DRC, then **route the ratsnest**:
-   - USB pair: J1 A6/B6 → U3 pad 27 and A7/B7 → pad 26 — keep D+/D− side-by-side and short
-   - CC lines: J1 A5→R4, B5→R5 (other ends of R4/R5 already go to GND)
-   - VBUS: J1 A4/B4/A9/B9 → C5 → U1 pad 4
-   - Charger: U1 pad 1→R7, pad 5→R6; LED chain to 3V3
-   - Buttons (IO3, IO9), EN, I2C (IO4/IO5 → OLED header), R8 pull-up
-4. **Firmware pin map after this fix:** MAIN button = GPIO3, BOOT/recovery = GPIO9
-   (was 8 — update the sketch if it read GPIO8), I2C `Wire.begin(4, 5)` (SDA=4, SCL=5),
-   USB is native — no pin setup. Flashing over USB now works normally; hold BOOT while
-   pressing RESET only for recovery.
+2. **Schematic → ERC.** One known warning: U1 pin "TEMP" has no pad — the 5-pin
+   MCP73831 has no TEMP pin; delete that symbol pin and its stub wire to clear it.
+3. **Board:** press `B` to fill zones, then run Freerouting (Plugin and Content
+   Manager → Freerouting) and let it route the whole board.
+4. **Check the USB pair by hand afterwards.** D+ and D− (J1 A6/B6 → U3 pad 27,
+   A7/B7 → pad 26) should run short and side-by-side. If the autorouter sent them
+   on separate scenic routes, delete those two tracks and drag them manually —
+   the connector sits right next to the module, so it's a quick fix.
+5. Refill zones, run DRC, and if it's clean the board is manufacturable.
+
+### Firmware pin map after this fix
+
+MAIN button = GPIO3, BOOT/recovery = **GPIO9** (was 8 — update the sketch if it
+read GPIO8), I2C `Wire.begin(4, 5)` (SDA=4, SCL=5). USB is native, no pin setup.
+Flashing over USB now works normally; hold BOOT while pressing RESET only for recovery.
 
 ## Known caveats to fix in rev 5 (not addressed here)
 

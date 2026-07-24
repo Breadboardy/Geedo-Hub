@@ -51,16 +51,38 @@ autorouter picks up sensible widths automatically:
 
 ### Steps
 
-1. `git pull`, open `hardware/Geedo_PCB_v4.kicad_pro` (KiCad 8+).
-2. **Schematic → ERC.** One known warning: U1 pin "TEMP" has no pad — the 5-pin
-   MCP73831 has no TEMP pin; delete that symbol pin and its stub wire to clear it.
-3. **Board:** press `B` to fill zones, then run Freerouting (Plugin and Content
-   Manager → Freerouting) and let it route the whole board.
-4. **Check the USB pair by hand afterwards.** D+ and D− (J1 A6/B6 → U3 pad 27,
-   A7/B7 → pad 26) should run short and side-by-side. If the autorouter sent them
-   on separate scenic routes, delete those two tracks and drag them manually —
-   the connector sits right next to the module, so it's a quick fix.
-5. Refill zones, run DRC, and if it's clean the board is manufacturable.
+Routing runs entirely from the terminal — no KiCad window needed:
+
+```bash
+./tools/route_pcb.sh          # export DSN -> Freerouting -> import SES -> save board
+./tools/route_pcb.sh 500      # more optimisation passes
+```
+
+The script uses KiCad's own Python bindings (`ExportSpecctraDSN` /
+`ImportSpecctraSES`, both headless-capable in KiCad 8+), so it needs the system
+python that ships with KiCad — not a conda/venv python. It auto-skips any
+Freerouting jar too new for the installed Java (2.2.x needs Java 25; the 1.9.0
+build runs on Java 11+).
+
+Afterwards:
+
+1. **Check the USB pair by hand.** D+ and D− (J1 A6/B6 → U3 pad 27, A7/B7 → pad 26)
+   should run short and side-by-side. If the autorouter sent them on separate
+   scenic routes, delete those two tracks and drag them manually — the connector
+   sits right next to the module, so it's a quick fix.
+2. `kicad-cli pcb drc --schematic-parity hardware/Geedo_PCB_v4.kicad_pcb`
+3. Open the board, press `B` to refill zones, and commit if DRC is clean.
+4. **Schematic → ERC** once: one known warning, U1 pin "TEMP" has no pad — the
+   5-pin MCP73831 has no TEMP pin; delete that symbol pin and its stub wire.
+
+### Layout notes
+
+- Front side: USB-C, ESP32 module, the three buttons, OLED header.
+  Back side: charger, regulator, battery connector, all passives. Parts that look
+  stacked in 2D (U1 under SW3, U2 under SW2) are on opposite faces — that's fine.
+- `R8` sits at the top of the back-side pull-up column with R1/R2/R3;
+  `C5` sits just below the charger U1. Both were auto-added in rev 4.1 — move them
+  if you prefer, they have no mechanical constraint.
 
 ### Firmware pin map after this fix
 

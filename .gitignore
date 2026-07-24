@@ -1,1 +1,8 @@
 Github code
+
+# KiCad caches / autorouter intermediates
+fp-info-cache
+*.kicad_prl
+*-backups/
+*.dsn
+*.ses

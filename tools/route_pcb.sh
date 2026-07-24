@@ -82,8 +82,14 @@ import sys, pcbnew
 board = pcbnew.LoadBoard(sys.argv[1])
 if not pcbnew.ImportSpecctraSES(board, sys.argv[2]):
     sys.exit("SES import failed")
-for z in board.Zones():
-    z.SetIsFilled(False)          # zones need a refill after routing
+
+# refill copper zones, otherwise every zone-fed pad reports as unconnected in DRC
+zones = board.Zones()
+if len(zones):
+    pcbnew.ZONE_FILLER(board).Fill(zones)
+    print(f"filled {len(zones)} zone(s)")
+
+board.BuildConnectivity()
 pcbnew.SaveBoard(sys.argv[1], board)
 tr = [t for t in board.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T]
 vi = [t for t in board.GetTracks() if t.Type() == pcbnew.PCB_VIA_T]

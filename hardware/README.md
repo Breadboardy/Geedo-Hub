@@ -159,6 +159,10 @@ swapped, which painted false copper straight across the gap.
 ## Known caveats to fix in rev 5
 
 - No ESD protection on the USB data lines (add a USBLC6-2SC6 next to J1).
-- Five board-edge clearance violations remain from the original autoroute
-  (three CC2 traces, the EN via, U2's pad) at 0.35-0.39 mm where the board
-  setup asks 0.5 mm. Most fabs build these without comment.
+- The CC2 trace runs 0.35 mm from the bottom board edge where the setup asks
+  0.5 mm. This one cannot be fixed by moving the trace: it threads the gap
+  between SW2's lower pad and the board outline, which is 0.8 mm wide, and
+  clearing the pad by 0.2 mm plus the edge by 0.5 mm needs 0.95 mm. Lifting it
+  just trades an edge violation for a 0.025 mm pad clearance, which is far
+  worse. Fixing it properly means nudging SW2 up a millimetre in rev 5. Most
+  fabs build 0.35 mm to the outline without comment.

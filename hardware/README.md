@@ -117,6 +117,12 @@ unchanged. Tab-to-ground is also better thermally, since it bonds to the pour.
 `C6` (1 uF, back side, 2 mm from the output pin) was added as a local output
 capacitor for regulator stability; C2's 10 uF is 9 mm away on the same net.
 
+`C7` (1 uF, back side, directly under the module's EN pad) was added between EN
+and ground. Espressif's guidelines call for this RC with the 10 k pull-up: it
+holds reset low while the rail rises, so the chip starts cleanly on a slow
+power-up. Without it a board usually boots but can occasionally hang until
+reset is pressed.
+
 ## Powering the board
 
 The 3.3 V rail is generated from the **battery**. USB 5 V reaches only the
@@ -135,9 +141,6 @@ main remaining item for rev 5.
 ## Known caveats to fix in rev 5
 
 - No ESD protection on the USB data lines (add a USBLC6-2SC6 next to J1).
-- No capacitor on EN. Espressif recommends ~1 uF from EN to ground so reset is
-  held low while the rail rises; without it a board can occasionally hang at
-  power-on until reset is pressed.
 - Five board-edge clearance violations remain from the original autoroute
   (three CC2 traces, the EN via, U2's pad) at 0.35-0.39 mm where the board
   setup asks 0.5 mm. Most fabs build these without comment.

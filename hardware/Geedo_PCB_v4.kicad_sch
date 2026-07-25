@@ -4494,6 +4494,16 @@
 		(uuid "1e54a725-acb7-46ef-836e-993102424ca9")
 	)
 	(label "EN_NET"
+		(at 113.82 56.19 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4b96acac-410b-4951-bd8f-1529df0c51d1")
+	)
+	(label "EN_NET"
 		(at 191.77 135.89 0)
 		(effects
 			(font
@@ -5835,6 +5845,73 @@
 	)
 	(symbol
 		(lib_id "Device:C")
+		(at 113.82 60.0 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8933de63-2bb5-4ba3-b97b-4167fae3544d")
+		(property "Reference" "C7"
+			(at 113.82 50.0 0)
+			(effects
+				(font
+					(size 1.5 1.5)
+				)
+			)
+		)
+		(property "Value" "1uF"
+			(at 113.82 52.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 113.82 60.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 113.82 60.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 113.82 60.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "be8117ee-3a26-4250-b771-2b984ad41d36")
+		)
+		(pin "2"
+			(uuid "4e2688a7-2b55-4325-98d2-4a6f88bf2e93")
+		)
+		(instances
+			(project "Geedo_PCB_v4"
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
 		(at 68.58 154.94 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -6373,6 +6450,73 @@
 			(project ""
 				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
 					(reference "#PWR2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "GND_1")
+		(lib_id "power:GND")
+		(at 113.82 63.81 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4f5c6f72-6463-428d-9596-f8d2b7c3b734")
+		(property "Reference" "#PWR7"
+			(at 113.82 70.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 113.82 68.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 113.82 63.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 113.82 63.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 113.82 63.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "11871724-ea4b-4173-a3f0-a3d75a716d84")
+		)
+		(instances
+			(project ""
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "#PWR7")
 					(unit 1)
 				)
 			)

@@ -116,6 +116,10 @@ unchanged. Tab-to-ground is also better thermally, since it bonds to the pour.
 
 `C6` (1 uF, back side, 2 mm from the output pin) was added as a local output
 capacitor for regulator stability; C2's 10 uF is 9 mm away on the same net.
+C6 is rotated so its **ground** pad faces east into open copper: the other way
+round that pad sat boxed in by U2's 3.3 V pad, the 3.3 V track below it and the
+STAT track above, and neither the pour nor a track could reach it. It is tied to
+the plane by a short B.Cu stub to a stitching via at (114.88, 118.25).
 
 `C7` (1 uF, back side, directly under the module's EN pad) was added between EN
 and ground. Espressif's guidelines call for this RC with the 10 k pull-up: it

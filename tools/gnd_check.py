@@ -125,7 +125,10 @@ for fb in each(p, r'\(footprint\s"'):
             if q:
                 w = max(w, max(abs(float(a)) for a,_ in q)*2)
                 h = max(h, max(abs(float(b)) for _,b in q)*2)
-        if abs((fr+pr) % 180 - 90) < 1: w, h = h, w
+        # KiCad stores the pad's ABSOLUTE orientation, already including the
+        # footprint's rotation - adding fr again double-counts it and
+        # models every pad on a 90deg-rotated part with w and h swapped.
+        if abs(pr % 180 - 90) < 1: w, h = h, w
         r = math.radians(fr)
         ax = fx + dx*math.cos(r) + dy*math.sin(r)
         ay = fy - dx*math.sin(r) + dy*math.cos(r)

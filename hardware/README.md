@@ -156,6 +156,33 @@ unconnected" DRC item was pointing at. It went unexplained for a while because
 the offline checking scripts modelled SW2's pads with their width and height
 swapped, which painted false copper straight across the gap.
 
+## Checking the board without opening KiCad
+
+Two scripts check the board straight from the `.kicad_pcb` file, so they work
+on a machine with no KiCad installed and they do not care whether the zones
+happen to be filled. Run both from the repo root:
+
+```bash
+python3 tools/drc_offline.py    # clearance, board edge, keepout
+python3 tools/pour_sim.py       # re-derives the pour, checks GND is one net
+```
+
+`pour_sim.py` needs numpy and scipy. It does not read the stored
+`filled_polygon` blocks - those go stale the moment anything is re-routed.
+It rebuilds the fill from the zone rules instead (clearance, min thickness,
+keepouts, edge clearance, island removal), then merges the two layers at
+through-hole pads and vias and flood-fills. That is what caught SW2's
+floating ground island.
+
+Expected output as of this revision: 0 clearance, 0 keepout, 4 board-edge
+(the CC2 trace described below), and ground resolving to a single 2042 mm2
+group with every ground pad on poured copper.
+
+These are a second opinion, not a replacement for KiCad's DRC - they do not
+model solder-mask bridging, starved thermals or footprint-library parity.
+Run `kicad-cli pcb drc --schematic-parity hardware/Geedo_PCB_v4.kicad_pcb`
+before ordering, with the zones filled.
+
 ## Known caveats to fix in rev 5
 
 - No ESD protection on the USB data lines (add a USBLC6-2SC6 next to J1).

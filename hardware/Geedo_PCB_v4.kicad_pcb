@@ -21778,6 +21778,22 @@
 		(net 2)
 		(uuid "c9f5ed84-f869-4606-a948-8dd102fd087d")
 	)
+	(via
+		(at 118.0 120.9)
+		(size 0.5)
+		(drill 0.3)
+		(layers "F.Cu" "B.Cu")
+		(net 2)
+		(uuid "3f0c1a72-5d84-4e19-9b60-2a1c7de84f11")
+	)
+	(via
+		(at 118.0 117.4)
+		(size 0.5)
+		(drill 0.3)
+		(layers "F.Cu" "B.Cu")
+		(net 2)
+		(uuid "6b2d4e08-91af-4c33-8de5-7c40b9a15e26")
+	)
 	(segment
 		(start 113.02 118.75)
 		(end 113.0 118.75)

@@ -142,6 +142,20 @@ it is current-limited to 215 mA and can cycle when the load is light.
 Feeding the regulator from USB *or* battery would fix this properly and is the
 main remaining item for rev 5.
 
+## Ground plane: SW2's ground was floating
+
+The copper pour on the front side is split by the CC2 track that runs down
+the right-hand side of the board. The strip east of it (roughly x 114-118.5,
+y 105-126) carries **SW2's two ground pads** and had no via anywhere on it,
+so the BOOT button's ground return was connected to nothing. Two stitching
+vias at (118.0, 120.9) and (118.0, 117.4) tie that strip down to the back-side
+plane. Ground now resolves to a single 2042 mm2 piece across both layers.
+
+This is what the long-standing "Zone [GND] on F.Cu / Zone [GND] on B.Cu -
+unconnected" DRC item was pointing at. It went unexplained for a while because
+the offline checking scripts modelled SW2's pads with their width and height
+swapped, which painted false copper straight across the gap.
+
 ## Known caveats to fix in rev 5
 
 - No ESD protection on the USB data lines (add a USBLC6-2SC6 next to J1).

@@ -643,7 +643,7 @@
 				)
 			)
 		)
-		(symbol "Geedo:AMS1117"
+		(symbol "Geedo:MCP1826S"
 			(pin_names
 				(offset 1.016)
 			)
@@ -658,7 +658,7 @@
 					)
 				)
 			)
-			(property "Value" "AMS1117"
+			(property "Value" "MCP1826S"
 				(at 0 6.35 0)
 				(effects
 					(font
@@ -693,7 +693,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "AMS1117_0_1"
+			(symbol "MCP1826S_0_1"
 				(rectangle
 					(start -5.08 -3.81)
 					(end 5.08 3.81)
@@ -706,18 +706,18 @@
 					)
 				)
 			)
-			(symbol "AMS1117_1_1"
+			(symbol "MCP1826S_1_1"
 				(pin passive line
 					(at -7.62 -1.27 0)
 					(length 2.54)
-					(name "GND_Adj"
+					(name "GND"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "1"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -735,7 +735,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -753,7 +753,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5636,6 +5636,72 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
+		(at 68.58 151.13 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0f59fa47-b4ec-42f4-9b23-3ae394928f57")
+		(property "Reference" "#PWR5"
+			(at 68.58 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 68.58 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 68.58 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bcf45690-d398-4740-9853-29448f7a158f")
+		)
+		(instances
+			(project ""
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "#PWR5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
 		(at 204.47 113.03 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5769,6 +5835,73 @@
 	)
 	(symbol
 		(lib_id "Device:C")
+		(at 68.58 154.94 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "446d5aad-6e4c-480a-aae8-ce56ef541fbf")
+		(property "Reference" "C6"
+			(at 68.58 144.94 0)
+			(effects
+				(font
+					(size 1.5 1.5)
+				)
+			)
+		)
+		(property "Value" "1uF"
+			(at 68.58 146.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 68.58 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 68.58 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ec87cdd7-d535-418d-99ed-3ebf6a44289a")
+		)
+		(pin "2"
+			(uuid "c88a85db-df79-460a-b645-0945fc358dcb")
+		)
+		(instances
+			(project "Geedo_PCB_v4"
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "C6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
 		(at 27.94 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5835,7 +5968,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Geedo:AMS1117")
+		(lib_id "Geedo:MCP1826S")
 		(at 54.61 143.51 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5851,7 +5984,7 @@
 				)
 			)
 		)
-		(property "Value" "AMS1117-3.3"
+		(property "Value" "MCP1826S-3302"
 			(at 54.61 135.51 0)
 			(effects
 				(font
@@ -6240,6 +6373,73 @@
 			(project ""
 				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
 					(reference "#PWR2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "GND_1")
+		(lib_id "power:GND")
+		(at 68.58 158.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "11fbf8e5-1fc7-4f4f-87fd-bdd53df9a582")
+		(property "Reference" "#PWR6"
+			(at 68.58 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 68.58 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 68.58 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "271b6b4e-3f31-40e9-a202-9ba09602869b")
+		)
+		(instances
+			(project ""
+				(path "/c1b30509-5759-4de0-8051-e295a09caa78"
+					(reference "#PWR6")
 					(unit 1)
 				)
 			)

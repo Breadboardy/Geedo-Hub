@@ -90,10 +90,54 @@ MAIN button = GPIO3, BOOT/recovery = **GPIO9** (was 8 — update the sketch if i
 read GPIO8), I2C `Wire.begin(4, 5)` (SDA=4, SCL=5). USB is native, no pin setup.
 Flashing over USB now works normally; hold BOOT while pressing RESET only for recovery.
 
-## Known caveats to fix in rev 5 (not addressed here)
+## Regulator: MCP1826S, not AMS1117 (changed in this revision)
 
-- The 3.3 V rail is generated from the **battery** through an AMS1117 (~1.1 V dropout):
-  below ~4.3 V of battery the rail sags under 3.3 V, and the board does **not** power
-  up from USB with no battery attached. It works, but is brownout-prone — swap in a
-  true low-dropout 500 mA LDO (e.g. HT7833) and/or feed the regulator from VBUS too.
+`U2` was an AMS1117-3.3, which needs ~1.1 V more on its input than it puts out.
+Fed from a LiPo that is the wrong way round:
+
+| battery | AMS1117 output | MCP1826S output |
+|---------|----------------|-----------------|
+| 4.2 V (full) | 3.3 V | 3.3 V |
+| 3.9 V (~70%) | ~3.2 V, sagging | 3.3 V |
+| 3.7 V (nominal) | ~3.0 V, at the chip's minimum | 3.3 V |
+| 3.5 V (~20%) | ~2.8 V, brownout | 3.3 V |
+
+WiFi makes it worse exactly when it matters: an ESP32-C3 pulls 300-400 mA in
+transmit bursts, which widens the dropout. The board would have run fine after
+a charge and then reset during WiFi activity at half battery, losing most of
+the pack's usable capacity.
+
+The MCP1826S-3302 drops only 0.25 V, holds 3.3 V down to about 3.55 V of
+battery, and keeps the same SOT-223 footprint. It is **not** pin-compatible -
+AMS1117 is GND/Vout/Vin with the tab on Vout, MCP1826S is Vin/GND/Vout with the
+tab on GND - so U2's pads were remapped and the three nets re-routed. The
+schematic symbol was renumbered rather than redrawn, so the existing wiring is
+unchanged. Tab-to-ground is also better thermally, since it bonds to the pour.
+
+`C6` (1 uF, back side, 2 mm from the output pin) was added as a local output
+capacitor for regulator stability; C2's 10 uF is 9 mm away on the same net.
+
+## Powering the board
+
+The 3.3 V rail is generated from the **battery**. USB 5 V reaches only the
+charger, so with no cell installed the MCP73831 has to act as the supply:
+it is current-limited to 215 mA and can cycle when the load is light.
+
+- **Flashing with a battery connected:** reliable. Native USB, no serial chip.
+- **Flashing with no battery:** usually works (download mode draws well under
+  the limit) but the rail is unregulated-ish and a brownout mid-write is
+  possible. Nothing is damaged; just retry.
+- **Running WiFi with no battery:** will brown out on transmit bursts.
+
+Feeding the regulator from USB *or* battery would fix this properly and is the
+main remaining item for rev 5.
+
+## Known caveats to fix in rev 5
+
 - No ESD protection on the USB data lines (add a USBLC6-2SC6 next to J1).
+- No capacitor on EN. Espressif recommends ~1 uF from EN to ground so reset is
+  held low while the rail rises; without it a board can occasionally hang at
+  power-on until reset is pressed.
+- Five board-edge clearance violations remain from the original autoroute
+  (three CC2 traces, the EN via, U2's pad) at 0.35-0.39 mm where the board
+  setup asks 0.5 mm. Most fabs build these without comment.

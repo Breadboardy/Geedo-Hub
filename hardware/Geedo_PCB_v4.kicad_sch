@@ -1703,24 +1703,6 @@
 						)
 					)
 				)
-				(pin passive line
-					(at -7.62 -2.54 0)
-					(length 2.54)
-					(name "TEMP"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
 			)
 		)
 		(symbol "Geedo:USBC"
@@ -2652,16 +2634,6 @@
 			(type default)
 		)
 		(uuid "06d800cf-ef59-42d8-921c-cb296a83d2ef")
-	)
-	(wire
-		(pts
-			(xy 34.29 102.87) (xy 83.82 102.87)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "08cf00b3-2887-44ca-afac-a9e827f6d8c1")
 	)
 	(wire
 		(pts
@@ -3602,16 +3574,6 @@
 			(type default)
 		)
 		(uuid "da3fc30b-3a4c-4248-a991-fda158a876b0")
-	)
-	(wire
-		(pts
-			(xy 34.29 93.98) (xy 34.29 102.87)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "da940e2f-4132-4d29-9c02-000bcb40ab62")
 	)
 	(wire
 		(pts
@@ -5261,9 +5223,6 @@
 		)
 		(pin "1"
 			(uuid "8f163b7f-4146-46a3-8d05-a828d5c42776")
-		)
-		(pin "6"
-			(uuid "d545bd81-ed61-4b0f-99f3-9897c6b05e65")
 		)
 		(instances
 			(project "Geedo_PCB_v4"

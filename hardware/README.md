@@ -114,12 +114,12 @@ tab on GND - so U2's pads were remapped and the three nets re-routed. The
 schematic symbol was renumbered rather than redrawn, so the existing wiring is
 unchanged. Tab-to-ground is also better thermally, since it bonds to the pour.
 
-`C6` (1 uF, back side, 2 mm from the output pin) was added as a local output
-capacitor for regulator stability; C2's 10 uF is 9 mm away on the same net.
-C6 is rotated so its **ground** pad faces east into open copper: the other way
-round that pad sat boxed in by U2's 3.3 V pad, the 3.3 V track below it and the
-STAT track above, and neither the pour nor a track could reach it. It is tied to
-the plane by a short B.Cu stub to a stitching via at (114.88, 118.25).
+`C6` (1 uF, back side) was added as a local output capacitor for regulator
+stability; C2's 10 uF is 9 mm away on the same net. It sits at (110.30, 115.80),
+3 mm from U2's output pin, with 3.3 V routed to U2.3 in four segments that jog
+around the VBAT via. It was originally placed 2 mm from the output pin on the
+*wrong side* of it, which put it underneath U2's SOT-223 body - not assemblable,
+and KiCad was right to flag the courtyard overlap.
 
 `C7` (1 uF, back side, directly under the module's EN pad) was added between EN
 and ground. Espressif's guidelines call for this RC with the 10 k pull-up: it
@@ -156,6 +156,30 @@ unconnected" DRC item was pointing at. It went unexplained for a while because
 the offline checking scripts modelled SW2's pads with their width and height
 swapped, which painted false copper straight across the gap.
 
+## The 3.3 V rail was in two halves
+
+Caught by KiCad's DRC, not by me. `+3V3` was split into two electrically
+separate islands with nothing joining them:
+
+| island | what was on it |
+|--------|----------------|
+| A | U3.3 (ESP32 3.3 V), U2.3 (regulator output), C6.1, D1.2 |
+| B | **J3.2 (OLED 3.3 V)**, R1.1, R2.1, R3.1, R8.1, C2.1, C3.1, C4.1 |
+
+So the regulator's output never reached the OLED header or **any** of the
+pull-ups - including the IO2 and IO8 strapping resistors the ESP32-C3 needs
+held high to boot, and the IO9 pull-up. The board would not have started.
+
+The routing had got within 1.2 mm of finishing and stopped: a front-side stub
+dead-ended at (103.15, 77.85) and a back-side track dead-ended at
+(103.96, 77.00), on opposite layers with no via between them. Fixed with a via
+at the front-side tip and a 0.5 mm back-side track joining the two.
+
+KiCad reported this as a single "unconnected items" entry, which badly
+undersells it - one missing connection was the whole upper half of the rail.
+Every net is now checked island-by-island, not just pad-to-pad; see
+`tools/drc_offline.py`.
+
 ## Checking the board without opening KiCad
 
 Two scripts check the board straight from the `.kicad_pcb` file, so they work
@@ -175,8 +199,9 @@ through-hole pads and vias and flood-fills. That is what caught SW2's
 floating ground island.
 
 Expected output as of this revision: 0 clearance, 0 keepout, 4 board-edge
-(the CC2 trace described below), and ground resolving to a single 2042 mm2
-group with every ground pad on poured copper.
+(the CC2 trace described below), and ground resolving to a single group with
+every ground pad on poured copper. Courtyard overlaps: 0. Nets split across
+islands: 0.
 
 These are a second opinion, not a replacement for KiCad's DRC - they do not
 model solder-mask bridging, starved thermals or footprint-library parity.

@@ -3726,7 +3726,7 @@
 	(footprint "Capacitor_SMD:C_0402_1005Metric"
 		(layer "B.Cu")
 		(uuid "47a2f2d5-d767-4d73-95b3-e7087055b911")
-		(at 113.5 118.75)
+		(at 110.3 115.8 180)
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C6"
@@ -6199,7 +6199,7 @@
 	(footprint "Package_TO_SOT_SMD:SOT-223-3_TabPin2"
 		(layer "B.Cu")
 		(uuid "c38500de-c845-4b7e-9f9a-6b4dd77dc34b")
-		(at 114.65 121)
+		(at 114.3 120.9)
 		(descr "module CMS SOT223 4 pins")
 		(tags "CMS SOT")
 		(property "Reference" "U2"
@@ -6482,7 +6482,7 @@
 	(footprint "LED_SMD:LED_0402_1005Metric"
 		(layer "B.Cu")
 		(uuid "dabe7649-0a3a-4e73-8336-45069e0edd9f")
-		(at 109.5 118.485 90)
+		(at 109.3 118.535 90)
 		(descr "LED SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D1"
@@ -18598,7 +18598,7 @@
 		(uuid "351b7243-8962-44c0-a2cc-c2d9e481e0e4")
 	)
 	(gr_text "Geedo"
-		(at 118.5 81 -0)
+		(at 112.55 87.3 -0)
 		(layer "B.Cu")
 		(uuid "352223a7-2775-4cf4-a3df-110c120cc9ba")
 		(effects
@@ -18689,14 +18689,6 @@
 		(layer "F.Cu")
 		(net 1)
 		(uuid "d82afe4b-5c82-4ad7-94b3-d9837073e48d")
-	)
-	(segment
-		(start 114.2259 105.3744)
-		(end 114.784 105.3744)
-		(width 0.5)
-		(layer "F.Cu")
-		(net 1)
-		(uuid "d976a159-ecfe-497b-a280-7ef3d5bc6a56")
 	)
 	(segment
 		(start 111.1 117.5)
@@ -19883,14 +19875,6 @@
 		(uuid "ee25b599-ccc2-408d-a650-2090f8990c39")
 	)
 	(segment
-		(start 117.1726 112.9782)
-		(end 113.8544 112.9782)
-		(width 0.5)
-		(layer "B.Cu")
-		(net 3)
-		(uuid "ef8c6233-a480-4a70-84f8-365e0a08d777")
-	)
-	(segment
 		(start 96.75 113.4)
 		(end 96.7 113.45)
 		(width 0.4)
@@ -19913,14 +19897,6 @@
 		(layer "B.Cu")
 		(net 3)
 		(uuid "fa20a4a3-483f-4583-8314-4d6b05ac833c")
-	)
-	(segment
-		(start 105.3502 119.8887)
-		(end 106.4615 121)
-		(width 0.5)
-		(layer "B.Cu")
-		(net 3)
-		(uuid "fb841733-bb88-4f43-9313-6f4ea51ddac2")
 	)
 	(segment
 		(start 116.5972 115.095)
@@ -21763,15 +21739,55 @@
 		(uuid "83ba9ee4-975d-403f-a246-1ee9668bfa0e")
 	)
 	(via
-		(at 114.88 118.25)
-		(size 0.5)
-		(drill 0.3)
+		(at 103.15 77.85)
+		(size 0.7)
+		(drill 0.4)
 		(layers "F.Cu" "B.Cu")
-		(net 2)
-		(uuid "c9f5ed84-f869-4606-a948-8dd102fd087d")
+		(net 3)
+		(uuid "4a91c7e5-32bd-4f76-a0e8-59d1b3c7f204")
+	)
+	(segment
+		(start 103.15 77.85)
+		(end 103.96 77.0)
+		(width 0.5)
+		(layer "B.Cu")
+		(net 3)
+		(uuid "8c5e1d34-7fa2-4b09-9e61-d02f8a4b6371")
+	)
+	(segment
+		(start 110.78 115.8)
+		(end 110.78 116.5)
+		(width 0.5)
+		(layer "B.Cu")
+		(net 3)
+		(uuid "5d7b3e91-4c28-4a6f-b013-e97a25f8c460")
+	)
+	(segment
+		(start 110.78 116.5)
+		(end 110.6 116.68)
+		(width 0.5)
+		(layer "B.Cu")
+		(net 3)
+		(uuid "a1f4b76c-2e05-4d38-8b97-63c0e4a91f52")
+	)
+	(segment
+		(start 110.6 116.68)
+		(end 110.6 117.6)
+		(width 0.5)
+		(layer "B.Cu")
+		(net 3)
+		(uuid "c93d5e08-71ab-4f26-9d40-5e8b27a3c614")
+	)
+	(segment
+		(start 110.6 117.6)
+		(end 111.1 118.1)
+		(width 0.5)
+		(layer "B.Cu")
+		(net 3)
+		(uuid "e6b0273f-9c14-4a8d-b752-01fd39c8e2a7")
 	)
 	(via
-		(at 118.0 120.9)
+		(at 118.0 124.2)
 		(size 0.5)
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
@@ -21785,30 +21801,6 @@
 		(layers "F.Cu" "B.Cu")
 		(net 2)
 		(uuid "6b2d4e08-91af-4c33-8de5-7c40b9a15e26")
-	)
-	(segment
-		(start 113.02 118.75)
-		(end 113.0 118.75)
-		(width 0.3)
-		(layer "B.Cu")
-		(net 3)
-		(uuid "e86e7f82-4ad9-4973-8af7-dea22886382a")
-	)
-	(segment
-		(start 113.0 118.75)
-		(end 112.5 118.75)
-		(width 0.3)
-		(layer "B.Cu")
-		(net 3)
-		(uuid "ec75a3a6-aeb0-4513-b68c-9e3f3305929e")
-	)
-	(segment
-		(start 113.98 118.75)
-		(end 114.88 118.25)
-		(width 0.25)
-		(layer "B.Cu")
-		(net 2)
-		(uuid "20a5572b-9be7-4174-8c35-beec51930b47")
 	)
 	(zone
 		(net 2)

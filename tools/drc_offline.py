@@ -77,9 +77,20 @@ def _copper_text(src):
         x, y, rot = float(at.group(1)), float(at.group(2)), float(at.group(3) or 0)
         sx, sy = (float(fs.group(1)), float(fs.group(2))) if fs else (1.0, 1.0)
         t = float(th.group(1)) if th else 0.15
-        w = len(txt) * sx * 0.85 + t
+        w = len(txt) * sx * 1.10 + t
         h = sy + t
         if abs(rot % 180 - 90) < 1: w, h = h, w
+        # A justified string is anchored by an EDGE, not its centre. KiCad's y
+        # grows downward, so `bottom` puts the anchor under the glyphs and the
+        # copper sits above it; `mirror` (normal for a back-layer string) flips
+        # which side of the anchor the text runs to.
+        just = re.search(r'\(justify([^)]*)\)', src[m.end():m.end()+400])
+        jt = just.group(1) if just else ''
+        sign = -1 if 'mirror' in jt else 1
+        if 'left' in jt:    x += sign * w/2
+        elif 'right' in jt: x -= sign * w/2
+        if 'top' in jt:     y += h/2
+        elif 'bottom' in jt: y -= h/2
         out.append(dict(ref=f'text:{txt}', num='', net=f'~text~{txt}~{lay}', x=x, y=y,
                         w=w, h=h, layers={lay}, typ='smd'))
     return out
@@ -204,7 +215,16 @@ EDGE = (89.5, 75.0, 119.0, 126.5)
 KEEP = (90.575, 96.91, 103.775, 102.31)
 edge_bad = keep_bad = 0
 for k, n, l, g, t in items:
-    if k == 'pad': continue
+    if k == 'pad' and t.startswith('text:'): continue
+    if g[0] == 'rrect':
+        g = ('rect', g[1], g[2], g[3], g[4])
+    if g[0] == 'rect':
+        # a pad's own copper has to clear the outline too - U2's tab did not
+        _, cx, cy, hw, hh = g
+        if not (EDGE[0]+EDGE_GAP <= cx-hw and cx+hw <= EDGE[2]-EDGE_GAP and
+                EDGE[1]+EDGE_GAP <= cy-hh and cy+hh <= EDGE[3]-EDGE_GAP):
+            print(f"  EDGE  {k}[{n}] {t} at ({cx:.2f},{cy:.2f})"); edge_bad += 1
+        continue
     pts = [(g[1], g[2])] if g[0] == 'circ' else [g[1], g[2]]
     rad = g[3]
     for x, y in pts:

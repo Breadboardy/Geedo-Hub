@@ -180,6 +180,38 @@ undersells it - one missing connection was the whole upper half of the rail.
 Every net is now checked island-by-island, not just pad-to-pad; see
 `tools/drc_offline.py`.
 
+## The logo, and why it never printed
+
+The face logo was a KiCad **reference image** - an `(image ...)` element with a
+1254x1254 PNG embedded as base64. Reference images are editor-only: they exist
+to trace over and line things up, and KiCad **never plots them to Gerbers**. The
+fab had never seen it, on any board.
+
+It was also far too small to print. The PNG is 96% whitespace padding, so at the
+stored scale the actual face came out 2.3 mm wide with 0.18 mm strokes - right at
+the silkscreen minimum, patchy at best even if it had plotted.
+
+It is now real artwork: the bitmap is traced into outlines and stored as a
+footprint, `Geedo:Logo`, of `fp_poly` shapes on **F.SilkS**, which does plot.
+Same position you had it, (115.5, 77), sized so the face is 6 mm wide with
+0.47 mm strokes. The mouth's enclosed hole is preserved by fracturing - the hole
+is joined to its outer contour by a zero-width slit, which is exactly what
+KiCad's own bitmap converter does.
+
+The reference image was removed: it plotted nothing, it sat directly on top of
+the new artwork in the editor, and it was 912 kB of base64 in a 1.1 MB board
+file (now 205 kB). The source bitmap is kept as `hardware/geedo-logo.png`.
+
+To move or resize it, drag the `LOGO1` footprint in KiCad like any other. To put
+it in **copper** instead of silkscreen - bare copper reads gold on ENIG and looks
+sharper than white ink - change the `fp_poly` layers to `F.Cu`; it would then
+need clearance from the ground pour, so re-run `tools/drc_offline.py` after.
+
+The `Geedo` copper text on the back moved from (118.5, 81) to (112.55, 87.3),
+which is unrelated to the logo: a 3.3 V track was running straight through the
+lettering, which KiCad flagged as a 0.000 mm clearance violation. It is the same
+text at the same size, just somewhere it does not collide.
+
 ## Checking the board without opening KiCad
 
 Two scripts check the board straight from the `.kicad_pcb` file, so they work

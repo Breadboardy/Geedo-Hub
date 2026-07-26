@@ -213,6 +213,24 @@ lettering - KiCad flagged that as a 0.000 mm clearance violation - but the board
 carries its name in the silkscreen logo now, so the copper lettering is gone. That
 also means there is no unconnected copper island sitting in the ground pour.
 
+## Remaining DRC items
+
+After the last pass KiCad reports **0 unconnected pads**. What is left:
+
+| item | severity | why it stays |
+|------|----------|--------------|
+| 3x `copper_edge_clearance` on the CC2 trace, 0.348 mm vs 0.5 mm | error | Genuinely unfixable in this layout - see the rev 5 note below. Fabs build 0.35 mm to the outline routinely. |
+| `lib_footprint_mismatch` on U3 | warning | The ESP32 module footprint is custom and edited, so it will always differ from the library copy. No effect on fabrication. |
+
+The logo footprint lives in `hardware/Geedo.pretty/`, registered by
+`hardware/fp-lib-table`, so `Geedo:Logo` resolves instead of reporting a
+missing library.
+
+C5 and C7 previously reported `lib_footprint_mismatch` too. They sat at
+rotation 0 while their pads carried an absolute angle of 180, which KiCad reads
+as differing from the library. The pads are symmetric roundrects so the two are
+the same shape - normalising the angle is bookkeeping, not a geometry change.
+
 ## Checking the board without opening KiCad
 
 Two scripts check the board straight from the `.kicad_pcb` file, so they work

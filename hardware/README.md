@@ -224,12 +224,13 @@ The header `J3` is wired, physically, as:
 | 3 | SCL |
 | 4 | SDA |
 
-That matches the most common SSD1306 breakout, which is ordered GND, VCC, SCL,
-SDA. **Some modules are VCC, GND, SCL, SDA instead.** If yours is one of those,
-plugging it straight in puts 3.3 V on its ground pin and ground on its supply -
-that will destroy the display. Check the silkscreen on your module against the
-table above before the first plug-in. If it does not match, swap the two power
-wires; the board is not wrong, the two module variants simply exist.
+**Checked: the module in use is GND-first, so it matches and plugs straight in.**
+
+Worth knowing if you ever swap displays: some SSD1306 breakouts are ordered
+VCC, GND, SCL, SDA instead. Plugging one of those straight in puts 3.3 V on its
+ground pin and ground on its supply, which destroys it. Compare the silkscreen
+on any new module against the table above first; if it does not match, swap the
+two power wires. The board is not wrong, both module variants simply exist.
 
 The schematic used to disagree with this. Its `Conn4` symbol named the pins
 VCC, GND, SDA, SCL - both pairs the wrong way round from how the wires actually

@@ -213,6 +213,48 @@ lettering - KiCad flagged that as a 0.000 mm clearance violation - but the board
 carries its name in the silkscreen logo now, so the copper lettering is gone. That
 also means there is no unconnected copper island sitting in the ground pour.
 
+## Check your OLED module's pin order before plugging it in
+
+The header `J3` is wired, physically, as:
+
+| pin | net |
+|-----|-----|
+| 1 (square pad) | GND |
+| 2 | 3V3 |
+| 3 | SCL |
+| 4 | SDA |
+
+That matches the most common SSD1306 breakout, which is ordered GND, VCC, SCL,
+SDA. **Some modules are VCC, GND, SCL, SDA instead.** If yours is one of those,
+plugging it straight in puts 3.3 V on its ground pin and ground on its supply -
+that will destroy the display. Check the silkscreen on your module against the
+table above before the first plug-in. If it does not match, swap the two power
+wires; the board is not wrong, the two module variants simply exist.
+
+The schematic used to disagree with this. Its `Conn4` symbol named the pins
+VCC, GND, SDA, SCL - both pairs the wrong way round from how the wires actually
+run. The wiring and the board were always self-consistent; only the names on the
+symbol were wrong, so anyone reading the schematic would have got it backwards.
+The pin names now match reality.
+
+Ten other pin labels were stale in the same way, left behind when the symbols
+were renumbered. `U2` was still carrying **AMS1117** pin names (`VI`, `VO`,
+`GND_Adj`) although it is an MCP1826S, and `U1`'s labels were one position out.
+All nets were correct throughout - these were names only - but they are now
+corrected so the board reads truthfully in KiCad.
+
+## Not done, if you want them later
+
+- **No reference designators are printed.** 25 of the 26 are hidden, so the
+  board gets component outlines and polarity marks but no `R1`/`C2`/`U3` text.
+  With four different values across eight identical-looking 0402 resistors,
+  hand-populating this means counting positions off the layout. Un-hiding them
+  is possible but not automatic: several sit 15-36 mm from their own part, so
+  they would need repositioning, and four would land on pads.
+- **No pull-ups on SDA/SCL.** I2C needs them. Most SSD1306 modules have their
+  own on board, in which case this is fine; if yours does not, the bus will not
+  work at all. Two 0402 resistors, 4.7 k, from SDA and SCL to 3V3 would settle it.
+
 ## Remaining DRC items
 
 After the last pass KiCad reports **0 unconnected pads**. What is left:

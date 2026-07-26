@@ -193,8 +193,8 @@ the silkscreen minimum, patchy at best even if it had plotted.
 
 It is now real artwork: the bitmap is traced into outlines and stored as a
 footprint, `Geedo:Logo`, of `fp_poly` shapes on **F.SilkS**, which does plot.
-Same position you had it, (115.5, 77), sized so the face is 6 mm wide with
-0.47 mm strokes. The mouth's enclosed hole is preserved by fracturing - the hole
+Sits at (115.5, 77.5), sized so the face is 6 mm wide with 0.47 mm strokes,
+0.90 mm inside the top edge and 1.16 mm from the nearest pad. The mouth's enclosed hole is preserved by fracturing - the hole
 is joined to its outer contour by a zero-width slit, which is exactly what
 KiCad's own bitmap converter does.
 
@@ -207,10 +207,11 @@ it in **copper** instead of silkscreen - bare copper reads gold on ENIG and look
 sharper than white ink - change the `fp_poly` layers to `F.Cu`; it would then
 need clearance from the ground pour, so re-run `tools/drc_offline.py` after.
 
-The `Geedo` copper text on the back moved from (118.5, 81) to (112.55, 87.3),
-which is unrelated to the logo: a 3.3 V track was running straight through the
-lettering, which KiCad flagged as a 0.000 mm clearance violation. It is the same
-text at the same size, just somewhere it does not collide.
+The `Geedo` copper text on the back has been **deleted**. It had been moved once,
+from (118.5, 81) to (112.55, 87.3), because a 3.3 V track ran straight through the
+lettering - KiCad flagged that as a 0.000 mm clearance violation - but the board
+carries its name in the silkscreen logo now, so the copper lettering is gone. That
+also means there is no unconnected copper island sitting in the ground pour.
 
 ## Checking the board without opening KiCad
 

@@ -82,7 +82,7 @@
 	(footprint "Geedo:Logo"
 		(layer "F.Cu")
 		(uuid "b7e41a90-3d52-4c68-9f01-2ac6d5e83b14")
-		(at 115.5 77.0)
+		(at 115.5 77.5)
 		(descr "Geedo face logo, silkscreen artwork traced from the reference bitmap")
 		(attr board_only exclude_from_pos_files exclude_from_bom)
 		(property "Reference" "LOGO1"
@@ -7387,19 +7387,7 @@
 		(uuid "daa5ed29-6cef-471b-8ad4-3da4df78b15b")
 	)
 
-	(gr_text "Geedo"
-		(at 112.55 87.3 -0)
-		(layer "B.Cu")
-		(uuid "352223a7-2775-4cf4-a3df-110c120cc9ba")
-		(effects
-			(font
-				(size 1.5 1.5)
-				(thickness 0.3)
-				(bold yes)
-			)
-			(justify left bottom mirror)
-		)
-	)
+
 	(segment
 		(start 113.8 103.1)
 		(end 113.9 103)

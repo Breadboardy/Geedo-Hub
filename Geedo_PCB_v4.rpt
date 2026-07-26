@@ -1,19 +1,10 @@
 ** Drc report for Geedo_PCB_v4.kicad_pcb **
-** Created on 2026-07-25T18:07:10-0700 **
+** Created on 2026-07-25T18:14:53-0700 **
 
-** Found 9 DRC violations **
-[lib_footprint_issues]: The current configuration does not include the library 'Geedo'.
-    Local override; warning
-    @(115.5000 mm, 77.5000 mm): Footprint LOGO1
+** Found 4 DRC violations **
 [lib_footprint_mismatch]: Footprint 'XCVR_ESP32-C3-MINI-1-N4' does not match copy in library 'ESP_Custom'.
     Local override; warning
     @(97.1750 mm, 105.2100 mm): Footprint U3
-[lib_footprint_mismatch]: Footprint 'C_0402_1005Metric' does not match copy in library 'Capacitor_SMD'.
-    Local override; warning
-    @(93.5000 mm, 124.8000 mm): Footprint C5
-[lib_footprint_mismatch]: Footprint 'C_0402_1005Metric' does not match copy in library 'Capacitor_SMD'.
-    Local override; warning
-    @(91.5000 mm, 110.0000 mm): Footprint C7
 [copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.3483 mm)
     Rule: board setup constraints edge; error
     @(119.0000 mm, 126.5000 mm): Segment on Edge.Cuts
@@ -26,12 +17,6 @@
     Rule: board setup constraints edge; error
     @(119.0000 mm, 126.5000 mm): Segment on Edge.Cuts
     @(113.6377 mm, 126.0267 mm): Track [Net-(J1-CC2)] on F.Cu, length 1.2787 mm
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(114.7840 mm, 105.3744 mm): Via [/VBAT] on F.Cu - B.Cu
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(117.9800 mm, 112.1708 mm): Track [+3V3] on B.Cu, length 1.1418 mm
 
 ** Found 0 unconnected pads **
 

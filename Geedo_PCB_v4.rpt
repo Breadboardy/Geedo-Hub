@@ -1,7 +1,10 @@
 ** Drc report for Geedo_PCB_v4.kicad_pcb **
-** Created on 2026-07-25T14:08:38-0700 **
+** Created on 2026-07-25T18:07:10-0700 **
 
-** Found 13 DRC violations **
+** Found 9 DRC violations **
+[lib_footprint_issues]: The current configuration does not include the library 'Geedo'.
+    Local override; warning
+    @(115.5000 mm, 77.5000 mm): Footprint LOGO1
 [lib_footprint_mismatch]: Footprint 'XCVR_ESP32-C3-MINI-1-N4' does not match copy in library 'ESP_Custom'.
     Local override; warning
     @(97.1750 mm, 105.2100 mm): Footprint U3
@@ -11,10 +14,6 @@
 [lib_footprint_mismatch]: Footprint 'C_0402_1005Metric' does not match copy in library 'Capacitor_SMD'.
     Local override; warning
     @(91.5000 mm, 110.0000 mm): Footprint C7
-[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.3925 mm)
-    Rule: board setup constraints edge; error
-    @(89.5000 mm, 126.5000 mm): Segment on Edge.Cuts
-    @(90.1925 mm, 109.3381 mm): Via [/EN_NET] on F.Cu - B.Cu
 [copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.3483 mm)
     Rule: board setup constraints edge; error
     @(119.0000 mm, 126.5000 mm): Segment on Edge.Cuts
@@ -27,41 +26,14 @@
     Rule: board setup constraints edge; error
     @(119.0000 mm, 126.5000 mm): Segment on Edge.Cuts
     @(113.6377 mm, 126.0267 mm): Track [Net-(J1-CC2)] on F.Cu, length 1.2787 mm
-[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.2000 mm)
-    Rule: board setup constraints edge; error
-    @(119.0000 mm, 126.5000 mm): Segment on Edge.Cuts
-    @(117.8000 mm, 121.0000 mm): Pad 2 [GND] of U2 on B.Cu
-[courtyards_overlap]: Courtyards overlap
-    Rule: board setup constraints courtyard; error
-    @(113.5000 mm, 118.7500 mm): Footprint C6
-    @(114.6500 mm, 121.0000 mm): Footprint U2
-[clearance]: Clearance violation (netclass 'Power' clearance 0.2000 mm; actual 0.0000 mm)
-    Rule: netclass 'Power'; error
-    @(118.0000 mm, 86.8283 mm): Track [+3V3] on B.Cu, length 10.6052 mm
-    @(118.5000 mm, 81.0000 mm): PCB Text 'Geedo' on B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(114.7840 mm, 105.3744 mm): Via [/VBAT] on F.Cu - B.Cu
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(103.1000 mm, 77.9000 mm): Track [+3V3] on F.Cu, length 0.0707 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(117.1726 mm, 112.9782 mm): Track [+3V3] on B.Cu, length 3.3182 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(105.3502 mm, 119.8887 mm): Track [+3V3] on B.Cu, length 1.5716 mm
+    @(117.9800 mm, 112.1708 mm): Track [+3V3] on B.Cu, length 1.1418 mm
 
-** Found 3 unconnected pads **
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(89.5000 mm, 75.0000 mm): Zone [GND] on B.Cu
-    @(89.5000 mm, 75.0000 mm): Zone [GND] on F.Cu
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(89.5000 mm, 75.0000 mm): Zone [GND] on B.Cu
-    @(89.5000 mm, 75.0000 mm): Zone [GND] on B.Cu
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(103.1000 mm, 77.9000 mm): Track [+3V3] on F.Cu, length 0.0707 mm
-    @(106.2893 mm, 79.3293 mm): Track [+3V3] on B.Cu, length 3.2941 mm
+** Found 0 unconnected pads **
 
 ** Found 0 Footprint errors **
 

@@ -25,6 +25,7 @@ Self-tests run first and abort on any failure:
   T4  the pad->net table is unchanged
 """
 import re, math, sys
+from decimal import Decimal
 
 SRC = sys.argv[1]
 MOVE = sys.argv[2].split(',') if len(sys.argv) > 2 else []
@@ -69,6 +70,20 @@ def negang(numstr):
     return neg(numstr)
 
 
+def mirror_abs(numstr, fx_str):
+    """Mirror an ABSOLUTE board x about the footprint origin: x -> 2*fx - x.
+
+    Zones nested in a footprint (e.g. a module's antenna keepout) store BOARD
+    coordinates, not footprint-local ones, so they must be mirrored about the
+    origin rather than negated. Decimal keeps this exactly self-inverse, so
+    double-flip stays byte-identical.
+    """
+    d = 2*Decimal(fx_str) - Decimal(numstr)
+    s = format(d, 'f')
+    if '.' in s: s = s.rstrip('0').rstrip('.')
+    return '0' if s in ('-0', '') else s
+
+
 def flip_footprint(fb):
     # 1. footprint's own (at x y [th]): th -> -th
     def fp_at(m):
@@ -87,6 +102,18 @@ def flip_footprint(fb):
         return f"(at {neg(x)} {y} {negang(a)})"
     head_end = out.index('\n', out.index('(at', out.index('(layer')))  # after fp at-line
     body = out[head_end:]
+
+    # 2a. nested zones hold ABSOLUTE board coords - hold them out of the
+    #     local-coordinate rewrites below and mirror them separately (2b).
+    fx_str = re.search(r'\n\t\t\(at\s+([-\d.]+)\s+', fb).group(1)
+    zones = []
+    while True:
+        zm = re.search(r'\(zone\b', body)
+        if not zm: break
+        zb, _ = block(body, zm.start())
+        body = body.replace(zb, f'\x01Z{len(zones)}\x01', 1)
+        zones.append(zb)
+
     body = re.sub(r'\(at\s+([-\d.]+)\s+([-\d.]+)(?:\s+([-\d.]+))?\)', sub_at, body)
 
     # 3. geometry primitives: negate x of start/end/mid/center/xy pairs
@@ -97,6 +124,12 @@ def flip_footprint(fb):
     # 4. offsets inside pads (drill offset) if any
     body = re.sub(r'\(offset\s+([-\d.]+)\s+([-\d.]+)\)',
                   lambda m: f"(offset {neg(m.group(1))} {m.group(2)})", body)
+
+    # 2b. put the zones back, mirroring their absolute x about the origin
+    for k, zb in enumerate(zones):
+        zb2 = re.sub(r'\(xy\s+([-\d.]+)\s+([-\d.]+)\)',
+                     lambda m: f"(xy {mirror_abs(m.group(1), fx_str)} {m.group(2)})", zb)
+        body = body.replace(f'\x01Z{k}\x01', zb2, 1)
 
     out = out[:head_end] + body
 
@@ -131,6 +164,18 @@ def flip_footprint(fb):
             nb = eb[:k] + f"\n{indent}\t(justify mirror)" + eb[k:]
         res.append(out[i:m.start()]); res.append(nb); i = e
     return ''.join(res)
+
+
+def zone_pts_of(fb):
+    """absolute (x, y) of every vertex of every zone nested in the footprint"""
+    out = []
+    i = 0
+    while True:
+        zm = re.compile(r'\(zone\b').search(fb, i)
+        if not zm: return out
+        zb, i = block(fb, zm.start())
+        out += [(float(a), float(b))
+                for a, b in re.findall(r'\(xy\s+([-\d.]+)\s+([-\d.]+)\)', zb)]
 
 
 def pads_of(fb):
@@ -190,6 +235,15 @@ for ref, (pos, fb) in fps.items():
         ex = 2*fx - x1
         if abs(x2 - ex) > 1e-6 or abs(y2 - y1) > 1e-6:
             print(f"T2 FAIL {ref}.{n1}: expected ({ex:.4f},{y1:.4f}) got ({x2:.4f},{y2:.4f})")
+            fails += 1; break
+    # T5 nested zones (absolute coords) mirror about the origin, same as pads
+    zb_before, zb_after = zone_pts_of(fb), zone_pts_of(f1)
+    if len(zb_before) != len(zb_after):
+        print(f"T5 FAIL {ref}: zone vertex count changed"); fails += 1; continue
+    for (x1, y1), (x2, y2) in zip(zb_before, zb_after):
+        ex = 2*fx - x1
+        if abs(x2 - ex) > 1e-6 or abs(y2 - y1) > 1e-6:
+            print(f"T5 FAIL {ref}: zone vertex expected ({ex:.4f},{y1:.4f}) got ({x2:.4f},{y2:.4f})")
             fails += 1; break
 print(f"self-test over {len(fps)} footprints: {'ALL PASS' if not fails else f'{fails} FAILURES'}")
 if fails: sys.exit(1)

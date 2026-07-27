@@ -194,6 +194,40 @@ unconnected" DRC item was pointing at. It went unexplained for a while because
 the offline checking scripts modelled SW2's pads with their width and height
 swapped, which painted false copper straight across the gap.
 
+## The antenna keepout was thrown off the board by the flip
+
+Spotted by eye in KiCad: the ESP32's antenna keepout rectangle was drawn far
+off to the left of the board, nowhere near the module.
+
+`ESP32-C3-MINI-1` carries three keepout zones nested inside its footprint,
+covering the antenna end of the module. **Zones nested in a footprint store
+absolute board coordinates**, unlike pads, lines and polygons, which are
+footprint-local. The rev-4.2 flip negated every local x, so it turned the
+keepout's `x 90.575..103.775` into `-103.775..-90.575` — mirrored about x=0
+instead of about the footprint origin, landing ~190 mm off the board.
+
+Nothing flagged it. KiCad's DRC has no rule for "antenna is missing its
+keepout", and the board is saved unfilled, so the damage only appears at
+**Edit → Fill Zones** — the step right before Gerber export. Simulating the
+pour on the pre-fix file shows the ground plane flooding the antenna window
+almost completely: 71.2 mm2 on F.Cu and 70.5 mm2 on B.Cu, out of 71.3 mm2.
+Solid copper on both sides of a printed antenna detunes it and shorts out its
+near field, so the radio would have been crippled on every board in the order.
+
+The fix restores `x 90.575..103.775`. The rectangle is centred on U3's origin
+(x = 97.175), so mirroring maps it onto itself — a flipped module needs the
+exact same absolute keepout as an unflipped one. After the fix the pour is
+kept out entirely (0.65 mm2 residual per layer, which is one 0.05 mm grid row
+at the window edge — a rasteriser artifact, not copper).
+
+`tools/flip_footprint.py` carried the same latent bug and would have repeated
+it on any future flip. It now holds nested zones out of the local-coordinate
+rewrite and mirrors them about the footprint origin with exact decimal
+arithmetic, guarded by a new self-test **T5** (zone vertices must land at
+`2*fx - x`, alongside T2 for pads). Cross-check: re-flipping U3 from the
+two-sided backup with the repaired tool reproduces the corrected coordinates
+exactly.
+
 ## The 3.3 V rail was in two halves
 
 Caught by KiCad's DRC, not by me. `+3V3` was split into two electrically

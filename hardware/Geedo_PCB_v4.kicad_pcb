@@ -1546,6 +1546,7 @@
 			(at 4.32 -3.13)
 			(size 1 2.1)
 			(drill oval 0.6 1.7)
+			(zone_connect 2)
 			(property pad_prop_heatsink)
 			(layers "*.Cu" "*.Mask" "In1.Cu" "In2.Cu" "In3.Cu" "In4.Cu" "In5.Cu" "In6.Cu"
 				"In7.Cu" "In8.Cu" "In9.Cu" "In10.Cu" "In11.Cu" "In12.Cu" "In13.Cu" "In14.Cu"
@@ -1561,6 +1562,7 @@
 			(at 4.32 1.05)
 			(size 1 1.6)
 			(drill oval 0.6 1.2)
+			(zone_connect 2)
 			(property pad_prop_heatsink)
 			(layers "*.Cu" "*.Mask" "In1.Cu" "In2.Cu" "In3.Cu" "In4.Cu" "In5.Cu" "In6.Cu"
 				"In7.Cu" "In8.Cu" "In9.Cu" "In10.Cu" "In11.Cu" "In12.Cu" "In13.Cu" "In14.Cu"
@@ -1576,6 +1578,7 @@
 			(at -4.32 -3.13)
 			(size 1 2.1)
 			(drill oval 0.6 1.7)
+			(zone_connect 2)
 			(property pad_prop_heatsink)
 			(layers "*.Cu" "*.Mask" "In1.Cu" "In2.Cu" "In3.Cu" "In4.Cu" "In5.Cu" "In6.Cu"
 				"In7.Cu" "In8.Cu" "In9.Cu" "In10.Cu" "In11.Cu" "In12.Cu" "In13.Cu" "In14.Cu"
@@ -1591,6 +1594,7 @@
 			(at -4.32 1.05)
 			(size 1 1.6)
 			(drill oval 0.6 1.2)
+			(zone_connect 2)
 			(property pad_prop_heatsink)
 			(layers "*.Cu" "*.Mask" "In1.Cu" "In2.Cu" "In3.Cu" "In4.Cu" "In5.Cu" "In6.Cu"
 				"In7.Cu" "In8.Cu" "In9.Cu" "In10.Cu" "In11.Cu" "In12.Cu" "In13.Cu" "In14.Cu"

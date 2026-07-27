@@ -37,11 +37,33 @@ here is strongly recommended - it is the single copy of Geedo's brain.
 `GUIDE.md` is the owner-facing version of this. Mechanically: SW1 shorts the
 pin to GND, so it idles high via `INPUT_PULLUP` and reads LOW when pressed.
 
-- **Tap** (< 700 ms) - `idleDelay()` returns true and whatever is playing cuts
-  short, which reads as "skip".
+- **Tap** (< 700 ms) - `petGeedo()`: mood up, immediate reaction face.
 - **Hold 5 s** - `serviceButtonHold()` draws a per-second countdown, then calls
   `WiFiManager::resetSettings()` and reboots. Releasing early cancels, so it
   cannot fire from a pocket press.
+
+## Mood
+
+One `uint8_t`, `MOOD_FLOOR`(40)..`MOOD_MAX`(100), persisted to `/mood` in
+LittleFS and restored on boot. Petting adds `MOOD_PET_BOOST`; `decayMood()`
+subtracts 1 per 15 minutes and **stops at the floor**, so Geedo ranges from
+delighted to plain content and never below - the owner-facing promise in
+`GUIDE.md` is "he never sulks at you", and `moodCategory()` only ever returns
+love/happy/cool/animal/robot.
+
+Pets within `PET_STREAK_MS` stack: three in a row reads as `love`, five or
+more as `surprised` (overstimulated, which is funnier than endless bliss).
+`reacting` guards re-entrancy - without it the button poll inside
+`idleDelay()` would re-trigger `petGeedo()` from inside its own reaction face.
+
+Writes are throttled to `MOOD_SAVE_MS` for flash wear, with `saveMood(true)`
+forced before both reboot paths (OTA and WiFi erase) so neither loses it.
+Out-of-range or missing stored values fall back to the default rather than
+being trusted.
+
+Host-tested against the sketch's own source: floor after a week of neglect,
+no sad/angry/dead category ever selected, clamp at max, streak build and
+reset, guard cleared, save throttle/force/round-trip, corrupt-file rejection.
 
 Every `delay()` in the playback path is now `idleDelay()`, which polls the
 button every 5 ms. Host-tested in the scratchpad harness (tap / cancel /

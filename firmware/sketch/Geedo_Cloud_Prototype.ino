@@ -13,9 +13,13 @@
     - Polls Hub for new animations every POLL_INTERVAL_MS.
 
   THE BUTTON (SW1, on the outside of Geedo):
-    - Tap          -> skip to the next animation
+    - Tap          -> pet him. He reacts, and his mood goes up.
     - Hold 5 s     -> erase saved WiFi and reopen the setup portal
                       (a countdown shows on screen; let go to cancel)
+
+  MOOD: one number, 40..100, kept in LittleFS. Petting raises it, time lowers
+  it back to 40 and no further - Geedo can be delighted or plain content, but
+  never sad at his owner. Mood picks which family of faces he pulls.
 
   WIRING (shipping ESP32-C3 board - see hardware/README.md):
     OLED  VCC -> 3.3V, GND -> GND, SDA -> GPIO4, SCL -> GPIO5
@@ -70,6 +74,15 @@ const uint32_t KAOMOJI_TIME_MS = 2000;    // how long each face stays up
 const uint32_t WIFI_RESET_HOLD_MS = 5000; // hold MAIN this long to erase WiFi
 const uint32_t BTN_TAP_MS = 700;          // shorter than this is a tap, not a hold
 
+// Mood. Petting lifts it; it drifts back down to MOOD_FLOOR and stops there,
+// so Geedo can be delighted or plain content but never miserable.
+const uint8_t  MOOD_FLOOR = 40;
+const uint8_t  MOOD_MAX = 100;
+const uint8_t  MOOD_PET_BOOST = 8;
+const uint32_t MOOD_DECAY_MS = 15UL * 60UL * 1000UL;   // -1 every 15 min
+const uint32_t MOOD_SAVE_MS = 10UL * 60UL * 1000UL;    // flash-wear throttle
+const uint32_t PET_STREAK_MS = 2000;      // pets this close together stack
+
 #define AP_NAME "GEEDO-Setup"
 // =========================================================
 
@@ -98,6 +111,9 @@ bool writeCache(const String& id, const String& hash, const uint8_t* buf, size_t
 bool parseAnimBin(const uint8_t* bb, size_t bl, const String& id, const String& name,
                   const String& file, const String& hash, uint16_t size);
 int findAnim(const char* id);
+void petGeedo();
+void showMoodKaomoji(uint32_t ms);
+void saveMood(bool force = false);
 
 void freeAnims() {
   for (uint8_t i = 0; i < anim_count; i++) {
@@ -134,12 +150,17 @@ void showSetupScreen() {
   display.display();
 }
 
-// ===== MAIN button: tap = skip, hold 5 s = erase WiFi and start setup over =====
+// ===== MAIN button: tap = pet him, hold 5 s = erase WiFi and set up again =====
 // SW1 shorts GPIO3 to GND, so the pin idles high and reads LOW when pressed.
 bool btnDown() { return digitalRead(MAIN_BTN_PIN) == LOW; }
 
+// Set while Geedo is mid-reaction, so the button poll inside idleDelay()
+// cannot re-enter petGeedo() from within petGeedo()'s own face.
+bool reacting = false;
+
 void eraseWiFiAndRestart() {
   showStatus("WIFI ERASED", "restarting...", "set up on your phone");
+  saveMood(true);          // losing the WiFi should not lose how he feels
   WiFiManager wm;
   wm.resetSettings();
   delay(1500);
@@ -164,7 +185,8 @@ void serviceButtonHold() {
     }
     delay(40);
   }
-  if (warned) showStatus("cancelled", "WiFi kept");
+  if (warned) { showStatus("cancelled", "WiFi kept"); return; }
+  petGeedo();   // a plain tap is a pet
 }
 
 // delay() that stays awake to the button. Returns true if the caller should
@@ -172,7 +194,7 @@ void serviceButtonHold() {
 bool idleDelay(uint32_t ms) {
   uint32_t t0 = millis();
   while ((millis() - t0) < ms) {
-    if (btnDown()) { serviceButtonHold(); return true; }
+    if (!reacting && btnDown()) { serviceButtonHold(); return true; }
     delay(5);
   }
   return false;
@@ -358,6 +380,72 @@ void showRandomKaomojiFrom(const char* cat, uint32_t ms) {
     if (kaomoji_category(i) == c && k-- == 0) { showKaomoji(i, ms); return; }
 }
 
+// ===== mood =====
+// One number, 40..100. Petting pushes it up, time pulls it back down to the
+// floor and no further: a neglected Geedo goes back to plain content, never
+// sad. It survives a power cut in LittleFS.
+uint8_t  mood = 60;
+uint32_t lastDecayAt = 0;
+uint32_t lastSaveAt = 0;
+uint32_t lastPetAt = 0;
+uint8_t  petStreak = 0;
+bool     moodDirty = false;
+
+void loadMood() {
+  if (!fsReady) return;
+  File f = LittleFS.open("/mood", "r");
+  if (!f) return;
+  long v = f.parseInt();
+  f.close();
+  if (v >= MOOD_FLOOR && v <= MOOD_MAX) mood = (uint8_t)v;
+  Serial.printf("mood restored: %u\n", mood);
+}
+
+void saveMood(bool force) {
+  if (!fsReady || !moodDirty) return;
+  if (!force && (millis() - lastSaveAt) < MOOD_SAVE_MS) return;
+  File f = LittleFS.open("/mood", "w");
+  if (!f) return;
+  f.print(mood);
+  f.close();
+  lastSaveAt = millis();
+  moodDirty = false;
+}
+
+// call often; unsigned subtraction makes the millis() rollover a non-event
+void decayMood() {
+  if ((millis() - lastDecayAt) < MOOD_DECAY_MS) return;
+  lastDecayAt = millis();
+  if (mood > MOOD_FLOOR) { mood--; moodDirty = true; }
+}
+
+// Which family of faces suits him right now. Nothing below content is ever
+// reachable from mood alone.
+const char* moodCategory() {
+  if (mood >= 85) return "love";
+  if (mood >= 65) return "happy";
+  static const char* const calm[] = {"happy", "cool", "animal", "robot"};
+  return calm[esp_random() % 4];
+}
+
+void showMoodKaomoji(uint32_t ms) { showRandomKaomojiFrom(moodCategory(), ms); }
+
+void petGeedo() {
+  uint32_t now = millis();
+  petStreak = (now - lastPetAt < PET_STREAK_MS && petStreak < 200)
+              ? petStreak + 1 : 1;
+  lastPetAt = now;
+  mood = (mood > MOOD_MAX - MOOD_PET_BOOST) ? MOOD_MAX : mood + MOOD_PET_BOOST;
+  moodDirty = true;
+  Serial.printf("pet! streak %u, mood %u\n", petStreak, mood);
+
+  reacting = true;                      // stop the reaction re-triggering itself
+  if (petStreak >= 5)      showRandomKaomojiFrom("surprised", 700);
+  else if (petStreak >= 3) showRandomKaomojiFrom("love", 800);
+  else                     showRandomKaomojiFrom(mood >= 85 ? "love" : "happy", 800);
+  reacting = false;
+}
+
 bool checkFirmwareUpdate() {
   WiFiClientSecure sec;
   sec.setInsecure();
@@ -397,6 +485,7 @@ bool checkFirmwareUpdate() {
   if (!Update.end(true)) { Serial.println("Update.end fail"); return false; }
 
   showStatus("UPDATE OK", "rebooting...");
+  saveMood(true);          // an update should not reset his mood either
   delay(1500);
   ESP.restart();
   return true;
@@ -535,6 +624,8 @@ void setup() {
 
   // 💾 Mount LittleFS and load any cached anims into RAM
   mountFS();
+  loadMood();
+  lastDecayAt = millis();
   uint8_t cached = loadCachedAnims();
   if (cached > 0) {
     // We have stuff to show even without WiFi — kick off one loop pass
@@ -579,15 +670,17 @@ void setup() {
     }
   } else {
     playSystemAnim("animations_boot_turning_on");
-    showRandomKaomojiFrom("happy", 1500);   // little hello face
+    showMoodKaomoji(1500);   // hello, in whatever mood he woke up in
   }
   lastPoll = millis();
 }
 
 void loop() {
   if (anim_count == 0) {
-    // no animations at all - kaomojis keep Geedo alive while we retry
-    showRandomKaomojiFrom("sad", 2500);
+    // no animations at all - kaomojis keep Geedo alive while we retry.
+    // "confused" rather than "sad": this is a lost-the-Hub face, and he is
+    // never meant to look miserable at his owner.
+    showRandomKaomojiFrom("confused", 2500);
     showStatus("No animations", "retrying...", "hold button 5s");
     idleDelay(2500);
     loadManifestAndAnims();
@@ -597,9 +690,11 @@ void loop() {
   for (uint8_t i = 0; i < anim_count; i++) {
     if (isSystemAnim(anims[i])) continue;
     playAnim(anims[i], PLAY_TIME_MS);
+    decayMood();
     if ((esp_random() % 100) < KAOMOJI_CHANCE_PCT)
-      showRandomKaomoji(KAOMOJI_TIME_MS);
+      showMoodKaomoji(KAOMOJI_TIME_MS);
   }
+  saveMood();
 
   if (POLL_INTERVAL_MS > 0 && (millis() - lastPoll) > POLL_INTERVAL_MS) {
     Serial.println("Polling...");

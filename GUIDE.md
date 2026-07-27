@@ -40,8 +40,18 @@ The button on the outside of Geedo does two things:
 
 | Do this | What happens |
 |---|---|
-| **Tap** | Skip to the next animation |
+| **Tap** | Pet him |
 | **Hold 5 seconds** | Erase saved WiFi and start setup again |
+
+**Petting.** Tap him and he reacts straight away — a happy face, and he
+cheers up a little. Keep tapping and he gets more and more wound up until
+he's positively giddy. He remembers: a Geedo who gets petted every day wears
+a different set of faces than one who's been left alone on a shelf.
+
+He drifts back to ordinary contentment if you ignore him for a few days, but
+that's as far down as it goes. **Geedo never sulks at you** and never guilts
+you into picking him up. He keeps his mood through a power cut and through
+updates.
 
 When you hold it, a countdown appears (`erasing WiFi in 3`). **Let go and
 nothing happens** — it only wipes the WiFi if you hold the whole way through.

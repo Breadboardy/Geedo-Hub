@@ -297,7 +297,9 @@ bool checkFirmwareUpdate() {
   WiFiClientSecure sec;
   sec.setInsecure();
   HTTPClient http;
-  http.begin(sec, String(HUB) + "/firmware/manifest.json");
+  // ?t= makes every poll a fresh CDN cache key - GitHub Pages otherwise
+  // serves a cached manifest for up to 10 minutes after a deploy
+  http.begin(sec, String(HUB) + "/firmware/manifest.json?t=" + String(millis()));
   int code = http.GET();
   if (code != 200) { Serial.printf("OTA manifest HTTP %d\n", code); http.end(); return false; }
   String body = http.getString();

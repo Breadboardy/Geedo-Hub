@@ -14,6 +14,10 @@ here is strongly recommended - it is the single copy of Geedo's brain.
 - Publishing = `tools/build_firmware.sh`: bumps the version in the sketch,
   compiles with arduino-cli, copies the bin into `firmware/`, rewrites the
   manifest, commits, pushes. The git push is the deploy.
+- The manifest poll appends `?t=<millis>` to defeat the GitHub Pages CDN
+  cache (max-age 600) - without it a freshly published version can take up
+  to ~10 min to reach devices. The `.bin` needs no cache-buster: its
+  filename changes every version.
 
 ## Animations
 

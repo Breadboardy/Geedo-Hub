@@ -102,9 +102,13 @@ to the OLED on real hardware.
   no user-visible error. `MAX_ANIMS` (40) caps it independently, with 32 in
   the manifest today. Fixing this properly means streaming frames from
   LittleFS at playback instead of holding whole animations in RAM.
-- **No battery sense.** J2 carries VBAT and GND only; no divider reaches an
-  ADC pin, so `animations_boot_low_battery` and `..._charging` can never be
-  triggered. Hardware change, rev 5.
+- **No battery or charger sense.** Traced on the board: `/VBAT` reaches only
+  J2, and the charger's `/STAT` pin reaches only R7 and the LED - neither gets
+  to a GPIO, and `/VBUS` does not either. So `animations_boot_low_battery` and
+  `..._charging` cannot be triggered at all, and Geedo cannot tell you he is
+  charging or nearly flat. **`/IO2` and `/IO8` are free** (each sits on a lone
+  pull resistor), so rev 5 wants `/STAT` on one and a VBAT divider on an ADC
+  pin - that is the whole fix.
 - **`visibility` is ignored.** `loadManifestAndAnims()` downloads every entry
   in the manifest regardless of the field, so unlock codes gate the website
   only, not the device.
@@ -134,10 +138,28 @@ What makes it hold up at 128x64:
 - **A sphere reads richer than a cube** for the same handful of lines -
   latitude rings plus longitude arcs give real form.
 
-Generation asserts the PROGMEM bytes equal the `.bin`, that no run of
-near-empty frames exceeds two (so a strobe gap can never look like a hang),
-and that **the final frame is pixel-identical to `eyes_render(0,0,100)`** -
-the boot cannot drift out of step with the idle face it hands over to.
+### Photosensitivity
+
+The first cut of this sequence ran a four-beat strobe: **twelve full-screen
+black/white flashes inside one second**, squarely in the band that triggers
+photosensitive seizures. WCAG 2.3.1 allows at most three large-area luminance
+flashes per second.
+
+On a mono panel the lit fraction *is* the luminance, so a flash is a
+frame-to-frame swing of more than a quarter of the screen. `fade()` spreads
+every big level change over dithered steps small enough that none of them
+counts, which keeps the bloom and the whiteout looking the same while removing
+the flashing. Where possible the effect carries its own ramp - the tunnel now
+enters bright and dims, rather than cutting from white to black and relighting.
+
+**The generator asserts this on every run** and refuses to emit a sequence with
+more than three flashes in any second. It has already caught one 16-per-second
+strobe, so it stays.
+
+Generation also asserts the PROGMEM bytes equal the `.bin`, that no run of
+near-empty frames exceeds two (so a gap can never look like a hang), and that
+**the final frame is pixel-identical to `eyes_render(0,0,100)`** - the boot
+cannot drift out of step with the idle face it hands over to.
 
 ## Idle face: wandering eyes (`firmware/sketch/eyes.h`)
 

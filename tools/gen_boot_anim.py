@@ -228,8 +228,8 @@ def tunnel(fb, t, gain=1.0):
                 fb[y][x] = 1
                 continue
             a = math.atan2(dy, dx)
-            v = math.sin(28.0 / d + t * 4.0) * 0.5 + 0.5
-            v *= 0.55 + 0.45 * math.sin(a * 6.0 + t * 2.0)
+            v = math.sin(28.0 / d + t * 2.0) * 0.35 + 0.55
+            v *= 0.70 + 0.30 * math.sin(a * 6.0 + t * 1.2)
             lvl = v * gain * min(1.0, d / 26.0)
             if BAYER[y & 3][x & 3] < lvl * 17.0:
                 fb[y][x] = 1
@@ -279,6 +279,28 @@ def sphere(fb, ang, z, scale=30, level=1.0):
             line(fb, a[0], a[1], b[0], b[1], level)
 
 
+
+def fade(a, b, steps=None, hold=0, under=None):
+    """Ramp the whole screen between two dither levels. A hard cut from black
+    to white is a seizure risk; the same move spread over a few dithered steps
+    still reads as a bloom but never trips the 3-flashes-per-second limit.
+    `under` draws content beneath the wash."""
+    if steps is None:
+        steps = max(1, int(abs(b - a) / 0.15 + 0.5))
+    for i in range(1, steps + 1):
+        f = blank()
+        if under:
+            under(f)
+        dither(f, a + (b - a) * i / steps)
+        add(f, 1)
+    if hold:
+        f = blank()
+        if under:
+            under(f)
+        dither(f, b)
+        add(f, hold)
+
+
 frames = []
 
 
@@ -289,10 +311,10 @@ def add(fb, dur=1):
 # ===================== ACT 1: cold, dead, one dying flicker ================
 add(blank(), 2)
 f = blank(); band(f, 31, 32, 0.5); add(f, 1)
-add(blank(), 2)
+add(blank(), 1)
 
 # ===================== ACT 2: the mains arcs over ==========================
-for k in range(5):
+for k in range(4):
     f = blank()
     bolt(f, 0, rnd.randrange(6, 58), 127, rnd.randrange(6, 58), 22)
     if k % 2:
@@ -307,7 +329,7 @@ TRACES = [((64, 32), (40, 32)), ((40, 32), (24, 32)), ((24, 32), (24, 12)),
           ((64, 32), (88, 32)), ((88, 32), (104, 32)), ((104, 32), (104, 12)),
           ((24, 32), (18, 52)), ((104, 32), (110, 52)),
           ((64, 32), (64, 6)), ((64, 32), (64, 58))]
-for k in range(1, 6):
+for k in range(2, 6, 2):
     f = blank()
     grow = k / 5.0
     for (ax, ay), (bx, by) in TRACES:
@@ -324,34 +346,35 @@ for lvl in (1.0, 0.25, 1.0):
     add(f, 1)
 
 # ===================== ACT 4: plasma surge, panel shaking ==================
-for i, g in enumerate((0.30, 0.48, 0.36, 0.66, 0.52, 0.85, 1.0)):
+for i, g in enumerate((0.34, 0.52, 0.40, 0.72, 0.95)):
     f = blank()
     plasma(f, i * 0.55, g)
     j = rnd.randrange(-3, 4)
     for (ax, ay), (bx, by) in TRACES:
         line(f, ax + j, ay, bx + j, by, 1.0)
     add(f, 1)
-f = blank(); band(f, 0, H - 1); add(f, 1)
+fade(0.6, 1.0, hold=2)
 
 # ===================== ACT 5: down the tunnel ==============================
-for i in range(8):
+for i in range(7):
     f = blank()
-    tunnel(f, i * 0.42, 0.55 + i * 0.06)
+    tunnel(f, i * 0.26, 0.92 - i * 0.07)
     add(f, 1)
+
+fade(0.30, 0.06)
 
 # ===================== ACT 6: hyperspace ===================================
 stars = [(rnd.uniform(-70, 70), rnd.uniform(-40, 40), rnd.uniform(0.25, 2.4))
          for _ in range(150)]
-for adv, streak in ((0.0, 0.0), (0.18, 0.06), (0.34, 0.18), (0.50, 0.38),
-                    (0.64, 0.70), (0.76, 1.20), (0.86, 1.90), (0.93, 2.80)):
+for adv, streak in ((0.0, 0.0), (0.26, 0.10), (0.48, 0.32),
+                    (0.66, 0.75), (0.80, 1.40), (0.90, 2.40)):
     f = blank()
     starfield(f, [(sx, sy, max(0.06, sz - adv * 1.6)) for sx, sy, sz in stars],
               streak, 1.0)
     add(f, 1)
 
 # ===================== ACT 7: a wireframe world tumbles out ================
-for z, ang in ((6.0, 0.0), (3.6, 0.8), (2.4, 1.7), (1.8, 2.6),
-               (1.45, 3.5), (1.2, 4.4), (1.05, 5.3)):
+for z, ang in ((6.0, 0.0), (3.4, 0.9), (2.2, 1.9), (1.6, 2.9), (1.15, 4.2)):
     f = blank()
     starfield(f, [(sx, sy, max(0.06, sz - 1.5)) for sx, sy, sz in stars], 1.3, 0.4)
     sphere(f, ang, z)
@@ -359,7 +382,7 @@ for z, ang in ((6.0, 0.0), (3.6, 0.8), (2.4, 1.7), (1.8, 2.6),
 f = blank(); sphere(f, 6.0, 0.95, 34); add(f, 2)
 
 # it detonates: shards thrown at the viewer
-for r in (7, 18, 31, 46):
+for r in (9, 24, 42):
     f = blank()
     for k in range(54):
         a = k * 2.39996
@@ -369,13 +392,14 @@ for r in (7, 18, 31, 46):
     add(f, 1)
 
 # ===================== ACT 8: GEEDO ========================================
-for sc in (2.8, 1.7, 1.0):
+for sc in (2.6, 1.4, 1.0):
     f = blank(); wordmark(f, sc); add(f, 1)
-f = blank(); wordmark(f, 1.0); add(f, 3)
-f = blank(); wordmark(f, 1.0); add(invert(f), 1)      # negative flash
+f = blank(); wordmark(f, 1.0); add(f, 2)
+fade(0.15, 0.60, under=lambda f: wordmark(f, 1.0), hold=1)   # negative swell
+fade(0.60, 0.10, under=lambda f: wordmark(f, 1.0))
 f = blank(); wordmark(f, 1.0); add(f, 1)
 
-for k in range(4):                                    # VHS tearing
+for k in range(3):                                    # VHS tearing
     base = blank(); wordmark(base, 1.0)
     if k == 2:
         plasma(base, 3.1, 0.35)
@@ -394,16 +418,14 @@ for k in range(4):                                    # VHS tearing
     add(f, 1)
 f = blank(); wordmark(f, 1.0); add(f, 2)
 
-# ===================== ACT 9: strobe into whiteout =========================
-for d in (1, 1, 1, 1):
-    f = blank(); band(f, 0, H - 1); add(f, d)
-    add(blank(), 1)
-f = blank(); band(f, 0, H - 1); add(f, 3)
-add(blank(), 1)
+# ===================== ACT 9: one held whiteout ============================
+# This was four hard black/white cuts - 16 flashes a second, squarely in the
+# photosensitive danger band. A single ramped whiteout keeps the punch.
+fade(0.1, 1.0, hold=2)
+fade(1.0, 0.0)
 
 # ===================== ACT 10: shockwave ===================================
-for rad, th, lvl in ((8, 9, 1.0), (24, 8, 1.0), (42, 8, 1.0),
-                     (60, 7, 0.8), (78, 6, 0.55), (96, 5, 0.35)):
+for rad, th, lvl in ((10, 9, 1.0), (30, 8, 1.0), (54, 7, 0.8), (80, 6, 0.45)):
     f = blank(); ring(f, 64, CY, rad, th, lvl); add(f, 1)
 
 # ===================== ACT 11: shards assemble his eyes ====================
@@ -415,7 +437,7 @@ for y in range(0, H, 3):
             targets.append((x, y))
 rnd.shuffle(targets)
 starts = [(rnd.uniform(-50, 178), rnd.uniform(-40, 104)) for _ in targets]
-for t in (0.0, 0.30, 0.55, 0.75, 0.89, 0.97):
+for t in (0.0, 0.34, 0.62, 0.84, 0.97):
     f = blank()
     for (sx, sy), (tx, ty) in zip(starts, targets):
         x, y = sx + (tx - sx) * t, sy + (ty - sy) * t
@@ -424,15 +446,16 @@ for t in (0.0, 0.30, 0.55, 0.75, 0.89, 0.97):
         else:
             disc(f, x, y, 1)
     add(f, 1)
-f = blank(); band(f, 0, H - 1); add(f, 1)             # impact flash
+fade(0.30, 0.55, hold=1)                              # impact
+fade(0.55, 0.0)
 
 # ===================== ACT 12: eyes open, blink, awake =====================
 for sq in (0.05, 0.05, 0.22, 0.55, 0.85, 1.0):
     add(eyes_frame(sq), 1)
-add(eyes_frame(1.0), 5)
+add(eyes_frame(1.0), 4)
 for sq in (0.45, 0.12, 0.45):
     add(eyes_frame(sq), 1)
-add(eyes_frame(1.0), 6)
+add(eyes_frame(1.0), 5)
 
 
 # ---------------------------------------------------------------- pack
@@ -469,6 +492,22 @@ for i in range(0, len(data), 16):
     hdr.append('  ' + ', '.join(f'0x{b:02X}' for b in data[i:i + 16]) + ',')
 hdr.append('};')
 (ROOT / 'firmware' / 'sketch' / 'boot_anim_progmem.h').write_text('\n'.join(hdr) + '\n')
+
+
+# ---------------------------------------- photosensitivity guard (WCAG 2.3.1)
+# No more than three large-area luminance flashes in any one second. On a mono
+# panel the lit fraction IS the luminance, so a "flash" is a frame-to-frame
+# swing of more than a quarter of the screen. This has caught a 16-per-second
+# strobe once already; it runs on every generation so it cannot creep back.
+ink = [sum(bin(b).count('1') for b in pack_frame(fb)) / 8192.0 for fb, _ in frames]
+t_ms, times = 0, []
+for _, d in frames:
+    times.append(t_ms); t_ms += (1000 // FPS) * d
+flash_at = [times[i] for i in range(1, n) if abs(ink[i] - ink[i - 1]) > 0.25]
+worst = max((sum(1 for g in flash_at if f <= g < f + 1000) for f in flash_at), default=0)
+assert worst <= 3, (f"{worst} large-area flashes inside one second - "
+                    "that is a seizure risk; ramp the transition with fade()")
+print(f"photosensitivity: {len(flash_at)} large transitions, worst second {worst}/3 - OK")
 
 total_ms = sum(d for _, d in frames) * (1000 // FPS)
 print(f"{n} frames, {len(data)} bytes of flash, runs {total_ms/1000:.1f}s")

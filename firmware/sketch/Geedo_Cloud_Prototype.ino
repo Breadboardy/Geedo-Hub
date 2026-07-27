@@ -682,6 +682,10 @@ void setup() {
   if (WiFi.SSID().length() == 0) {
     showSetupScreen();
   } else {
+    // autoConnect() blocks, so the animation plays ahead of it rather than
+    // during. Only possible from the LittleFS cache, which is why the cache
+    // load happens before WiFi.
+    playSystemAnim("animations_boot_connecting_to_wifi");
     showStatus("Connecting WiFi", WiFi.SSID().c_str());
   }
 

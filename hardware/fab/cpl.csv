@@ -18,7 +18,7 @@ R5,27.990mm,29.490mm,Bottom,180
 R6,27.990mm,27.500mm,Bottom,180
 R7,27.990mm,25.510mm,Bottom,180
 R8,27.990mm,39.440mm,Bottom,180
-SW1,21.500mm,17.500mm,Top,0
+SW1,21.500mm,17.500mm,Top,180
 SW2,20.500mm,37.000mm,Bottom,270
 SW3,20.500mm,26.700mm,Bottom,270
 U1,4.138mm,4.950mm,Bottom,180

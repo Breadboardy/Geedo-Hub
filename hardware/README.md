@@ -15,10 +15,12 @@ single-side assembly tier:
   face. All three parts are through-hole: they insert from the front and get
   soldered on the back, the classic TV-remote build. **Zero SMD passes on
   the front.**
-- **SW1 changed part:** the MAIN button is now a standard 6x6 mm
-  through-hole tactile switch (TL1105/B3F class, LCSC C127509) instead of the
-  SMD KSC6. Same position. Its taller plunger is also easier to poke through
-  an enclosure. BOOT and RESET stay SMD KSC6 on the back.
+- **SW1 stays the original SMD KSC6** (all three buttons are the same part,
+  LCSC C221929). It is the one SMD part on the front, so the fab's
+  single-side run does NOT place it - **you hand-solder SW1 yourself**: four
+  big pads, an easy first SMD joint. For a production run, either pay for
+  the second assembly side or swap SW1 to a 6x6 mm THT switch (that variant
+  was built and verified in git history, commit c41971e).
 - Everything re-routed from scratch (1000+ segments). The old CC2
   board-edge violations are gone - the new route no longer hugs the edge.
 - `hardware/fab/bom.csv` and `hardware/fab/cpl.csv` are the assembly-house

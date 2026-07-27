@@ -22,14 +22,30 @@ if [ "$BRANCH" != "main" ]; then
   exit 1
 fi
 
-# read current version from sketch
-CUR_VER=$(grep -oP 'FIRMWARE_VERSION\s*=\s*\K[0-9]+' "$SKETCH/Geedo_Cloud_Prototype.ino" | head -1)
+# What is actually PUBLISHED is the manifest, not the sketch. The sketch is a
+# working copy that gets copied around between the repo and ~/Arduino, so
+# trusting it can silently rewind the counter and republish a version the
+# Geedos already have (they compare `latest <= FIRMWARE_VERSION` and ignore
+# it). Take whichever is higher so the number can only ever go up.
+MANIFEST_VER=$(grep -oP '"version"\s*:\s*\K[0-9]+' "$HUB/firmware/manifest.json" | head -1)
+SKETCH_VER=$(grep -oP 'FIRMWARE_VERSION\s*=\s*\K[0-9]+' "$SKETCH/Geedo_Cloud_Prototype.ino" | head -1)
+CUR_VER=$MANIFEST_VER
+[ "$SKETCH_VER" -gt "$CUR_VER" ] && CUR_VER=$SKETCH_VER
 NEW_VER=$((CUR_VER + 1))
 [ -n "$VER_NAME" ] || VER_NAME="v$NEW_VER"
+
+if [ -e "$HUB/firmware/geedo_v${NEW_VER}.bin" ]; then
+  echo "firmware/geedo_v${NEW_VER}.bin already exists - refusing to overwrite" >&2
+  echo "a published version must never change meaning under devices" >&2
+  exit 1
+fi
 echo "Building firmware $CUR_VER -> $NEW_VER  (shown to owners as $VER_NAME)"
 
-# bump sketch
-sed -i "s/const uint32_t FIRMWARE_VERSION = $CUR_VER;/const uint32_t FIRMWARE_VERSION = $NEW_VER;/" "$SKETCH/Geedo_Cloud_Prototype.ino"
+# Bump BOTH copies of the sketch: the build copy and the one tracked in the
+# repo. Otherwise they drift and the next build rewinds again.
+for f in "$SKETCH/Geedo_Cloud_Prototype.ino" "$HUB/firmware/sketch/Geedo_Cloud_Prototype.ino"; do
+  [ -f "$f" ] && sed -i -E "s/const uint32_t FIRMWARE_VERSION = [0-9]+;/const uint32_t FIRMWARE_VERSION = $NEW_VER;/" "$f"
+done
 
 # compile
 cd "$SKETCH"
@@ -55,7 +71,7 @@ EOF
 
 # commit + push
 cd "$HUB"
-git add firmware/
+git add firmware/ tools/
 git commit -m "firmware $VER_NAME (build $NEW_VER)"
 git push
 echo "✓ Firmware $VER_NAME published. Geedos will auto-update within 60s."

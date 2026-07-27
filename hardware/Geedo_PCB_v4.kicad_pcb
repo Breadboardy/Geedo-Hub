@@ -559,6 +559,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "b1446f48-bf41-49d1-9373-349ae81d6a30")
 		)
 		(pad "2" smd rect
@@ -568,6 +569,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "0d197efa-cdd8-4436-a89e-32f87345944c")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Button_Switch_SMD.3dshapes/SW_push_1P1T_NO_CK_KSC6xxJxxx.wrl"
@@ -867,6 +869,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "e5764634-0149-46b0-9935-6b8b30df335b")
 		)
 		(pad "2" smd rect
@@ -876,6 +879,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "b84b51ee-9ac3-4d1f-922d-7ea652daa673")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Button_Switch_SMD.3dshapes/SW_push_1P1T_NO_CK_KSC6xxJxxx.wrl"
@@ -1169,6 +1173,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "9378628b-2b0f-41b2-8b3f-62e915d41861")
 		)
 		(pad "2" smd rect
@@ -1178,6 +1183,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "78628f68-d79c-4b64-ba5a-58749757928e")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Button_Switch_SMD.3dshapes/SW_push_1P1T_NO_CK_KSC6xxJxxx.wrl"
@@ -1439,6 +1445,7 @@
 			(size 0.6 1.45)
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
+			(zone_connect 2)
 			(uuid "511fd851-2862-4bb7-8e7e-be6acedd408c")
 		)
 		(pad "A4" smd rect
@@ -1487,6 +1494,7 @@
 			(size 0.6 1.45)
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
+			(zone_connect 2)
 			(uuid "47e28bb8-6950-4626-ad36-44776a9eef00")
 		)
 		(pad "B1" smd rect
@@ -1494,6 +1502,7 @@
 			(size 0.6 1.45)
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
+			(zone_connect 2)
 			(uuid "b537b2b1-b99f-4faf-9f32-23a1775cef95")
 		)
 		(pad "B4" smd rect
@@ -1542,6 +1551,7 @@
 			(size 0.6 1.45)
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
+			(zone_connect 2)
 			(uuid "28bdd505-889e-4682-a2f1-76214494eb07")
 		)
 		(pad "S1" thru_hole oval
@@ -2195,6 +2205,7 @@
 			(pinfunction "GND")
 			(pintype "passive")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "ecf3b17e-9769-41f2-bf3b-8e122c65817b")
 		)
 		(pad "2" smd rect
@@ -2205,6 +2216,7 @@
 			(pinfunction "3V3")
 			(pintype "passive")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "4af624cf-3d41-4a11-b6dd-82583411684e")
 		)
 		(pad "3" smd rect
@@ -2281,6 +2293,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "78fc8551-3f16-45ef-8d9d-e78f067e92ec")
 		)
 		(pad "12" smd rect
@@ -2309,6 +2322,7 @@
 			(pinfunction "IO13")
 			(pintype "passive")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "7040bdbe-cbbe-4cef-b167-bdd4eb57648a")
 		)
 		(pad "15" smd rect
@@ -2474,6 +2488,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "165b4ba8-a4c1-4332-ae78-25717a5fc105")
 		)
 		(pad "37" smd rect
@@ -2482,6 +2497,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "559ea79e-8c2d-417c-845e-752cf1fdfdef")
 		)
 		(pad "38" smd rect
@@ -2490,6 +2506,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "ee3a61ed-9571-4f55-b109-b11734817d2f")
 		)
 		(pad "39" smd rect
@@ -2498,6 +2515,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "08682f4f-68ea-442e-9bfc-ae42a047bb41")
 		)
 		(pad "40" smd rect
@@ -2506,6 +2524,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "1ed28c27-de85-42fd-a896-21fc8ee2ecac")
 		)
 		(pad "41" smd rect
@@ -2514,6 +2533,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "5b9be942-0112-4cdd-886d-f579a16a5332")
 		)
 		(pad "42" smd rect
@@ -2522,6 +2542,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "304b1e66-d223-4b49-95b9-31a13e944208")
 		)
 		(pad "43" smd rect
@@ -2530,6 +2551,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "9961c517-2ddd-4756-b12a-1405464f6372")
 		)
 		(pad "44" smd rect
@@ -2538,6 +2560,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "c9f4f284-3d0e-4e90-ac76-0b5238daa43c")
 		)
 		(pad "45" smd rect
@@ -2546,6 +2569,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "ceebe256-eebd-44d1-abf8-9706c6e6c9e4")
 		)
 		(pad "46" smd rect
@@ -2554,6 +2578,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "a2ef93cb-9236-4da7-ae39-40f17f0e4a5c")
 		)
 		(pad "47" smd rect
@@ -2562,6 +2587,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "80f08c29-801f-4155-8b79-2272c03de38f")
 		)
 		(pad "48" smd rect
@@ -2570,6 +2596,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "078c4e25-867f-4788-acb3-0a2f2f301a1e")
 		)
 		(pad "49_1" smd custom
@@ -2590,6 +2617,7 @@
 					(fill yes)
 				)
 			)
+			(zone_connect 2)
 			(uuid "9888eebf-d8aa-48d6-b48f-99c34e336626")
 		)
 		(pad "49_2" smd rect
@@ -2598,6 +2626,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "74c00143-4ffa-45ec-a025-e6cfbee5bcc7")
 		)
 		(pad "49_3" smd rect
@@ -2606,6 +2635,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "8c251a3d-3ff5-4155-9173-05d37d75c1ec")
 		)
 		(pad "49_4" smd rect
@@ -2614,6 +2644,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "49972104-9d46-4a9f-8c20-377b3a1405fc")
 		)
 		(pad "49_5" smd rect
@@ -2622,6 +2653,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "569b1c85-d9a3-40de-b793-b8fad5d4d1bb")
 		)
 		(pad "49_6" smd rect
@@ -2630,6 +2662,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "49af4528-0c63-440f-a7d6-a498750ade36")
 		)
 		(pad "49_7" smd rect
@@ -2638,6 +2671,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "1263b31c-6fca-43a0-8ab5-d5724b440f45")
 		)
 		(pad "49_8" smd rect
@@ -2646,6 +2680,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "7250f0ce-1d0a-45e6-8b11-230554999ef6")
 		)
 		(pad "49_9" smd rect
@@ -2654,6 +2689,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "790b7081-bbc9-4eb3-910b-0692917c2d34")
 		)
 		(pad "50" smd rect
@@ -2662,6 +2698,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "d255d34c-434a-448e-94f9-74fe292b3c74")
 		)
 		(pad "51" smd rect
@@ -2670,6 +2707,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "e52b58c0-1a24-4036-9ce4-dba256df7c45")
 		)
 		(pad "52" smd rect
@@ -2678,6 +2716,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "56df2f1a-0e34-4234-9f1c-a8ccff6069d1")
 		)
 		(pad "53" smd rect
@@ -2686,6 +2725,7 @@
 			(layers "B.Cu" "B.Paste" "B.Mask")
 			(net 2 "GND")
 			(solder_mask_margin 0.102)
+			(zone_connect 2)
 			(uuid "00cfafac-7e73-4eb8-bab2-bd7a3e0c8bd3")
 		)
 		(zone
@@ -3019,6 +3059,7 @@
 			(net 2 "GND")
 			(pinfunction "VSS")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "1edf3886-73ac-4e8b-8407-8c9f460d1062")
 		)
 		(pad "3" smd roundrect
@@ -3491,6 +3532,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "8b5f782f-1dd5-43a0-861e-b9bb821b83e3")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -3702,6 +3744,7 @@
 			(net 2 "GND")
 			(pinfunction "1")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "5af9eba1-ec3c-4022-867b-92818ae054b2")
 		)
 		(pad "2" smd roundrect
@@ -4154,6 +4197,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "aa2ed955-517c-465c-bdf0-0f7f51491750")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -4375,6 +4419,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "653ed1ad-8d72-4d46-b1bd-d98d893dd23a")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -4596,6 +4641,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "9c22e8c6-7b7b-46a3-a7a0-3f9152047ae6")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -5737,6 +5783,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "7055d05d-6041-4342-ac57-aea7c8c30168")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -5958,6 +6005,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "5cacc0e2-a1ca-4a65-8c51-6b49989d163a")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -6179,6 +6227,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "19f22470-b7ed-43ec-a572-40fb2ec16621")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -6400,6 +6449,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "71d3f4ef-0439-4428-b39f-a1ad2e844ff5")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -6663,6 +6713,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "8cf10b69-229b-4e95-9305-52cc1d0258d6")
 		)
 		(pad "2" smd roundrect
@@ -6673,6 +6724,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "d022fbaf-76c1-4b32-b0cb-a1229fd994e2")
 		)
 		(pad "3" smd roundrect
@@ -7136,6 +7188,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "b42d7d3a-b4ef-4588-a220-2a0975585b8e")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"
@@ -8020,6 +8073,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "4e318ec6-7ed2-4404-9922-dd81d5010a5b")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.wrl"
@@ -8241,6 +8295,7 @@
 			(net 2 "GND")
 			(pinfunction "2")
 			(pintype "passive")
+			(zone_connect 2)
 			(uuid "85cac25c-fc0c-4832-ba9c-74f03bae2ce3")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0402_1005Metric.wrl"

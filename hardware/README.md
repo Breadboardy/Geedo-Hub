@@ -23,6 +23,15 @@ labels; sch<->pcb verified CONSISTENT. `fab/bom.csv` + `fab/cpl.csv` are
 regenerated (19 line items, 29 placements; 100k = LCSC C25741). **If you
 exported Gerbers before rev 4.3, re-export** - the old zip has no sense parts.
 
+**Ground pads connect solid, not thermal.** The rev-4.3 sense routing
+crowds the corridor under the module, and KiCad's DRC rightly complained
+that several GND pads could only get one thermal spoke (it wants two).
+Every SMD ground pad now uses a solid zone connection - electrically
+better, standard on dense boards, and the parts are machine-reflowed so
+the soldering argument for reliefs does not apply. The two through-hole
+ground pins (J2/J3) keep their thermal reliefs because those are
+hand-soldered.
+
 Checker state after the change: clearance 0, edge 0, keepout 0, courtyards 0,
 hole-to-hole 0, nets split 0, GND one pour, netlist CONSISTENT.
 

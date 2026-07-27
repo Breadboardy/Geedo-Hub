@@ -41,6 +41,7 @@
 #include <LittleFS.h>
 #include "boot_anim_progmem.h"
 #include "kamoji.h"
+#include "eyes.h"
 
 // ================== CONFIG (no secrets) ==================
 const uint32_t FIRMWARE_VERSION = 12;
@@ -69,6 +70,7 @@ const char* HUB = "https://breadboardy.github.io/Geedo-Hub";
 
 const uint32_t POLL_INTERVAL_MS = 60UL * 1000UL;
 const uint32_t PLAY_TIME_MS = 5000;
+const uint32_t IDLE_EYES_MS = 9000;   // wandering between each animation
 const uint8_t  KAOMOJI_CHANCE_PCT = 40;   // odds of a face appearing between animations
 const uint32_t KAOMOJI_TIME_MS = 2000;    // how long each face stays up
 const uint32_t WIFI_RESET_HOLD_MS = 5000; // hold MAIN this long to erase WiFi
@@ -430,6 +432,21 @@ const char* moodCategory() {
 
 void showMoodKaomoji(uint32_t ms) { showRandomKaomojiFrom(moodCategory(), ms); }
 
+// ===== idle: wandering eyes =====
+// This is Geedo's resting state. Animations become things he does now and
+// then; the eyes are what he looks like the rest of the time.
+EyeState eyeState;
+
+void idleEyes(uint32_t ms) {
+  uint8_t frame[1024];
+  uint32_t t0 = millis();
+  while ((millis() - t0) < ms) {
+    uint16_t hold = eyes_next(&eyeState, mood, esp_random(), frame);
+    drawFrame(frame);
+    if (idleDelay(hold)) return;      // petted mid-wander: go and react
+  }
+}
+
 void petGeedo() {
   uint32_t now = millis();
   petStreak = (now - lastPetAt < PET_STREAK_MS && petStreak < 200)
@@ -440,6 +457,10 @@ void petGeedo() {
   Serial.printf("pet! streak %u, mood %u\n", petStreak, mood);
 
   reacting = true;                      // stop the reaction re-triggering itself
+  uint8_t frame[1024];
+  eyes_happy(frame);                    // eyes perk up first - instant feedback
+  drawFrame(frame);
+  delay(150);
   if (petStreak >= 5)      showRandomKaomojiFrom("surprised", 700);
   else if (petStreak >= 3) showRandomKaomojiFrom("love", 800);
   else                     showRandomKaomojiFrom(mood >= 85 ? "love" : "happy", 800);
@@ -625,6 +646,7 @@ void setup() {
   // 💾 Mount LittleFS and load any cached anims into RAM
   mountFS();
   loadMood();
+  eyes_init(&eyeState);
   lastDecayAt = millis();
   uint8_t cached = loadCachedAnims();
   if (cached > 0) {
@@ -671,6 +693,7 @@ void setup() {
   } else {
     playSystemAnim("animations_boot_turning_on");
     showMoodKaomoji(1500);   // hello, in whatever mood he woke up in
+    idleEyes(2500);          // then he opens his eyes and looks around
   }
   lastPoll = millis();
 }
@@ -680,19 +703,23 @@ void loop() {
     // no animations at all - kaomojis keep Geedo alive while we retry.
     // "confused" rather than "sad": this is a lost-the-Hub face, and he is
     // never meant to look miserable at his owner.
-    showRandomKaomojiFrom("confused", 2500);
+    // The eyes need neither WiFi nor downloads, so he stays alive and
+    // looking around even with nothing fetched.
+    idleEyes(8000);
+    showRandomKaomojiFrom("confused", 1800);
     showStatus("No animations", "retrying...", "hold button 5s");
-    idleDelay(2500);
+    idleDelay(1500);
     loadManifestAndAnims();
     return;
   }
 
   for (uint8_t i = 0; i < anim_count; i++) {
     if (isSystemAnim(anims[i])) continue;
-    playAnim(anims[i], PLAY_TIME_MS);
+    idleEyes(IDLE_EYES_MS);         // his resting face: wandering and blinking
     decayMood();
     if ((esp_random() % 100) < KAOMOJI_CHANCE_PCT)
       showMoodKaomoji(KAOMOJI_TIME_MS);
+    playAnim(anims[i], PLAY_TIME_MS);   // then he goes and does something
   }
   saveMood();
 

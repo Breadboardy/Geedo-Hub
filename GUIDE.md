@@ -82,6 +82,18 @@ should never need either.
 
 ---
 
+## What he does when nothing's happening
+
+Most of the time Geedo just sits there being alive: his eyes wander around,
+he holds a look for a moment, glances somewhere else, and blinks now and then
+on his own. He never repeats the same pattern twice.
+
+Every so often he'll go and *do* something — one of his animations — and then
+go back to looking around. Pet him and his eyes perk up straight away.
+
+His eyes work with no WiFi and nothing downloaded, so he's never a blank
+screen.
+
 ## Getting new animations
 
 New animations land on Geedo **by themselves**. He checks the Hub every

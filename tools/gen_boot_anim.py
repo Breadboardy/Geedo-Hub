@@ -202,6 +202,83 @@ def starfield(fb, stars, streak, level=1.0):
             px(fb, x, y, level)
 
 
+
+def plasma(fb, t, gain=1.0):
+    """Sine-field plasma, thresholded through the Bayer matrix. Boiling
+    organic mush is the one thing that reads as 'power' better than flat
+    dither, and it costs nothing but sines."""
+    for y in range(H):
+        for x in range(W):
+            v = (math.sin(x / 7.0 + t) + math.sin(y / 5.0 - t * 1.3)
+                 + math.sin((x + y) / 9.0 + t * 0.7)
+                 + math.sin(math.hypot(x - 64, y - 32) / 6.0 - t * 2.1))
+            lvl = ((v + 4.0) / 8.0) * gain
+            if BAYER[y & 3][x & 3] < lvl * 17.0:
+                fb[y][x] = 1
+
+
+def tunnel(fb, t, gain=1.0):
+    """Polar tunnel: shade by 1/distance so it rushes at the viewer."""
+    for y in range(H):
+        dy = y - 32
+        for x in range(W):
+            dx = x - 64
+            d = math.hypot(dx, dy)
+            if d < 1.2:
+                fb[y][x] = 1
+                continue
+            a = math.atan2(dy, dx)
+            v = math.sin(28.0 / d + t * 4.0) * 0.5 + 0.5
+            v *= 0.55 + 0.45 * math.sin(a * 6.0 + t * 2.0)
+            lvl = v * gain * min(1.0, d / 26.0)
+            if BAYER[y & 3][x & 3] < lvl * 17.0:
+                fb[y][x] = 1
+
+
+def bolt(fb, x0, y0, x1, y1, spread, depth=5):
+    """Midpoint-displacement lightning, branching as it goes."""
+    if depth <= 0 or spread < 1.2:
+        line(fb, x0, y0, x1, y1)
+        return
+    mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+    mx += rnd.uniform(-spread, spread)
+    my += rnd.uniform(-spread, spread)
+    bolt(fb, x0, y0, mx, my, spread / 2, depth - 1)
+    bolt(fb, mx, my, x1, y1, spread / 2, depth - 1)
+    if depth > 2 and rnd.random() < 0.45:
+        bolt(fb, mx, my, mx + rnd.uniform(-24, 24), my + rnd.uniform(-18, 18),
+             spread / 2, depth - 2)
+
+
+def sphere(fb, ang, z, scale=30, level=1.0):
+    """Wireframe sphere - latitude rings and longitude arcs. Reads as a far
+    more complex object than a cube for the same handful of lines."""
+    ca, sa = math.cos(ang), math.sin(ang)
+    cb, sb = math.cos(ang * 0.6), math.sin(ang * 0.6)
+
+    def proj(px_, py_, pz_):
+        x1, z1 = px_ * ca - pz_ * sa, px_ * sa + pz_ * ca
+        y1, z2 = py_ * cb - z1 * sb, py_ * sb + z1 * cb
+        d = max(0.35, z2 + z)
+        return 64 + x1 * scale / d, CY + y1 * scale / d
+
+    for li in range(-2, 3):                       # latitude rings
+        lat = li * 0.42
+        r, yy = math.cos(lat), math.sin(lat)
+        pts = [proj(r * math.cos(k * math.pi / 8), yy, r * math.sin(k * math.pi / 8))
+               for k in range(17)]
+        for a, b in zip(pts, pts[1:]):
+            line(fb, a[0], a[1], b[0], b[1], level)
+    for mi in range(6):                           # longitude arcs
+        lon = mi * math.pi / 6
+        pts = [proj(math.cos(k * math.pi / 8) * math.cos(lon),
+                    math.sin(k * math.pi / 8),
+                    math.cos(k * math.pi / 8) * math.sin(lon))
+               for k in range(-8, 9)]
+        for a, b in zip(pts, pts[1:]):
+            line(fb, a[0], a[1], b[0], b[1], level)
+
+
 frames = []
 
 
@@ -209,10 +286,21 @@ def add(fb, dur=1):
     frames.append((fb, dur))
 
 
-# ===================== ACT 1: dead, then the board takes power ==============
-add(blank(), 3)
+# ===================== ACT 1: cold, dead, one dying flicker ================
+add(blank(), 2)
+f = blank(); band(f, 31, 32, 0.5); add(f, 1)
+add(blank(), 2)
 
-# traces creep out from the centre like current finding its way through copper
+# ===================== ACT 2: the mains arcs over ==========================
+for k in range(5):
+    f = blank()
+    bolt(f, 0, rnd.randrange(6, 58), 127, rnd.randrange(6, 58), 22)
+    if k % 2:
+        bolt(f, rnd.randrange(0, 40), 0, rnd.randrange(88, 128), 63, 16)
+    add(f, 1)
+add(blank(), 1)
+
+# ===================== ACT 3: copper traces take the charge ================
 NODES = [(64, 32), (24, 12), (104, 12), (18, 52), (110, 52), (64, 6), (64, 58),
          (40, 32), (88, 32), (24, 32), (104, 32)]
 TRACES = [((64, 32), (40, 32)), ((40, 32), (24, 32)), ((24, 32), (24, 12)),
@@ -227,9 +315,7 @@ for k in range(1, 6):
     for nx, ny in NODES[:k * 2]:
         disc(f, nx, ny, 1)
     add(f, 1)
-
-# nodes fire
-for lvl in (1.0, 0.3, 1.0):
+for lvl in (1.0, 0.25, 1.0):
     f = blank()
     for (ax, ay), (bx, by) in TRACES:
         line(f, ax, ay, bx, by, lvl)
@@ -237,61 +323,67 @@ for lvl in (1.0, 0.3, 1.0):
         disc(f, nx, ny, 2 if lvl > 0.5 else 1)
     add(f, 1)
 
-# ===================== ACT 2: the surge, with the panel shaking =============
-for i, lvl in enumerate((0.15, 0.3, 0.18, 0.45, 0.28, 0.62)):
+# ===================== ACT 4: plasma surge, panel shaking ==================
+for i, g in enumerate((0.30, 0.48, 0.36, 0.66, 0.52, 0.85, 1.0)):
     f = blank()
-    dither(f, lvl)
+    plasma(f, i * 0.55, g)
+    j = rnd.randrange(-3, 4)
     for (ax, ay), (bx, by) in TRACES:
-        j = rnd.randrange(-2, 3)
         line(f, ax + j, ay, bx + j, by, 1.0)
     add(f, 1)
+f = blank(); band(f, 0, H - 1); add(f, 1)
 
-# ===================== ACT 3: hyperspace ===================================
+# ===================== ACT 5: down the tunnel ==============================
+for i in range(8):
+    f = blank()
+    tunnel(f, i * 0.42, 0.55 + i * 0.06)
+    add(f, 1)
+
+# ===================== ACT 6: hyperspace ===================================
 stars = [(rnd.uniform(-70, 70), rnd.uniform(-40, 40), rnd.uniform(0.25, 2.4))
-         for _ in range(120)]
-for step_i, (adv, streak, lvl) in enumerate(
-        ((0.0, 0.00, 1.0), (0.16, 0.05, 1.0), (0.30, 0.14, 1.0),
-         (0.44, 0.30, 1.0), (0.58, 0.55, 1.0), (0.70, 0.95, 1.0),
-         (0.80, 1.50, 1.0), (0.88, 2.30, 1.0))):
+         for _ in range(150)]
+for adv, streak in ((0.0, 0.0), (0.18, 0.06), (0.34, 0.18), (0.50, 0.38),
+                    (0.64, 0.70), (0.76, 1.20), (0.86, 1.90), (0.93, 2.80)):
     f = blank()
-    cur = [(sx, sy, max(0.06, sz - adv * 1.6)) for sx, sy, sz in stars]
-    starfield(f, cur, streak, lvl)
+    starfield(f, [(sx, sy, max(0.06, sz - adv * 1.6)) for sx, sy, sz in stars],
+              streak, 1.0)
     add(f, 1)
 
-# ===================== ACT 4: the cube tumbles out of the depth =============
-for i, (z, ang) in enumerate(((5.0, 0.0), (3.2, 0.9), (2.2, 1.8),
-                              (1.6, 2.7), (1.25, 3.6), (1.05, 4.5))):
+# ===================== ACT 7: a wireframe world tumbles out ================
+for z, ang in ((6.0, 0.0), (3.6, 0.8), (2.4, 1.7), (1.8, 2.6),
+               (1.45, 3.5), (1.2, 4.4), (1.05, 5.3)):
     f = blank()
-    cur = [(sx, sy, max(0.06, sz - 1.4)) for sx, sy, sz in stars]
-    starfield(f, cur, 1.2, 0.45)
-    cube(f, ang, z)
+    starfield(f, [(sx, sy, max(0.06, sz - 1.5)) for sx, sy, sz in stars], 1.3, 0.4)
+    sphere(f, ang, z)
     add(f, 1)
+f = blank(); sphere(f, 6.0, 0.95, 34); add(f, 2)
 
-# it flares, then blows apart into shrapnel
-f = blank(); cube(f, 5.2, 0.95, 30); add(f, 2)
-for r in (8, 20, 34):
+# it detonates: shards thrown at the viewer
+for r in (7, 18, 31, 46):
     f = blank()
-    for k in range(46):
+    for k in range(54):
         a = k * 2.39996
         d = r + rnd.uniform(-4, 4)
-        x, y = 64 + math.cos(a) * d * 1.7, CY + math.sin(a) * d
-        line(f, x, y, x - math.cos(a) * 4, y - math.sin(a) * 3)
+        x, y = 64 + math.cos(a) * d * 1.8, CY + math.sin(a) * d
+        line(f, x, y, x - math.cos(a) * 6, y - math.sin(a) * 4)
     add(f, 1)
 
-# ===================== ACT 5: GEEDO slams in, glitching =====================
-for sc in (2.4, 1.5, 1.0):
-    f = blank()
-    wordmark(f, sc)
-    add(f, 1)
+# ===================== ACT 8: GEEDO ========================================
+for sc in (2.8, 1.7, 1.0):
+    f = blank(); wordmark(f, sc); add(f, 1)
 f = blank(); wordmark(f, 1.0); add(f, 3)
+f = blank(); wordmark(f, 1.0); add(invert(f), 1)      # negative flash
+f = blank(); wordmark(f, 1.0); add(f, 1)
 
-for k in range(3):                        # datamosh: slice and offset
+for k in range(4):                                    # VHS tearing
     base = blank(); wordmark(base, 1.0)
+    if k == 2:
+        plasma(base, 3.1, 0.35)
     f = blank()
     y = 0
     while y < H:
-        hgt = rnd.randrange(3, 9)
-        off = rnd.choice((-9, -5, 0, 4, 8))
+        hgt = rnd.randrange(2, 8)
+        off = rnd.choice((-14, -8, -3, 0, 4, 9, 15))
         for yy in range(y, min(H, y + hgt)):
             for x in range(W):
                 if base[yy][x]:
@@ -302,16 +394,19 @@ for k in range(3):                        # datamosh: slice and offset
     add(f, 1)
 f = blank(); wordmark(f, 1.0); add(f, 2)
 
-# ===================== ACT 6: whiteout and shockwave ========================
-f = blank(); wordmark(f, 1.0); add(invert(f), 1)
+# ===================== ACT 9: strobe into whiteout =========================
+for d in (1, 1, 1, 1):
+    f = blank(); band(f, 0, H - 1); add(f, d)
+    add(blank(), 1)
 f = blank(); band(f, 0, H - 1); add(f, 3)
-add(blank(), 1)                                   # hard cut: impact
-f = blank(); band(f, 0, H - 1); add(f, 1)
-for rad, th, lvl in ((10, 9, 1.0), (28, 8, 1.0), (46, 7, 0.85),
-                     (64, 6, 0.6), (82, 5, 0.4)):
+add(blank(), 1)
+
+# ===================== ACT 10: shockwave ===================================
+for rad, th, lvl in ((8, 9, 1.0), (24, 8, 1.0), (42, 8, 1.0),
+                     (60, 7, 0.8), (78, 6, 0.55), (96, 5, 0.35)):
     f = blank(); ring(f, 64, CY, rad, th, lvl); add(f, 1)
 
-# ===================== ACT 7: particles collapse into his eyes ==============
+# ===================== ACT 11: shards assemble his eyes ====================
 targets = []
 probe = eyes_frame(1.0)
 for y in range(0, H, 3):
@@ -319,19 +414,20 @@ for y in range(0, H, 3):
         if probe[y][x]:
             targets.append((x, y))
 rnd.shuffle(targets)
-starts = [(rnd.uniform(-40, 168), rnd.uniform(-30, 94)) for _ in targets]
-for t in (0.0, 0.35, 0.62, 0.82, 0.94):
+starts = [(rnd.uniform(-50, 178), rnd.uniform(-40, 104)) for _ in targets]
+for t in (0.0, 0.30, 0.55, 0.75, 0.89, 0.97):
     f = blank()
     for (sx, sy), (tx, ty) in zip(starts, targets):
         x, y = sx + (tx - sx) * t, sy + (ty - sy) * t
-        if t < 0.9:
-            line(f, x, y, x + (sx - tx) * 0.05, y + (sy - ty) * 0.05)
+        if t < 0.92:
+            line(f, x, y, x + (sx - tx) * 0.06, y + (sy - ty) * 0.06)
         else:
             disc(f, x, y, 1)
     add(f, 1)
+f = blank(); band(f, 0, H - 1); add(f, 1)             # impact flash
 
-# ===================== ACT 8: eyes open, one blink, awake ==================
-for sq in (0.05, 0.05, 0.2, 0.5, 0.8, 1.0):
+# ===================== ACT 12: eyes open, blink, awake =====================
+for sq in (0.05, 0.05, 0.22, 0.55, 0.85, 1.0):
     add(eyes_frame(sq), 1)
 add(eyes_frame(1.0), 5)
 for sq in (0.45, 0.12, 0.45):

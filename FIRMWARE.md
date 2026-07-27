@@ -114,26 +114,30 @@ to the OLED on real hardware.
 
 Regenerate with `python3 tools/gen_boot_anim.py --png`; it writes both
 `firmware/sketch/boot_anim_progmem.h` (PROGMEM, played the instant he powers
-up, before WiFi) and `animations/bin/animations_boot_boot_animation.bin`, and
-asserts the two are byte-identical.
+up, before WiFi) and `animations/bin/animations_boot_boot_animation.bin`.
 
-66 frames, 20 fps, 66 KB of flash, 4.2 s. Eight acts: copper traces creeping
-out from the centre and firing, a dithered power surge with the panel shaking,
-a hyperspace starfield accelerating into streaks, a wireframe cube tumbling
-out of the depth and blowing apart, the GEEDO wordmark slamming in and
-datamoshing, whiteout into shockwave rings, then particles streaking in from
-off-screen and collapsing into his eyes, which open and blink.
+98 frames, 20 fps, 98 KB of flash, 5.8 s, in twelve acts: a dying flicker,
+mains lightning arcing over, copper traces taking the charge, a plasma surge
+with the panel shaking, a rush down a tunnel, hyperspace, a wireframe sphere
+tumbling out of the depth and detonating, the GEEDO wordmark with a negative
+flash and VHS tearing, a strobe into whiteout, shockwave rings, and shards
+flying in from off-screen to assemble his eyes.
 
-Two things make it hold up at 128x64. There is no brightness on a 1-bit panel,
-so an **ordered Bayer dither** fakes it - ramping density is what reads as a
-surge rather than an on/off. And everything else is **line work**: Bresenham
-strokes, a perspective starfield and a rotating wireframe stay crisp where
-shaded art turns to mud at this size.
+What makes it hold up at 128x64:
 
-It ends on the idle eyes at exactly the geometry in `eyes.h`, so the boot
-hands over to the wandering face with no visible seam. Generation asserts the
-final frame is the open eyes and that no run of near-empty frames exceeds
-three, so the sequence can never go dark and look hung.
+- **No brightness exists on a 1-bit panel.** An ordered Bayer dither fakes it,
+  and every shaded effect (plasma, tunnel, ring falloff) is a value field
+  thresholded through that matrix.
+- **Line work over shading.** Bresenham strokes, a perspective starfield,
+  midpoint-displacement lightning and a projected wireframe sphere stay crisp
+  where filled art turns to mud at this size.
+- **A sphere reads richer than a cube** for the same handful of lines -
+  latitude rings plus longitude arcs give real form.
+
+Generation asserts the PROGMEM bytes equal the `.bin`, that no run of
+near-empty frames exceeds two (so a strobe gap can never look like a hang),
+and that **the final frame is pixel-identical to `eyes_render(0,0,100)`** -
+the boot cannot drift out of step with the idle face it hands over to.
 
 ## Idle face: wandering eyes (`firmware/sketch/eyes.h`)
 

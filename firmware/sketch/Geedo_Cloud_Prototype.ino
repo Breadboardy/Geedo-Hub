@@ -12,12 +12,17 @@
     - Auto-connects to remembered WiFi every boot.
     - Polls Hub for new animations every POLL_INTERVAL_MS.
 
-  TO ERASE SAVED WIFI:
-    - Hold the BOOT button on power-up, or
-    - In code, call WiFiManager.resetSettings()
+  THE BUTTON (SW1, on the outside of Geedo):
+    - Tap          -> skip to the next animation
+    - Hold 5 s     -> erase saved WiFi and reopen the setup portal
+                      (a countdown shows on screen; let go to cancel)
 
-  WIRING:
-    OLED VCC -> 3.3V, GND -> GND, SDA -> GPIO 21, SCL -> GPIO 22
+  WIRING (shipping ESP32-C3 board - see hardware/README.md):
+    OLED  VCC -> 3.3V, GND -> GND, SDA -> GPIO4, SCL -> GPIO5
+    SW1 MAIN  -> GPIO3 to GND     SW2 BOOT -> GPIO9 to GND
+    SW3 RESET -> EN to GND (hardware reset, firmware never sees it)
+  On a classic ESP32 devkit the pin map falls back to SDA 21 / SCL 22 and
+  the devkit's BOOT button stands in for SW1.
 */
 
 #include <WiFi.h>
@@ -38,8 +43,22 @@ const uint32_t FIRMWARE_VERSION = 12;
 const char* HUB = "https://breadboardy.github.io/Geedo-Hub";
 // const char* HUB = "https://breadboard.github.io/Geedo-Hub";  // production
 
-#define SDA_PIN 21
-#define SCL_PIN 22
+// Pin map. The shipping Geedo is an ESP32-C3 (see hardware/README.md);
+// bring-up happens on a classic ESP32 devkit, so both are covered here and
+// the right set is chosen at compile time.
+#if CONFIG_IDF_TARGET_ESP32C3
+  #define SDA_PIN 4
+  #define SCL_PIN 5
+  #define MAIN_BTN_PIN 3      // SW1, the button on the outside of Geedo
+  #define BOOT_BTN_PIN 9      // SW2, internal
+#else
+  #define SDA_PIN 21
+  #define SCL_PIN 22
+  #define MAIN_BTN_PIN 0      // devkit's BOOT button stands in for SW1
+  #define BOOT_BTN_PIN 0
+#endif
+// SW3 pulls EN low: a hardware reset, invisible to firmware.
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_ADDR 0x3C
@@ -48,6 +67,8 @@ const uint32_t POLL_INTERVAL_MS = 60UL * 1000UL;
 const uint32_t PLAY_TIME_MS = 5000;
 const uint8_t  KAOMOJI_CHANCE_PCT = 40;   // odds of a face appearing between animations
 const uint32_t KAOMOJI_TIME_MS = 2000;    // how long each face stays up
+const uint32_t WIFI_RESET_HOLD_MS = 5000; // hold MAIN this long to erase WiFi
+const uint32_t BTN_TAP_MS = 700;          // shorter than this is a tap, not a hold
 
 #define AP_NAME "GEEDO-Setup"
 // =========================================================
@@ -111,6 +132,50 @@ void showSetupScreen() {
   display.println(F("> " AP_NAME));
   display.println(F("(no password)"));
   display.display();
+}
+
+// ===== MAIN button: tap = skip, hold 5 s = erase WiFi and start setup over =====
+// SW1 shorts GPIO3 to GND, so the pin idles high and reads LOW when pressed.
+bool btnDown() { return digitalRead(MAIN_BTN_PIN) == LOW; }
+
+void eraseWiFiAndRestart() {
+  showStatus("WIFI ERASED", "restarting...", "set up on your phone");
+  WiFiManager wm;
+  wm.resetSettings();
+  delay(1500);
+  ESP.restart();
+}
+
+// Runs while the button is held. A quick tap returns immediately (the caller
+// treats that as "skip"); holding past WIFI_RESET_HOLD_MS wipes the WiFi
+// credentials. Letting go early cancels, so it cannot fire by accident.
+void serviceButtonHold() {
+  uint32_t t0 = millis();
+  bool warned = false;
+  while (btnDown()) {
+    uint32_t held = millis() - t0;
+    if (held >= WIFI_RESET_HOLD_MS) { eraseWiFiAndRestart(); return; }
+    if (held > BTN_TAP_MS) {
+      char l2[24];
+      snprintf(l2, sizeof(l2), "erasing WiFi in %lu",
+               (unsigned long)((WIFI_RESET_HOLD_MS - held + 999) / 1000));
+      showStatus("KEEP HOLDING", l2, "let go to cancel");
+      warned = true;
+    }
+    delay(40);
+  }
+  if (warned) showStatus("cancelled", "WiFi kept");
+}
+
+// delay() that stays awake to the button. Returns true if the caller should
+// cut whatever it is showing short.
+bool idleDelay(uint32_t ms) {
+  uint32_t t0 = millis();
+  while ((millis() - t0) < ms) {
+    if (btnDown()) { serviceButtonHold(); return true; }
+    delay(5);
+  }
+  return false;
 }
 
 bool httpGet(const String& url, uint8_t** outBuf, size_t* outLen) {
@@ -220,7 +285,7 @@ void playAnim(const Anim& A, uint32_t maxMs) {
   uint32_t start = millis();
   while (millis() - start < maxMs) {
     drawFrame(A.pixels + i * 1024);
-    delay(1000 / max((uint8_t)1, A.fps) * A.durations[i]);
+    if (idleDelay(1000 / max((uint8_t)1, A.fps) * A.durations[i])) return;
     i += dir;
     if (i >= A.frame_count) {
       if (pp) { dir = -1; i = A.frame_count - 2; }
@@ -247,7 +312,7 @@ void playAnimOnce(const Anim& A) {
   uint16_t basePer = 1000 / max((uint8_t)1, A.fps);
   for (uint8_t f = 0; f < A.frame_count; f++) {
     drawFrame(A.pixels + (size_t)f * 1024);
-    delay(basePer * (A.durations[f] ? A.durations[f] : 1));
+    if (idleDelay(basePer * (A.durations[f] ? A.durations[f] : 1))) return;
   }
 }
 
@@ -268,7 +333,7 @@ void showKaomoji(uint16_t id, uint32_t ms) {
   kaomoji_show(id, frame);           // renders a GDA1-format page buffer
   drawFrame(frame);                  // same blit path as animations
   Serial.printf("kaomoji %u: %s\n", id, kaomoji_face(id % KAOMOJI_COUNT));
-  delay(ms);
+  idleDelay(ms);
 }
 
 void showRandomKaomoji(uint32_t ms) {
@@ -450,11 +515,18 @@ void setup() {
   Serial.begin(115200);
   delay(200);
 
+  pinMode(MAIN_BTN_PIN, INPUT_PULLUP);
+
   Wire.begin(SDA_PIN, SCL_PIN);
-  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR)) {
-    Serial.println("OLED init failed");
-    while (1) delay(100);
+  // A loose OLED ribbon used to hang here forever. Retry, then carry on
+  // regardless: without WiFi we could never ship a fix, and a Geedo that
+  // still reaches the Hub can be repaired by an update.
+  bool displayOK = false;
+  for (uint8_t attempt = 0; attempt < 3 && !displayOK; attempt++) {
+    displayOK = display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
+    if (!displayOK) { Serial.println("OLED init failed, retrying"); delay(300); }
   }
+  if (!displayOK) Serial.println("OLED not responding - continuing headless");
   display.clearDisplay();
   display.display();
 
@@ -487,7 +559,7 @@ void setup() {
     // OFFLINE MODE: no WiFi, but cached anims keep Geedo alive
     playSystemAnim("animations_boot_failed_to_connect");
     if (anim_count == 0) {
-      showStatus("No WiFi", "and no cache", "tap BOOT to setup");
+      showStatus("No WiFi", "and no cache", "hold button 5s");
     }
     lastPoll = millis();
     return;
@@ -516,8 +588,8 @@ void loop() {
   if (anim_count == 0) {
     // no animations at all - kaomojis keep Geedo alive while we retry
     showRandomKaomojiFrom("sad", 2500);
-    showStatus("No animations", "retrying...");
-    delay(2500);
+    showStatus("No animations", "retrying...", "hold button 5s");
+    idleDelay(2500);
     loadManifestAndAnims();
     return;
   }

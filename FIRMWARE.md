@@ -110,6 +110,23 @@ to the OLED on real hardware.
   only, not the device.
 - **OTA is unsigned.** HTTPS with `setInsecure()`, no signature check.
 
+## Power-on animation (`tools/gen_boot_anim.py`)
+
+Regenerate with `python3 tools/gen_boot_anim.py --png`; it writes both
+`firmware/sketch/boot_anim_progmem.h` (PROGMEM, played the instant he powers
+up, before WiFi) and `animations/bin/animations_boot_boot_animation.bin`, and
+asserts the two are byte-identical.
+
+44 frames, 20 fps, 45 KB of flash, 3.1 s. The panel is 1-bit so there is no
+brightness - an **ordered Bayer dither** fakes it, and ramping the dither
+density is what makes the opening read as a power surge rather than a hard
+on/off. Beats: dead, electrical sparks, surge, collapse to a charged line,
+snap, bloom, whiteout, a one-frame hard cut to black for impact, shockwave
+rings, then the eyes rise as slits and open.
+
+It ends on the idle eyes at exactly the geometry in `eyes.h`, so the boot
+hands over to the wandering face with no visible seam.
+
 ## Idle face: wandering eyes (`firmware/sketch/eyes.h`)
 
 Geedo's resting state. Two filled rounded rectangles, **30 x 42, corner radius

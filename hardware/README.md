@@ -1,4 +1,40 @@
-# Geedo PCB v4 — repaired (rev 4.1)
+# Geedo PCB v4 — repaired (rev 4.2, single-side assembly)
+
+## Rev 4.2: one machine-assembled side
+
+Rev 4.1 had SMD parts on both faces, which forces double-sided assembly -
+two setups, two stencils, roughly double the labour charge. Rev 4.2 moves
+every SMD part to the **back**, so the board qualifies for the cheap
+single-side assembly tier:
+
+- **Back (the machine side):** ESP32 module, USB-C, charger, regulator,
+  BOOT + RESET buttons, LED, all passives - 22 parts, one paste-place-reflow
+  pass. The USB port opens at the board edge as before, just on the back face.
+- **Front (the human side):** only what the outside of Geedo touches - the
+  OLED socket, the MAIN button, the battery connector, and the silkscreen
+  face. All three parts are through-hole: they insert from the front and get
+  soldered on the back, the classic TV-remote build. **Zero SMD passes on
+  the front.**
+- **SW1 changed part:** the MAIN button is now a standard 6x6 mm
+  through-hole tactile switch (TL1105/B3F class, LCSC C127509) instead of the
+  SMD KSC6. Same position. Its taller plunger is also easier to poke through
+  an enclosure. BOOT and RESET stay SMD KSC6 on the back.
+- Everything re-routed from scratch (1000+ segments). The old CC2
+  board-edge violations are gone - the new route no longer hugs the edge.
+- `hardware/fab/bom.csv` and `hardware/fab/cpl.csv` are the assembly-house
+  upload files. The LCSC numbers are suggestions - verify stock at order
+  time, and expect the fab's reviewer to nudge some rotations; that is
+  normal and they confirm before running.
+- To revert the whole relayout:
+  `cp hardware/Geedo_PCB_v4_BACKUP_two-sided.kicad_pcb hardware/Geedo_PCB_v4.kicad_pcb`
+
+Verified: clearance 0, board-edge 0, keepout 0, courtyards 0, hole-to-hole 0,
+all 17 nets single-piece, netlist 29/29 vs schematic, ground one pour with
+every pad connected, and all 13 functional circuits (straps, EN reset, USB,
+charger, LED, I2C) checked pad-by-pad. Run KiCad DRC with zones filled as the
+final authority before ordering.
+
+# Previous: rev 4.1 notes
 
 The v4 design files had schematic symbols with **made-up pin numbers** that did not
 match their real-world footprints, so the netlist landed on the wrong physical pads.

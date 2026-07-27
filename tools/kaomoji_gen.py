@@ -557,5 +557,5 @@ static inline int kaomoji_show(uint16_t i, uint8_t* frame1024) {
 ''')
 out = '\n'.join(lines) + '\n'
 (ROOT / 'firmware').mkdir(exist_ok=True)
-(ROOT / 'firmware' / 'kamoji.h').write_text(out)
-print(f"wrote firmware/kamoji.h ({len(out)//1024} KB, {len(FACES)} faces, {len(GLYPHS)} glyphs)")
+(ROOT / 'firmware' / 'sketch' / 'kamoji.h').write_text(out)
+print(f"wrote firmware/sketch/kamoji.h ({len(out)//1024} KB, {len(FACES)} faces, {len(GLYPHS)} glyphs)")

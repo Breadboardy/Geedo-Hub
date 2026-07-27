@@ -31,6 +31,7 @@
 #include <WiFiManager.h>
 #include <LittleFS.h>
 #include "boot_anim_progmem.h"
+#include "kamoji.h"
 
 // ================== CONFIG (no secrets) ==================
 const uint32_t FIRMWARE_VERSION = 12;
@@ -45,6 +46,8 @@ const char* HUB = "https://breadboardy.github.io/Geedo-Hub";
 
 const uint32_t POLL_INTERVAL_MS = 60UL * 1000UL;
 const uint32_t PLAY_TIME_MS = 5000;
+const uint8_t  KAOMOJI_CHANCE_PCT = 40;   // odds of a face appearing between animations
+const uint32_t KAOMOJI_TIME_MS = 2000;    // how long each face stays up
 
 #define AP_NAME "GEEDO-Setup"
 // =========================================================
@@ -259,6 +262,37 @@ bool isSystemAnim(const Anim& A) {
   return A.id.startsWith("animations_boot_");
 }
 
+// ===== kaomoji faces (kamoji.h - 191 of them, always available, no WiFi needed) =====
+void showKaomoji(uint16_t id, uint32_t ms) {
+  uint8_t frame[1024];
+  kaomoji_show(id, frame);           // renders a GDA1-format page buffer
+  drawFrame(frame);                  // same blit path as animations
+  Serial.printf("kaomoji %u: %s\n", id, kaomoji_face(id % KAOMOJI_COUNT));
+  delay(ms);
+}
+
+void showRandomKaomoji(uint32_t ms) {
+  showKaomoji(esp_random() % KAOMOJI_COUNT, ms);
+}
+
+uint8_t kaomojiCat(const char* name) {
+  for (uint8_t i = 0; i < KAOMOJI_CATEGORY_COUNT; i++)
+    if (!strcmp((const char*)pgm_read_ptr(&KAOMOJI_CATEGORY_NAMES[i]), name)) return i;
+  return 255;
+}
+
+// random face from one category ("happy", "sad", "robot", ...)
+void showRandomKaomojiFrom(const char* cat, uint32_t ms) {
+  uint8_t c = kaomojiCat(cat);
+  uint16_t n = 0;
+  for (uint16_t i = 0; i < KAOMOJI_COUNT; i++)
+    if (kaomoji_category(i) == c) n++;
+  if (n == 0) { showRandomKaomoji(ms); return; }
+  uint16_t k = esp_random() % n;
+  for (uint16_t i = 0; i < KAOMOJI_COUNT; i++)
+    if (kaomoji_category(i) == c && k-- == 0) { showKaomoji(i, ms); return; }
+}
+
 bool checkFirmwareUpdate() {
   WiFiClientSecure sec;
   sec.setInsecure();
@@ -471,14 +505,17 @@ void setup() {
     }
   } else {
     playSystemAnim("animations_boot_turning_on");
+    showRandomKaomojiFrom("happy", 1500);   // little hello face
   }
   lastPoll = millis();
 }
 
 void loop() {
   if (anim_count == 0) {
+    // no animations at all - kaomojis keep Geedo alive while we retry
+    showRandomKaomojiFrom("sad", 2500);
     showStatus("No animations", "retrying...");
-    delay(5000);
+    delay(2500);
     loadManifestAndAnims();
     return;
   }
@@ -486,6 +523,8 @@ void loop() {
   for (uint8_t i = 0; i < anim_count; i++) {
     if (isSystemAnim(anims[i])) continue;
     playAnim(anims[i], PLAY_TIME_MS);
+    if ((esp_random() % 100) < KAOMOJI_CHANCE_PCT)
+      showRandomKaomoji(KAOMOJI_TIME_MS);
   }
 
   if (POLL_INTERVAL_MS > 0 && (millis() - lastPoll) > POLL_INTERVAL_MS) {

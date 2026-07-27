@@ -117,15 +117,23 @@ Regenerate with `python3 tools/gen_boot_anim.py --png`; it writes both
 up, before WiFi) and `animations/bin/animations_boot_boot_animation.bin`, and
 asserts the two are byte-identical.
 
-44 frames, 20 fps, 45 KB of flash, 3.1 s. The panel is 1-bit so there is no
-brightness - an **ordered Bayer dither** fakes it, and ramping the dither
-density is what makes the opening read as a power surge rather than a hard
-on/off. Beats: dead, electrical sparks, surge, collapse to a charged line,
-snap, bloom, whiteout, a one-frame hard cut to black for impact, shockwave
-rings, then the eyes rise as slits and open.
+66 frames, 20 fps, 66 KB of flash, 4.2 s. Eight acts: copper traces creeping
+out from the centre and firing, a dithered power surge with the panel shaking,
+a hyperspace starfield accelerating into streaks, a wireframe cube tumbling
+out of the depth and blowing apart, the GEEDO wordmark slamming in and
+datamoshing, whiteout into shockwave rings, then particles streaking in from
+off-screen and collapsing into his eyes, which open and blink.
+
+Two things make it hold up at 128x64. There is no brightness on a 1-bit panel,
+so an **ordered Bayer dither** fakes it - ramping density is what reads as a
+surge rather than an on/off. And everything else is **line work**: Bresenham
+strokes, a perspective starfield and a rotating wireframe stay crisp where
+shaded art turns to mud at this size.
 
 It ends on the idle eyes at exactly the geometry in `eyes.h`, so the boot
-hands over to the wandering face with no visible seam.
+hands over to the wandering face with no visible seam. Generation asserts the
+final frame is the open eyes and that no run of near-empty frames exceeds
+three, so the sequence can never go dark and look hung.
 
 ## Idle face: wandering eyes (`firmware/sketch/eyes.h`)
 

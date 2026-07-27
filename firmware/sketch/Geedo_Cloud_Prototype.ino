@@ -56,11 +56,16 @@ const char* HUB = "https://breadboardy.github.io/Geedo-Hub";
   #define SCL_PIN 5
   #define MAIN_BTN_PIN 3      // SW1, the button on the outside of Geedo
   #define BOOT_BTN_PIN 9      // SW2, internal
+  // rev 4.3 board: battery/charger sense
+  #define BAT_ADC_PIN 0       // IO0 = ADC1_CH0 <- 100k/100k divider from VBAT
+  #define CHG_STAT_PIN 1      // IO1 <- 10k series <- MCP73831 STAT
+  #define HAS_POWER_SENSE 1
 #else
   #define SDA_PIN 21
   #define SCL_PIN 22
   #define MAIN_BTN_PIN 0      // devkit's BOOT button stands in for SW1
   #define BOOT_BTN_PIN 0
+  #define HAS_POWER_SENSE 0   // classic devkit: no divider wired
 #endif
 // SW3 pulls EN low: a hardware reset, invisible to firmware.
 
@@ -75,6 +80,11 @@ const uint8_t  KAOMOJI_CHANCE_PCT = 40;   // odds of a face appearing between an
 const uint32_t KAOMOJI_TIME_MS = 2000;    // how long each face stays up
 const uint32_t WIFI_RESET_HOLD_MS = 5000; // hold MAIN this long to erase WiFi
 const uint32_t BTN_TAP_MS = 700;          // shorter than this is a tap, not a hold
+
+// Battery. The MCP1826S drops out around 3.55 V in, so the 3.3 V rail starts
+// sagging below that - warn before it gets there.
+const uint16_t BAT_LOW_MV = 3450;
+const uint32_t LOW_BAT_NAG_MS = 90UL * 1000UL;  // at most one warning per 90 s
 
 // Mood. Petting lifts it; it drifts back down to MOOD_FLOOR and stops there,
 // so Geedo can be delighted or plain content but never miserable.
@@ -150,6 +160,61 @@ void showSetupScreen() {
   display.println(F("> " AP_NAME));
   display.println(F("(no password)"));
   display.display();
+}
+
+// ===== power sense (rev 4.3 boards: VBAT divider on IO0, STAT on IO1) =====
+// STAT is tri-state: LOW = charging, HIGH = charge done, Hi-Z = no USB power.
+// With INPUT_PULLUP on the pin, Hi-Z reads HIGH, so LOW means exactly
+// "charging right now".
+bool powerSenseOK = HAS_POWER_SENSE;   // demoted at runtime on implausible reads
+bool wasCharging = false;
+uint32_t lastLowBatAt = 0;
+uint8_t badPowerReads = 0;
+
+uint32_t batteryMilliVolts() {
+#if HAS_POWER_SENSE
+  uint32_t acc = 0;
+  for (uint8_t i = 0; i < 8; i++) acc += analogReadMilliVolts(BAT_ADC_PIN);
+  return (acc / 8) * 2;                // 100k/100k divider halves VBAT
+#else
+  return 0;
+#endif
+}
+
+// One power poll -> event bits (1 = charging just started, 2 = low battery).
+// Pure logic so the host harness can drive it. A board without the divider
+// (rev 4.2) gives implausible readings; three in a row disable sensing for
+// good, so old boards run the old behaviour instead of nagging nonsense.
+uint8_t powerEvents(uint32_t mv, bool statLow, uint32_t now,
+                    bool* wasChg, uint32_t* lastNag, bool* senseOK, uint8_t* bad) {
+  if (!*senseOK) return 0;
+  if (mv < 2500 || mv > 4600) {
+    if (++*bad >= 3) *senseOK = false;
+    return 0;
+  }
+  *bad = 0;
+  uint8_t ev = 0;
+  if (statLow && !*wasChg) ev |= 1;
+  *wasChg = statLow;
+  if (!statLow && mv < BAT_LOW_MV && (now - *lastNag) >= LOW_BAT_NAG_MS) {
+    *lastNag = now;
+    ev |= 2;
+  }
+  return ev;
+}
+
+void pollPower() {
+#if HAS_POWER_SENSE
+  bool statLow = digitalRead(CHG_STAT_PIN) == LOW;
+  uint8_t ev = powerEvents(batteryMilliVolts(), statLow, millis(),
+                           &wasCharging, &lastLowBatAt, &powerSenseOK, &badPowerReads);
+  if (ev & 1) playSystemAnim("animations_boot_charging");
+  if (ev & 2) {
+    playSystemAnim("animations_boot_low_battery");
+    showStatus("LOW BATTERY", "charge me!");
+    delay(1200);
+  }
+#endif
 }
 
 // ===== MAIN button: tap = pet him, hold 5 s = erase WiFi and set up again =====
@@ -644,6 +709,9 @@ void setup() {
   delay(200);
 
   pinMode(MAIN_BTN_PIN, INPUT_PULLUP);
+#if HAS_POWER_SENSE
+  pinMode(CHG_STAT_PIN, INPUT_PULLUP);
+#endif
 
   Wire.begin(SDA_PIN, SCL_PIN);
   // A loose OLED ribbon used to hang here forever. Retry, then carry on
@@ -745,8 +813,12 @@ void loop() {
   }
   saveMood();
 
+  pollPower();
+
   if (POLL_INTERVAL_MS > 0 && (millis() - lastPoll) > POLL_INTERVAL_MS) {
-    Serial.println("Polling...");
+    Serial.printf("Polling... (bat %lu mV%s)\n",
+                  (unsigned long)batteryMilliVolts(),
+                  wasCharging ? ", charging" : "");
 
     if (loadManifestAndAnims()) {
       Serial.printf("Now %d animations\n", anim_count);

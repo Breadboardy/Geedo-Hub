@@ -1,4 +1,31 @@
-# Geedo PCB v4 — repaired (rev 4.2, single-side assembly)
+# Geedo PCB v4 — repaired (rev 4.3, single-side assembly + power sense)
+
+## Rev 4.3: the board knows its own battery
+
+Four 0402 parts on the back (machine side) give the firmware what rev 4.2
+could not: battery voltage and charger status.
+
+- **R10/R11 (100k/100k)**: divider from `/VBAT` to GND; midpoint
+  `/VBAT_SENSE` goes to **IO0** (pad 12, ADC1_CH0). 4.2 V reads as 2.1 V,
+  inside the ADC's range at 11 dB attenuation. Constant drain is 21 uA -
+  about 2.7 years to self-drain a 500 mAh cell, negligible next to the ESP32.
+- **C8 (100 nF)**: sampling/filter cap on the divider midpoint.
+- **R9 (10k)**: series from the MCP73831's STAT pin (net now named
+  `/STAT_RAW`) to **IO1** (pad 13) as `/CHG_STAT`. STAT is tri-state - LOW
+  charging, HIGH done, Hi-Z unpowered - the series R prevents contention if
+  the pin is ever misconfigured, and `INPUT_PULLUP` makes Hi-Z read HIGH.
+- Deliberately NOT on IO2/IO8: those are boot-strapping pins and their
+  pull-ups (R8/R2) are load-bearing. STAT driving one low at reset would
+  stop the chip booting whenever USB was plugged in.
+
+The schematic gained the same parts, IO0/IO1 pins on the ESP32C3 symbol, and
+labels; sch<->pcb verified CONSISTENT. `fab/bom.csv` + `fab/cpl.csv` are
+regenerated (19 line items, 29 placements; 100k = LCSC C25741). **If you
+exported Gerbers before rev 4.3, re-export** - the old zip has no sense parts.
+
+Checker state after the change: clearance 0, edge 0, keepout 0, courtyards 0,
+hole-to-hole 0, nets split 0, GND one pour, netlist CONSISTENT.
+
 
 ## Rev 4.2: one machine-assembled side
 

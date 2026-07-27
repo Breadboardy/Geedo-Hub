@@ -113,10 +113,10 @@ he still works in the car, on a trip, or when the internet is down.
 Plug in USB-C. The charge light on the board glows while charging and goes out
 when full. Geedo runs happily while plugged in.
 
-**Please note:** Geedo cannot currently tell you how much battery is left —
-there's no battery-level sensor on this revision of the board, so he simply
-switches off when he runs out. Charge him when he goes dark. A battery meter
-is planned for the next board revision.
+When you plug him in he plays his charging animation, and when the battery
+runs low he'll warn you with a low-battery animation and a `LOW BATTERY`
+screen (at most once every minute and a half — he won't spam you). If he
+does run completely flat he just switches off; plug him in and he wakes.
 
 ---
 
@@ -157,9 +157,6 @@ problems without losing his downloaded animations.
 
 Being upfront about what this version can't do:
 
-- **No battery meter.** The board has no battery-sense line, so Geedo can't
-  warn you before he runs flat, and the `low battery` and `charging`
-  animations can't be shown. Fixed in the next board revision.
 - **Limited animation memory.** Animations are held in RAM while playing.
   The library is close to the ceiling; past that, new animations are silently
   skipped rather than replacing old ones.

@@ -102,13 +102,15 @@ to the OLED on real hardware.
   no user-visible error. `MAX_ANIMS` (40) caps it independently, with 32 in
   the manifest today. Fixing this properly means streaming frames from
   LittleFS at playback instead of holding whole animations in RAM.
-- **No battery or charger sense.** Traced on the board: `/VBAT` reaches only
-  J2, and the charger's `/STAT` pin reaches only R7 and the LED - neither gets
-  to a GPIO, and `/VBUS` does not either. So `animations_boot_low_battery` and
-  `..._charging` cannot be triggered at all, and Geedo cannot tell you he is
-  charging or nearly flat. **`/IO2` and `/IO8` are free** (each sits on a lone
-  pull resistor), so rev 5 wants `/STAT` on one and a VBAT divider on an ADC
-  pin - that is the whole fix.
+- ~~No battery or charger sense~~ **Fixed in board rev 4.3**: 100k/100k
+  divider from VBAT to IO0 (ADC1_CH0) and the charger's STAT through 10k to
+  IO1. `pollPower()` plays `animations_boot_charging` when USB lands and
+  `animations_boot_low_battery` (rate-limited to one per 90 s) below 3.45 V.
+  On boards without the divider (rev 4.2 and the classic devkit) three
+  implausible ADC reads disable sensing for good, so old hardware keeps the
+  old behaviour. The decision logic is a pure function, host-tested: plug-in
+  edge fires once, replug fires again, no nag while charging, rate limiting,
+  glitch tolerance, boundary values, millis rollover.
 - **`visibility` is ignored.** `loadManifestAndAnims()` downloads every entry
   in the manifest regardless of the field, so unlock codes gate the website
   only, not the device.

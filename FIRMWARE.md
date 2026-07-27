@@ -11,9 +11,20 @@ here is strongly recommended - it is the single copy of Geedo's brain.
   `FIRMWARE_VERSION`, and when newer downloads the `.bin` over HTTPS and
   flashes itself (ESP32 two-slot OTA; the `min_spiffs` partition scheme in the
   build command is what makes room for both slots).
-- Publishing = `tools/build_firmware.sh`: bumps the version in the sketch,
-  compiles with arduino-cli, copies the bin into `firmware/`, rewrites the
-  manifest, commits, pushes. The git push is the deploy.
+- Publishing = `tools/build_firmware.sh [display-name]`: bumps the version in
+  the sketch, compiles with arduino-cli, copies the bin into `firmware/`,
+  rewrites the manifest, commits, pushes. The git push is the deploy.
+  **It only runs on Callum's machine** - it needs arduino-cli and the ESP32
+  toolchain, so a firmware release cannot be published from anywhere else.
+- Versions are ordered by the integer `version`, which is what the device
+  compares. The optional `name` field ("13.1.0") is the label owners see on
+  screen; semver lives there while the counter underneath ticks by one.
+- The manifest is written **after** the .bin is copied, and the script aborts
+  if the compile produced no fresh binary. A manifest pointing at a missing
+  .bin used to make every Geedo play the update animation and show
+  "DO NOT UNPLUG" on each 60 s poll, forever, without ever updating -
+  `checkFirmwareUpdate()` now probes the binary (headers only) before it
+  commits to any of that UI.
 - The manifest poll appends `?t=<millis>` to defeat the GitHub Pages CDN
   cache (max-age 600) - without it a freshly published version can take up
   to ~10 min to reach devices. The `.bin` needs no cache-buster: its

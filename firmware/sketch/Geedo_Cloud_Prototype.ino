@@ -488,18 +488,36 @@ bool checkFirmwareUpdate() {
   const char* binPath = doc["url"] | (const char*)nullptr;
   if (!binPath) return false;
   String binUrl = String(HUB) + "/" + binPath;
-  Serial.printf("OTA: downloading %s\n", binUrl.c_str());
+  // Optional display label, e.g. "13.1.0". Ordering is still the integer
+  // `version` - this is only what the owner sees on the screen.
+  const char* verName = doc["name"] | (const char*)nullptr;
+  String label = verName ? String(verName) : ("v" + String(latest));
+  Serial.printf("OTA: downloading %s (%s)\n", binUrl.c_str(), label.c_str());
+
+  // Probe before committing to the UI. Headers only - end() drops the body
+  // without fetching it. A manifest that names a .bin which is missing or
+  // half-published would otherwise show the update animation and
+  // "DO NOT UNPLUG" on every poll, forever, while never updating anything.
+  http.begin(sec, binUrl);
+  code = http.GET();
+  int len = http.getSize();
+  http.end();
+  if (code != 200 || len <= 0) {
+    Serial.printf("OTA: bin not ready (HTTP %d, len %d) - staying on v%u\n",
+                  code, len, FIRMWARE_VERSION);
+    return false;
+  }
 
   playSystemAnim("animations_boot_update_animation");
-  showStatus("UPDATING", ("v" + String(latest)).c_str(), "DO NOT UNPLUG");
+  showStatus("UPDATING", label.c_str(), "DO NOT UNPLUG");
+
   http.begin(sec, binUrl);
   code = http.GET();
   if (code != 200) { http.end(); return false; }
-  int len = http.getSize();
+  len = http.getSize();
   if (len <= 0) { http.end(); return false; }
 
   if (!Update.begin(len)) { Serial.println("Update.begin fail"); http.end(); return false; }
-  showStatus("UPDATING", ("v" + String(latest)).c_str(), "DO NOT UNPLUG");
   size_t written = Update.writeStream(*http.getStreamPtr());
   http.end();
   if (written != (size_t)len) { Update.abort(); return false; }

@@ -137,8 +137,8 @@ three, so the sequence can never go dark and look hung.
 
 ## Idle face: wandering eyes (`firmware/sketch/eyes.h`)
 
-Geedo's resting state. Two filled rounded rectangles, **30 x 42, corner radius
-7, 18 px of black between them**, drawn procedurally into the usual 1024-byte
+Geedo's resting state. Two filled rounded rectangles, **38 x 48, corner radius
+8, 22 px of black between them**, drawn procedurally into the usual 1024-byte
 page buffer.
 
 Why generated rather than drawn: a wandering idle needs dozens of gaze

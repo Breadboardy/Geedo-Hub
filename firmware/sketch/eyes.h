@@ -13,16 +13,17 @@
 #include <string.h>
 
 // Shape, chosen against renders of the real thing.
-#define EYE_W 30
-#define EYE_H 42
-#define EYE_R 7
-#define EYE_GAP_BLACK 18                       // black pixels between the eyes
+#define EYE_W 38
+#define EYE_H 48
+#define EYE_R 8
+#define EYE_GAP_BLACK 22                       // black pixels between the eyes
 #define EYE_CX_L (64 - (EYE_W + EYE_GAP_BLACK) / 2)
 #define EYE_CX_R (64 + (EYE_W + EYE_GAP_BLACK) / 2)
 #define EYE_CY 32
 
-// How far the gaze roams. 30x42 centred leaves 11 px above and below, so 5 is
-// the most we can travel vertically and still keep the eye on screen.
+// How far the gaze roams. 38x48 with a 22 px gap leaves 15 px either side and
+// 8 px above and below, so these ranges keep ~7 px and ~3 px of slack - the
+// eye travels visibly without ever touching the edge of the panel.
 #define EYE_WANDER_X 8
 #define EYE_WANDER_Y 5
 

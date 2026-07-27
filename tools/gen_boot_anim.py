@@ -20,7 +20,7 @@ W, H = 128, 64
 FPS = 20                       # base period 50 ms; durations are multiples
 
 # must match eyes.h
-EYE_W, EYE_H, EYE_R, GAP = 30, 42, 7, 18
+EYE_W, EYE_H, EYE_R, GAP = 38, 48, 8, 22
 CXL, CXR, CY = 64 - (EYE_W + GAP) // 2, 64 + (EYE_W + GAP) // 2, 32
 
 BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]]

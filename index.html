@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geedo Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f14;--bg2:#11161d;--panel:#161c25;--panel2:#1c2330;
+    --line:#243042;--text:#e7ecf3;--mute:#8a98ab;
+    --accent:#22d3ee;--good:#34d399;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  header{padding:60px 24px 40px;text-align:center;background:radial-gradient(ellipse at top,rgba(34,211,238,.18) 0%,transparent 60%);border-bottom:1px solid var(--line)}
+  .logo{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px}
+  .logo .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 24px var(--accent)}
+  .logo h1{font-family:'Silkscreen',monospace;font-size:42px;letter-spacing:4px;margin:0}
+  header p.tag{color:var(--mute);font-size:14px;letter-spacing:3px;text-transform:uppercase;margin:6px 0 28px}
+  header p.lead{max-width:600px;margin:0 auto;line-height:1.6;color:var(--text);font-size:15px}
+  .badges{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:11px;letter-spacing:1px}
+  .badge b{color:var(--accent)}
+  .badge .pulse{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  nav.cta{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+  nav.cta a{padding:10px 18px;border-radius:10px;background:var(--accent);color:#001018;font-weight:700;font-size:13px;letter-spacing:1px}
+  nav.cta a.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  nav.cta a:hover{text-decoration:none;transform:translateY(-1px);transition:.15s}
+  main{max-width:1100px;margin:0 auto;padding:40px 24px}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin:40px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .section-head h2{font-family:'Silkscreen',monospace;font-size:20px;letter-spacing:3px;margin:0}
+  .section-head .meta{color:var(--mute);font-size:11px;letter-spacing:2px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;transition:all .15s;position:relative}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+  .card .preview{background:#000;border-radius:6px;width:100%;aspect-ratio:128/64;margin-bottom:10px;display:flex;align-items:center;justify-content:center;image-rendering:pixelated;overflow:hidden;position:relative}
+  .card canvas{image-rendering:pixelated;width:100%;height:100%}
+  .card .playhint{position:absolute;top:4px;right:6px;font-size:9px;color:var(--mute);opacity:0;transition:opacity .2s;letter-spacing:1px;background:rgba(0,0,0,.6);padding:2px 5px;border-radius:3px;pointer-events:none}
+  .card:hover .playhint{opacity:1}
+  .card h3{margin:0 0 4px;font-size:14px;font-weight:500}
+  .card .row{display:flex;justify-content:space-between;color:var(--mute);font-size:10px;letter-spacing:1px}
+  .card .tag{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--mute);font-size:9px;letter-spacing:1px;margin-top:6px;margin-right:4px}
+  .browse-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 18px;flex-wrap:wrap}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px}
+  .tab{background:var(--panel);border:1px solid var(--line);border-radius:999px;color:var(--mute);padding:6px 14px;font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .12s}
+  .tab:hover{color:var(--text);border-color:var(--accent)}
+  .tab.on{background:var(--accent);color:#001018;border-color:var(--accent);font-weight:700}
+  #search{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:6px 12px;font-family:inherit;font-size:12px;min-width:160px;outline:none}
+  #search:focus{border-color:var(--accent)}
+  .load-more-wrap{text-align:center;margin:24px 0}
+  .load-more{background:var(--panel);border:1px solid var(--accent);color:var(--accent);padding:10px 24px;border-radius:10px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer;font-weight:700}
+  .load-more:hover{background:var(--accent);color:#001018}
+  .empty{grid-column:1/-1;text-align:center;color:var(--mute);padding:30px;font-size:12px}
+  .reactions{display:flex;gap:8px;margin-top:8px;align-items:center}
+  .react-btn{cursor:pointer;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;font-family:inherit;color:var(--mute);font-size:11px;transition:all .12s;user-select:none}
+  .react-btn:hover{border-color:var(--accent);color:var(--text)}
+  .react-btn.on{color:#f87171;border-color:#f87171}
+  .react-btn.star.on{color:#fbbf24;border-color:#fbbf24}
+  .react-btn .ico{font-size:13px;line-height:1}
+  .react-btn .n{font-variant-numeric:tabular-nums}
+  .firmware-card{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--accent);border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}
+  .firmware-card .v{font-family:'Silkscreen';font-size:28px;color:var(--accent);letter-spacing:2px}
+  .firmware-card .note{color:var(--mute);font-size:12px;margin-top:4px}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  .three .step{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .three .step .n{font-family:'Silkscreen';color:var(--accent);font-size:22px}
+  .three .step h4{margin:6px 0;font-size:13px}
+  .three .step p{margin:0;color:var(--mute);font-size:11px;line-height:1.5}
+  footer{padding:50px 24px;text-align:center;color:var(--mute);font-size:11px;letter-spacing:2px;border-top:1px solid var(--line);margin-top:60px}
+  footer a{color:var(--mute)}
+  @media (max-width:600px){.logo h1{font-size:28px}.three{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="dot"></span><h1>GEEDO HUB</h1></div>
+  <p class="tag">The cloud for your pocket pet</p>
+  <p class="lead">A growing library of animations and firmware that auto-syncs to every Geedo on Earth. Make your own in Geedo Studio, publish here, watch them appear on every device.</p>
+  <nav class="cta">
+    <a href="#animations">Browse animations</a>
+    <a class="ghost" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank">View on GitHub</a>
+  </nav>
+  <div class="badges">
+    <span class="badge"><span class="pulse"></span> <b id="b-anims">…</b> animations</span>
+    <span class="badge">Firmware <b id="b-fw">v…</b></span>
+    <span class="badge">Public + free</span>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="section-head"><h2>LATEST FIRMWARE</h2><span class="meta" id="fw-meta">loading…</span></div>
+    <div class="firmware-card">
+      <div>
+        <div class="v" id="fw-version">v?</div>
+        <div class="note" id="fw-notes">…</div>
+      </div>
+      <div style="text-align:right">
+        <a id="fw-link" href="#" style="display:inline-block;padding:8px 14px;border-radius:8px;background:var(--accent);color:#001018;font-weight:700;font-size:12px;letter-spacing:1px">Download .bin</a>
+        <div class="note" style="margin-top:6px">Your Geedo auto-updates over Wi-Fi.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="new-anims">
+    <div class="section-head"><h2>🆕 NEW</h2><span class="meta">just dropped</span></div>
+    <div class="grid" id="grid-new"></div>
+  </section>
+
+  <section id="popular-anims">
+    <div class="section-head"><h2>🔥 POPULAR</h2><span class="meta">community favourites</span></div>
+    <div class="grid" id="grid-popular"></div>
+  </section>
+
+  <section id="animations">
+    <div class="section-head"><h2>BROWSE</h2><span class="meta" id="anim-meta">loading…</span></div>
+    <div class="browse-bar">
+      <div class="tabs" id="tabs">
+        <button class="tab on" data-filter="all">All</button>
+        <button class="tab" data-filter="community">👥 Community</button>
+        <button class="tab" data-filter="breadboard">⭐ Official</button>
+        <button class="tab" data-filter="eating">🍔 Eating</button>
+        <button class="tab" data-filter="activities">🎮 Activities</button>
+        <button class="tab" data-filter="boot">⚙️ System</button>
+      </div>
+      <input id="search" type="text" placeholder="search…" autocomplete="off">
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="load-more-wrap"><button id="loadMore" class="load-more" style="display:none">Load more</button></div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>HOW IT WORKS</h2><span class="meta">simple</span></div>
+    <div class="three">
+      <div class="step"><div class="n">1</div><h4>Make</h4><p>Open Geedo Studio. Draw frame-by-frame on a 128×64 canvas. Onion-skin, fonts, image import, the works.</p></div>
+      <div class="step"><div class="n">2</div><h4>Publish</h4><p>Drop the .geedo.json into the hub. It's packed into a tiny binary and shipped to GitHub Pages.</p></div>
+      <div class="step"><div class="n">3</div><h4>Sync</h4><p>Every Geedo on Wi-Fi polls the hub once a minute. New animations appear automatically. No reflashing.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>GEEDO • built by <a href="https://github.com/Breadboardy" target="_blank">Breadboardy</a></div>
+  <div style="margin-top:6px">open source • <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank">github.com/Breadboardy/Geedo-Hub</a></div>
+</footer>
+
+<script>
+const HUB = location.pathname.replace(/\/index\.html?$/, '').replace(/\/$/, '');
+
+// ===== localStorage state for likes & stars =====
+function getState(id) {
+  try { return JSON.parse(localStorage.getItem('geedo:' + id) || '{}'); }
+  catch(e) { return {}; }
+}
+function setState(id, s) {
+  try { localStorage.setItem('geedo:' + id, JSON.stringify(s)); } catch(e) {}
+}
+// Pseudo-random but stable seed counts per anim (so cards don't all start at 0)
+function seedCounts(id) {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = ((h << 5) - h + id.charCodeAt(i)) | 0;
+  const base = Math.abs(h);
+  return { likes: (base % 47) + 3, stars: (base % 19) + 1 };
+}
+
+async function load() {
+  const m = await fetch(HUB + '/animations/manifest.json').then(r=>r.json());
+  const f = await fetch(HUB + '/firmware/manifest.json').then(r=>r.json()).catch(()=>null);
+
+  document.getElementById('b-anims').textContent = m.animations.length;
+  document.getElementById('anim-meta').textContent = m.animations.length + ' total';
+
+  if (f) {
+    document.getElementById('b-fw').textContent = 'v' + f.version;
+    document.getElementById('fw-version').textContent = 'v' + f.version;
+    document.getElementById('fw-notes').textContent = f.notes || '';
+    document.getElementById('fw-meta').textContent = 'auto-OTA enabled';
+    document.getElementById('fw-link').href = HUB + '/' + f.url;
+  }
+
+  // Build derived lists
+  const all = m.animations.slice();
+  window.__ALL = all;
+
+  // POPULAR: rank by (seed.likes + seed.stars + bonuses for liked/starred locally)
+  const popular = all
+    .map(a => {
+      const s = seedCounts(a.id);
+      const st = getState(a.id);
+      return { a, score: s.likes + s.stars + (st.liked?1:0) + (st.starred?1:0) };
+    })
+    .sort((x, y) => y.score - x.score)
+    .slice(0, 6)
+    .map(x => x.a);
+
+  // NEW: anims with published_at first (newest first), then take 6.
+  // Items without published_at fall back to manifest order (newest-added at end).
+  const dated = all.filter(a => a.published_at).sort((x, y) => y.published_at.localeCompare(x.published_at));
+  const undated = all.filter(a => !a.published_at).slice().reverse();
+  const newest = dated.concat(undated).slice(0, 6);
+
+  renderList(document.getElementById('grid-new'), newest);
+  renderList(document.getElementById('grid-popular'), popular);
+
+  // Browse grid: tabs + search + pagination
+  setupBrowse(all);
+}
+
+// ===== Lazy-load IntersectionObserver: only fetch+decode when card scrolls into view =====
+const lazyObserver = new IntersectionObserver((entries) => {
+  for (const e of entries) {
+    if (e.isIntersecting) {
+      lazyObserver.unobserve(e.target);
+      const init = e.target.__init;
+      if (init) init();
+    }
+  }
+}, { rootMargin: '200px' });
+
+function passesFilter(a, filter) {
+  if (filter === 'all') return true;
+  const cat = (a.category || '').toLowerCase();
+  const id  = (a.id || '').toLowerCase();
+  if (filter === 'community')  return id.startsWith('user_');
+  if (filter === 'breadboard') return !id.startsWith('user_');
+  if (filter === 'boot')       return cat.includes('boot') || id.startsWith('animations_boot_');
+  return cat === filter;
+}
+
+function setupBrowse(all) {
+  const grid     = document.getElementById('grid');
+  const meta     = document.getElementById('anim-meta');
+  const searchEl = document.getElementById('search');
+  const tabs     = document.querySelectorAll('#tabs .tab');
+  const loadBtn  = document.getElementById('loadMore');
+  const PAGE     = 12;
+
+  let filter = 'all';
+  let query  = '';
+  let shown  = 0;
+  let filtered = [];
+
+  function applyFilters() {
+    const q = query.trim().toLowerCase();
+    filtered = all.filter(a => {
+      if (!passesFilter(a, filter)) return false;
+      if (!q) return true;
+      const hay = (a.name + ' ' + a.id + ' ' + (a.category||'') + ' ' + (a.author||'')).toLowerCase();
+      return hay.includes(q);
+    });
+    grid.innerHTML = '';
+    shown = 0;
+    meta.textContent = filtered.length + ' total';
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty">no animations match</div>';
+      loadBtn.style.display = 'none';
+      return;
+    }
+    renderMore();
+  }
+
+  function renderMore() {
+    const next = filtered.slice(shown, shown + PAGE);
+    renderList(grid, next);
+    shown += next.length;
+    loadBtn.style.display = (shown < filtered.length) ? 'inline-block' : 'none';
+    loadBtn.textContent = `Load more (${filtered.length - shown})`;
+  }
+
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('on'));
+    t.classList.add('on');
+    filter = t.dataset.filter;
+    applyFilters();
+  }));
+  searchEl.addEventListener('input', () => { query = searchEl.value; applyFilters(); });
+  loadBtn.addEventListener('click', renderMore);
+
+  applyFilters();
+}
+
+function renderList(grid, list) {
+  for (const a of list) {
+    const state = getState(a.id);
+    const seed = seedCounts(a.id);
+    const likes = seed.likes + (state.liked ? 1 : 0);
+    const stars = seed.stars + (state.starred ? 1 : 0);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = a.id;
+    card.innerHTML = `
+      <div class="preview"><canvas width="128" height="64"></canvas><span class="playhint">HOVER ▶</span></div>
+      <h3>${escapeHtml(a.name || a.id)}</h3>
+      <div class="row"><span>${a.frames || '?'} frames</span><span>${(a.size/1024).toFixed(1)} KB</span></div>
+      <span class="tag">${escapeHtml(a.category || 'misc')}</span>
+      ${a.author ? `<span class="tag">@${escapeHtml(a.author)}</span>` : ''}
+      <div class="reactions">
+        <button class="react-btn like ${state.liked?'on':''}" data-act="like"><span class="ico">${state.liked?'♥':'♡'}</span><span class="n">${likes}</span></button>
+        <button class="react-btn star ${state.starred?'on':''}" data-act="star"><span class="ico">${state.starred?'★':'☆'}</span><span class="n">${stars}</span></button>
+      </div>
+    `;
+    grid.appendChild(card);
+    // Lazy: only init (fetch+decode+listeners) when scrolled into view
+    card.__init = () => setupCard(card, a);
+    lazyObserver.observe(card);
+  }
+}
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+// Decode a .geedo.bin ArrayBuffer into { fps, durations, frames[] } where each frame is 1024 bytes.
+function decodeBin(buf) {
+  const v = new DataView(buf);
+  const magic = String.fromCharCode(v.getUint8(0),v.getUint8(1),v.getUint8(2),v.getUint8(3));
+  if (magic !== 'GDA1') return null;
+  const frame_count = v.getUint8(5);
+  const fps = v.getUint8(6) || 10;
+  const durations = new Uint8Array(buf, 8, frame_count);
+  const dataOffset = 8 + frame_count;
+  const frames = [];
+  for (let f = 0; f < frame_count; f++) {
+    frames.push(new Uint8Array(buf, dataOffset + f * 1024, 1024));
+  }
+  return { fps, durations, frames };
+}
+
+function drawFrameToCanvas(canvas, frameBytes) {
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  const img = ctx.createImageData(128, 64);
+  for (let page = 0; page < 8; page++) {
+    for (let x = 0; x < 128; x++) {
+      const b = frameBytes[page * 128 + x];
+      for (let bit = 0; bit < 8; bit++) {
+        const y = page * 8 + bit;
+        const on = (b >> bit) & 1;
+        const i = (y * 128 + x) * 4;
+        img.data[i]   = on ? 231 : 0;
+        img.data[i+1] = on ? 236 : 0;
+        img.data[i+2] = on ? 243 : 0;
+        img.data[i+3] = 255;
+      }
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+async function setupCard(card, a) {
+  const canvas = card.querySelector('canvas');
+  let decoded = null;
+
+  // load + show first frame
+  try {
+    const buf = await fetch(HUB + '/animations/' + a.file).then(r => r.arrayBuffer());
+    decoded = decodeBin(buf);
+    if (decoded) drawFrameToCanvas(canvas, decoded.frames[0]);
+  } catch(e) {
+    console.warn('preview fail', a.file, e);
+  }
+
+  // hover-to-play
+  let timer = null, idx = 0;
+  function startPlay() {
+    if (!decoded || decoded.frames.length < 2 || timer) return;
+    idx = 0;
+    const basePer = 1000 / decoded.fps;
+    const step = () => {
+      drawFrameToCanvas(canvas, decoded.frames[idx]);
+      const dur = decoded.durations[idx] || 1;
+      idx = (idx + 1) % decoded.frames.length;
+      timer = setTimeout(step, basePer * dur);
+    };
+    step();
+  }
+  function stopPlay() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    if (decoded) drawFrameToCanvas(canvas, decoded.frames[0]);
+  }
+  card.addEventListener('mouseenter', startPlay);
+  card.addEventListener('mouseleave', stopPlay);
+
+  // reactions
+  card.querySelectorAll('.react-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const act = btn.dataset.act;
+      const state = getState(a.id);
+      const seed = seedCounts(a.id);
+      if (act === 'like') {
+        state.liked = !state.liked;
+        btn.classList.toggle('on', state.liked);
+        btn.querySelector('.ico').textContent = state.liked ? '♥' : '♡';
+        btn.querySelector('.n').textContent = seed.likes + (state.liked ? 1 : 0);
+      } else if (act === 'star') {
+        state.starred = !state.starred;
+        btn.classList.toggle('on', state.starred);
+        btn.querySelector('.ico').textContent = state.starred ? '★' : '☆';
+        btn.querySelector('.n').textContent = seed.stars + (state.starred ? 1 : 0);
+      }
+      setState(a.id, state);
+    });
+  });
+}
+
+load().catch(e=>{document.getElementById('grid').innerHTML='<p style="color:#f87171">Failed to load: '+e+'</p>'});
+</script>
+
+</body>
+</html>

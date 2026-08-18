@@ -108,6 +108,7 @@ section{padding-block:clamp(38px,4.6vw,70px)}
   width:8px;height:8px;border-radius:50%;background:var(--glow);
   box-shadow:0 0 8px var(--glow);animation:blink 3.4s infinite;
 }
+.logo img.mark{width:27px;height:27px;flex:none}
 @keyframes blink{0%,92%,100%{opacity:1}95%{opacity:.25}}
 .nav a.link{font-size:14px;font-weight:500;color:var(--mute);transition:color .15s}
 .nav a.link:hover,.nav a.link[aria-current]{color:var(--text)}

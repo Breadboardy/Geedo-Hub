@@ -331,5 +331,8 @@
       "visibility": "public",
       "frames": 1
     }
+  ],
+  "packs": [
+    "ocean"
   ]
 }

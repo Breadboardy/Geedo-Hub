@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "ocean",
+  "name": "Ocean Pack",
+  "rarity": "common",
+  "animations": [
+    {
+      "id": "ocean_angler",
+      "name": "Angler",
+      "file": "bin/ocean_angler.bin",
+      "size": 10258,
+      "hash": "c811798a",
+      "frames": 10
+    },
+    {
+      "id": "chest",
+      "name": "Chest",
+      "file": "bin/chest.bin",
+      "size": 9233,
+      "hash": "62443cab",
+      "frames": 9
+    },
+    {
+      "id": "crab",
+      "name": "Crab",
+      "file": "bin/crab.bin",
+      "size": 12308,
+      "hash": "5907fea1",
+      "frames": 12
+    },
+    {
+      "id": "diver",
+      "name": "Diver",
+      "file": "bin/diver.bin",
+      "size": 21533,
+      "hash": "be0c5e53",
+      "frames": 21
+    },
+    {
+      "id": "going_underwater",
+      "name": "Going Underwater",
+      "file": "bin/going_underwater.bin",
+      "size": 9233,
+      "hash": "249f57f8",
+      "frames": 9
+    },
+    {
+      "id": "jellyfish",
+      "name": "Jellyfish",
+      "file": "bin/jellyfish.bin",
+      "size": 10258,
+      "hash": "0968c210",
+      "frames": 10
+    },
+    {
+      "id": "ocean_waves",
+      "name": "Ocean Waves",
+      "file": "bin/ocean_waves.bin",
+      "size": 11283,
+      "hash": "6a3d02db",
+      "frames": 11
+    },
+    {
+      "id": "submarine",
+      "name": "Submarine",
+      "file": "bin/submarine.bin",
+      "size": 12308,
+      "hash": "7058cce3",
+      "frames": 12
+    }
+  ]
+}

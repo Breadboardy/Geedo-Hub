@@ -6,7 +6,7 @@
 <title>Packs — Geedo</title>
 <meta name="description" content="Themed sets of animations that arrive on your Geedo together. Some are public, some come with a code.">
 <link rel="stylesheet" href="assets/geedo.css">
-<link rel="icon" href="assets/logo.svg">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
   .pack{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-lift)}
   .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:20px 22px}
@@ -22,13 +22,22 @@
   .ladder .free{color:var(--good)}
   .ladder .dear{color:var(--bad)}
   .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,52px)}
+  .shop{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .product{background:var(--bg-lift);border:1px solid var(--line);border-radius:16px;
+           padding:22px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:6px}
+  .product .boxart{width:min(240px,70vw);margin:6px auto 14px;
+                   filter:drop-shadow(0 10px 14px rgba(90,70,40,.16))}
+  .product h3{font-size:17px}
+  .product .tag2{color:var(--mute);font-size:13.5px;line-height:1.55;flex:1}
+  .product .rowb{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  .product.soon .boxart{filter:grayscale(.85) opacity(.55) drop-shadow(0 10px 14px rgba(90,70,40,.1))}
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-in">
-    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
     <div class="grow"></div>
     <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
       <a class="link" href="browse.html">Animations</a>
@@ -65,8 +74,51 @@
   </div>
 
   <section>
-    <div class="sec-head"><span class="micro">Live on the Hub</span><span class="fill rule"></span>
+    <div class="sec-head"><span class="micro">The packs</span><span class="fill rule"></span>
       <span class="micro" id="n-packs"></span></div>
+    <div class="shop">
+
+      <article class="product" id="p-ocean">
+        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+             style="width:100%;height:auto"><div class="box-screen"></div></div>
+        <h3>Ocean Pack</h3>
+        <p class="tag2">Underwater scenes drawn by hand: an angler fish, a treasure
+           chest, a diver, and a very confident crab.</p>
+        <div class="rowb">
+          <span class="chip good">Free · on every Geedo</span>
+          <a class="btn plain" href="#inside">Look inside →</a>
+        </div>
+      </article>
+
+      <article class="product" id="p-stick2">
+        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+             style="width:100%;height:auto"><div class="box-screen"></div></div>
+        <h3>Stickman Pack Vol. 2</h3>
+        <p class="tag2">Six stickman stunts with props and real physics. Backflips,
+           fishing, a kickflip that mostly lands.</p>
+        <div class="rowb">
+          <span class="chip on">With code · giveaways</span>
+          <a class="btn plain" href="unlock.html">Redeem →</a>
+        </div>
+      </article>
+
+      <article class="product soon" id="p-space">
+        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+             style="width:100%;height:auto"></div>
+        <h3>Space Pack</h3>
+        <p class="tag2">Drifting through the stars, drawn frame by frame. Still in
+           the workshop.</p>
+        <div class="rowb">
+          <span class="chip">Coming soon</span>
+          <span class="micro">watch the Discord</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="inside">
+    <div class="sec-head"><span class="micro">Look inside</span><span class="fill rule"></span></div>
     <div class="stack" style="--s:22px" id="packs">
       <div class="empty"><span class="spin" style="display:inline-block"></span> Checking the Hub…</div>
     </div>
@@ -152,6 +204,7 @@
   }
 
   host.replaceChildren();
+  let firstPackAnim = null;
   for (const id of ids) {
     let pm;
     try {
@@ -194,6 +247,7 @@
     for (const a of anims.slice(0, 8)) {
       try {
         const anim = await loadBin(`packs/${id}/${a.file}`.replace(/^packs\//, 'packs/'));
+        if (!firstPackAnim) firstPackAnim = anim;
         const fig = document.createElement('figure');
         fig.style.margin = '0';
         fig.append(new Screen(anim, { scale: 2 }).el);
@@ -208,16 +262,23 @@
     if (!shelf.children.length) shelf.innerHTML = '<p class="small mute">Previews unavailable.</p>';
   }
 
-  // The box's label is a live screen - the product photo is playing.
+  // Every box's label is a live screen - the shelf of products is playing.
+  const mount = async (sel, anim) => {
+    try {
+      const s2 = new Screen(anim, { scale: 2 });
+      s2.el.style.width = '100%';
+      const slot = document.querySelector(sel);
+      if (slot) slot.append(s2.el);
+    } catch (e) {}
+  };
   try {
     const all = m.animations || [];
-    const pick = all.find(a => /backflip/.test(a.id)) || all.find(a => /stickman|flying/.test(a.id))
-              || all.find(a => !/boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id));
-    if (pick) {
-      const s2 = new Screen(await loadBin(pick.file), { scale: 2 });
-      s2.el.style.width = '100%';
-      document.querySelector('#boxart .box-screen').append(s2.el);
-    }
+    const hero = all.find(a => /backflip/.test(a.id)) || all.find(a => /stickman|flying/.test(a.id));
+    if (hero) mount('#boxart .box-screen', await loadBin(hero.file));
+    const stick = all.find(a => /backflip|stickman/.test(a.id));
+    if (stick) mount('#p-stick2 .box-screen', await loadBin(stick.file));
+    if (firstPackAnim) mount('#p-ocean .box-screen', firstPackAnim);
+    else if (hero) mount('#p-ocean .box-screen', await loadBin(hero.file));
   } catch (e) {}
 })();
 </script>

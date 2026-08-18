@@ -2,78 +2,122 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Unlock · Geedo Hub</title>
+<title>Redeem a code — Geedo</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="assets/style.css">
+<meta name="description" content="Redeem a Geedo pack code. The Hub never stores your code - it is the key that opens the pack.">
+<link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" href="assets/logo.svg">
 <style>
-  .result{margin-top:24px;display:none}
+  .box{max-width:560px;margin:0 auto;border:1px solid var(--line);border-radius:14px;
+       background:var(--bg-lift);padding:clamp(24px,4vw,38px)}
+  .result{display:none;margin-top:26px;padding-top:26px;border-top:1px solid var(--line)}
   .result.show{display:block}
-  .play-canvas{width:384px;height:192px;max-width:100%;background:#000;border-radius:8px;border:1px solid var(--line);image-rendering:pixelated;display:block;margin:0 auto 14px}
-  .status-msg{padding:10px;border-radius:8px;margin-top:12px;font-size:12px}
-  .status-msg.ok{background:#0e2a1c;border:1px solid #1f3a2c;color:var(--good)}
-  .status-msg.bad{background:#2a1414;border:1px solid #3a1d1d;color:var(--bad)}
-  .status-msg.warn{background:#2a2010;border:1px solid #3a2f13;color:var(--warn)}
-  .helper{font-size:11px;color:var(--mute);margin-top:14px;line-height:1.6}
+  #aList{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:16px 0}
+  #aList .btn{padding:7px 13px;font-size:12px}
+  .helper{font-size:12px;color:var(--dim);line-height:1.6}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a href="index.html" class="brand"><span class="dot"></span>GEEDO HUB</a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="browse.html">Browse</a>
-    <a href="unlock.html" class="active">Unlock</a>
-    <a href="studio/index.html">Studio</a>
+  <div class="nav-in">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="models.html">Models</a>
+      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
   </div>
-  <div class="spacer"></div>
-  <a href="https://discord.gg/Tp6urXEMQd" class="btn" target="_blank" rel="noopener">Discord</a>
-  <a href="https://github.com/Breadboardy/Geedo-Hub" class="btn">GitHub</a>
 </nav>
 
-<div class="container" style="max-width:640px">
-  <h2 class="sec-title" style="text-align:center">UNLOCK</h2>
-  <p class="sec-sub" style="text-align:center">Enter a 6-letter code from a friend or a Time Capsule</p>
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
 
-  <div class="unlock-box">
-    <input type="text" id="code" class="code-input" placeholder="XXXX-XXXX" maxlength="13" autofocus>
-    <div class="helper">Codes look like <b>GD-X7K9-PQ4M</b>. Type it with or without the dashes — older 6-letter codes still work.</div>
-    <div style="margin-top:18px"><button class="btn primary" onclick="tryUnlock()">UNLOCK</button></div>
+  <div style="max-width:60ch;margin:0 auto;text-align:center">
+    <p class="micro" style="margin:0 0 14px">Redeem</p>
+    <h1 class="h1">Got a code?</h1>
+    <p class="lead" style="margin:12px auto 0">
+      From a giveaway, a pack you bought, or a friend. Type it in and the pack
+      opens right here.
+    </p>
+  </div>
+
+  <div class="box" style="margin-top:36px;text-align:center">
+    <input type="text" id="code" class="field code-field" placeholder="XXXX-XXXX"
+           maxlength="13" autocomplete="off" autocapitalize="characters"
+           spellcheck="false" autofocus aria-label="Pack code">
+    <p class="helper" style="margin:12px 0 0">
+      Codes look like <b class="accent">GD-X7K9-PQ4M</b>. Dashes optional —
+      older 6-letter codes still work.
+    </p>
+    <div style="margin-top:20px">
+      <button class="btn primary" id="go" onclick="tryUnlock()">Unlock</button>
+    </div>
     <div id="status"></div>
 
     <div class="result" id="result">
-      <hr style="border:none;border-top:1px solid var(--line);margin:24px 0">
-      <h3 id="aName" style="margin:0 0 4px;font-family:'Silkscreen'"></h3>
-      <div class="by" id="aBy" style="color:var(--mute);font-size:12px;margin-bottom:14px"></div>
-      <canvas id="aCanvas" class="play-canvas" width="128" height="64"></canvas>
-      <div id="aList" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px"></div>
+      <h2 class="h2" id="aName"></h2>
+      <p class="micro" id="aBy" style="margin:8px 0 18px"></p>
+      <div class="screen lg" style="max-width:384px;margin:0 auto">
+        <canvas id="aCanvas" width="128" height="64" style="width:100%"></canvas>
+      </div>
+      <div id="aList"></div>
       <a id="aDownload" class="btn primary" download>Download for Geedo</a>
+      <p class="helper" style="margin-top:18px;text-align:left">
+        <b class="accent">To put it on your Geedo:</b> hold his button for 5
+        seconds, join <b>GEEDO-Setup</b> on your phone like the first time, and
+        type this same code into the <b>Pack code</b> box. He downloads and
+        unlocks it himself, keeps it in his own memory forever, and plays his
+        gift ceremony when it lands. Needs firmware v27.
+      </p>
     </div>
   </div>
 
-  <p class="helper" style="text-align:center;margin-top:28px">
-    Want to make a private code? <a href="studio/index.html">Open Studio</a>, click Publish to Hub, and choose "Private Code".
-  </p>
-
-  <div class="unlock-box" style="margin-top:28px;text-align:center">
-    <h3 style="margin:0 0 8px;font-family:'Silkscreen'">GOT A GEEDO?</h3>
-    <p class="helper" style="margin-top:0">
-      Come and hang out with the other owners — swap animations, show off your desk,
-      and get pinged when a giveaway starts.
+  <div style="max-width:60ch;margin:36px auto 0">
+    <div class="note small">
+      <b>Your code is never stored on the Hub.</b> Not the code, not a hash of
+      it. Every pack sits there as a locked box and the code you type is the
+      key — which is why a wrong one simply doesn't open anything, and why the
+      check takes a moment.
+    </div>
+    <p class="helper" style="margin-top:18px;text-align:center">
+      Want to make your own private code? <a class="accent" href="studio/index.html">Open Studio</a>,
+      hit Publish to Hub, and choose “Private Code”.
     </p>
-    <div style="margin-top:14px">
-      <a class="btn primary" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">JOIN THE DISCORD</a>
-    </div>
-    <div class="helper" style="margin-top:12px">discord.gg/Tp6urXEMQd</div>
   </div>
-</div>
 
-<div class="foot">
-  Geedo Hub · <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">discord</a> ·
-  <a href="https://github.com/Breadboardy/Geedo-Hub">github</a>
-</div>
+  <section style="padding-bottom:0">
+    <div class="box" style="text-align:center">
+      <h2 class="h2">Got a Geedo?</h2>
+      <p class="lead" style="margin:12px auto 0;font-size:15px">
+        Come and hang out with the other owners — swap animations, show off your
+        desk, and get pinged when a giveaway starts.
+      </p>
+      <div style="margin-top:20px">
+        <a class="btn primary" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
+      </div>
+      <p class="helper" style="margin-top:14px">discord.gg/Tp6urXEMQd</p>
+    </div>
+  </section>
 
+</main>
+
+<footer class="wrap">
+  <div class="spread">
+    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+    <div class="row" style="gap:22px">
+      <a class="small mute" href="browse.html">Animations</a>
+      <a class="small mute" href="packs.html">Packs</a>
+      <a class="small mute" href="connect.html">Connect</a>
+      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
 <script>
 const codeInput=document.getElementById('code');
 const statusEl=document.getElementById('status');
@@ -92,7 +136,7 @@ codeInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock()});
 
 let playTimer=null;
 function showStatus(msg,kind){
-  statusEl.innerHTML=`<div class="status-msg ${kind}">${msg}</div>`;
+  statusEl.innerHTML=`<div class="note ${kind} small" style="margin-top:18px;text-align:left">${msg}</div>`;
 }
 
 // The codes are NOT in animations/codes.json. That file holds nothing but
@@ -158,7 +202,41 @@ async function tryUnlock(){
     }
   }
   showStatus('Unlocked!','ok');
+  await playUnbox();
   showPack(pack);
+}
+
+// The unboxing: a hand-drawn present that shakes, blows its lid, and zooms
+// into the camera - drawn frame by frame in Studio style, converted from the
+// original film with tools/video2geedo.py, and played here from the same
+// GDA1 bytes a robot would play. It runs ONCE per unlock (flags byte is 0),
+// a click skips it, and it is decoration: if the file is missing or the
+// visitor prefers reduced motion, the pack simply appears.
+async function playUnbox(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let anim;
+  try{
+    const r=await fetch('assets/unbox.bin');
+    if(!r.ok) return;
+    anim=unpackGda1(new Uint8Array(await r.arrayBuffer()));
+  }catch(e){return}
+  result.classList.add('show');
+  document.getElementById('aName').textContent='';
+  document.getElementById('aBy').textContent='';
+  const c=document.getElementById('aCanvas');
+  if(playTimer) clearTimeout(playTimer);
+  await new Promise(done=>{
+    let i=0;
+    const skip=()=>{i=anim.frames.length};
+    c.addEventListener('click',skip,{once:true});
+    const step=()=>{
+      if(i>=anim.frames.length){c.removeEventListener('click',skip);done();return}
+      drawFrame(c,anim.frames[i].pixels);
+      playTimer=setTimeout(step,1000/(anim.fps||12)*(anim.frames[i].dur||1));
+      i++;
+    };
+    step();
+  });
 }
 
 // ---- GDA1: 'GDA1' + [ver, frames, fps, flags] + durations[] + pixels[]

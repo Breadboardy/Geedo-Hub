@@ -1,0 +1,248 @@
+/* ==========================================================================
+   GEEDO — design system
+
+   The rule everything follows: Geedo is a 128x64 one-bit screen. So the site
+   is one-bit too. Black, white, hairlines, a pixel grid, and exactly one
+   colour used rarely enough that it still means something when it appears.
+
+   What that rules out, on purpose: decorative gradients, glass panels, boxes
+   inside boxes, three identical feature cards, emoji standing in for icons.
+   The interesting thing on this site is the robot's actual face playing at
+   3x. Everything else gets out of its way.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Silkscreen:wght@400;700&display=swap');
+
+:root{
+  /* Near-black, not pure: pure #000 next to an OLED render kills the glow. */
+  --bg:#08090c;
+  --bg-lift:#0d0f14;
+  --surface:#111318;
+  --line:#1c1f27;
+  --line-bright:#2a2f3a;
+  --text:#e9ebef;
+  --mute:#868d99;
+  --dim:#5b626e;
+  --accent:#22d3ee;      /* the OLED glow. Used sparingly - see .accent-rule */
+  --good:#34d399;
+  --warn:#fbbf24;
+  --bad:#f87171;
+
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pixel:'Silkscreen',var(--mono);
+
+  --gut:clamp(20px,4vw,48px);
+  --max:1240px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--mono);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  /* The pixel grid the whole product is made of, at 1% opacity. You should
+     not consciously see this - it just stops large dark areas reading flat. */
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.045) 1px,transparent 0);
+  background-size:4px 4px;
+}
+img,canvas,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ---------------------------------------------------------------- type */
+h1,h2,h3,h4{margin:0;font-weight:400;letter-spacing:-.01em;line-height:1.1}
+.display{
+  font-family:var(--pixel);font-weight:700;
+  font-size:clamp(34px,7.5vw,86px);letter-spacing:.02em;line-height:.98;
+}
+.h1{font-size:clamp(26px,3.6vw,44px);letter-spacing:-.02em;line-height:1.08}
+.h2{font-size:clamp(20px,2.4vw,30px);letter-spacing:-.015em}
+.h3{font-size:17px;letter-spacing:-.01em}
+.lead{font-size:clamp(15px,1.5vw,18px);color:var(--mute);line-height:1.7;max-width:60ch}
+.small{font-size:13px;line-height:1.6}
+.micro{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);font-weight:500;
+}
+.num{font-family:var(--pixel);font-weight:700;font-variant-numeric:tabular-nums}
+.accent{color:var(--accent)}
+.mute{color:var(--mute)}
+
+/* ---------------------------------------------------------------- layout */
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gut)}
+.stack>*+*{margin-top:var(--s,16px)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;gap:24px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+
+section{padding-block:clamp(38px,4.6vw,68px)}
+/* A section head is a hairline with a label sitting on it - a rule, not a box.
+   Repeated on every page, it is most of what makes the site feel like one
+   thing rather than a stack of pages. */
+.sec-head{
+  display:flex;align-items:baseline;gap:16px;
+  padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:32px;
+}
+.sec-head .micro{white-space:nowrap}
+.sec-head .fill{flex:1;height:1px}
+
+/* ---------------------------------------------------------------- nav */
+.nav{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{
+  max-width:var(--max);margin:0 auto;padding:0 var(--gut);
+  height:58px;display:flex;align-items:center;gap:clamp(14px,2.5vw,30px);
+}
+.logo{
+  font-family:var(--pixel);font-weight:700;font-size:17px;letter-spacing:.08em;
+  display:flex;align-items:center;gap:9px;
+}
+.logo .led{
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 10px var(--accent);animation:blink 3.4s infinite;
+}
+@keyframes blink{0%,92%,100%{opacity:1}95%{opacity:.25}}
+.nav a.link{font-size:13px;color:var(--mute);transition:color .15s}
+.nav a.link:hover,.nav a.link[aria-current]{color:var(--text)}
+.nav a.link[aria-current]{position:relative}
+.nav a.link[aria-current]::after{
+  content:'';position:absolute;left:0;right:0;bottom:-19px;height:1px;background:var(--accent);
+}
+.nav .grow{flex:1}
+.nav-toggle{display:none;background:0;border:0;color:var(--text);font:inherit;cursor:pointer;padding:6px}
+
+/* ---------------------------------------------------------------- screen
+   The signature element: a real 128x64 frame, scaled by whole numbers only
+   so pixels stay square and sharp. Never scale these fractionally. */
+.screen{
+  position:relative;background:#000;border:1px solid var(--line-bright);
+  border-radius:6px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6),0 18px 44px -22px rgba(34,211,238,.3);
+}
+.screen canvas{
+  display:block;width:100%;height:auto;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+}
+/* the faint scanline/pixel lattice of a real panel */
+.screen::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply;opacity:.5;
+}
+.screen.lg{box-shadow:0 0 0 1px rgba(0,0,0,.6),0 30px 80px -30px rgba(34,211,238,.45)}
+
+/* ---------------------------------------------------------------- buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+  padding:11px 20px;border-radius:8px;cursor:pointer;
+  border:1px solid var(--line-bright);background:transparent;color:var(--text);
+  transition:border-color .15s,background .15s,color .15s;
+}
+.btn:hover{border-color:var(--dim);background:var(--bg-lift)}
+.btn.primary{
+  background:var(--accent);border-color:var(--accent);color:#03212a;font-weight:700;
+}
+.btn.primary:hover{filter:brightness(1.08);background:var(--accent)}
+.btn.plain{border-color:transparent;padding-inline:0}
+.btn.plain:hover{background:0;color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------------------------------------------------------------- tiles */
+.tiles{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.tile{background:var(--bg);padding:22px 24px}
+.tile .num{font-size:clamp(26px,3.4vw,40px);display:block;line-height:1}
+.cols-2{grid-template-columns:repeat(2,1fr)}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+
+/* ---------------------------------------------------------------- cards */
+.cards{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.card{
+  border:1px solid var(--line);border-radius:10px;background:var(--bg-lift);
+  padding:14px;transition:border-color .15s,transform .15s;
+}
+.card:hover{border-color:var(--line-bright);transform:translateY(-2px)}
+.card .meta{display:flex;justify-content:space-between;gap:10px;margin-top:12px;align-items:baseline}
+.card h3{font-size:14px}
+
+.chip{
+  display:inline-block;padding:3px 9px;border-radius:999px;
+  border:1px solid var(--line);color:var(--dim);
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+}
+.chip.on{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.chip.good{color:var(--good);border-color:#1f3a2c}
+.chip.warn{color:var(--warn);border-color:#3a2f13}
+
+/* filter buttons double as chips */
+button.chip{background:0;cursor:pointer;font-family:inherit}
+button.chip:hover{color:var(--text);border-color:var(--line-bright)}
+button.chip[aria-pressed="true"]{
+  background:var(--accent);border-color:var(--accent);color:#03212a;font-weight:700;
+}
+
+/* ---------------------------------------------------------------- forms */
+.field{
+  width:100%;background:var(--bg-lift);border:1px solid var(--line-bright);
+  border-radius:8px;padding:12px 14px;color:var(--text);
+  font-family:inherit;font-size:14px;
+}
+.field:focus{outline:none;border-color:var(--accent)}
+.field::placeholder{color:var(--dim)}
+.code-field{
+  font-family:var(--pixel);font-size:clamp(20px,4vw,30px);text-align:center;
+  letter-spacing:.22em;color:var(--accent);padding:18px 12px;
+}
+
+.note{border-left:2px solid var(--line-bright);padding:2px 0 2px 16px;color:var(--mute);font-size:13px}
+.note.ok{border-color:var(--good);color:var(--good)}
+.note.bad{border-color:var(--bad);color:var(--bad)}
+.note.warn{border-color:var(--warn);color:var(--warn)}
+
+/* ---------------------------------------------------------------- steps */
+.steps{counter-reset:step;display:grid;gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.step{background:var(--bg);padding:24px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
+.step::before{
+  counter-increment:step;content:counter(step,decimal-leading-zero);
+  font-family:var(--pixel);font-weight:700;font-size:22px;color:var(--accent);line-height:1;
+}
+.step h3{margin-bottom:6px}
+.step p{margin:0;color:var(--mute);font-size:13px}
+
+/* ---------------------------------------------------------------- footer */
+footer{border-top:1px solid var(--line);margin-top:40px;padding-block:44px}
+footer a:hover{color:var(--accent)}
+
+/* ---------------------------------------------------------------- misc */
+.spin{
+  width:13px;height:13px;border:2px solid var(--line-bright);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .7s linear infinite;flex:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{padding:60px 0;text-align:center;color:var(--dim);font-size:13px}
+
+@media (max-width:820px){
+  .cols-4{grid-template-columns:repeat(2,1fr)}
+  .cols-3{grid-template-columns:1fr}
+}
+@media (max-width:680px){
+  .nav-links{
+    display:none;position:absolute;top:58px;left:0;right:0;
+    flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);
+  }
+  .nav-links.open{display:flex}
+  .nav-links a.link{padding:14px var(--gut);border-top:1px solid var(--line)}
+  .nav a.link[aria-current]::after{display:none}
+  .nav-toggle{display:block}
+  .cols-2,.cols-4{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr;gap:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}

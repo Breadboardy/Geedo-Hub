@@ -129,6 +129,18 @@ he still works in the car, on a trip, or when the internet is down.
 
 ---
 
+## The Geedo Discord
+
+Other owners hang out here:
+
+**https://discord.gg/Tp6urXEMQd**
+
+It's where new animation packs get announced, where you can show off what
+you've drawn in the Studio, and where giveaways happen — pick up the
+**Giveaways** role when you join and you'll get pinged when one starts.
+
+---
+
 ## Charging
 
 Plug in USB-C. The charge light on the board glows while charging and goes out

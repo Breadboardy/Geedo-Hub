@@ -2,180 +2,210 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Browse · Geedo Hub</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="assets/style.css">
+<title>Animations — Geedo</title>
+<meta name="description" content="Every animation on the Geedo Hub, playing the same files the robots download.">
+<link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" href="assets/logo.svg">
 <style>
-  .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
-  .chip{padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--mute);cursor:pointer;font-size:11px;letter-spacing:1px}
-  .chip.active{background:var(--accent);color:#001018;border-color:var(--accent);font-weight:700}
-  .search{flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-family:inherit;color:var(--text);font-size:12px}
-  .search:focus{outline:none;border-color:var(--accent)}
-  .empty{padding:60px;text-align:center;color:var(--mute);font-size:13px}
-
-  /* preview modal */
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100}
-  .modal-bg.open{display:flex}
-  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;width:480px;text-align:center}
-  .modal h2{font-family:'Silkscreen';font-size:18px;letter-spacing:2px;margin:0 0 6px}
-  .modal .by{color:var(--mute);font-size:12px;margin-bottom:18px}
-  .modal .play-canvas{width:384px;height:192px;background:#000;border-radius:8px;border:1px solid var(--line);image-rendering:pixelated;display:block;margin:0 auto 14px}
-  .modal .actions{display:flex;gap:8px;justify-content:center;margin-top:14px}
-  .modal-close{position:absolute;top:14px;right:18px;cursor:pointer;color:var(--mute);font-size:22px}
+  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:28px}
+  .bar .field{width:auto;flex:1;min-width:180px;max-width:280px}
+  .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(268px,1fr))}
+  figure.anim{margin:0;cursor:pointer}
+  figure.anim .screen{transition:border-color .15s}
+  figure.anim:hover .screen{border-color:var(--accent)}
+  figure.anim figcaption{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-top:10px}
+  figure.anim h3{font-size:14px}
+  figure.anim .m{font-size:11px;color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums}
+  dialog{border:0;padding:0;background:0;max-width:none;max-height:none}
+  dialog::backdrop{background:rgba(4,5,7,.86);backdrop-filter:blur(8px)}
+  .sheet{background:var(--bg);border:1px solid var(--line-bright);border-radius:14px;
+         padding:clamp(20px,3vw,32px);width:min(560px,92vw)}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a href="index.html" class="brand"><span class="dot"></span>GEEDO HUB</a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="browse.html" class="active">Browse</a>
-    <a href="unlock.html">Unlock</a>
-    <a href="studio/index.html">Studio</a>
+  <div class="nav-in">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="models.html">Models</a>
+      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
   </div>
-  <div class="spacer"></div>
-  <a href="https://github.com/breadboard/Geedo-Hub" class="btn">GitHub</a>
 </nav>
 
-<div class="container">
-  <h2 class="sec-title">Browse Animations</h2>
-  <p class="sec-sub">Public drops + discoveries. Private codes go on the Unlock page.</p>
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
 
-  <div class="filter-bar">
-    <span class="chip active" data-filter="all">All</span>
-    <span class="chip" data-filter="public">Public</span>
-    <span class="chip" data-filter="discover">Random</span>
-    <span class="chip" data-filter="capsule">Time Capsules</span>
-    <input type="text" id="search" class="search" placeholder="Search by name or tag...">
-  </div>
-
-  <div class="grid" id="grid"></div>
-  <div class="empty" id="empty" style="display:none">Nothing here yet — be the first to <a href="studio/index.html">make an animation</a>!</div>
-</div>
-
-<div class="modal-bg" id="modal">
-  <div class="modal" style="position:relative">
-    <div class="modal-close" onclick="closeModal()">×</div>
-    <h2 id="mName">Animation</h2>
-    <div class="by" id="mBy">by someone</div>
-    <canvas id="mCanvas" class="play-canvas" width="128" height="64"></canvas>
-    <div id="mTags" class="tags" style="justify-content:center;display:flex;gap:6px"></div>
-    <div class="actions">
-      <a id="mDownload" class="btn primary" download>Download .json</a>
-      <a id="mIno" class="btn" download>Get .ino</a>
+  <div class="spread" style="margin-bottom:34px">
+    <div>
+      <h1 class="h1">Animations</h1>
+      <p class="lead" style="margin-top:10px">
+        Everything on the Hub, playing right now. Each one is the same
+        <code>.bin</code> your Geedo downloads — 1 KB a frame, one bit a pixel.
+      </p>
+    </div>
+    <div class="tiles cols-2" style="min-width:220px">
+      <div class="tile" style="padding:14px 18px"><span class="num accent" id="n-anims" style="font-size:24px">··</span><span class="micro">animations</span></div>
+      <div class="tile" style="padding:14px 18px"><span class="num" id="n-frames" style="font-size:24px">··</span><span class="micro">frames</span></div>
     </div>
   </div>
-</div>
 
-<div class="foot">
-  Geedo Hub · <a href="https://github.com/breadboard/Geedo-Hub">github</a>
-</div>
+  <div class="bar" id="filters">
+    <input class="field" id="q" type="search" placeholder="Search…" autocomplete="off">
+  </div>
 
+  <div class="grid" id="grid"><div class="empty">Loading the Hub…</div></div>
+  <div class="empty" id="none" hidden>Nothing matches that.</div>
+
+</main>
+
+<dialog id="dlg">
+  <div class="sheet stack" style="--s:16px">
+    <div class="spread" style="align-items:flex-start">
+      <div>
+        <h2 class="h2" id="d-name">—</h2>
+        <p class="micro" id="d-meta" style="margin-top:6px">—</p>
+      </div>
+      <button class="btn plain" id="d-close" aria-label="Close" style="font-size:20px;line-height:1">×</button>
+    </div>
+    <div id="d-screen"></div>
+    <div class="row">
+      <a class="btn primary" id="d-dl" download>Download .bin</a>
+      <a class="btn" id="d-raw" target="_blank" rel="noopener">View raw</a>
+    </div>
+    <p class="small mute" style="margin:0">
+      Drop a <code>.bin</code> into your own build, or just let the Hub deliver it —
+      every Geedo picks new animations up within a minute.
+    </p>
+  </div>
+</dialog>
+
+<footer class="wrap">
+  <div class="spread">
+    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+    <div class="row" style="gap:22px">
+      <a class="small mute" href="packs.html">Packs</a>
+      <a class="small mute" href="connect.html">Connect</a>
+      <a class="small mute" href="unlock.html">Redeem a code</a>
+      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
 <script>
-let ANIMS=[];
-let filter='all',search='';
+(async () => {
+  const { Screen, loadBin, manifest, pretty } = window.Geedo;
+  const grid = document.getElementById('grid');
+  const none = document.getElementById('none');
 
-fetch('animations/index.json')
-  .then(r=>r.json())
-  .then(d=>{ANIMS=d.animations||[];render()})
-  .catch(()=>{ANIMS=[];render()});
+  let anims = [];
+  try { anims = (await manifest()).animations || []; }
+  catch (e) { grid.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
 
-document.querySelectorAll('.chip').forEach(c=>{
-  c.onclick=()=>{
-    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-    c.classList.add('active');
-    filter=c.dataset.filter;
-    render();
-  };
-});
-document.getElementById('search').oninput=e=>{search=e.target.value.toLowerCase();render()};
+  document.getElementById('n-anims').textContent = anims.length;
 
-function render(){
-  const list=ANIMS.filter(a=>{
-    if(filter!=='all' && (a.visibility||'public')!==filter) return false;
-    if(search){
-      const hay=(a.name+' '+(a.tags||[]).join(' ')+' '+(a.author||'')).toLowerCase();
-      if(!hay.includes(search)) return false;
-    }
-    return true;
-  });
-  const grid=document.getElementById('grid');
-  const empty=document.getElementById('empty');
-  grid.innerHTML='';
-  if(!list.length){empty.style.display='block';return}
-  empty.style.display='none';
-  list.forEach(a=>{
-    const vis=a.visibility||'public';
-    const pillClass=vis==='public'?'ok':(vis==='discover'?'warn':(vis==='capsule'?'warn':'locked'));
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML=`
-      <canvas class="thumb" width="128" height="64" data-id="${a.id}"></canvas>
-      <h3>${a.name}</h3>
-      <div class="by">by ${a.author||'unknown'} · ${a.frames||'?'} frames</div>
-      <div class="tags">
-        <span class="pill ${pillClass}">${vis}</span>
-        ${(a.tags||[]).slice(0,2).map(t=>`<span class="pill">${t}</span>`).join('')}
-      </div>`;
-    card.onclick=()=>openAnim(a);
-    grid.appendChild(card);
-    // load thumb (first frame)
-    if(a.file) loadThumb(a, card.querySelector('canvas'));
-  });
-}
-function loadThumb(a, canvas){
-  fetch('animations/'+a.file).then(r=>r.json()).then(d=>{
-    if(!d.frames || !d.frames.length) return;
-    drawFrame(canvas, d.frames[0].pixels);
-  }).catch(()=>{});
-}
-function drawFrame(canvas, pixels){
-  const ctx=canvas.getContext('2d');
-  ctx.imageSmoothingEnabled=false;
-  const img=ctx.createImageData(128,64);
-  for(let i=0;i<128*64;i++){
-    const v=pixels[i]?255:0;
-    img.data[i*4]=v;img.data[i*4+1]=v;img.data[i*4+2]=v;img.data[i*4+3]=255;
-  }
-  ctx.putImageData(img,0,0);
-}
-
-let playTimer=null;
-function openAnim(a){
-  document.getElementById('mName').textContent=a.name;
-  document.getElementById('mBy').textContent='by '+(a.author||'unknown')+' · '+(a.frames||'?')+' frames';
-  const tags=document.getElementById('mTags');
-  tags.innerHTML='';
-  const vis=a.visibility||'public';
-  const pillClass=vis==='public'?'ok':(vis==='discover'?'warn':'locked');
-  const v=document.createElement('span');v.className='pill '+pillClass;v.textContent=vis;tags.appendChild(v);
-  (a.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;tags.appendChild(s)});
-
-  document.getElementById('mDownload').href='animations/'+a.file;
-  document.getElementById('mDownload').download=a.name+'.geedo.json';
-  document.getElementById('mIno').style.display='none'; // we don't have .ino in repo
-
-  document.getElementById('modal').classList.add('open');
-
-  fetch('animations/'+a.file).then(r=>r.json()).then(d=>{
-    const c=document.getElementById('mCanvas');
-    let i=0;
-    const tick=()=>{
-      drawFrame(c, d.frames[i].pixels);
-      i=(i+1)%d.frames.length;
-      playTimer=setTimeout(tick, 1000/(d.fps||8));
+  // Category buttons come from the data, so a new category on the Hub turns up
+  // here without anyone editing this file.
+  const cats = [...new Set(anims.map(a => a.category).filter(Boolean))].sort();
+  const bar = document.getElementById('filters');
+  let active = 'all';
+  const mkChip = (val, label) => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = label; b.dataset.cat = val;
+    b.setAttribute('aria-pressed', val === 'all');
+    b.onclick = () => {
+      active = val;
+      bar.querySelectorAll('button.chip').forEach(x =>
+        x.setAttribute('aria-pressed', x.dataset.cat === val));
+      apply();
     };
-    if(playTimer) clearTimeout(playTimer);
-    tick();
-  });
-}
-function closeModal(){
-  document.getElementById('modal').classList.remove('open');
-  if(playTimer){clearTimeout(playTimer);playTimer=null}
-}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+    return b;
+  };
+  bar.prepend(...[mkChip('all', 'All'), ...cats.map(c => mkChip(c, pretty(c)))]);
+
+  // Build every card up front, then show/hide. Rebuilding on each keystroke
+  // would throw away decoded frames and re-fetch, which is both slower and
+  // visibly restarts every animation mid-loop.
+  grid.replaceChildren();
+  let totalFrames = 0;
+  const cards = [];
+
+  for (const a of anims) {
+    const fig = document.createElement('figure');
+    fig.className = 'anim';
+    fig.tabIndex = 0;
+    fig.setAttribute('role', 'button');
+    const holder = document.createElement('div');
+    holder.className = 'screen';
+    holder.style.aspectRatio = '2/1';
+    const cap = document.createElement('figcaption');
+    cap.innerHTML = `<h3 class="h3"></h3><span class="m">…</span>`;
+    cap.querySelector('h3').textContent = pretty(a.name);
+    fig.append(holder, cap);
+    grid.append(fig);
+
+    const card = { el: fig, data: a, hay: `${a.name} ${a.id} ${a.category || ''} ${a.author || ''}`.toLowerCase() };
+    cards.push(card);
+
+    loadBin(a.file).then(anim => {
+      totalFrames += anim.frames.length;
+      document.getElementById('n-frames').textContent = totalFrames;
+      const s = new Screen(anim, { scale: 2 });
+      s.el.style.width = '100%';
+      fig.replaceChild(s.el, holder);
+      cap.querySelector('.m').textContent = `${anim.frames.length}f · ${anim.fps}fps`;
+      card.anim = anim;
+      const open = () => show(a, anim);
+      fig.onclick = open;
+      fig.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+    }).catch(() => {
+      cap.querySelector('.m').textContent = 'unavailable';
+      fig.style.opacity = '.45';
+    });
+  }
+
+  const q = document.getElementById('q');
+  function apply(){
+    const term = q.value.trim().toLowerCase();
+    let shown = 0;
+    for (const c of cards) {
+      const ok = (active === 'all' || c.data.category === active) &&
+                 (!term || c.hay.includes(term));
+      c.el.hidden = !ok;
+      if (ok) shown++;
+    }
+    none.hidden = shown > 0;
+  }
+  q.addEventListener('input', apply);
+
+  const dlg = document.getElementById('dlg');
+  let big = null;
+  function show(a, anim){
+    document.getElementById('d-name').textContent = pretty(a.name);
+    document.getElementById('d-meta').textContent =
+      `${pretty(a.category) || 'Animation'} · ${anim.frames.length} frames · ${anim.fps} fps` +
+      `${anim.loop ? ' · loops' : ''}${anim.pingpong ? ' · ping-pong' : ''} · ${(a.size/1024).toFixed(1)} KB`;
+    const dl = document.getElementById('d-dl');
+    dl.href = 'animations/' + a.file;
+    dl.download = a.id + '.bin';
+    document.getElementById('d-raw').href = 'animations/' + a.file;
+    if (big) big.destroy();
+    big = new Screen(anim, { scale: 4 });
+    big.el.style.width = '100%';
+    document.getElementById('d-screen').replaceChildren(big.el);
+    dlg.showModal();
+  }
+  document.getElementById('d-close').onclick = () => dlg.close();
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', () => { if (big) { big.destroy(); big = null; } });
+})();
 </script>
 </body>
 </html>

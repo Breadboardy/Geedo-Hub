@@ -3,413 +3,264 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geedo Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Silkscreen&display=swap" rel="stylesheet">
+<title>Geedo — a little robot with a face</title>
+<meta name="description" content="A desk robot with a 128x64 face. He joins your WiFi, downloads new animations from the Hub on his own, and pulls faces at you.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" href="assets/logo.svg">
 <style>
-  :root{
-    --bg:#0b0f14;--bg2:#11161d;--panel:#161c25;--panel2:#1c2330;
-    --line:#243042;--text:#e7ecf3;--mute:#8a98ab;
-    --accent:#22d3ee;--good:#34d399;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace}
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
-  header{padding:60px 24px 40px;text-align:center;background:radial-gradient(ellipse at top,rgba(34,211,238,.18) 0%,transparent 60%);border-bottom:1px solid var(--line)}
-  .logo{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px}
-  .logo .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 24px var(--accent)}
-  .logo h1{font-family:'Silkscreen',monospace;font-size:42px;letter-spacing:4px;margin:0}
-  header p.tag{color:var(--mute);font-size:14px;letter-spacing:3px;text-transform:uppercase;margin:6px 0 28px}
-  header p.lead{max-width:600px;margin:0 auto;line-height:1.6;color:var(--text);font-size:15px}
-  .badges{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
-  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:11px;letter-spacing:1px}
-  .badge b{color:var(--accent)}
-  .badge .pulse{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);animation:pulse 1.5s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  nav.cta{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
-  nav.cta a{padding:10px 18px;border-radius:10px;background:var(--accent);color:#001018;font-weight:700;font-size:13px;letter-spacing:1px}
-  nav.cta a.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
-  nav.cta a:hover{text-decoration:none;transform:translateY(-1px);transition:.15s}
-  main{max-width:1100px;margin:0 auto;padding:40px 24px}
-  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin:40px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
-  .section-head h2{font-family:'Silkscreen',monospace;font-size:20px;letter-spacing:3px;margin:0}
-  .section-head .meta{color:var(--mute);font-size:11px;letter-spacing:2px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;transition:all .15s;position:relative}
-  .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
-  .card .preview{background:#000;border-radius:6px;width:100%;aspect-ratio:128/64;margin-bottom:10px;display:flex;align-items:center;justify-content:center;image-rendering:pixelated;overflow:hidden;position:relative}
-  .card canvas{image-rendering:pixelated;width:100%;height:100%}
-  .card .playhint{position:absolute;top:4px;right:6px;font-size:9px;color:var(--mute);opacity:0;transition:opacity .2s;letter-spacing:1px;background:rgba(0,0,0,.6);padding:2px 5px;border-radius:3px;pointer-events:none}
-  .card:hover .playhint{opacity:1}
-  .card h3{margin:0 0 4px;font-size:14px;font-weight:500}
-  .card .row{display:flex;justify-content:space-between;color:var(--mute);font-size:10px;letter-spacing:1px}
-  .card .tag{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--mute);font-size:9px;letter-spacing:1px;margin-top:6px;margin-right:4px}
-  .browse-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 18px;flex-wrap:wrap}
-  .tabs{display:flex;flex-wrap:wrap;gap:6px}
-  .tab{background:var(--panel);border:1px solid var(--line);border-radius:999px;color:var(--mute);padding:6px 14px;font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .12s}
-  .tab:hover{color:var(--text);border-color:var(--accent)}
-  .tab.on{background:var(--accent);color:#001018;border-color:var(--accent);font-weight:700}
-  #search{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:6px 12px;font-family:inherit;font-size:12px;min-width:160px;outline:none}
-  #search:focus{border-color:var(--accent)}
-  .load-more-wrap{text-align:center;margin:24px 0}
-  .load-more{background:var(--panel);border:1px solid var(--accent);color:var(--accent);padding:10px 24px;border-radius:10px;font-family:inherit;font-size:12px;letter-spacing:2px;cursor:pointer;font-weight:700}
-  .load-more:hover{background:var(--accent);color:#001018}
-  .empty{grid-column:1/-1;text-align:center;color:var(--mute);padding:30px;font-size:12px}
-  .reactions{display:flex;gap:8px;margin-top:8px;align-items:center}
-  .react-btn{cursor:pointer;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;font-family:inherit;color:var(--mute);font-size:11px;transition:all .12s;user-select:none}
-  .react-btn:hover{border-color:var(--accent);color:var(--text)}
-  .react-btn.on{color:#f87171;border-color:#f87171}
-  .react-btn.star.on{color:#fbbf24;border-color:#fbbf24}
-  .react-btn .ico{font-size:13px;line-height:1}
-  .react-btn .n{font-variant-numeric:tabular-nums}
-  .firmware-card{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--accent);border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}
-  .firmware-card .v{font-family:'Silkscreen';font-size:28px;color:var(--accent);letter-spacing:2px}
-  .firmware-card .note{color:var(--mute);font-size:12px;margin-top:4px}
-  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-  .three .step{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
-  .three .step .n{font-family:'Silkscreen';color:var(--accent);font-size:22px}
-  .three .step h4{margin:6px 0;font-size:13px}
-  .three .step p{margin:0;color:var(--mute);font-size:11px;line-height:1.5}
-  footer{padding:50px 24px;text-align:center;color:var(--mute);font-size:11px;letter-spacing:2px;border-top:1px solid var(--line);margin-top:60px}
-  footer a{color:var(--mute)}
-  @media (max-width:600px){.logo h1{font-size:28px}.three{grid-template-columns:1fr}}
+  .hero{padding-block:clamp(40px,6vw,78px) clamp(24px,3vw,40px)}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) auto;gap:clamp(30px,5vw,72px);align-items:center}
+  .hero .display span{color:var(--accent)}
+  .hero-stats{display:flex;gap:clamp(20px,4vw,48px);flex-wrap:wrap;margin-top:34px;
+    padding-top:26px;border-top:1px solid var(--line)}
+  .hero-stats .num{font-size:26px;display:block;line-height:1}
+  .strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:14px;scrollbar-width:thin}
+  .strip>*{flex:none}
+  .strip figcaption{margin-top:8px;font-size:11px;color:var(--dim);letter-spacing:.06em}
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(24px,4vw,56px)}
+  .model-list{border-top:1px solid var(--line)}
+  .model-list a{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:baseline;
+    padding:18px 0;border-bottom:1px solid var(--line);transition:padding-inline .18s,color .15s}
+  .model-list a:hover{padding-inline:10px 0;color:var(--accent)}
+  .model-list .idx{font-family:var(--pixel);color:var(--dim);font-size:12px}
+  .model-list p{margin:0;color:var(--mute);font-size:13px}
+  .model-list .go{color:var(--dim);font-size:12px}
+  @media (max-width:880px){.hero-grid{grid-template-columns:1fr}.hero .screen{justify-self:start}}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo"><span class="dot"></span><h1>GEEDO HUB</h1></div>
-  <p class="tag">The cloud for your pocket pet</p>
-  <p class="lead">A growing library of animations and firmware that auto-syncs to every Geedo on Earth. Make your own in Geedo Studio, publish here, watch them appear on every device.</p>
-  <nav class="cta">
-    <a href="#animations">Browse animations</a>
-    <a class="ghost" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank">View on GitHub</a>
-  </nav>
-  <div class="badges">
-    <span class="badge"><span class="pulse"></span> <b id="b-anims">…</b> animations</span>
-    <span class="badge">Firmware <b id="b-fw">v…</b></span>
-    <span class="badge">Public + free</span>
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="models.html">Models</a>
+      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <p class="micro" style="margin:0 0 18px">Desk robot · ESP32-C3 · 128×64 OLED</p>
+      <h1 class="display">A little robot<br>with a <span>face</span>.</h1>
+      <p class="lead" style="margin-top:24px">
+        Geedo sits on your desk and looks around. He joins your WiFi, pulls new
+        animations off the Hub by himself, and remembers whether you've been
+        petting him. You never plug him into a computer.
+      </p>
+      <div class="row" style="margin-top:32px;gap:10px">
+        <a class="btn primary" href="browse.html">See what he does</a>
+        <a class="btn" href="connect.html">Set one up</a>
+      </div>
+      <div class="hero-stats">
+        <div><span class="num accent" id="s-anims">··</span><span class="micro">animations</span></div>
+        <div><span class="num" id="s-frames">··</span><span class="micro">frames drawn</span></div>
+        <div><span class="num" id="s-fw">··</span><span class="micro">firmware</span></div>
+        <div><span class="num">60<span style="font-size:.55em">s</span></span><span class="micro">sync interval</span></div>
+      </div>
+    </div>
+    <figure style="margin:0" id="hero-fig">
+      <div class="screen lg" style="width:min(384px,80vw);aspect-ratio:2/1;"></div>
+    </figure>
   </div>
 </header>
 
 <main>
-  <section>
-    <div class="section-head"><h2>LATEST FIRMWARE</h2><span class="meta" id="fw-meta">loading…</span></div>
-    <div class="firmware-card">
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="micro">01 / He does things</span><span class="fill rule"></span>
+    <a class="micro" href="browse.html" style="color:var(--accent)">All animations →</a>
+  </div>
+  <div class="strip" id="strip"><div class="empty">Loading the Hub…</div></div>
+  <p class="small mute" style="margin-top:18px;max-width:62ch">
+    These are playing the exact <code>.bin</code> files your Geedo downloads —
+    same bytes, same 128×64 grid, same one bit per pixel. Nothing here is a
+    mock-up of the product.
+  </p>
+</section>
+
+<section class="wrap">
+  <div class="sec-head"><span class="micro">02 / How it works</span><span class="fill rule"></span></div>
+  <div class="steps">
+    <div class="step">
       <div>
-        <div class="v" id="fw-version">v?</div>
-        <div class="note" id="fw-notes">…</div>
-      </div>
-      <div style="text-align:right">
-        <a id="fw-link" href="#" style="display:inline-block;padding:8px 14px;border-radius:8px;background:var(--accent);color:#001018;font-weight:700;font-size:12px;letter-spacing:1px">Download .bin</a>
-        <div class="note" style="margin-top:6px">Your Geedo auto-updates over Wi-Fi.</div>
+        <h3 class="h3">He joins your WiFi once</h3>
+        <p>Switch him on, connect your phone to <b>GEEDO-Setup</b>, pick your network.
+           He remembers it forever — every start after that goes straight to his face.</p>
       </div>
     </div>
-  </section>
-
-  <section id="new-anims">
-    <div class="section-head"><h2>🆕 NEW</h2><span class="meta">just dropped</span></div>
-    <div class="grid" id="grid-new"></div>
-  </section>
-
-  <section id="popular-anims">
-    <div class="section-head"><h2>🔥 POPULAR</h2><span class="meta">community favourites</span></div>
-    <div class="grid" id="grid-popular"></div>
-  </section>
-
-  <section id="animations">
-    <div class="section-head"><h2>BROWSE</h2><span class="meta" id="anim-meta">loading…</span></div>
-    <div class="browse-bar">
-      <div class="tabs" id="tabs">
-        <button class="tab on" data-filter="all">All</button>
-        <button class="tab" data-filter="community">👥 Community</button>
-        <button class="tab" data-filter="breadboard">⭐ Official</button>
-        <button class="tab" data-filter="eating">🍔 Eating</button>
-        <button class="tab" data-filter="activities">🎮 Activities</button>
-        <button class="tab" data-filter="boot">⚙️ System</button>
+    <div class="step">
+      <div>
+        <h3 class="h3">He checks the Hub every minute</h3>
+        <p>New animation published? It's on every Geedo on Earth within 60 seconds,
+           and saved to his own storage so it survives a power cut.</p>
       </div>
-      <input id="search" type="text" placeholder="search…" autocomplete="off">
     </div>
-    <div class="grid" id="grid"></div>
-    <div class="load-more-wrap"><button id="loadMore" class="load-more" style="display:none">Load more</button></div>
-  </section>
+    <div class="step">
+      <div>
+        <h3 class="h3">You draw your own</h3>
+        <p>Geedo Studio is a 128×64 pixel editor in the browser. Draw, publish,
+           and watch it turn up on the robot.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <section>
-    <div class="section-head"><h2>HOW IT WORKS</h2><span class="meta">simple</span></div>
-    <div class="three">
-      <div class="step"><div class="n">1</div><h4>Make</h4><p>Open Geedo Studio. Draw frame-by-frame on a 128×64 canvas. Onion-skin, fonts, image import, the works.</p></div>
-      <div class="step"><div class="n">2</div><h4>Publish</h4><p>Drop the .geedo.json into the hub. It's packed into a tiny binary and shipped to GitHub Pages.</p></div>
-      <div class="step"><div class="n">3</div><h4>Sync</h4><p>Every Geedo on Wi-Fi polls the hub once a minute. New animations appear automatically. No reflashing.</p></div>
+<section class="wrap">
+  <div class="sec-head">
+    <span class="micro">03 / One brain, many shells</span><span class="fill rule"></span>
+    <a class="micro" href="models.html" style="color:var(--accent)">All models →</a>
+  </div>
+  <div class="split">
+    <div>
+      <p class="lead" style="margin:0">
+        Every Geedo — every model, every colour, every special edition — runs the
+        same board and the same firmware. Variety lives in the layers that are
+        cheap to change, never in the electronics.
+      </p>
+      <p class="small mute" style="margin-top:18px">
+        It's how phone cases work, and Lego minifigures. The board is the slow,
+        expensive, risky part; the moment a “model” needs a different one, that
+        model costs hundreds of pounds and a month before a single one exists.
+      </p>
     </div>
-  </section>
+    <nav class="model-list">
+      <a href="models.html#classic"><span class="idx">01</span><span><b>Classic</b><p>The friendly rounded box, tilted so he looks up at you</p></span><span class="go">→</span></a>
+      <a href="models.html#retro"><span class="idx">02</span><span><b>Retro</b><p>A chunky little CRT with feet and a fat bezel</p></span><span class="go">→</span></a>
+      <a href="models.html#bot"><span class="idx">03</span><span><b>Bot</b><p>Squarer, antenna nubs, a visor lip over the screen</p></span><span class="go">→</span></a>
+      <a href="models.html#critter"><span class="idx">04</span><span><b>Critter</b><p>Ears on top. Cat, bear, whatever — and a purr</p></span><span class="go">→</span></a>
+      <a href="models.html#desk"><span class="idx">05</span><span><b>Desk</b><p>Angled like a picture frame, for beside a monitor</p></span><span class="go">→</span></a>
+    </nav>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head"><span class="micro">04 / Packs</span><span class="fill rule"></span>
+    <a class="micro" href="packs.html" style="color:var(--accent)">Browse packs →</a></div>
+  <div class="split">
+    <div>
+      <h2 class="h2">Sets of animations that arrive together.</h2>
+      <p class="lead" style="margin-top:14px">
+        A pack is a themed bundle — ocean, stickman, weather. Some are public and
+        land on every robot. Others come with a code: type it in, and only your
+        Geedo gets them.
+      </p>
+      <div class="row" style="margin-top:22px">
+        <a class="btn" href="packs.html">See the packs</a>
+        <a class="btn plain" href="unlock.html">Have a code? →</a>
+      </div>
+    </div>
+    <div class="tiles cols-2" style="align-self:start">
+      <div class="tile"><span class="num accent" id="s-packs">··</span><span class="micro">packs live</span></div>
+      <div class="tile"><span class="num">1-bit</span><span class="micro">every pixel</span></div>
+      <div class="tile"><span class="num">1 KB</span><span class="micro">per frame</span></div>
+      <div class="tile"><span class="num">∞</span><span class="micro">kept offline</span></div>
+    </div>
+  </div>
+</section>
+
 </main>
 
-<footer>
-  <div>GEEDO • built by <a href="https://github.com/Breadboardy" target="_blank">Breadboardy</a></div>
-  <div style="margin-top:6px">open source • <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank">github.com/Breadboardy/Geedo-Hub</a></div>
+<footer class="wrap">
+  <div class="spread">
+    <div>
+      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+      <p class="small mute" style="margin:12px 0 0">Built by Breadboardy.</p>
+    </div>
+    <div class="row" style="gap:26px;align-items:flex-start">
+      <div class="stack" style="--s:8px">
+        <span class="micro">Explore</span>
+        <a class="small mute" href="browse.html">Animations</a>
+        <a class="small mute" href="packs.html">Packs</a>
+        <a class="small mute" href="models.html">Models</a>
+      </div>
+      <div class="stack" style="--s:8px">
+        <span class="micro">Owners</span>
+        <a class="small mute" href="connect.html">Set up</a>
+        <a class="small mute" href="unlock.html">Redeem a code</a>
+        <a class="small mute" href="GUIDE.md">Owner's guide</a>
+      </div>
+      <div class="stack" style="--s:8px">
+        <span class="micro">Elsewhere</span>
+        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+        <a class="small mute" href="studio/index.html">Studio</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
+<script src="assets/geedo.js"></script>
 <script>
-const HUB = location.pathname.replace(/\/index\.html?$/, '').replace(/\/$/, '');
+(async () => {
+  const { Screen, loadBin, manifest, firmware, pretty } = window.Geedo;
 
-// ===== localStorage state for likes & stars =====
-function getState(id) {
-  try { return JSON.parse(localStorage.getItem('geedo:' + id) || '{}'); }
-  catch(e) { return {}; }
-}
-function setState(id, s) {
-  try { localStorage.setItem('geedo:' + id, JSON.stringify(s)); } catch(e) {}
-}
-// Pseudo-random but stable seed counts per anim (so cards don't all start at 0)
-function seedCounts(id) {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = ((h << 5) - h + id.charCodeAt(i)) | 0;
-  const base = Math.abs(h);
-  return { likes: (base % 47) + 3, stars: (base % 19) + 1 };
-}
+  const [m, fw] = await Promise.all([
+    manifest().catch(() => ({ animations: [] })),
+    firmware(),
+  ]);
+  const anims = m.animations || [];
 
-async function load() {
-  const m = await fetch(HUB + '/animations/manifest.json').then(r=>r.json());
-  const f = await fetch(HUB + '/firmware/manifest.json').then(r=>r.json()).catch(()=>null);
+  document.getElementById('s-anims').textContent = anims.length || '—';
+  document.getElementById('s-packs').textContent = (m.packs || []).length;
+  if (fw) document.getElementById('s-fw').textContent = 'v' + fw.version;
 
-  document.getElementById('b-anims').textContent = m.animations.length;
-  document.getElementById('anim-meta').textContent = m.animations.length + ' total';
-
-  if (f) {
-    document.getElementById('b-fw').textContent = 'v' + f.version;
-    document.getElementById('fw-version').textContent = 'v' + f.version;
-    document.getElementById('fw-notes').textContent = f.notes || '';
-    document.getElementById('fw-meta').textContent = 'auto-OTA enabled';
-    document.getElementById('fw-link').href = HUB + '/' + f.url;
+  // The hero gets his eyes; they are the thing people recognise.
+  const hero = anims.find(a => /blink_eyes|hello_geedo/.test(a.id)) || anims[0];
+  if (hero) {
+    try {
+      const fig = document.getElementById('hero-fig');
+      const s = new Screen(await loadBin(hero.file), { scale: 3, className: 'lg' });
+      s.el.style.width = 'min(384px,80vw)';
+      fig.replaceChildren(s.el);
+    } catch (e) { /* leave the empty frame rather than an error box */ }
   }
 
-  // Build derived lists
-  const all = m.animations.slice();
-  window.__ALL = all;
-
-  // POPULAR: rank by (seed.likes + seed.stars + bonuses for liked/starred locally)
-  const popular = all
-    .map(a => {
-      const s = seedCounts(a.id);
-      const st = getState(a.id);
-      return { a, score: s.likes + s.stars + (st.liked?1:0) + (st.starred?1:0) };
-    })
-    .sort((x, y) => y.score - x.score)
-    .slice(0, 6)
-    .map(x => x.a);
-
-  // NEW: anims with published_at first (newest first), then take 6.
-  // Items without published_at fall back to manifest order (newest-added at end).
-  const dated = all.filter(a => a.published_at).sort((x, y) => y.published_at.localeCompare(x.published_at));
-  const undated = all.filter(a => !a.published_at).slice().reverse();
-  const newest = dated.concat(undated).slice(0, 6);
-
-  renderList(document.getElementById('grid-new'), newest);
-  renderList(document.getElementById('grid-popular'), popular);
-
-  // Browse grid: tabs + search + pagination
-  setupBrowse(all);
-}
-
-// ===== Lazy-load IntersectionObserver: only fetch+decode when card scrolls into view =====
-const lazyObserver = new IntersectionObserver((entries) => {
-  for (const e of entries) {
-    if (e.isIntersecting) {
-      lazyObserver.unobserve(e.target);
-      const init = e.target.__init;
-      if (init) init();
-    }
+  // A spread across categories reads as a library; six from one category
+  // reads as a demo with one idea in it.
+  const strip = document.getElementById('strip');
+  const byCat = new Map();
+  for (const a of anims) {
+    if (/boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id)) continue;
+    if (!byCat.has(a.category)) byCat.set(a.category, []);
+    byCat.get(a.category).push(a);
   }
-}, { rootMargin: '200px' });
-
-function passesFilter(a, filter) {
-  if (filter === 'all') return true;
-  const cat = (a.category || '').toLowerCase();
-  const id  = (a.id || '').toLowerCase();
-  if (filter === 'community')  return id.startsWith('user_');
-  if (filter === 'breadboard') return !id.startsWith('user_');
-  if (filter === 'boot')       return cat.includes('boot') || id.startsWith('animations_boot_');
-  return cat === filter;
-}
-
-function setupBrowse(all) {
-  const grid     = document.getElementById('grid');
-  const meta     = document.getElementById('anim-meta');
-  const searchEl = document.getElementById('search');
-  const tabs     = document.querySelectorAll('#tabs .tab');
-  const loadBtn  = document.getElementById('loadMore');
-  const PAGE     = 12;
-
-  let filter = 'all';
-  let query  = '';
-  let shown  = 0;
-  let filtered = [];
-
-  function applyFilters() {
-    const q = query.trim().toLowerCase();
-    filtered = all.filter(a => {
-      if (!passesFilter(a, filter)) return false;
-      if (!q) return true;
-      const hay = (a.name + ' ' + a.id + ' ' + (a.category||'') + ' ' + (a.author||'')).toLowerCase();
-      return hay.includes(q);
-    });
-    grid.innerHTML = '';
-    shown = 0;
-    meta.textContent = filtered.length + ' total';
-    if (!filtered.length) {
-      grid.innerHTML = '<div class="empty">no animations match</div>';
-      loadBtn.style.display = 'none';
-      return;
-    }
-    renderMore();
+  const picks = [];
+  for (let i = 0; picks.length < 8; i++) {
+    let added = false;
+    for (const list of byCat.values()) if (list[i]) { picks.push(list[i]); added = true; }
+    if (!added) break;
   }
-
-  function renderMore() {
-    const next = filtered.slice(shown, shown + PAGE);
-    renderList(grid, next);
-    shown += next.length;
-    loadBtn.style.display = (shown < filtered.length) ? 'inline-block' : 'none';
-    loadBtn.textContent = `Load more (${filtered.length - shown})`;
+  strip.replaceChildren();
+  let frames = 0;
+  for (const a of picks.slice(0, 8)) {
+    try {
+      const anim = await loadBin(a.file);
+      frames += anim.frames.length;
+      const fig = document.createElement('figure');
+      fig.style.margin = '0';
+      const s = new Screen(anim, { scale: 2 });
+      fig.append(s.el, Object.assign(document.createElement('figcaption'),
+        { textContent: `${pretty(a.name)} · ${anim.frames.length}f` }));
+      strip.append(fig);
+    } catch (e) { /* one bad file must not empty the shelf */ }
   }
+  if (!strip.children.length)
+    strip.innerHTML = '<div class="empty">Could not reach the Hub just now.</div>';
 
-  tabs.forEach(t => t.addEventListener('click', () => {
-    tabs.forEach(x => x.classList.remove('on'));
-    t.classList.add('on');
-    filter = t.dataset.filter;
-    applyFilters();
-  }));
-  searchEl.addEventListener('input', () => { query = searchEl.value; applyFilters(); });
-  loadBtn.addEventListener('click', renderMore);
-
-  applyFilters();
-}
-
-function renderList(grid, list) {
-  for (const a of list) {
-    const state = getState(a.id);
-    const seed = seedCounts(a.id);
-    const likes = seed.likes + (state.liked ? 1 : 0);
-    const stars = seed.stars + (state.starred ? 1 : 0);
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.id = a.id;
-    card.innerHTML = `
-      <div class="preview"><canvas width="128" height="64"></canvas><span class="playhint">HOVER ▶</span></div>
-      <h3>${escapeHtml(a.name || a.id)}</h3>
-      <div class="row"><span>${a.frames || '?'} frames</span><span>${(a.size/1024).toFixed(1)} KB</span></div>
-      <span class="tag">${escapeHtml(a.category || 'misc')}</span>
-      ${a.author ? `<span class="tag">@${escapeHtml(a.author)}</span>` : ''}
-      <div class="reactions">
-        <button class="react-btn like ${state.liked?'on':''}" data-act="like"><span class="ico">${state.liked?'♥':'♡'}</span><span class="n">${likes}</span></button>
-        <button class="react-btn star ${state.starred?'on':''}" data-act="star"><span class="ico">${state.starred?'★':'☆'}</span><span class="n">${stars}</span></button>
-      </div>
-    `;
-    grid.appendChild(card);
-    // Lazy: only init (fetch+decode+listeners) when scrolled into view
-    card.__init = () => setupCard(card, a);
-    lazyObserver.observe(card);
-  }
-}
-
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-
-// Decode a .geedo.bin ArrayBuffer into { fps, durations, frames[] } where each frame is 1024 bytes.
-function decodeBin(buf) {
-  const v = new DataView(buf);
-  const magic = String.fromCharCode(v.getUint8(0),v.getUint8(1),v.getUint8(2),v.getUint8(3));
-  if (magic !== 'GDA1') return null;
-  const frame_count = v.getUint8(5);
-  const fps = v.getUint8(6) || 10;
-  const durations = new Uint8Array(buf, 8, frame_count);
-  const dataOffset = 8 + frame_count;
-  const frames = [];
-  for (let f = 0; f < frame_count; f++) {
-    frames.push(new Uint8Array(buf, dataOffset + f * 1024, 1024));
-  }
-  return { fps, durations, frames };
-}
-
-function drawFrameToCanvas(canvas, frameBytes) {
-  const ctx = canvas.getContext('2d');
-  ctx.imageSmoothingEnabled = false;
-  const img = ctx.createImageData(128, 64);
-  for (let page = 0; page < 8; page++) {
-    for (let x = 0; x < 128; x++) {
-      const b = frameBytes[page * 128 + x];
-      for (let bit = 0; bit < 8; bit++) {
-        const y = page * 8 + bit;
-        const on = (b >> bit) & 1;
-        const i = (y * 128 + x) * 4;
-        img.data[i]   = on ? 231 : 0;
-        img.data[i+1] = on ? 236 : 0;
-        img.data[i+2] = on ? 243 : 0;
-        img.data[i+3] = 255;
-      }
-    }
-  }
-  ctx.putImageData(img, 0, 0);
-}
-
-async function setupCard(card, a) {
-  const canvas = card.querySelector('canvas');
-  let decoded = null;
-
-  // load + show first frame
-  try {
-    const buf = await fetch(HUB + '/animations/' + a.file).then(r => r.arrayBuffer());
-    decoded = decodeBin(buf);
-    if (decoded) drawFrameToCanvas(canvas, decoded.frames[0]);
-  } catch(e) {
-    console.warn('preview fail', a.file, e);
-  }
-
-  // hover-to-play
-  let timer = null, idx = 0;
-  function startPlay() {
-    if (!decoded || decoded.frames.length < 2 || timer) return;
-    idx = 0;
-    const basePer = 1000 / decoded.fps;
-    const step = () => {
-      drawFrameToCanvas(canvas, decoded.frames[idx]);
-      const dur = decoded.durations[idx] || 1;
-      idx = (idx + 1) % decoded.frames.length;
-      timer = setTimeout(step, basePer * dur);
-    };
-    step();
-  }
-  function stopPlay() {
-    if (timer) { clearTimeout(timer); timer = null; }
-    if (decoded) drawFrameToCanvas(canvas, decoded.frames[0]);
-  }
-  card.addEventListener('mouseenter', startPlay);
-  card.addEventListener('mouseleave', stopPlay);
-
-  // reactions
-  card.querySelectorAll('.react-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const act = btn.dataset.act;
-      const state = getState(a.id);
-      const seed = seedCounts(a.id);
-      if (act === 'like') {
-        state.liked = !state.liked;
-        btn.classList.toggle('on', state.liked);
-        btn.querySelector('.ico').textContent = state.liked ? '♥' : '♡';
-        btn.querySelector('.n').textContent = seed.likes + (state.liked ? 1 : 0);
-      } else if (act === 'star') {
-        state.starred = !state.starred;
-        btn.classList.toggle('on', state.starred);
-        btn.querySelector('.ico').textContent = state.starred ? '★' : '☆';
-        btn.querySelector('.n').textContent = seed.stars + (state.starred ? 1 : 0);
-      }
-      setState(a.id, state);
-    });
-  });
-}
-
-load().catch(e=>{document.getElementById('grid').innerHTML='<p style="color:#f87171">Failed to load: '+e+'</p>'});
+  // Total frames across the whole library, not just what is on screen.
+  const all = await Promise.allSettled(anims.map(a => loadBin(a.file)));
+  const total = all.reduce((n, r) => n + (r.value ? r.value.frames.length : 0), 0);
+  document.getElementById('s-frames').textContent = total || frames || '—';
+})();
 </script>
-
 </body>
 </html>

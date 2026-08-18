@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Packs — Geedo</title>
+<meta name="description" content="Themed sets of animations that arrive on your Geedo together. Some are public, some come with a code.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" href="assets/logo.svg">
+<style>
+  .pack{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-lift)}
+  .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:20px 22px}
+  .pack-screens{display:flex;gap:10px;overflow-x:auto;padding:0 22px 20px}
+  .pack-screens>*{flex:none}
+  .rarity{font-family:var(--pixel);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+  .r-common{color:var(--dim)} .r-uncommon{color:var(--good)}
+  .r-rare{color:var(--accent)} .r-legendary{color:var(--warn)}
+  .ladder{width:100%;border-collapse:collapse;font-size:13px}
+  .ladder th,.ladder td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  .ladder th{color:var(--dim);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .ladder td:first-child{color:var(--text);white-space:nowrap}
+  .ladder .free{color:var(--good)}
+  .ladder .dear{color:var(--bad)}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,52px)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="models.html">Models</a>
+      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
+
+  <div style="max-width:64ch">
+    <h1 class="h1">Packs</h1>
+    <p class="lead" style="margin-top:12px">
+      A pack is a themed set of animations that arrives together. Public packs
+      land on every Geedo on Earth. Private ones come with a code — type it in
+      and only your robot gets them.
+    </p>
+    <div class="row" style="margin-top:22px">
+      <a class="btn primary" href="unlock.html">Redeem a code</a>
+      <a class="btn" href="connect.html">How packs reach Geedo</a>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="micro">Live on the Hub</span><span class="fill rule"></span>
+      <span class="micro" id="n-packs"></span></div>
+    <div class="stack" style="--s:22px" id="packs">
+      <div class="empty"><span class="spin" style="display:inline-block"></span> Checking the Hub…</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="micro">How a pack gets to your robot</span><span class="fill rule"></span></div>
+    <div class="two">
+      <div class="steps" style="border-block:1px solid var(--line)">
+        <div class="step"><div>
+          <h3 class="h3">Public packs</h3>
+          <p>Switched on for everyone. Geedo notices at his next check and downloads
+             them — you do nothing at all, and the new-pack celebration plays when
+             they land.</p>
+        </div></div>
+        <div class="step"><div>
+          <h3 class="h3">Code packs</h3>
+          <p>Bought one, or won one in a giveaway? You get a code like
+             <b>GD-K7X9-PQ4M</b>. Enter it and the pack is yours.</p>
+        </div></div>
+      </div>
+      <div>
+        <h2 class="h2">A code is a key, not a password.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          The Hub never stores your code — not the code, not even a hash of it.
+          Every private pack sits on the Hub as a locked box, and the code you
+          type is what opens it. Get it wrong and the box simply doesn't open;
+          there's nothing to look up and nothing to read off.
+        </p>
+        <p class="small mute" style="margin-top:16px">
+          The key is stretched through 600,000 rounds of PBKDF2 before it's
+          tried, which is why the Unlock page pauses for a moment. That pause is
+          the point: it makes guessing codes hundreds of thousands of times more
+          expensive, and costs you about half a second.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="micro">Why packs, and not just more animations</span><span class="fill rule"></span></div>
+    <div class="two">
+      <div>
+        <p class="lead" style="margin:0">
+          Every frame of every listed animation lives in the robot's memory while
+          it plays, and the base set already uses most of it.
+        </p>
+        <p class="small mute" style="margin-top:16px">
+          So packs stay separate channels rather than being merged into the main
+          list. Switching one on or off is editing a single line on the Hub —
+          nothing gets re-uploaded, nothing gets lost, and a robot only carries
+          the packs it actually has.
+        </p>
+      </div>
+      <table class="ladder">
+        <thead><tr><th>Layer</th><th>Cost per variant</th><th>What it buys</th></tr></thead>
+        <tbody>
+          <tr><td>Animation packs</td><td class="free">£0</td><td>New things he does — reaches robots already sold</td></tr>
+          <tr><td>Personalities</td><td class="free">£0</td><td>Sleepy, hyper, shy: same robot, different soul</td></tr>
+          <tr><td>Songs</td><td class="free">£0</td><td>A tune per edition</td></tr>
+          <tr><td>Case colour</td><td class="free">£0</td><td>The most visible variety there is</td></tr>
+          <tr><td>Sticker sheet</td><td>~20p</td><td>Owners customise their own</td></tr>
+          <tr><td>New board</td><td class="dear">£££ + weeks</td><td>Avoided until there's a real reason</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div class="spread">
+    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+    <div class="row" style="gap:22px">
+      <a class="small mute" href="browse.html">Animations</a>
+      <a class="small mute" href="models.html">Models</a>
+      <a class="small mute" href="unlock.html">Redeem a code</a>
+      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script>
+(async () => {
+  const { Screen, loadBin, manifest, pretty } = window.Geedo;
+  const host = document.getElementById('packs');
+
+  let m;
+  try { m = await manifest(); }
+  catch (e) { host.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
+
+  const ids = m.packs || [];
+  document.getElementById('n-packs').textContent = ids.length
+    ? `${ids.length} pack${ids.length === 1 ? '' : 's'}` : '';
+
+  if (!ids.length) {
+    // An honest empty state beats inventing packs that do not exist. It says
+    // what a pack is and where the first one will come from.
+    host.innerHTML = `
+      <div class="pack" style="padding:28px 22px">
+        <h3 class="h2" style="margin-bottom:10px">No public packs are switched on right now.</h3>
+        <p class="lead" style="font-size:15px;margin:0">
+          Packs get announced in the Discord first, and giveaway codes are drawn
+          there. If you're holding a code already, it still works — the Unlock
+          page doesn't need a pack to be public.
+        </p>
+        <div class="row" style="margin-top:20px">
+          <a class="btn primary" href="unlock.html">Redeem a code</a>
+          <a class="btn" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
+        </div>
+      </div>`;
+    return;
+  }
+
+  host.replaceChildren();
+  for (const id of ids) {
+    let pm;
+    try {
+      const r = await fetch(`animations/packs/${id}/manifest.json`);
+      if (!r.ok) throw new Error(r.status);
+      pm = await r.json();
+    } catch (e) {
+      // A pack listed in the manifest whose channel is missing is a real fault
+      // worth showing rather than hiding - the robots hit the same 404.
+      const bad = document.createElement('div');
+      bad.className = 'pack';
+      bad.style.padding = '20px 22px';
+      bad.innerHTML = `<h3 class="h3">${pretty(id)}</h3>
+        <p class="note bad small" style="margin-top:10px">
+          Listed on the Hub, but <code>animations/packs/${id}/manifest.json</code>
+          isn't there. Robots asking for this pack get the same 404.</p>`;
+      host.append(bad);
+      continue;
+    }
+
+    const anims = pm.animations || [];
+    const rarity = (pm.rarity || 'common').toLowerCase();
+    const el = document.createElement('article');
+    el.className = 'pack';
+    el.innerHTML = `
+      <div class="pack-head">
+        <div>
+          <h3 class="h2">${pretty(pm.name || id)}</h3>
+          <p class="small mute" style="margin:6px 0 0">${pm.note || ''}</p>
+        </div>
+        <div style="text-align:right;white-space:nowrap">
+          <span class="rarity r-${rarity}">${rarity}</span>
+          <p class="micro" style="margin:6px 0 0">${anims.length} animation${anims.length===1?'':'s'}</p>
+        </div>
+      </div>
+      <div class="pack-screens"></div>`;
+    host.append(el);
+
+    const shelf = el.querySelector('.pack-screens');
+    for (const a of anims.slice(0, 8)) {
+      try {
+        const anim = await loadBin(`packs/${id}/${a.file}`.replace(/^packs\//, 'packs/'));
+        const fig = document.createElement('figure');
+        fig.style.margin = '0';
+        fig.append(new Screen(anim, { scale: 2 }).el);
+        const cap = document.createElement('figcaption');
+        cap.className = 'micro';
+        cap.style.marginTop = '8px';
+        cap.textContent = pretty(a.name || a.id);
+        fig.append(cap);
+        shelf.append(fig);
+      } catch (e) { /* skip the one file, keep the pack */ }
+    }
+    if (!shelf.children.length) shelf.innerHTML = '<p class="small mute">Previews unavailable.</p>';
+  }
+})();
+</script>
+</body>
+</html>

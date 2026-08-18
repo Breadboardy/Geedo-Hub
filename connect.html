@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect — Geedo</title>
+<meta name="description" content="Set up a Geedo: join his WiFi network once, and he does the rest by himself forever.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" href="assets/logo.svg">
+<style>
+  .flow{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .flow-step{background:var(--bg);padding:clamp(22px,3vw,32px);
+             display:grid;grid-template-columns:1fr 296px;gap:clamp(20px,3vw,40px);align-items:center}
+  .flow-step:nth-child(even){background:var(--bg-lift)}
+  .flow-step .n{font-family:var(--pixel);font-size:13px;color:var(--accent);letter-spacing:.1em}
+  .flow-step h2{margin-top:10px}
+  .flow-step p{color:var(--mute);margin:12px 0 0;max-width:54ch}
+  .fake{background:#000;border:1px solid var(--line-bright);border-radius:6px;padding:16px 18px;
+        font-size:12px;line-height:1.7;color:#e9ebef;white-space:pre-wrap}
+  .fake b{color:var(--accent)}
+  .screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+  .screens figcaption{margin-top:8px;font-size:11px;color:var(--dim);letter-spacing:.06em}
+  table.meanings{width:100%;border-collapse:collapse;font-size:13px}
+  table.meanings td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.meanings td:first-child{color:var(--accent);white-space:nowrap;font-size:12px}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,52px)}
+  @media (max-width:800px){.flow-step{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="models.html">Models</a>
+      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
+
+  <div style="max-width:62ch">
+    <p class="micro" style="margin:0 0 14px">Setting one up</p>
+    <h1 class="h1">You do this once.</h1>
+    <p class="lead" style="margin-top:14px">
+      Geedo joins your WiFi on his first switch-on and remembers it forever.
+      After that every start goes straight to his face, and new animations turn
+      up on their own. You never plug him into a computer.
+    </p>
+  </div>
+
+  <section>
+    <div class="flow">
+
+      <div class="flow-step">
+        <div>
+          <span class="n">STEP 01</span>
+          <h2 class="h2">Switch him on</h2>
+          <p>His boot animation plays straight away, before he even looks for
+             WiFi. If he's never been set up, he asks for it.</p>
+        </div>
+        <div class="fake">Hi! Let's set me up:
+1. phone WiFi list
+2. join this one:
+   [ <b>GEEDO-Setup</b> ]
+no password needed!</div>
+      </div>
+
+      <div class="flow-step">
+        <div>
+          <span class="n">STEP 02</span>
+          <h2 class="h2">Join <b class="accent">GEEDO-Setup</b> on your phone</h2>
+          <p>Open your WiFi settings and connect to it — there's no password. A
+             page opens by itself. Pick your home network, type your password,
+             hit save.</p>
+          <p class="small" style="color:var(--dim)">
+            If the page doesn't pop up, open a browser and go to
+            <b class="accent">192.168.4.1</b>. The setup network stays open for
+            5 minutes; switch him off and on to reopen it.</p>
+        </div>
+        <div class="fake">┌──────────────────────┐
+│  <b>GEEDO SETUP</b>         │
+│                      │
+│  WiFi   [ MyHouse ▾ ]│
+│  Pass   [ •••••••• ] │
+│                      │
+│        [  SAVE  ]    │
+└──────────────────────┘</div>
+      </div>
+
+      <div class="flow-step">
+        <div>
+          <span class="n">STEP 03</span>
+          <h2 class="h2">That's it</h2>
+          <p>He connects, fetches his animations, and comes alive. From then on
+             the setup screen only ever comes back if he can't reach your WiFi.</p>
+          <p class="small" style="color:var(--dim)">
+            Changed your WiFi password? Hold the button 5 seconds — he erases
+            the old network and reopens setup. Let go early and nothing happens.</p>
+        </div>
+        <div id="boot-screens" class="screens" style="grid-template-columns:1fr"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="micro">His screens, and what they mean</span><span class="fill rule"></span></div>
+    <div class="two">
+      <table class="meanings">
+        <tbody>
+          <tr><td>Hi! Let's set me up</td><td>No WiFi saved — join <b>GEEDO-Setup</b>. Also shows if his saved network stops working</td></tr>
+          <tr><td>getting my stuff…</td><td>Downloading animations from the Hub</td></tr>
+          <tr><td>updating…</td><td>Installing new firmware — leave him powered until he reboots himself</td></tr>
+          <tr><td>Fetch FAILED</td><td>On your WiFi but can't reach the Hub. Usually a login-page network (school, café, hotel)</td></tr>
+          <tr><td>LOW BATTERY</td><td>Plug in USB-C. He warns at most once every 90 seconds — he won't nag</td></tr>
+          <tr><td>KEEP HOLDING</td><td>You're holding the button. Keep going to erase WiFi, or let go</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <h2 class="h2">The button does two things.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          <b class="accent">Tap</b> to pet him — he reacts straight away and cheers
+          up a little. Keep tapping and he gets more and more wound up.
+        </p>
+        <p class="lead" style="margin-top:12px;font-size:15px">
+          <b class="accent">Hold 5 seconds</b> to erase his WiFi and start setup
+          over.
+        </p>
+        <p class="small mute" style="margin-top:16px">
+          He remembers the petting. A Geedo who gets a tap every day wears a
+          different set of faces than one left on a shelf — and he keeps his mood
+          through a power cut and through updates. He never sulks, though, and
+          never guilts you into picking him up.
+        </p>
+        <p class="small" style="margin-top:14px;color:var(--dim)">
+          Secret: pet him ten times in a row and he sings his theme song.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="micro">Getting a pack onto him</span><span class="fill rule"></span></div>
+    <div class="two">
+      <div>
+        <h2 class="h2">Public packs need nothing from you.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          He checks the Hub every 60 seconds. Anything newly switched on is
+          downloaded and saved to his own storage, so it keeps playing with the
+          WiFi off — in the car, on a trip, or when the internet is down.
+        </p>
+        <div class="row" style="margin-top:20px">
+          <a class="btn" href="packs.html">See the packs</a>
+        </div>
+      </div>
+      <div>
+        <h2 class="h2">Got a code?</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          Codes from a giveaway or a bought pack are redeemed on the Unlock page.
+          Type it in and the pack opens in your browser — you can watch every
+          animation and download each one.
+        </p>
+        <div class="row" style="margin-top:20px">
+          <a class="btn primary" href="unlock.html">Redeem a code</a>
+        </div>
+        <div class="note small" style="margin-top:22px">
+          <b>Geedo can take the code himself</b> (firmware v27+): the setup page
+          has a <b>Pack code</b> box. Type it there once and he downloads the
+          pack, unlocks it with the same key-stretching the Hub uses, and keeps
+          it in his own memory — it survives WiFi erases, Hub changes, and power
+          cuts, and never needs the code again.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="micro">If something goes wrong</span><span class="fill rule"></span></div>
+    <table class="meanings">
+      <tbody>
+        <tr><td>No GEEDO-Setup</td><td>Some phones hide networks with no internet. Turn WiFi off and on, or check the full list. It only runs for 5 minutes after switch-on — restart him to reopen it</td></tr>
+        <tr><td>Page won't open</td><td>Browse to <b>192.168.4.1</b> by hand</td></tr>
+        <tr><td>Fetch FAILED</td><td>Networks with a login page block him. He needs an ordinary home network, and he'll keep retrying on his own</td></tr>
+        <tr><td>Blank screen</td><td>Press RESET inside the case. If he still appears on your WiFi, the display ribbon is probably loose</td></tr>
+        <tr><td>Update failed + code</td><td>He retries by himself, so usually just wait. The code says where it broke — the owner's guide lists them</td></tr>
+      </tbody>
+    </table>
+    <p class="small mute" style="margin-top:20px">
+      Still stuck? Ask in the <a class="accent" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a> —
+      or read the full <a class="accent" href="GUIDE.md">owner's guide</a>.
+    </p>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div class="spread">
+    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+    <div class="row" style="gap:22px">
+      <a class="small mute" href="browse.html">Animations</a>
+      <a class="small mute" href="packs.html">Packs</a>
+      <a class="small mute" href="unlock.html">Redeem a code</a>
+      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script>
+(async () => {
+  const { Screen, loadBin, manifest, pretty } = window.Geedo;
+  const host = document.getElementById('boot-screens');
+  try {
+    const anims = (await manifest()).animations || [];
+    // His real boot sequence, not a drawing of it.
+    const want = ['connecting_to_wifi', 'turning_on', 'boot_animation'];
+    const picks = want
+      .map(w => anims.find(a => a.id.includes(w)))
+      .filter(Boolean).slice(0, 2);
+    if (!picks.length) { host.remove(); return; }
+    host.style.gridTemplateColumns = '1fr';
+    host.replaceChildren();
+    for (const a of picks) {
+      const anim = await loadBin(a.file);
+      const fig = document.createElement('figure');
+      fig.style.margin = '0';
+      const s = new Screen(anim, { scale: 2 });
+      s.el.style.width = '100%';
+      fig.append(s.el, Object.assign(document.createElement('figcaption'),
+        { textContent: pretty(a.name) }));
+      host.append(fig);
+    }
+  } catch (e) { host.remove(); }
+})();
+</script>
+</body>
+</html>

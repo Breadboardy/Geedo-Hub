@@ -8,23 +8,17 @@
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" href="assets/logo.svg">
 <style>
-  .hero{padding-block:clamp(40px,6vw,78px) clamp(24px,3vw,40px)}
+  .hero{padding-block:clamp(44px,6vw,84px) clamp(28px,3.4vw,46px)}
   .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) auto;gap:clamp(30px,5vw,72px);align-items:center}
   .hero .display span{color:var(--accent)}
   .hero-stats{display:flex;gap:clamp(20px,4vw,48px);flex-wrap:wrap;margin-top:34px;
     padding-top:26px;border-top:1px solid var(--line)}
-  .hero-stats .num{font-size:26px;display:block;line-height:1}
-  .strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:14px;scrollbar-width:thin}
+  .hero-stats .num{font-size:26px;display:block;line-height:1;color:var(--accent)}
+  .strip{display:flex;gap:16px;overflow-x:auto;padding-bottom:14px;scrollbar-width:thin}
   .strip>*{flex:none}
-  .strip figcaption{margin-top:8px;font-size:11px;color:var(--dim);letter-spacing:.06em}
-  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(24px,4vw,56px)}
-  .model-list{border-top:1px solid var(--line)}
-  .model-list a{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:baseline;
-    padding:18px 0;border-bottom:1px solid var(--line);transition:padding-inline .18s,color .15s}
-  .model-list a:hover{padding-inline:10px 0;color:var(--accent)}
-  .model-list .idx{font-family:var(--pixel);color:var(--dim);font-size:12px}
-  .model-list p{margin:0;color:var(--mute);font-size:13px}
-  .model-list .go{color:var(--dim);font-size:12px}
+  .strip figcaption{margin-top:9px;font-size:12px;color:var(--mute);font-weight:500}
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(26px,4vw,60px);align-items:center}
+  .foot-cols{display:flex;gap:clamp(24px,4vw,56px);align-items:flex-start;flex-wrap:wrap}
   @media (max-width:880px){.hero-grid{grid-template-columns:1fr}.hero .screen{justify-self:start}}
 </style>
 </head>
@@ -34,11 +28,11 @@
   <div class="nav-in">
     <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
     <div class="grow"></div>
-    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+    <div class="nav-links row" style="gap:clamp(14px,2.4vw,28px)">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
-      <a class="link" href="models.html">Models</a>
-      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="connect.html">Set up</a>
+      <a class="link" href="unlock.html">Redeem</a>
       <a class="link" href="studio/index.html">Studio</a>
     </div>
     <button class="nav-toggle" aria-label="Menu">≡</button>
@@ -48,22 +42,22 @@
 <header class="hero wrap">
   <div class="hero-grid">
     <div>
-      <p class="micro" style="margin:0 0 18px">Desk robot · ESP32-C3 · 128×64 OLED</p>
+      <p class="micro" style="margin:0 0 18px">The desk robot with a mind of his own</p>
       <h1 class="display">A little robot<br>with a <span>face</span>.</h1>
       <p class="lead" style="margin-top:24px">
-        Geedo sits on your desk and looks around. He joins your WiFi, pulls new
-        animations off the Hub by himself, and remembers whether you've been
-        petting him. You never plug him into a computer.
+        Geedo sits on your desk and looks around. He joins your WiFi, downloads
+        new animations by himself, and remembers whether you've been petting
+        him. You never plug him into a computer.
       </p>
-      <div class="row" style="margin-top:32px;gap:10px">
+      <div class="row" style="margin-top:32px;gap:12px">
         <a class="btn primary" href="browse.html">See what he does</a>
-        <a class="btn" href="connect.html">Set one up</a>
+        <a class="btn" href="packs.html">Animation packs</a>
       </div>
       <div class="hero-stats">
-        <div><span class="num accent" id="s-anims">··</span><span class="micro">animations</span></div>
+        <div><span class="num" id="s-anims">··</span><span class="micro">animations</span></div>
         <div><span class="num" id="s-frames">··</span><span class="micro">frames drawn</span></div>
         <div><span class="num" id="s-fw">··</span><span class="micro">firmware</span></div>
-        <div><span class="num">60<span style="font-size:.55em">s</span></span><span class="micro">sync interval</span></div>
+        <div><span class="num">60<span style="font-size:.55em">s</span></span><span class="micro">sync time</span></div>
       </div>
     </div>
     <figure style="margin:0" id="hero-fig">
@@ -80,15 +74,35 @@
     <a class="micro" href="browse.html" style="color:var(--accent)">All animations →</a>
   </div>
   <div class="strip" id="strip"><div class="empty">Loading the Hub…</div></div>
-  <p class="small mute" style="margin-top:18px;max-width:62ch">
-    These are playing the exact <code>.bin</code> files your Geedo downloads —
-    same bytes, same 128×64 grid, same one bit per pixel. Nothing here is a
-    mock-up of the product.
+  <p class="small mute" style="margin-top:16px;max-width:62ch">
+    Every screen on this page is playing the exact files your Geedo downloads —
+    same pixels, same speed. Nothing here is a mock-up.
   </p>
 </section>
 
 <section class="wrap">
-  <div class="sec-head"><span class="micro">02 / How it works</span><span class="fill rule"></span></div>
+  <div class="sec-head">
+    <span class="micro">02 / He eats things</span><span class="fill rule"></span>
+    <span class="micro" id="food-count"></span>
+  </div>
+  <div class="split">
+    <div>
+      <h2 class="h2">A robot of considerable appetite.</h2>
+      <p class="lead" style="margin-top:14px;font-size:16px">
+        Burgers, ramen, cupcakes, an entire circuit board — Geedo's food
+        animations are a food group of their own, drawn pixel by pixel. He
+        picks one when the mood takes him, which is often.
+      </p>
+      <div class="row" style="margin-top:20px">
+        <a class="btn" href="browse.html">Watch him eat</a>
+      </div>
+    </div>
+    <div class="strip" id="foodstrip"></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head"><span class="micro">03 / How it works</span><span class="fill rule"></span></div>
   <div class="steps">
     <div class="step">
       <div>
@@ -99,100 +113,94 @@
     </div>
     <div class="step">
       <div>
-        <h3 class="h3">He checks the Hub every minute</h3>
-        <p>New animation published? It's on every Geedo on Earth within 60 seconds,
-           and saved to his own storage so it survives a power cut.</p>
+        <h3 class="h3">New animations arrive on their own</h3>
+        <p>He checks the Hub every minute. Anything new is on every Geedo in the
+           world within 60 seconds, saved to his own memory so it survives power cuts.</p>
       </div>
     </div>
     <div class="step">
       <div>
-        <h3 class="h3">You draw your own</h3>
-        <p>Geedo Studio is a 128×64 pixel editor in the browser. Draw, publish,
-           and watch it turn up on the robot.</p>
+        <h3 class="h3">You can draw your own</h3>
+        <p>Geedo Studio is a pixel editor in your browser. Draw something, publish
+           it, and watch your robot start doing it.</p>
       </div>
     </div>
   </div>
 </section>
 
 <section class="wrap">
-  <div class="sec-head">
-    <span class="micro">03 / One brain, many shells</span><span class="fill rule"></span>
-    <a class="micro" href="models.html" style="color:var(--accent)">All models →</a>
-  </div>
-  <div class="split">
-    <div>
-      <p class="lead" style="margin:0">
-        Every Geedo — every model, every colour, every special edition — runs the
-        same board and the same firmware. Variety lives in the layers that are
-        cheap to change, never in the electronics.
-      </p>
-      <p class="small mute" style="margin-top:18px">
-        It's how phone cases work, and Lego minifigures. The board is the slow,
-        expensive, risky part; the moment a “model” needs a different one, that
-        model costs hundreds of pounds and a month before a single one exists.
-      </p>
-    </div>
-    <nav class="model-list">
-      <a href="models.html#classic"><span class="idx">01</span><span><b>Classic</b><p>The friendly rounded box, tilted so he looks up at you</p></span><span class="go">→</span></a>
-      <a href="models.html#retro"><span class="idx">02</span><span><b>Retro</b><p>A chunky little CRT with feet and a fat bezel</p></span><span class="go">→</span></a>
-      <a href="models.html#bot"><span class="idx">03</span><span><b>Bot</b><p>Squarer, antenna nubs, a visor lip over the screen</p></span><span class="go">→</span></a>
-      <a href="models.html#critter"><span class="idx">04</span><span><b>Critter</b><p>Ears on top. Cat, bear, whatever — and a purr</p></span><span class="go">→</span></a>
-      <a href="models.html#desk"><span class="idx">05</span><span><b>Desk</b><p>Angled like a picture frame, for beside a monitor</p></span><span class="go">→</span></a>
-    </nav>
-  </div>
-</section>
-
-<section class="wrap">
-  <div class="sec-head"><span class="micro">04 / Packs</span><span class="fill rule"></span>
+  <div class="sec-head"><span class="micro">04 / Animation packs</span><span class="fill rule"></span>
     <a class="micro" href="packs.html" style="color:var(--accent)">Browse packs →</a></div>
   <div class="split">
     <div>
-      <h2 class="h2">Sets of animations that arrive together.</h2>
+      <h2 class="h2">A box of new tricks.</h2>
       <p class="lead" style="margin-top:14px">
-        A pack is a themed bundle — ocean, stickman, weather. Some are public and
-        land on every robot. Others come with a code: type it in, and only your
-        Geedo gets them.
+        Packs are themed sets — ocean, stickman, space — that arrive on your
+        Geedo together. Some are public and land on every robot. Others come
+        with a code: yours, and only yours.
+      </p>
+      <p class="small mute" style="margin-top:14px">
+        Codes are never stored on our servers — not even scrambled. Each pack is
+        sealed with real encryption and the code you type is the only key.
       </p>
       <div class="row" style="margin-top:22px">
+        <a class="btn primary" href="unlock.html">Redeem a code</a>
         <a class="btn" href="packs.html">See the packs</a>
-        <a class="btn plain" href="unlock.html">Have a code? →</a>
       </div>
     </div>
-    <div class="tiles cols-2" style="align-self:start">
-      <div class="tile"><span class="num accent" id="s-packs">··</span><span class="micro">packs live</span></div>
-      <div class="tile"><span class="num">1-bit</span><span class="micro">every pixel</span></div>
-      <div class="tile"><span class="num">1 KB</span><span class="micro">per frame</span></div>
-      <div class="tile"><span class="num">∞</span><span class="micro">kept offline</span></div>
+    <div class="boxart" id="boxart">
+      <svg viewBox="0 0 400 350" role="img" aria-label="A Geedo animations box">
+        <ellipse cx="192" cy="322" rx="168" ry="14" fill="rgba(60,45,20,.13)"/>
+        <polygon points="300,110 348,72 348,262 300,300" fill="#9c7847"/>
+        <polygon points="52,110 100,72 348,72 300,110" fill="#d3b083"/>
+        <rect x="52" y="110" width="248" height="190" fill="#b8905b"/>
+        <line x1="52" y1="110" x2="300" y2="110" stroke="#8a6a3c" stroke-width="1.5"/>
+        <line x1="300" y1="110" x2="348" y2="72" stroke="#8a6a3c" stroke-width="1.5"/>
+        <polygon points="176,110 214,110 262,72 224,72" fill="#e8dcc2" opacity=".9"/>
+        <rect x="176" y="110" width="38" height="22" fill="#e8dcc2" opacity=".9"/>
+        <text x="122" y="98" transform="skewX(-38)" font-family="Silkscreen,monospace"
+              font-size="13" fill="#6d5330" letter-spacing="1">GEEDO BOX</text>
+        <text x="176" y="162" text-anchor="middle" font-family="Silkscreen,monospace"
+              font-weight="700" font-size="23" fill="#5f4726" letter-spacing="2">ANIMATIONS</text>
+        <rect x="60" y="188" width="208" height="106" rx="5" fill="#faf8f4" stroke="#8a6a3c" stroke-width="1.5"/>
+        <line x1="312" y1="130" x2="338" y2="109" stroke="#7c5f36" stroke-width="3" opacity=".55"/>
+        <line x1="312" y1="150" x2="338" y2="129" stroke="#7c5f36" stroke-width="3" opacity=".55"/>
+        <text x="316" y="238" transform="rotate(-39 316 238)" font-family="JetBrains Mono,monospace"
+              font-size="10" fill="#6d5330" letter-spacing="1">128×64 · 1-BIT</text>
+      </svg>
+      <div class="box-screen" style="left:16.2%;top:54.9%;width:50.2%"></div>
     </div>
   </div>
 </section>
 
 </main>
 
-<footer class="wrap">
-  <div class="spread">
-    <div>
+<footer class="wrap" style="max-width:none">
+  <div class="wrap spread">
+    <div style="max-width:34ch">
       <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-      <p class="small mute" style="margin:12px 0 0">Built by Breadboardy.</p>
+      <p class="small mute" style="margin:12px 0 0">
+        A little robot with a face, built by Breadboardy. New animations ship
+        to every Geedo, free, forever.
+      </p>
     </div>
-    <div class="row" style="gap:26px;align-items:flex-start">
-      <div class="stack" style="--s:8px">
+    <div class="foot-cols">
+      <div class="stack" style="--s:9px">
         <span class="micro">Explore</span>
         <a class="small mute" href="browse.html">Animations</a>
         <a class="small mute" href="packs.html">Packs</a>
-        <a class="small mute" href="models.html">Models</a>
+        <a class="small mute" href="studio/index.html">Studio</a>
       </div>
-      <div class="stack" style="--s:8px">
+      <div class="stack" style="--s:9px">
         <span class="micro">Owners</span>
-        <a class="small mute" href="connect.html">Set up</a>
+        <a class="small mute" href="connect.html">Set up your Geedo</a>
         <a class="small mute" href="unlock.html">Redeem a code</a>
         <a class="small mute" href="GUIDE.md">Owner's guide</a>
       </div>
-      <div class="stack" style="--s:8px">
-        <span class="micro">Elsewhere</span>
+      <div class="stack" style="--s:9px">
+        <span class="micro">Community</span>
         <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
         <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
-        <a class="small mute" href="studio/index.html">Studio</a>
       </div>
     </div>
   </div>
@@ -210,26 +218,24 @@
   const anims = m.animations || [];
 
   document.getElementById('s-anims').textContent = anims.length || '—';
-  document.getElementById('s-packs').textContent = (m.packs || []).length;
   if (fw) document.getElementById('s-fw').textContent = 'v' + fw.version;
 
-  // The hero gets his eyes; they are the thing people recognise.
   const hero = anims.find(a => /blink_eyes|hello_geedo/.test(a.id)) || anims[0];
   if (hero) {
     try {
-      const fig = document.getElementById('hero-fig');
       const s = new Screen(await loadBin(hero.file), { scale: 3, className: 'lg' });
       s.el.style.width = 'min(384px,80vw)';
-      fig.replaceChildren(s.el);
-    } catch (e) { /* leave the empty frame rather than an error box */ }
+      document.getElementById('hero-fig').replaceChildren(s.el);
+    } catch (e) {}
   }
 
-  // A spread across categories reads as a library; six from one category
-  // reads as a demo with one idea in it.
+  const isSystem = a => /boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
+
+  // Shelf one: a spread across categories, food excluded - food has its own.
   const strip = document.getElementById('strip');
   const byCat = new Map();
   for (const a of anims) {
-    if (/boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id)) continue;
+    if (isSystem(a) || a.category === 'eating') continue;
     if (!byCat.has(a.category)) byCat.set(a.category, []);
     byCat.get(a.category).push(a);
   }
@@ -240,26 +246,52 @@
     if (!added) break;
   }
   strip.replaceChildren();
-  let frames = 0;
   for (const a of picks.slice(0, 8)) {
     try {
       const anim = await loadBin(a.file);
-      frames += anim.frames.length;
       const fig = document.createElement('figure');
       fig.style.margin = '0';
-      const s = new Screen(anim, { scale: 2 });
-      fig.append(s.el, Object.assign(document.createElement('figcaption'),
-        { textContent: `${pretty(a.name)} · ${anim.frames.length}f` }));
+      fig.append(new Screen(anim, { scale: 2 }).el,
+        Object.assign(document.createElement('figcaption'), { textContent: pretty(a.name) }));
       strip.append(fig);
-    } catch (e) { /* one bad file must not empty the shelf */ }
+    } catch (e) {}
   }
   if (!strip.children.length)
     strip.innerHTML = '<div class="empty">Could not reach the Hub just now.</div>';
 
-  // Total frames across the whole library, not just what is on screen.
+  // Shelf two: the menu.
+  const food = anims.filter(a => a.category === 'eating');
+  document.getElementById('food-count').textContent =
+    food.length ? `${food.length} dishes and counting` : '';
+  const fs = document.getElementById('foodstrip');
+  for (const a of food.slice(0, 6)) {
+    try {
+      const anim = await loadBin(a.file);
+      const fig = document.createElement('figure');
+      fig.style.margin = '0';
+      const s = new Screen(anim, { scale: 2 });
+      s.el.style.width = 'min(232px,60vw)';
+      fig.append(s.el,
+        Object.assign(document.createElement('figcaption'), { textContent: pretty(a.name) }));
+      fs.append(fig);
+    } catch (e) {}
+  }
+
+  // The box's label plays a real animation - the product photo is alive.
+  const boxPick = anims.find(a => /stickman|flying/.test(a.id))
+               || anims.find(a => !isSystem(a));
+  if (boxPick) {
+    try {
+      const s = new Screen(await loadBin(boxPick.file), { scale: 2 });
+      s.el.style.width = '100%';
+      document.querySelector('#boxart .box-screen').append(s.el);
+    } catch (e) {}
+  }
+
+  // Total frames across the library.
   const all = await Promise.allSettled(anims.map(a => loadBin(a.file)));
   const total = all.reduce((n, r) => n + (r.value ? r.value.frames.length : 0), 0);
-  document.getElementById('s-frames').textContent = total || frames || '—';
+  document.getElementById('s-frames').textContent = total || '—';
 })();
 </script>
 </body>

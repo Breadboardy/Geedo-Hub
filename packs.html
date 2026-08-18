@@ -33,8 +33,8 @@
     <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
-      <a class="link" href="models.html">Models</a>
-      <a class="link" href="connect.html">Connect</a>
+      <a class="link" href="connect.html">Set up</a>
+      <a class="link" href="unlock.html">Redeem</a>
       <a class="link" href="studio/index.html">Studio</a>
     </div>
     <button class="nav-toggle" aria-label="Menu">≡</button>
@@ -43,16 +43,40 @@
 
 <main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
 
-  <div style="max-width:64ch">
-    <h1 class="h1">Packs</h1>
-    <p class="lead" style="margin-top:12px">
-      A pack is a themed set of animations that arrives together. Public packs
-      land on every Geedo on Earth. Private ones come with a code — type it in
-      and only your robot gets them.
-    </p>
-    <div class="row" style="margin-top:22px">
-      <a class="btn primary" href="unlock.html">Redeem a code</a>
-      <a class="btn" href="connect.html">How packs reach Geedo</a>
+  <div class="two" style="align-items:center">
+    <div>
+      <h1 class="h1">A box of new tricks.</h1>
+      <p class="lead" style="margin-top:12px">
+        A pack is a themed set of animations that arrives together. Public packs
+        land on every Geedo on Earth. Private ones come with a code — type it in
+        and only your robot gets them.
+      </p>
+      <div class="row" style="margin-top:22px">
+        <a class="btn primary" href="unlock.html">Redeem a code</a>
+        <a class="btn" href="connect.html">How packs reach Geedo</a>
+      </div>
+    </div>
+    <div class="boxart" id="boxart">
+      <svg viewBox="0 0 400 350" role="img" aria-label="A Geedo animations box">
+        <ellipse cx="192" cy="322" rx="168" ry="14" fill="rgba(60,45,20,.13)"/>
+        <polygon points="300,110 348,72 348,262 300,300" fill="#9c7847"/>
+        <polygon points="52,110 100,72 348,72 300,110" fill="#d3b083"/>
+        <rect x="52" y="110" width="248" height="190" fill="#b8905b"/>
+        <line x1="52" y1="110" x2="300" y2="110" stroke="#8a6a3c" stroke-width="1.5"/>
+        <line x1="300" y1="110" x2="348" y2="72" stroke="#8a6a3c" stroke-width="1.5"/>
+        <polygon points="176,110 214,110 262,72 224,72" fill="#e8dcc2" opacity=".9"/>
+        <rect x="176" y="110" width="38" height="22" fill="#e8dcc2" opacity=".9"/>
+        <text x="122" y="98" transform="skewX(-38)" font-family="Silkscreen,monospace"
+              font-size="13" fill="#6d5330" letter-spacing="1">GEEDO BOX</text>
+        <text x="176" y="162" text-anchor="middle" font-family="Silkscreen,monospace"
+              font-weight="700" font-size="23" fill="#5f4726" letter-spacing="2">ANIMATIONS</text>
+        <rect x="60" y="188" width="208" height="106" rx="5" fill="#faf8f4" stroke="#8a6a3c" stroke-width="1.5"/>
+        <line x1="312" y1="130" x2="338" y2="109" stroke="#7c5f36" stroke-width="3" opacity=".55"/>
+        <line x1="312" y1="150" x2="338" y2="129" stroke="#7c5f36" stroke-width="3" opacity=".55"/>
+        <text x="316" y="238" transform="rotate(-39 316 238)" font-family="JetBrains Mono,monospace"
+              font-size="10" fill="#6d5330" letter-spacing="1">128×64 · 1-BIT</text>
+      </svg>
+      <div class="box-screen" style="left:16.2%;top:54.9%;width:50.2%"></div>
     </div>
   </div>
 
@@ -98,35 +122,6 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head"><span class="micro">Why packs, and not just more animations</span><span class="fill rule"></span></div>
-    <div class="two">
-      <div>
-        <p class="lead" style="margin:0">
-          Every frame of every listed animation lives in the robot's memory while
-          it plays, and the base set already uses most of it.
-        </p>
-        <p class="small mute" style="margin-top:16px">
-          So packs stay separate channels rather than being merged into the main
-          list. Switching one on or off is editing a single line on the Hub —
-          nothing gets re-uploaded, nothing gets lost, and a robot only carries
-          the packs it actually has.
-        </p>
-      </div>
-      <table class="ladder">
-        <thead><tr><th>Layer</th><th>Cost per variant</th><th>What it buys</th></tr></thead>
-        <tbody>
-          <tr><td>Animation packs</td><td class="free">£0</td><td>New things he does — reaches robots already sold</td></tr>
-          <tr><td>Personalities</td><td class="free">£0</td><td>Sleepy, hyper, shy: same robot, different soul</td></tr>
-          <tr><td>Songs</td><td class="free">£0</td><td>A tune per edition</td></tr>
-          <tr><td>Case colour</td><td class="free">£0</td><td>The most visible variety there is</td></tr>
-          <tr><td>Sticker sheet</td><td>~20p</td><td>Owners customise their own</td></tr>
-          <tr><td>New board</td><td class="dear">£££ + weeks</td><td>Avoided until there's a real reason</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
 </main>
 
 <footer class="wrap">
@@ -134,7 +129,6 @@
     <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
     <div class="row" style="gap:22px">
       <a class="small mute" href="browse.html">Animations</a>
-      <a class="small mute" href="models.html">Models</a>
       <a class="small mute" href="unlock.html">Redeem a code</a>
       <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
     </div>
@@ -230,6 +224,18 @@
     }
     if (!shelf.children.length) shelf.innerHTML = '<p class="small mute">Previews unavailable.</p>';
   }
+
+  // The box's label is a live screen - the product photo is playing.
+  try {
+    const all = m.animations || [];
+    const pick = all.find(a => /stickman|flying/.test(a.id))
+              || all.find(a => !/boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id));
+    if (pick) {
+      const s2 = new Screen(await loadBin(pick.file), { scale: 2 });
+      s2.el.style.width = '100%';
+      document.querySelector('#boxart .box-screen').append(s2.el);
+    }
+  } catch (e) {}
 })();
 </script>
 </body>

@@ -28,7 +28,8 @@
     <a href="studio/index.html">Studio</a>
   </div>
   <div class="spacer"></div>
-  <a href="https://github.com/breadboard/Geedo-Hub" class="btn">GitHub</a>
+  <a href="https://discord.gg/Tp6urXEMQd" class="btn" target="_blank" rel="noopener">Discord</a>
+  <a href="https://github.com/Breadboardy/Geedo-Hub" class="btn">GitHub</a>
 </nav>
 
 <div class="container" style="max-width:640px">
@@ -36,8 +37,8 @@
   <p class="sec-sub" style="text-align:center">Enter a 6-letter code from a friend or a Time Capsule</p>
 
   <div class="unlock-box">
-    <input type="text" id="code" class="code-input" placeholder="XXXXXX" maxlength="9" autofocus>
-    <div class="helper">Codes look like <b>GD-X7K9PQ</b>. Type with or without the GD- prefix.</div>
+    <input type="text" id="code" class="code-input" placeholder="XXXX-XXXX" maxlength="13" autofocus>
+    <div class="helper">Codes look like <b>GD-X7K9-PQ4M</b>. Type it with or without the dashes — older 6-letter codes still work.</div>
     <div style="margin-top:18px"><button class="btn primary" onclick="tryUnlock()">UNLOCK</button></div>
     <div id="status"></div>
 
@@ -46,6 +47,7 @@
       <h3 id="aName" style="margin:0 0 4px;font-family:'Silkscreen'"></h3>
       <div class="by" id="aBy" style="color:var(--mute);font-size:12px;margin-bottom:14px"></div>
       <canvas id="aCanvas" class="play-canvas" width="128" height="64"></canvas>
+      <div id="aList" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px"></div>
       <a id="aDownload" class="btn primary" download>Download for Geedo</a>
     </div>
   </div>
@@ -53,10 +55,23 @@
   <p class="helper" style="text-align:center;margin-top:28px">
     Want to make a private code? <a href="studio/index.html">Open Studio</a>, click Publish to Hub, and choose "Private Code".
   </p>
+
+  <div class="unlock-box" style="margin-top:28px;text-align:center">
+    <h3 style="margin:0 0 8px;font-family:'Silkscreen'">GOT A GEEDO?</h3>
+    <p class="helper" style="margin-top:0">
+      Come and hang out with the other owners — swap animations, show off your desk,
+      and get pinged when a giveaway starts.
+    </p>
+    <div style="margin-top:14px">
+      <a class="btn primary" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">JOIN THE DISCORD</a>
+    </div>
+    <div class="helper" style="margin-top:12px">discord.gg/Tp6urXEMQd</div>
+  </div>
 </div>
 
 <div class="foot">
-  Geedo Hub · <a href="https://github.com/breadboard/Geedo-Hub">github</a>
+  Geedo Hub · <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">discord</a> ·
+  <a href="https://github.com/Breadboardy/Geedo-Hub">github</a>
 </div>
 
 <script>
@@ -65,9 +80,13 @@ const statusEl=document.getElementById('status');
 const result=document.getElementById('result');
 
 codeInput.oninput=e=>{
-  let v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
-  if(v.length>6) v=v.slice(0,6);
-  e.target.value=v;
+  // Keep the dash the card shows, but never let it count toward the length:
+  // codes are 8 characters now and 6 on the older cards, so cap the letters
+  // rather than the string.
+  const raw=e.target.value.toUpperCase();
+  const gd=raw.startsWith('GD-');
+  let v=(gd?raw.slice(3):raw).replace(/[^A-Z0-9]/g,'').slice(0,8);
+  e.target.value=(gd?'GD-':'')+(v.length>4?v.slice(0,4)+'-'+v.slice(4):v);
 };
 codeInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock()});
 
@@ -76,46 +95,131 @@ function showStatus(msg,kind){
   statusEl.innerHTML=`<div class="status-msg ${kind}">${msg}</div>`;
 }
 
-function tryUnlock(){
-  const code=codeInput.value.trim().toUpperCase().replace(/^GD-?/,'');
-  if(code.length<4){showStatus('Code is too short. Try again.','bad');return}
-  showStatus('Checking…','warn');
-  fetch('animations/codes.json')
-    .then(r=>r.json())
-    .then(codes=>{
-      const entry=codes[code];
-      if(!entry){showStatus('Code not found. Double-check the letters.','bad');return}
-      // capsule check
-      if(entry.unlockDate){
-        const now=new Date(),unlock=new Date(entry.unlockDate);
-        if(now<unlock){
-          const days=Math.ceil((unlock-now)/(1000*60*60*24));
-          showStatus(`Time Capsule — unlocks in ${days} day(s) on ${entry.unlockDate}.`,'warn');
-          return;
-        }
-      }
-      showStatus('Unlocked!','ok');
-      loadAnim(entry);
-    })
-    .catch(()=>showStatus('Could not reach the Hub. Try again later.','bad'));
+// The codes are NOT in animations/codes.json. That file holds nothing but
+// AES-256-GCM ciphertext; the code you type is the key that opens it. So
+// there is no list to look a code up in, and nothing to read off the Hub.
+// Built by tools/codes.py - the two must agree exactly.
+
+function normalize(raw){
+  // Must match normalize() in tools/codes.py character for character.
+  const up=raw.trim().toUpperCase();
+  const body=up.startsWith('GD-')?up.slice(3):up;
+  return body.replace(/[^A-Z0-9]/g,'');
 }
-function loadAnim(entry){
-  fetch('animations/'+entry.file).then(r=>r.json()).then(d=>{
-    result.classList.add('show');
-    document.getElementById('aName').textContent=entry.name||'Animation';
-    document.getElementById('aBy').textContent='by '+(entry.author||'a friend')+' · '+d.frames.length+' frames';
-    document.getElementById('aDownload').href='animations/'+entry.file;
-    document.getElementById('aDownload').download=(entry.name||'anim')+'.geedo.json';
-    const c=document.getElementById('aCanvas');
-    let i=0;
-    const tick=()=>{
-      drawFrame(c, d.frames[i].pixels);
-      i=(i+1)%d.frames.length;
-      playTimer=setTimeout(tick, 1000/(d.fps||8));
+const unb64=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+
+async function deriveKey(code,salt,iter){
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),
+                                           'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},
+    base,{name:'AES-GCM',length:256},false,['decrypt']);
+}
+async function openBox(key,box){
+  // GCM authenticates, so a wrong key THROWS rather than returning junk.
+  // That failure is exactly how a wrong code is detected - there is no
+  // separate "does this code exist" check anywhere.
+  try{
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(box.iv)},key,unb64(box.ct));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }catch(e){return null}
+}
+
+async function tryUnlock(){
+  const code=normalize(codeInput.value);
+  if(code.length<4){showStatus('Code is too short. Try again.','bad');return}
+  showStatus('Checking your code…','warn');
+  let doc;
+  try{
+    doc=await (await fetch('animations/codes.json',{cache:'no-store'})).json();
+  }catch(e){showStatus('Could not reach the Hub. Try again later.','bad');return}
+  if(doc.v!==2){showStatus('The Hub needs rebuilding — tell breadboard.','bad');return}
+
+  // Deliberately slow: 600k rounds means a graphics card guessing codes gets
+  // 600k times less far, and costs you about half a second.
+  const key=await deriveKey(code,unb64(doc.kdf.salt),doc.kdf.iter);
+  let found=null;
+  for(const box of doc.entries){
+    const got=await openBox(key,box);
+    if(got){found=got;break}
+  }
+  if(!found){showStatus('Code not found. Double-check the letters.','bad');return}
+
+  const ckey=await crypto.subtle.importKey('raw',unb64(found.k),'AES-GCM',false,['decrypt']);
+  const pack=await openBox(ckey,doc.blobs[found.b]);
+  if(!pack){showStatus('That code opened, but its pack is missing. Tell breadboard.','bad');return}
+
+  if(pack.unlockDate){
+    const now=new Date(),until=new Date(pack.unlockDate);
+    if(now<until){
+      const days=Math.ceil((until-now)/86400000);
+      showStatus(`Time Capsule — unlocks in ${days} day(s) on ${pack.unlockDate}.`,'warn');
+      return;
+    }
+  }
+  showStatus('Unlocked!','ok');
+  showPack(pack);
+}
+
+// ---- GDA1: 'GDA1' + [ver, frames, fps, flags] + durations[] + pixels[]
+// Page-major, one bit per pixel, bit set means lit. Same layout the robot
+// reads, so what plays here is byte-for-byte what plays on the screen.
+function unpackGda1(bytes){
+  const fc=bytes[5],fps=bytes[6],flags=bytes[7];
+  const body=8+fc, frames=[];
+  for(let f=0;f<fc;f++){
+    const px=new Uint8Array(128*64),off=body+f*1024;
+    for(let page=0;page<8;page++)
+      for(let x=0;x<128;x++){
+        const b=bytes[off+page*128+x];
+        for(let bit=0;bit<8;bit++) px[(page*8+bit)*128+x]=(b>>bit)&1;
+      }
+    frames.push({pixels:px,dur:bytes[8+f]||1});
+  }
+  return {fps:fps||8,loop:!!(flags&1),pp:!!(flags&2),frames};
+}
+
+let current=null;
+function showPack(pack){
+  result.classList.add('show');
+  document.getElementById('aName').textContent=pack.name||'Pack';
+  const n=(pack.anims||[]).length;
+  document.getElementById('aBy').textContent=
+    'by '+(pack.author||'a friend')+' · '+(pack.rarity||'')+' · '+n+' animation'+(n===1?'':'s');
+
+  const list=document.getElementById('aList');
+  list.innerHTML='';
+  pack.anims.forEach((a,i)=>{
+    const anim=unpackGda1(unb64(a.bin));
+    const b=document.createElement('button');
+    b.className='btn'+(i===0?' primary':'');
+    b.textContent=a.name;
+    b.onclick=()=>{
+      [...list.children].forEach(c=>c.className='btn');
+      b.className='btn primary';
+      play(anim);
+      const dl=document.getElementById('aDownload');
+      dl.href=URL.createObjectURL(new Blob([unb64(a.bin)],{type:'application/octet-stream'}));
+      dl.download=a.name.replace(/[^a-z0-9]+/gi,'_')+'.bin';
+      dl.textContent='Download '+a.name;
     };
-    if(playTimer) clearTimeout(playTimer);
-    tick();
+    list.appendChild(b);
   });
+  if(pack.anims.length) list.children[0].click();
+}
+
+function play(anim){
+  current=anim;
+  const c=document.getElementById('aCanvas');
+  let i=0;
+  if(playTimer) clearTimeout(playTimer);
+  const tick=()=>{
+    if(current!==anim) return;
+    drawFrame(c,anim.frames[i].pixels);
+    i=(i+1)%anim.frames.length;
+    playTimer=setTimeout(tick,1000/(anim.fps||8)*(anim.frames[i].dur||1));
+  };
+  tick();
 }
 function drawFrame(canvas, pixels){
   const ctx=canvas.getContext('2d');

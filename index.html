@@ -45,19 +45,13 @@
       <p class="micro" style="margin:0 0 18px">The desk robot</p>
       <h1 class="display">A little robot<br>with a <span>face</span>.</h1>
       <p class="lead" style="margin-top:24px">
-        Geedo sits on your desk and looks around. He joins your WiFi, downloads
-        new animations by himself, and remembers whether you've been petting
-        him. You never plug him into a computer.
+        Geedo is a little robot that lives on your desk. He connects to your
+        WiFi and downloads new animations all by himself. You never have to
+        plug him into anything.
       </p>
       <div class="row" style="margin-top:32px;gap:12px">
         <a class="btn primary" href="browse.html">See what he does</a>
         <a class="btn" href="packs.html">Animation packs</a>
-      </div>
-      <div class="hero-stats">
-        <div><span class="num" id="s-anims">··</span><span class="micro">animations</span></div>
-        <div><span class="num" id="s-frames">··</span><span class="micro">frames drawn</span></div>
-        <div><span class="num" id="s-fw">··</span><span class="micro">firmware</span></div>
-        <div><span class="num">60<span style="font-size:.55em">s</span></span><span class="micro">sync time</span></div>
       </div>
     </div>
     <figure style="margin:0" id="hero-fig">
@@ -74,10 +68,6 @@
     <a class="micro" href="browse.html" style="color:var(--accent)">All animations →</a>
   </div>
   <div class="strip" id="strip"><div class="empty">Loading the Hub…</div></div>
-  <p class="small mute" style="margin-top:16px;max-width:62ch">
-    Every screen on this page is playing the exact files your Geedo downloads.
-    Same pixels, same speed. Nothing here is a mock-up.
-  </p>
 </section>
 
 <section class="wrap">
@@ -87,11 +77,10 @@
   </div>
   <div class="split">
     <div>
-      <h2 class="h2">A robot of considerable appetite.</h2>
+      <h2 class="h2">He loves eating.</h2>
       <p class="lead" style="margin-top:14px;font-size:16px">
-        Burgers, ramen, cupcakes, even an entire circuit board. Geedo's food
-        animations are drawn pixel by pixel, and he picks one whenever the
-        mood takes him. The mood takes him often.
+        Burgers, pizza, ramen, chips, cupcakes. Geedo has a food animation for
+        nearly everything, and he eats whenever he feels like it.
       </p>
       <div class="row" style="margin-top:20px">
         <a class="btn" href="browse.html">Watch him eat</a>
@@ -135,15 +124,13 @@
     <a class="micro" href="packs.html" style="color:var(--accent)">Browse packs →</a></div>
   <div class="split">
     <div>
-      <h2 class="h2">A box of new tricks.</h2>
+      <h2 class="h2">Free packs and code packs.</h2>
       <p class="lead" style="margin-top:14px">
-        Packs are themed sets that arrive on your Geedo together: ocean,
-        stickman, space. Some are public and land on every robot. Others come
-        with a code, and only your robot gets them.
+        A pack is a set of animations that arrives on your Geedo together.
+        Some packs are free and every Geedo gets them. Some come with a code.
       </p>
       <p class="small mute" style="margin-top:14px">
-        Codes are never stored on our servers, not even scrambled. Each pack is
-        sealed with real encryption, and the code you type is the only key.
+        Codes are safe: they are never saved anywhere on the website.
       </p>
       <div class="row" style="margin-top:22px">
         <a class="btn primary" href="unlock.html">Redeem a code</a>
@@ -154,7 +141,6 @@
       <img src="assets/box.png" alt="The Geedo animations box"
            width="245" height="186" style="width:100%;height:auto">
       <div class="box-screen"></div>
-    </div>
     </div>
   </div>
 </section>
@@ -195,18 +181,32 @@
 <script src="assets/geedo.js"></script>
 <script>
 (async () => {
-  const { Screen, loadBin, manifest, firmware, pretty } = window.Geedo;
+  const { Screen, loadBin, manifest, pretty } = window.Geedo;
 
-  const [m, fw] = await Promise.all([
-    manifest().catch(() => ({ animations: [] })),
-    firmware(),
-  ]);
+  const still = (sel, anim) => {
+    const slot = document.querySelector(sel);
+    if (!slot) return;
+    const px = anim.frames[Math.floor(anim.frames.length / 2)].pixels;
+    const c = document.createElement('canvas');
+    c.width = 128; c.height = 64; c.style.width = '100%';
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(128, 64);
+    for (let i = 0; i < 128 * 64; i++) {
+      const v = px[i] ? 255 : 0;
+      img.data[i*4] = v; img.data[i*4+1] = v; img.data[i*4+2] = v; img.data[i*4+3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    const wrap = document.createElement('div');
+    wrap.className = 'screen';
+    wrap.appendChild(c);
+    slot.append(wrap);
+  };
+
+  const m = await manifest().catch(() => ({ animations: [] }));
   const anims = m.animations || [];
 
-  document.getElementById('s-anims').textContent = anims.length || '—';
-  if (fw) document.getElementById('s-fw').textContent = 'v' + fw.version;
-
-  const hero = anims.find(a => /blink_eyes|hello_geedo/.test(a.id)) || anims[0];
+  const hero = anims.find(a => /waking_up/.test(a.id))
+            || anims.find(a => !/hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id));
   if (hero) {
     try {
       const s = new Screen(await loadBin(hero.file), { scale: 3, className: 'lg' });
@@ -215,7 +215,7 @@
     } catch (e) {}
   }
 
-  const isSystem = a => /boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
+  const isSystem = a => /hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
 
   // Shelf one: a spread across categories, food excluded - food has its own.
   const strip = document.getElementById('strip');
@@ -263,22 +263,13 @@
     } catch (e) {}
   }
 
-  // The box's label plays a real animation - the product photo is alive.
+  // The box's label is printed, like a real label: one frame, no motion.
   const boxPick = anims.find(a => /backflip/.test(a.id))
                || anims.find(a => /stickman|flying/.test(a.id))
                || anims.find(a => !isSystem(a));
   if (boxPick) {
-    try {
-      const s = new Screen(await loadBin(boxPick.file), { scale: 2 });
-      s.el.style.width = '100%';
-      document.querySelector('#boxart .box-screen').append(s.el);
-    } catch (e) {}
+    try { still('#boxart .box-screen', await loadBin(boxPick.file)); } catch (e) {}
   }
-
-  // Total frames across the library.
-  const all = await Promise.allSettled(anims.map(a => loadBin(a.file)));
-  const total = all.reduce((n, r) => n + (r.value ? r.value.frames.length : 0), 0);
-  document.getElementById('s-frames').textContent = total || '—';
 })();
 </script>
 </body>

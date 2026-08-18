@@ -54,11 +54,10 @@
 
   <div class="two" style="align-items:center">
     <div>
-      <h1 class="h1">A box of new tricks.</h1>
+      <h1 class="h1">Animation packs</h1>
       <p class="lead" style="margin-top:12px">
-        A pack is a themed set of animations that arrives together. Public packs
-        land on every Geedo on Earth. Private ones come with a code. Type it
-        in, and only your robot gets them.
+        A pack is a set of animations for your Geedo. Free packs go to every
+        Geedo automatically. Code packs need a code from a card or a giveaway.
       </p>
       <div class="row" style="margin-top:22px">
         <a class="btn primary" href="unlock.html">Redeem a code</a>
@@ -69,7 +68,6 @@
       <img src="assets/box.png" alt="The Geedo animations box"
            width="245" height="186" style="width:100%;height:auto">
       <div class="box-screen"></div>
-    </div>
     </div>
   </div>
 
@@ -82,8 +80,8 @@
         <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
              style="width:100%;height:auto"><div class="box-screen"></div></div>
         <h3>Ocean Pack</h3>
-        <p class="tag2">Underwater scenes drawn by hand: an angler fish, a treasure
-           chest, a diver, and a very confident crab.</p>
+        <p class="tag2">8 underwater animations: a jellyfish, a submarine, a
+           treasure chest, a crab and more.</p>
         <div class="rowb">
           <span class="chip good">Free · on every Geedo</span>
           <a class="btn plain" href="#inside">Look inside →</a>
@@ -94,8 +92,8 @@
         <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
              style="width:100%;height:auto"><div class="box-screen"></div></div>
         <h3>Stickman Pack Vol. 2</h3>
-        <p class="tag2">Six stickman stunts with props and real physics. Backflips,
-           fishing, a kickflip that mostly lands.</p>
+        <p class="tag2">6 stickman animations: backflips, fishing, skating and
+           more.</p>
         <div class="rowb">
           <span class="chip on">With code · giveaways</span>
           <a class="btn plain" href="unlock.html">Redeem →</a>
@@ -106,11 +104,10 @@
         <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
              style="width:100%;height:auto"></div>
         <h3>Space Pack</h3>
-        <p class="tag2">Drifting through the stars, drawn frame by frame. Still in
-           the workshop.</p>
+        <p class="tag2">Being drawn right now.</p>
         <div class="rowb">
           <span class="chip">Coming soon</span>
-          <span class="micro">watch the Discord</span>
+          <span class="micro">announced in Discord</span>
         </div>
       </article>
 
@@ -130,28 +127,26 @@
       <div class="steps" style="border-block:1px solid var(--line)">
         <div class="step"><div>
           <h3 class="h3">Public packs</h3>
-          <p>Switched on for everyone. Geedo notices at his next check and downloads
-             them himself. The new-pack celebration plays when they land.</p>
+          <p>These are on for everyone. Your Geedo finds them at his next
+             check and downloads them himself.</p>
         </div></div>
         <div class="step"><div>
           <h3 class="h3">Code packs</h3>
-          <p>Bought one, or won one in a giveaway? You get a code like
-             <b>GD-K7X9-PQ4M</b>. Enter it and the pack is yours.</p>
+          <p>You get a code like <b>GD-K7X9-PQ4M</b> from a card or a
+             giveaway. Type it in on the Redeem page and the pack is yours.</p>
         </div></div>
       </div>
       <div>
-        <h2 class="h2">A code is a key, not a password.</h2>
+        <h2 class="h2">Codes are safe.</h2>
         <p class="lead" style="margin-top:14px;font-size:15px">
-          The Hub never stores your code. Not the code, not even a hash of it.
-          Every private pack sits on the Hub as a locked box, and the code you
-          type is what opens it. Get it wrong and the box simply doesn't open;
-          there's nothing to look up and nothing to read off.
+          Your code is never saved anywhere on the website. Each code pack is
+          locked with real encryption, and the code you type is the only key
+          that opens it.
         </p>
         <p class="small mute" style="margin-top:16px">
-          The key is stretched through 600,000 rounds of PBKDF2 before it's
-          tried, which is why the Unlock page pauses for a moment. That pause is
-          the point: it makes guessing codes hundreds of thousands of times more
-          expensive, and costs you about half a second.
+          That's also why the Redeem page pauses for a second when you type a
+          code: the lock is built to be slow on purpose, so nobody can guess
+          codes by trying millions of them.
         </p>
       </div>
     </div>
@@ -262,23 +257,34 @@
     if (!shelf.children.length) shelf.innerHTML = '<p class="small mute">Previews unavailable.</p>';
   }
 
-  // Every box's label is a live screen - the shelf of products is playing.
-  const mount = async (sel, anim) => {
-    try {
-      const s2 = new Screen(anim, { scale: 2 });
-      s2.el.style.width = '100%';
-      const slot = document.querySelector(sel);
-      if (slot) slot.append(s2.el);
-    } catch (e) {}
+  // Box labels are printed, like real labels: one frame each, no motion.
+  const still = (sel, anim) => {
+    const slot = document.querySelector(sel);
+    if (!slot || !anim) return;
+    const px = anim.frames[Math.floor(anim.frames.length / 2)].pixels;
+    const c = document.createElement('canvas');
+    c.width = 128; c.height = 64; c.style.width = '100%';
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(128, 64);
+    for (let i = 0; i < 128 * 64; i++) {
+      const v = px[i] ? 255 : 0;
+      img.data[i*4] = v; img.data[i*4+1] = v; img.data[i*4+2] = v; img.data[i*4+3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    const wrap = document.createElement('div');
+    wrap.className = 'screen';
+    wrap.appendChild(c);
+    slot.append(wrap);
   };
   try {
     const all = m.animations || [];
-    const hero = all.find(a => /backflip/.test(a.id)) || all.find(a => /stickman|flying/.test(a.id));
-    if (hero) mount('#boxart .box-screen', await loadBin(hero.file));
-    const stick = all.find(a => /backflip|stickman/.test(a.id));
-    if (stick) mount('#p-stick2 .box-screen', await loadBin(stick.file));
-    if (firstPackAnim) mount('#p-ocean .box-screen', firstPackAnim);
-    else if (hero) mount('#p-ocean .box-screen', await loadBin(hero.file));
+    const stick = all.find(a => /backflip|stickman|flying/.test(a.id));
+    if (stick) {
+      const anim = await loadBin(stick.file);
+      still('#boxart .box-screen', anim);
+      still('#p-stick2 .box-screen', anim);
+    }
+    still('#p-ocean .box-screen', firstPackAnim);
   } catch (e) {}
 })();
 </script>

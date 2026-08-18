@@ -71,26 +71,6 @@
 </section>
 
 <section class="wrap">
-  <div class="sec-head">
-    <span class="micro">What he eats</span><span class="fill rule"></span>
-    <span class="micro" id="food-count"></span>
-  </div>
-  <div class="split">
-    <div>
-      <h2 class="h2">He loves eating.</h2>
-      <p class="lead" style="margin-top:14px;font-size:16px">
-        Burgers, pizza, ramen, chips, cupcakes. Geedo has a food animation for
-        nearly everything, and he eats whenever he feels like it.
-      </p>
-      <div class="row" style="margin-top:20px">
-        <a class="btn" href="browse.html">Watch him eat</a>
-      </div>
-    </div>
-    <div class="strip" id="foodstrip"></div>
-  </div>
-</section>
-
-<section class="wrap">
   <div class="sec-head"><span class="micro">How it works</span><span class="fill rule"></span></div>
   <div class="steps">
     <div class="step">
@@ -140,7 +120,6 @@
     <div class="boxart" id="boxart">
       <img src="assets/box.png" alt="The Geedo animations box"
            width="245" height="186" style="width:100%;height:auto">
-      <div class="box-screen"></div>
     </div>
   </div>
 </section>
@@ -183,25 +162,6 @@
 (async () => {
   const { Screen, loadBin, manifest, pretty } = window.Geedo;
 
-  const still = (sel, anim) => {
-    const slot = document.querySelector(sel);
-    if (!slot) return;
-    const px = anim.frames[Math.floor(anim.frames.length / 2)].pixels;
-    const c = document.createElement('canvas');
-    c.width = 128; c.height = 64; c.style.width = '100%';
-    const ctx = c.getContext('2d');
-    const img = ctx.createImageData(128, 64);
-    for (let i = 0; i < 128 * 64; i++) {
-      const v = px[i] ? 255 : 0;
-      img.data[i*4] = v; img.data[i*4+1] = v; img.data[i*4+2] = v; img.data[i*4+3] = 255;
-    }
-    ctx.putImageData(img, 0, 0);
-    const wrap = document.createElement('div');
-    wrap.className = 'screen';
-    wrap.appendChild(c);
-    slot.append(wrap);
-  };
-
   const m = await manifest().catch(() => ({ animations: [] }));
   const anims = m.animations || [];
 
@@ -217,7 +177,7 @@
 
   const isSystem = a => /hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
 
-  // Shelf one: a spread across categories, food excluded - food has its own.
+  // The shelf: a spread across categories. Food is left out for now.
   const strip = document.getElementById('strip');
   const byCat = new Map();
   for (const a of anims) {
@@ -245,31 +205,7 @@
   if (!strip.children.length)
     strip.innerHTML = '<div class="empty">Could not reach the Hub just now.</div>';
 
-  // Shelf two: the menu.
-  const food = anims.filter(a => a.category === 'eating');
-  document.getElementById('food-count').textContent =
-    food.length ? `${food.length} dishes and counting` : '';
-  const fs = document.getElementById('foodstrip');
-  for (const a of food.slice(0, 6)) {
-    try {
-      const anim = await loadBin(a.file);
-      const fig = document.createElement('figure');
-      fig.style.margin = '0';
-      const s = new Screen(anim, { scale: 2 });
-      s.el.style.width = 'min(232px,60vw)';
-      fig.append(s.el,
-        Object.assign(document.createElement('figcaption'), { textContent: pretty(a.name) }));
-      fs.append(fig);
-    } catch (e) {}
-  }
 
-  // The box's label is printed, like a real label: one frame, no motion.
-  const boxPick = anims.find(a => /backflip/.test(a.id))
-               || anims.find(a => /stickman|flying/.test(a.id))
-               || anims.find(a => !isSystem(a));
-  if (boxPick) {
-    try { still('#boxart .box-screen', await loadBin(boxPick.file)); } catch (e) {}
-  }
 })();
 </script>
 </body>

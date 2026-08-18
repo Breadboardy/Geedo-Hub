@@ -67,7 +67,6 @@
     <div class="boxart" id="boxart">
       <img src="assets/box.png" alt="The Geedo animations box"
            width="245" height="186" style="width:100%;height:auto">
-      <div class="box-screen"></div>
     </div>
   </div>
 
@@ -78,7 +77,7 @@
 
       <article class="product" id="p-ocean">
         <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
-             style="width:100%;height:auto"><div class="box-screen"></div></div>
+             style="width:100%;height:auto"></div>
         <h3>Ocean Pack</h3>
         <p class="tag2">8 underwater animations: a jellyfish, a submarine, a
            treasure chest, a crab and more.</p>
@@ -90,7 +89,7 @@
 
       <article class="product" id="p-stick2">
         <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
-             style="width:100%;height:auto"><div class="box-screen"></div></div>
+             style="width:100%;height:auto"></div>
         <h3>Stickman Pack Vol. 2</h3>
         <p class="tag2">6 stickman animations: backflips, fishing, skating and
            more.</p>
@@ -199,7 +198,6 @@
   }
 
   host.replaceChildren();
-  let firstPackAnim = null;
   for (const id of ids) {
     let pm;
     try {
@@ -242,7 +240,6 @@
     for (const a of anims.slice(0, 8)) {
       try {
         const anim = await loadBin(`packs/${id}/${a.file}`.replace(/^packs\//, 'packs/'));
-        if (!firstPackAnim) firstPackAnim = anim;
         const fig = document.createElement('figure');
         fig.style.margin = '0';
         fig.append(new Screen(anim, { scale: 2 }).el);
@@ -257,35 +254,6 @@
     if (!shelf.children.length) shelf.innerHTML = '<p class="small mute">Previews unavailable.</p>';
   }
 
-  // Box labels are printed, like real labels: one frame each, no motion.
-  const still = (sel, anim) => {
-    const slot = document.querySelector(sel);
-    if (!slot || !anim) return;
-    const px = anim.frames[Math.floor(anim.frames.length / 2)].pixels;
-    const c = document.createElement('canvas');
-    c.width = 128; c.height = 64; c.style.width = '100%';
-    const ctx = c.getContext('2d');
-    const img = ctx.createImageData(128, 64);
-    for (let i = 0; i < 128 * 64; i++) {
-      const v = px[i] ? 255 : 0;
-      img.data[i*4] = v; img.data[i*4+1] = v; img.data[i*4+2] = v; img.data[i*4+3] = 255;
-    }
-    ctx.putImageData(img, 0, 0);
-    const wrap = document.createElement('div');
-    wrap.className = 'screen';
-    wrap.appendChild(c);
-    slot.append(wrap);
-  };
-  try {
-    const all = m.animations || [];
-    const stick = all.find(a => /backflip|stickman|flying/.test(a.id));
-    if (stick) {
-      const anim = await loadBin(stick.file);
-      still('#boxart .box-screen', anim);
-      still('#p-stick2 .box-screen', anim);
-    }
-    still('#p-ocean .box-screen', firstPackAnim);
-  } catch (e) {}
 })();
 </script>
 </body>

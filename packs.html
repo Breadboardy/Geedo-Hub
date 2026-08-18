@@ -48,8 +48,8 @@
       <h1 class="h1">A box of new tricks.</h1>
       <p class="lead" style="margin-top:12px">
         A pack is a themed set of animations that arrives together. Public packs
-        land on every Geedo on Earth. Private ones come with a code — type it in
-        and only your robot gets them.
+        land on every Geedo on Earth. Private ones come with a code. Type it
+        in, and only your robot gets them.
       </p>
       <div class="row" style="margin-top:22px">
         <a class="btn primary" href="unlock.html">Redeem a code</a>
@@ -57,26 +57,10 @@
       </div>
     </div>
     <div class="boxart" id="boxart">
-      <svg viewBox="0 0 400 350" role="img" aria-label="A Geedo animations box">
-        <ellipse cx="192" cy="322" rx="168" ry="14" fill="rgba(60,45,20,.13)"/>
-        <polygon points="300,110 348,72 348,262 300,300" fill="#9c7847"/>
-        <polygon points="52,110 100,72 348,72 300,110" fill="#d3b083"/>
-        <rect x="52" y="110" width="248" height="190" fill="#b8905b"/>
-        <line x1="52" y1="110" x2="300" y2="110" stroke="#8a6a3c" stroke-width="1.5"/>
-        <line x1="300" y1="110" x2="348" y2="72" stroke="#8a6a3c" stroke-width="1.5"/>
-        <polygon points="176,110 214,110 262,72 224,72" fill="#e8dcc2" opacity=".9"/>
-        <rect x="176" y="110" width="38" height="22" fill="#e8dcc2" opacity=".9"/>
-        <text x="122" y="98" transform="skewX(-38)" font-family="Silkscreen,monospace"
-              font-size="13" fill="#6d5330" letter-spacing="1">GEEDO BOX</text>
-        <text x="176" y="162" text-anchor="middle" font-family="Silkscreen,monospace"
-              font-weight="700" font-size="23" fill="#5f4726" letter-spacing="2">ANIMATIONS</text>
-        <rect x="60" y="188" width="208" height="106" rx="5" fill="#faf8f4" stroke="#8a6a3c" stroke-width="1.5"/>
-        <line x1="312" y1="130" x2="338" y2="109" stroke="#7c5f36" stroke-width="3" opacity=".55"/>
-        <line x1="312" y1="150" x2="338" y2="129" stroke="#7c5f36" stroke-width="3" opacity=".55"/>
-        <text x="316" y="238" transform="rotate(-39 316 238)" font-family="JetBrains Mono,monospace"
-              font-size="10" fill="#6d5330" letter-spacing="1">128×64 · 1-BIT</text>
-      </svg>
-      <div class="box-screen" style="left:16.2%;top:54.9%;width:50.2%"></div>
+      <img src="assets/box.png" alt="The Geedo animations box"
+           width="245" height="186" style="width:100%;height:auto">
+      <div class="box-screen"></div>
+    </div>
     </div>
   </div>
 
@@ -95,8 +79,7 @@
         <div class="step"><div>
           <h3 class="h3">Public packs</h3>
           <p>Switched on for everyone. Geedo notices at his next check and downloads
-             them — you do nothing at all, and the new-pack celebration plays when
-             they land.</p>
+             them himself. The new-pack celebration plays when they land.</p>
         </div></div>
         <div class="step"><div>
           <h3 class="h3">Code packs</h3>
@@ -107,7 +90,7 @@
       <div>
         <h2 class="h2">A code is a key, not a password.</h2>
         <p class="lead" style="margin-top:14px;font-size:15px">
-          The Hub never stores your code — not the code, not even a hash of it.
+          The Hub never stores your code. Not the code, not even a hash of it.
           Every private pack sits on the Hub as a locked box, and the code you
           type is what opens it. Get it wrong and the box simply doesn't open;
           there's nothing to look up and nothing to read off.
@@ -228,7 +211,7 @@
   // The box's label is a live screen - the product photo is playing.
   try {
     const all = m.animations || [];
-    const pick = all.find(a => /stickman|flying/.test(a.id))
+    const pick = all.find(a => /backflip/.test(a.id)) || all.find(a => /stickman|flying/.test(a.id))
               || all.find(a => !/boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id));
     if (pick) {
       const s2 = new Screen(await loadBin(pick.file), { scale: 2 });

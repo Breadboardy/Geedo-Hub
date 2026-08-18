@@ -224,14 +224,21 @@ button.chip[aria-pressed="true"]{
    The product illustration: a kraft shipping box with a live screen on its
    label. Drawn here rather than photographed so it scales, matches the
    palette, and the "photo" on the box is a real animation playing. */
-.boxart{position:relative;width:min(430px,88vw);margin:0 auto}
-.boxart svg{width:100%;height:auto;overflow:visible}
+.boxart{position:relative;width:min(400px,86vw);margin:0 auto;
+  filter:drop-shadow(0 16px 22px rgba(90,70,40,.18))}
+/* The live label: the animation plays as ink on the box's own white
+   sticker. The overlay's white ground melts into the label's white paper,
+   so the join is invisible and the alignment forgiving. */
 .boxart .box-screen{
-  position:absolute;left:16.1%;top:56.8%;width:50.5%;
-  border-radius:4px;
+  position:absolute;left:18.2%;top:53.4%;width:26.6%;
+  transform:rotate(8deg);transform-origin:center;
+  background:#fff;padding:4% 2%;border-radius:2px;
 }
-.boxart .box-screen .screen{border-width:2px;border-radius:5px;
-  box-shadow:0 2px 8px rgba(20,22,26,.35)}
+.boxart .box-screen .screen{
+  background:#fff;border:none;border-radius:0;box-shadow:none;
+}
+.boxart .box-screen .screen::after{display:none}
+.boxart .box-screen canvas{filter:invert(1)}
 
 /* ---------------------------------------------------------------- footer */
 footer{border-top:1px solid var(--line);margin-top:40px;padding-block:46px;

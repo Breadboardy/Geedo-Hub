@@ -50,13 +50,58 @@
     <p class="micro" style="margin:0 0 14px">Setting one up</p>
     <h1 class="h1">You do this once.</h1>
     <p class="lead" style="margin-top:14px">
-      Geedo joins your WiFi on his first switch-on and remembers it forever.
-      After that every start goes straight to his face, and new animations turn
-      up on their own. You never plug him into a computer.
+      Geedo joins your WiFi once and remembers it forever. After that every
+      start goes straight to his face, and new animations turn up on their own.
+      Set him up from this computer over the USB cable, or from your phone with
+      no cable at all — either way you only do it once.
     </p>
   </div>
 
+  <section id="usb-sec">
+    <div class="sec-head"><span class="micro">From this computer</span><span class="fill rule"></span></div>
+    <div class="two">
+      <div>
+        <h2 class="h2">Plug him in and set him up here.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          A Geedo who has never been on WiFi cannot be found <em>over</em> WiFi
+          — there is nothing to find him on yet. The cable always works, so this
+          is the quickest way to get a brand-new one talking.
+        </p>
+        <p class="small mute" style="margin-top:12px">
+          Firmware v27 or newer. Works in Chrome and Edge; Safari and Firefox
+          can't talk to serial devices, so use the phone method below on those.
+        </p>
+        <div class="row" style="margin-top:20px">
+          <button class="btn primary" id="usb-go">Find my Geedo</button>
+          <span class="small mute" id="usb-state">not connected</span>
+        </div>
+      </div>
+      <div>
+        <div id="usb-info" class="note small" hidden></div>
+        <div id="usb-nets" hidden style="margin-top:12px">
+          <label class="micro" for="usb-ssid">Network</label>
+          <select class="field" id="usb-ssid" style="margin-top:6px"></select>
+          <label class="micro" for="usb-pass" style="display:block;margin-top:12px">Password</label>
+          <input class="field" id="usb-pass" type="password" autocomplete="off"
+                 placeholder="leave empty for an open network" style="margin-top:6px">
+          <div class="row" style="margin-top:14px">
+            <button class="btn primary" id="usb-join">Connect him to WiFi</button>
+            <button class="btn" id="usb-rescan">Scan again</button>
+          </div>
+        </div>
+        <pre id="usb-log" hidden style="margin-top:14px;max-height:190px;overflow:auto;
+             background:#000;color:#e9ebef;border:1px solid var(--line-bright);
+             border-radius:6px;padding:12px;font-size:11px;line-height:1.6"></pre>
+      </div>
+    </div>
+    <p class="small mute" style="margin-top:18px" id="usb-unsupported" hidden>
+      This browser can't open serial devices, so the cable route isn't
+      available here. Use the phone steps below — they work everywhere.
+    </p>
+  </section>
+
   <section>
+    <div class="sec-head"><span class="micro">Or from your phone</span><span class="fill rule"></span></div>
     <div class="flow">
 
       <div class="flow-step">
@@ -173,10 +218,12 @@ no password needed!</div>
         </div>
         <div class="note small" style="margin-top:22px">
           <b>Geedo can take the code himself</b> (firmware v27+): the setup page
-          has a <b>Pack code</b> box. Type it there once and he downloads the
-          pack, unlocks it with the same key-stretching the Hub uses, and keeps
-          it in his own memory — it survives WiFi erases, Hub changes, and power
-          cuts, and never needs the code again.
+          has a <b>Pack code</b> box, and so does the USB link above. Type it
+          once and he downloads the pack, unlocks it with the same
+          key-stretching the Hub uses, and keeps it in his own memory — it
+          survives WiFi erases, Hub changes, and power cuts, and never needs
+          the code again. He holds four packs; the page he serves on your
+          network lets you remove one to make room.
         </div>
       </div>
     </div>
@@ -239,6 +286,185 @@ no password needed!</div>
       host.append(fig);
     }
   } catch (e) { host.remove(); }
+})();
+</script>
+
+<script>
+/* ---------------------------------------------------------------------------
+   The USB link.
+
+   A Geedo who has never joined a network cannot be found over the network, so
+   the cable is how a computer meets a new one. Chrome and Edge expose serial
+   ports to an ordinary HTTPS page, and Geedo already IS a serial device -
+   that is how he gets flashed.
+
+   He prints a lot of ordinary debug chatter to the same port, so every ANSWER
+   he gives starts with "GEEDO ". That prefix is the whole protocol: it is what
+   lets this page tell a reply from a log line without guessing.
+   --------------------------------------------------------------------------- */
+(() => {
+  const $ = id => document.getElementById(id);
+  const state = $('usb-state'), log = $('usb-log');
+
+  if (!('serial' in navigator)) {
+    $('usb-go').disabled = true;
+    state.textContent = 'not available in this browser';
+    $('usb-unsupported').hidden = false;
+    return;
+  }
+
+  let port = null, writer = null, pending = null;
+
+  function say(text, colour) {
+    log.hidden = false;
+    const d = document.createElement('div');
+    d.textContent = text;
+    if (colour) d.style.color = colour;
+    log.append(d);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function handle(line) {
+    const mine = line.startsWith('GEEDO ');
+    say(line, mine ? '#22d3ee' : '#71717a');
+    if (!pending || !mine) return;
+    pending.lines.push(line);
+    if (pending.until.test(line)) {
+      clearTimeout(pending.timer);
+      const p = pending; pending = null;
+      p.done(p.lines);
+    }
+  }
+
+  /* Ask, then collect his GEEDO lines until one matches `until`. Every answer
+     he gives ends with a line that says so - OK, ERR or END - so nothing here
+     has to guess when he has finished talking. */
+  function ask(cmd, until, ms = 8000, shown) {
+    return new Promise((done, fail) => {
+      if (!writer) return fail(new Error('not connected'));
+      pending = { lines: [], until, done, timer: setTimeout(() => {
+        pending = null; fail(new Error('Geedo did not answer'));
+      }, ms) };
+      // A password must never reach the log. The caller that has one says what
+      // to print instead; the regex is a backstop for any future caller that
+      // forgets. Note the unquoted branch refuses a leading quote - without
+      // that, `JOIN "Open Net" ` backtracks into it and prints half the name.
+      say('> ' + (shown || cmd.replace(
+            /^(JOIN\s+(?:"[^"]*"|[^"\s]\S*))\s+(\S.*)$/, '$1 ********')),
+          '#b08d57');
+      writer.write(new TextEncoder().encode(cmd + '\n')).catch(() => {});
+    });
+  }
+
+  async function readLoop() {
+    const dec = new TextDecoderStream();
+    port.readable.pipeTo(dec.writable).catch(() => {});
+    const reader = dec.readable.getReader();
+    let buf = '';
+    for (;;) {
+      let chunk;
+      try { chunk = await reader.read(); } catch (e) { break; }
+      if (chunk.done) break;
+      buf += chunk.value;
+      let i;
+      while ((i = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, i).replace(/\r$/, '');
+        buf = buf.slice(i + 1);
+        if (line) handle(line);
+      }
+      if (buf.length > 4096) buf = '';       // a robot mid-boot can spew
+    }
+    state.textContent = 'disconnected';
+    writer = null; port = null;
+  }
+
+  async function showInfo() {
+    const out = await ask('INFO', /^GEEDO INFO /, 6000);
+    const kv = {};
+    out[out.length - 1].slice(11).trim().split(/\s+/).forEach(p => {
+      const eq = p.indexOf('=');
+      if (eq > 0) kv[p.slice(0, eq)] = p.slice(eq + 1);
+    });
+    const [used, total] = (kv.fs || '0/0').split('/').map(Number);
+    const box = $('usb-info');
+    box.hidden = false;
+    box.innerHTML =
+      `<b>Geedo says hello.</b> Firmware v${kv.fw || '?'} &middot; ` +
+      `${kv.packs || '0/0'} packs &middot; ` +
+      `${Math.round(used / 1024)} of ${Math.round(total / 1024)} KB used &middot; ` +
+      (kv.ip && kv.ip !== 'none' ? `on WiFi at ${kv.ip}` : 'not on WiFi yet');
+  }
+
+  const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';
+
+  async function scan() {
+    state.textContent = 'looking for networks…';
+    // A scan takes the radio a few seconds, and longer in a crowded street.
+    const out = await ask('SCAN', /^GEEDO END SCAN/, 30000);
+    const nets = [], seen = new Set();
+    for (const l of out) {
+      const m = l.match(/^GEEDO NET (-?\d+) (\S+) "(.*)"$/);
+      if (!m || !m[3] || seen.has(m[3])) continue;   // hidden or a repeat
+      seen.add(m[3]);
+      nets.push({ rssi: +m[1], open: m[2] === 'open', ssid: m[3] });
+    }
+    nets.sort((a, b) => b.rssi - a.rssi);            // strongest first
+    const sel = $('usb-ssid');
+    sel.replaceChildren();
+    for (const n of nets) {
+      const o = document.createElement('option');
+      o.value = n.ssid;
+      o.textContent = `${n.ssid}   ${bars(n.rssi)}${n.open ? '  open' : ''}`;
+      sel.append(o);
+    }
+    $('usb-nets').hidden = !nets.length;
+    state.textContent = nets.length
+      ? `${nets.length} network${nets.length === 1 ? '' : 's'} nearby`
+      : 'no networks found — try again';
+  }
+
+  $('usb-go').onclick = async () => {
+    try {
+      port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 115200 });
+      writer = port.writable.getWriter();
+      readLoop();
+      state.textContent = 'connected — saying hello';
+      // Opening the port can reset him. Let him finish booting before asking
+      // anything, or the first command lands in the bootloader's lap.
+      await new Promise(r => setTimeout(r, 1500));
+      await showInfo();
+      await scan();
+    } catch (e) {
+      state.textContent = /No port selected/i.test(e.message || '')
+        ? 'no device picked' : (e.message || 'could not connect');
+    }
+  };
+
+  $('usb-rescan').onclick = () => scan().catch(e => state.textContent = e.message);
+
+  $('usb-join').onclick = async () => {
+    const ssid = $('usb-ssid').value, pass = $('usb-pass').value;
+    if (!ssid) return;
+    state.textContent = 'joining…';
+    try {
+      // He is given up to 20 s to join, so wait longer than that for his answer.
+      const out = await ask(`JOIN "${ssid}" ${pass}`, /^GEEDO (OK|ERR) JOIN/, 30000,
+                            `JOIN "${ssid}" ${pass ? '********' : ''}`);
+      const last = out[out.length - 1];
+      if (last.startsWith('GEEDO OK JOIN')) {
+        $('usb-pass').value = '';
+        state.textContent = 'joined ' + ssid;
+        await showInfo();
+      } else {
+        state.textContent = pass
+          ? 'could not join — check the password'
+          : 'could not join — that network probably needs a password';
+      }
+    } catch (e) {
+      state.textContent = 'no answer from Geedo';
+    }
+  };
 })();
 </script>
 </body>

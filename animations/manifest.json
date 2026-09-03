@@ -145,6 +145,17 @@
    "frames": 48
   },
   {
+   "id": "animations_boot_boot_animation",
+   "name": "Power-on animation",
+   "category": "animations_boot",
+   "author": "breadboard",
+   "file": "bin/animations_boot_boot_animation.bin",
+   "size": 105583,
+   "hash": "2c71a38a",
+   "visibility": "public",
+   "frames": 103
+  },
+  {
    "id": "animations_boot_error_blue_screen_of_death",
    "name": "Error! (blue screen of death)",
    "category": "animations_boot",

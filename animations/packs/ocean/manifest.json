@@ -10,7 +10,8 @@
       "file": "bin/ocean_angler.bin",
       "size": 10258,
       "hash": "c811798a",
-      "frames": 10
+      "frames": 10,
+      "sha256": "c811798a527acb6d15dc6155a02022824d4d0bb7e8cc82b9afa50f99696fb7a0"
     },
     {
       "id": "chest",
@@ -18,7 +19,8 @@
       "file": "bin/chest.bin",
       "size": 9233,
       "hash": "62443cab",
-      "frames": 9
+      "frames": 9,
+      "sha256": "62443cabd9a09129424dcffd0f5e82ee067270e2bf4ee8a8967ae9d3df9ff183"
     },
     {
       "id": "crab",
@@ -26,7 +28,8 @@
       "file": "bin/crab.bin",
       "size": 12308,
       "hash": "5907fea1",
-      "frames": 12
+      "frames": 12,
+      "sha256": "5907fea18dc4553bd9f4f9c5a3660767b17d629dbb728864f5e82389afbb9352"
     },
     {
       "id": "diver",
@@ -34,7 +37,8 @@
       "file": "bin/diver.bin",
       "size": 21533,
       "hash": "be0c5e53",
-      "frames": 21
+      "frames": 21,
+      "sha256": "be0c5e5376324033501a5f33322165f07f839dbc98140e0581ecd627d2466d76"
     },
     {
       "id": "going_underwater",
@@ -42,7 +46,8 @@
       "file": "bin/going_underwater.bin",
       "size": 9233,
       "hash": "249f57f8",
-      "frames": 9
+      "frames": 9,
+      "sha256": "249f57f86042f3caae4393f9d65d9a71351c043ec26631057cfb93f6d2fcbbb7"
     },
     {
       "id": "jellyfish",
@@ -50,7 +55,8 @@
       "file": "bin/jellyfish.bin",
       "size": 10258,
       "hash": "0968c210",
-      "frames": 10
+      "frames": 10,
+      "sha256": "0968c21030e8bb06c224173e3103453b35ef6c3935c5bff9eb95f8994a861b1d"
     },
     {
       "id": "ocean_waves",
@@ -58,7 +64,8 @@
       "file": "bin/ocean_waves.bin",
       "size": 11283,
       "hash": "6a3d02db",
-      "frames": 11
+      "frames": 11,
+      "sha256": "6a3d02db642cfdfe68ab28727cd0e8a2f6e4f64f30f2249da65149d66d6d1bd8"
     },
     {
       "id": "submarine",
@@ -66,7 +73,8 @@
       "file": "bin/submarine.bin",
       "size": 12308,
       "hash": "7058cce3",
-      "frames": 12
+      "frames": 12,
+      "sha256": "7058cce3edcdb1267ae7f821af4f2e55da4d81d14ade02749e4c31680cd18a49"
     }
   ]
 }

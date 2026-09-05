@@ -10,7 +10,8 @@
    "size": 20508,
    "hash": "2f3019e9",
    "visibility": "public",
-   "frames": 20
+   "frames": 20,
+   "sha256": "2f3019e911effbcce803e8064516f21fd6a8c2ab662f18ae5f9d79dc79841503"
   },
   {
    "id": "activities_campfire",
@@ -21,7 +22,8 @@
    "size": 4108,
    "hash": "231900aa",
    "visibility": "public",
-   "frames": 4
+   "frames": 4,
+   "sha256": "231900aaf506d2b42e9faca53455b0f573c69c02a7381dd9d4e5ff2688690e80"
   },
   {
    "id": "activities_chill_glasses",
@@ -32,7 +34,8 @@
    "size": 8208,
    "hash": "6ab2b782",
    "visibility": "public",
-   "frames": 8
+   "frames": 8,
+   "sha256": "6ab2b7826176ba076aa600b6b347ecfeacee47ec21bc8471c5591ebe778cb7fb"
   },
   {
    "id": "activities_chill_work",
@@ -43,7 +46,8 @@
    "size": 1033,
    "hash": "ac89a354",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "ac89a354bb93a4d46c2140735503e36a433f554bb4f5764dc39de3077b8efbfe"
   },
   {
    "id": "activities_dj",
@@ -54,7 +58,8 @@
    "size": 5133,
    "hash": "a7e5de4f",
    "visibility": "public",
-   "frames": 5
+   "frames": 5,
+   "sha256": "a7e5de4f18b7255ab696131afd0eb9b1c25c7fd646e43fdc02f368db3fa0982c"
   },
   {
    "id": "activities_reading",
@@ -65,7 +70,8 @@
    "size": 9233,
    "hash": "102708d3",
    "visibility": "public",
-   "frames": 9
+   "frames": 9,
+   "sha256": "102708d346427e9a767dd78c6b4a4ba1c031473c301f0df3f50218cd53f1df74"
   },
   {
    "id": "activities_sleeping",
@@ -76,7 +82,8 @@
    "size": 6158,
    "hash": "abbffbaa",
    "visibility": "public",
-   "frames": 6
+   "frames": 6,
+   "sha256": "abbffbaaad4952c156e21e89ab24141e8a65037c7869a0f879cb0ca95e4ca543"
   },
   {
    "id": "activities_waking_up",
@@ -87,7 +94,8 @@
    "size": 11283,
    "hash": "87987e41",
    "visibility": "public",
-   "frames": 11
+   "frames": 11,
+   "sha256": "87987e41d39cb17dc233f10aa36bacaf06ca222261571c99d9e9754b512a7fb3"
   },
   {
    "id": "activities__brushing_teeth",
@@ -98,7 +106,8 @@
    "size": 5133,
    "hash": "40e91dae",
    "visibility": "public",
-   "frames": 5
+   "frames": 5,
+   "sha256": "40e91daee32757cdd519f9ef5a6aaa5df2a9245cfcbadf5cb069d3295593d510"
   },
   {
    "id": "activities_helloo",
@@ -109,7 +118,8 @@
    "size": 10258,
    "hash": "55f93b2d",
    "visibility": "public",
-   "frames": 10
+   "frames": 10,
+   "sha256": "55f93b2db4adbc5783676c5dfa00bb64d4bcc0709a532098ef6d939b0a971193"
   },
   {
    "id": "activities_pounds",
@@ -120,7 +130,8 @@
    "size": 8208,
    "hash": "a05a84ca",
    "visibility": "public",
-   "frames": 8
+   "frames": 8,
+   "sha256": "a05a84ca0736efd15a5875cfa7d62f77f2f6b96516fe351172bb940623cfd79c"
   },
   {
    "id": "play_once_flying_bro",
@@ -131,7 +142,8 @@
    "size": 37933,
    "hash": "ef746db0",
    "visibility": "public",
-   "frames": 37
+   "frames": 37,
+   "sha256": "ef746db0713048e2a5cc1d3285dd5ebf43407efa590478a4271024faa7b0db83"
   },
   {
    "id": "play_once_stickman_backflip",
@@ -142,7 +154,8 @@
    "size": 49208,
    "hash": "38960f32",
    "visibility": "public",
-   "frames": 48
+   "frames": 48,
+   "sha256": "38960f32c2e7e64a7d35328f2c6993ed1aa9ed73369b89710b0a99fe03b17205"
   },
   {
    "id": "animations_boot_boot_animation",
@@ -153,7 +166,8 @@
    "size": 105583,
    "hash": "2c71a38a",
    "visibility": "public",
-   "frames": 103
+   "frames": 103,
+   "sha256": "2c71a38a8666a703b49243e9ae9e709b6a3592ae3b5de7731ac9d52da60ef335"
   },
   {
    "id": "animations_boot_error_blue_screen_of_death",
@@ -164,7 +178,8 @@
    "size": 1033,
    "hash": "b62f5fec",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "b62f5fec19e95fcdeb08b5b90e0498b3e35000ac1f8202ddbfb6ac34564d7f7a"
   },
   {
    "id": "animations_boot_turning_on",
@@ -175,7 +190,8 @@
    "size": 11283,
    "hash": "ca8bf86b",
    "visibility": "public",
-   "frames": 11
+   "frames": 11,
+   "sha256": "ca8bf86b1076987a490a9b5409909f83d539f05f6420ad402ec1ad85ffa2de1c"
   },
   {
    "id": "animations_boot_update_animation",
@@ -186,7 +202,8 @@
    "size": 2058,
    "hash": "a82893d9",
    "visibility": "public",
-   "frames": 2
+   "frames": 2,
+   "sha256": "a82893d9ba3ecd320d15747a2b3ac460099ea5eb7d4d9f45730920296a5ea3b3"
   },
   {
    "id": "animations_boot_charging",
@@ -197,7 +214,8 @@
    "size": 6158,
    "hash": "364c6bc2",
    "visibility": "public",
-   "frames": 6
+   "frames": 6,
+   "sha256": "364c6bc2b82dc6ca1afe952da5a9e8224d7ce2e0e09b93d8e07b89f12d5ef52a"
   },
   {
    "id": "animations_boot_connecting_to_wifi",
@@ -208,7 +226,8 @@
    "size": 21533,
    "hash": "0cf3559d",
    "visibility": "public",
-   "frames": 21
+   "frames": 21,
+   "sha256": "0cf3559d376a47d3275d13aef4aaa10d122897a371b39a498979f97c5f7baa94"
   },
   {
    "id": "animations_boot_failed_to_connect",
@@ -219,7 +238,8 @@
    "size": 2058,
    "hash": "03d49dc6",
    "visibility": "public",
-   "frames": 2
+   "frames": 2,
+   "sha256": "03d49dc663ffba31ab42b1299fa5d431060494c438056355cb2887ac940d46e4"
   },
   {
    "id": "animations_boot_low_battery",
@@ -230,7 +250,8 @@
    "size": 1033,
    "hash": "1ae919e3",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "1ae919e3d1e966fd380ab4e9d7a5f154359ccd1a59aed05a28b44a75af08a21e"
   },
   {
    "id": "hello_geedo",
@@ -241,7 +262,8 @@
    "hash": "79ab743b",
    "visibility": "public",
    "frames": 2,
-   "category": "studio"
+   "category": "studio",
+   "sha256": "79ab743b9270ead1679542120ece07220329e87463f0737e3d1857b8d5b5afca"
   },
   {
    "id": "eating_burger",
@@ -252,7 +274,8 @@
    "size": 1033,
    "hash": "4052fc73",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "4052fc7354ede4ac3d6ce63ea43aac7fa007455d4fc7aa203199c27db7086549"
   },
   {
    "id": "eating_chips",
@@ -263,7 +286,8 @@
    "size": 1033,
    "hash": "7a5b8934",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "7a5b89349a85c766ecd67f035937c3dbd3df4de37fd47ef0f5a4f665a530502c"
   },
   {
    "id": "eating_circut_board",
@@ -274,7 +298,8 @@
    "size": 1033,
    "hash": "66478ae2",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "66478ae24e7d5eb894825a84f820553ae32b21c056a0532080f34f8285bff9e0"
   },
   {
    "id": "eating_esp32",
@@ -285,7 +310,8 @@
    "size": 1033,
    "hash": "4b594d17",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "4b594d17c4bf62e3c57e25db08a8d704fa3cea65b7590423ba738b7365fa0441"
   },
   {
    "id": "eating_fries",
@@ -296,7 +322,8 @@
    "size": 1033,
    "hash": "1a5c6b51",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "1a5c6b51229bb56239272961aea618c9c37264317ce34711cc968fd71070b064"
   },
   {
    "id": "eating_pizza",
@@ -307,7 +334,8 @@
    "size": 1033,
    "hash": "2351b1a2",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "2351b1a275cee77b61885355d213b5ed16360660a43263bcc6547d30a66e130b"
   },
   {
    "id": "eating_ramen",
@@ -318,7 +346,8 @@
    "size": 1033,
    "hash": "0a838e66",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "0a838e66e6b60bc516d34f4246eca2e6f5973c8ea6b42bc117caca584f278ec9"
   },
   {
    "id": "eating_ribs",
@@ -329,7 +358,8 @@
    "size": 1033,
    "hash": "5a44cfdb",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "5a44cfdb963d7bd43faa771c4abc4b7185b906c690749f935280861b94f5fbc3"
   },
   {
    "id": "eating_cupcake",
@@ -340,7 +370,8 @@
    "size": 1033,
    "hash": "9c41ef55",
    "visibility": "public",
-   "frames": 1
+   "frames": 1,
+   "sha256": "9c41ef55515f530efdd8fb4ee954c3bf90f98ad02dd5a0511448726fd227cde9"
   },
   {
    "id": "activities_mad_stick",
@@ -351,7 +382,8 @@
    "size": 10258,
    "hash": "f4ed8e1f",
    "visibility": "public",
-   "frames": 10
+   "frames": 10,
+   "sha256": "f4ed8e1feddbdb508f2f5c86df059a8b08454b7b6478ac01b5f21528e74c1e72"
   },
   {
    "id": "activities_troll_boi",
@@ -362,7 +394,8 @@
    "size": 2058,
    "hash": "d78d693d",
    "visibility": "public",
-   "frames": 2
+   "frames": 2,
+   "sha256": "d78d693df824e61dc19d79175cb5d3a196c3d4d9b3aa87215c0087e1f552116a"
   }
  ],
  "packs": [

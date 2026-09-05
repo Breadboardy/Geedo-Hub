@@ -1,0 +1,47 @@
+name: Sign manifests
+
+# Every Geedo checks that animations/manifest.json (and each pack's) was
+# signed by the Hub before it believes a word of it, and refuses any download
+# whose bytes do not hash to what the signed list says. So whenever a
+# manifest or a .bin changes on main - by hand, by a tool, by the publish
+# action - this fills in the full hashes and signs. Nothing changes if the
+# signature is already good, so it never commits for the sake of it.
+#
+# Needs the repository secret GEEDO_CONTENT_KEY: the content signing key's
+# private half, the whole PEM file. tools/make_signing_key.sh in the source
+# repo makes it and says how to add it.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'animations/manifest.json'
+      - 'animations/packs/*/manifest.json'
+      - 'animations/**/*.bin'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fill in hashes and sign
+        env:
+          GEEDO_CONTENT_KEY: ${{ secrets.GEEDO_CONTENT_KEY }}
+        run: python3 .github/scripts/sign_manifests.py
+
+      - name: Commit the signatures
+        run: |
+          git config user.name  "geedo-bot"
+          git config user.email "geedo-bot@users.noreply.github.com"
+          git add animations/
+          if git diff --cached --quiet; then
+            echo "already signed"
+          else
+            git commit -m "sign the manifests"
+            git push
+          fi

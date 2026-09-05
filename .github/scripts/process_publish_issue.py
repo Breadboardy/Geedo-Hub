@@ -93,7 +93,7 @@ def main():
 
     # 5. Run pack.py
     res = subprocess.run(
-        ['python3', str(ROOT / 'tools' / 'pack.py')],
+        ['python3', str(ROOT / '.github' / 'scripts' / 'pack.py')],
         capture_output=True, text=True
     )
     print(res.stdout)

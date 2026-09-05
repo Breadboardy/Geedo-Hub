@@ -33,6 +33,15 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
         run: python3 .github/scripts/process_publish_issue.py
 
+      # Robots refuse a list the Hub did not sign, and a download whose bytes
+      # do not hash to what the signed list says - so the manifest is signed
+      # here, with the content key, before it is pushed.
+      - name: Fill in hashes and sign the manifest
+        if: steps.process.outputs.success == 'true'
+        env:
+          GEEDO_CONTENT_KEY: ${{ secrets.GEEDO_CONTENT_KEY }}
+        run: python3 .github/scripts/sign_manifests.py
+
       - name: Commit + push
         if: steps.process.outputs.success == 'true'
         run: |

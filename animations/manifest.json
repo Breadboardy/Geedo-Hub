@@ -163,11 +163,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_boot_animation.bin",
-   "size": 105583,
-   "hash": "2c71a38a",
+   "size": 113783,
+   "hash": "ee6b4d90",
    "visibility": "public",
-   "frames": 103,
-   "sha256": "2c71a38a8666a703b49243e9ae9e709b6a3592ae3b5de7731ac9d52da60ef335"
+   "frames": 111,
+   "sha256": "ee6b4d906d10f4a2ab4ccd221438afdfbc4c9966f013cf2deaae799294a71b30"
   },
   {
    "id": "animations_boot_error_blue_screen_of_death",

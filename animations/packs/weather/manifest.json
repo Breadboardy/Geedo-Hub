@@ -53,10 +53,10 @@
    "id": "weather_wind",
    "name": "Wind",
    "file": "bin/weather_wind.bin",
-   "size": 45108,
-   "hash": "b2866c6e",
-   "frames": 44,
-   "sha256": "b2866c6ed74002bb817701feec0b7092aeb563c77c21f35a2856cea91b4bb7b6"
+   "size": 49208,
+   "hash": "f1093924",
+   "frames": 48,
+   "sha256": "f10939241676b83fa65dce8847fe4b74d5a67a87f567b23811779c4b91339f4f"
   }
  ]
 }

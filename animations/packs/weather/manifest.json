@@ -41,15 +41,6 @@
    "sha256": "2d1c4ef309a21d8f722d26f29db4ab0156765a6e0b837ed3f727235adfa9906d"
   },
   {
-   "id": "weather_fog",
-   "name": "Fog",
-   "file": "bin/weather_fog.bin",
-   "size": 36908,
-   "hash": "7836d577",
-   "frames": 36,
-   "sha256": "7836d57710793700252fc1606559c481979810c2f82a48e0e279c4d1c281ae63"
-  },
-  {
    "id": "weather_wind",
    "name": "Wind",
    "file": "bin/weather_wind.bin",

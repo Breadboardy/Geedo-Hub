@@ -8,46 +8,46 @@
    "id": "weather_sun",
    "name": "Sunshine",
    "file": "bin/weather_sun.bin",
-   "size": 32808,
-   "hash": "aeefb9f6",
+   "size": 8531,
+   "hash": "a5fc5973",
    "frames": 32,
-   "sha256": "aeefb9f661a067185605382cab5d1fb42981e9072b321ae4fe3c724bf510423d"
+   "sha256": "a5fc59739e38034e58da8200962b04c8d6c11de4ffbef35853b8891181d26b50"
   },
   {
    "id": "weather_rain",
    "name": "Rain",
    "file": "bin/weather_rain.bin",
-   "size": 30758,
-   "hash": "dde1fee9",
+   "size": 7622,
+   "hash": "8246394a",
    "frames": 30,
-   "sha256": "dde1fee9f5c30c2e7ad511610b4114f8a74784bf0c90f0f9e3cd75ad826aaf48"
+   "sha256": "8246394aad32b9b779f85b814126bfe64f4a01bb30f4b7269755eca2cdadb4d6"
   },
   {
    "id": "weather_snow",
    "name": "Snow",
    "file": "bin/weather_snow.bin",
-   "size": 41008,
-   "hash": "b90f2bcf",
+   "size": 9583,
+   "hash": "ddfb4f4c",
    "frames": 40,
-   "sha256": "b90f2bcf4d19247c8d67aaa84602ba130498cc479f7597beecb32916014445c7"
+   "sha256": "ddfb4f4c27390395eeb9aa0df65d2b23aa9dbbbb86688e9c8765e1b153e5cb2c"
   },
   {
    "id": "weather_storm",
    "name": "Storm",
    "file": "bin/weather_storm.bin",
-   "size": 36908,
-   "hash": "2d1c4ef3",
+   "size": 13946,
+   "hash": "ecbb66da",
    "frames": 36,
-   "sha256": "2d1c4ef309a21d8f722d26f29db4ab0156765a6e0b837ed3f727235adfa9906d"
+   "sha256": "ecbb66da1df22930788cffa667edb490db680f0ad8443948eccb634a1e1f2ff8"
   },
   {
    "id": "weather_wind",
    "name": "Wind",
    "file": "bin/weather_wind.bin",
-   "size": 49208,
-   "hash": "a0282260",
+   "size": 14213,
+   "hash": "a7f9def2",
    "frames": 48,
-   "sha256": "a02822607182b337a0678c2ba954c2dd0d13387411a0ff921f3b12af7ffc1f87"
+   "sha256": "a7f9def26a4dd9340bb2f42aaf4e9caade4860392b7f1c7c5a5c8cba5f8eb19a"
   }
  ]
 }

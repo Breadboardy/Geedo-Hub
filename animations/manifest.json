@@ -7,11 +7,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_bath.bin",
-   "size": 20508,
-   "hash": "2f3019e9",
+   "size": 2207,
+   "hash": "a2e877c3",
    "visibility": "public",
    "frames": 20,
-   "sha256": "2f3019e911effbcce803e8064516f21fd6a8c2ab662f18ae5f9d79dc79841503"
+   "sha256": "a2e877c3d19954399ca2f220ff86c0ceb91c88960805140f50200045a537fea7"
   },
   {
    "id": "activities_campfire",
@@ -19,11 +19,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_campfire.bin",
-   "size": 4108,
-   "hash": "231900aa",
+   "size": 568,
+   "hash": "f2727051",
    "visibility": "public",
    "frames": 4,
-   "sha256": "231900aaf506d2b42e9faca53455b0f573c69c02a7381dd9d4e5ff2688690e80"
+   "sha256": "f27270518a084f4ac4c051c148c8d515ce981cfc19e502fe8f2a743ddf4dce0e"
   },
   {
    "id": "activities_chill_glasses",
@@ -31,11 +31,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_chill_glasses.bin",
-   "size": 8208,
-   "hash": "6ab2b782",
+   "size": 826,
+   "hash": "74963879",
    "visibility": "public",
    "frames": 8,
-   "sha256": "6ab2b7826176ba076aa600b6b347ecfeacee47ec21bc8471c5591ebe778cb7fb"
+   "sha256": "74963879954e6bba09d33736fdea79f6c31dfce97d23b5517e27be45229f393f"
   },
   {
    "id": "activities_chill_work",
@@ -43,11 +43,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_chill_work.bin",
-   "size": 1033,
-   "hash": "ac89a354",
+   "size": 366,
+   "hash": "a095c2b4",
    "visibility": "public",
    "frames": 1,
-   "sha256": "ac89a354bb93a4d46c2140735503e36a433f554bb4f5764dc39de3077b8efbfe"
+   "sha256": "a095c2b4d73544919bf2b8db953d7ed73726e1afc1914f037228dd4ce1159527"
   },
   {
    "id": "activities_dj",
@@ -55,11 +55,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_dj.bin",
-   "size": 5133,
-   "hash": "a7e5de4f",
+   "size": 987,
+   "hash": "b83bc32a",
    "visibility": "public",
    "frames": 5,
-   "sha256": "a7e5de4f18b7255ab696131afd0eb9b1c25c7fd646e43fdc02f368db3fa0982c"
+   "sha256": "b83bc32ad42af3a8094ad3f5ccb1112d70e6c0744a1f19ac76206de47a197840"
   },
   {
    "id": "activities_reading",
@@ -67,11 +67,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_reading.bin",
-   "size": 9233,
-   "hash": "102708d3",
+   "size": 2364,
+   "hash": "b0ef8557",
    "visibility": "public",
    "frames": 9,
-   "sha256": "102708d346427e9a767dd78c6b4a4ba1c031473c301f0df3f50218cd53f1df74"
+   "sha256": "b0ef85578482adc1984eb243e3bc5175f28a6c9f36c279f646e50903d4ea2ec2"
   },
   {
    "id": "activities_sleeping",
@@ -79,11 +79,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_sleeping.bin",
-   "size": 6158,
-   "hash": "abbffbaa",
+   "size": 377,
+   "hash": "99152424",
    "visibility": "public",
    "frames": 6,
-   "sha256": "abbffbaaad4952c156e21e89ab24141e8a65037c7869a0f879cb0ca95e4ca543"
+   "sha256": "991524243460f170b8533617eef56fc443e0ce39d8bfab1236c8d1a791458327"
   },
   {
    "id": "activities_waking_up",
@@ -91,11 +91,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_waking_up.bin",
-   "size": 11283,
-   "hash": "87987e41",
+   "size": 553,
+   "hash": "f860d352",
    "visibility": "public",
    "frames": 11,
-   "sha256": "87987e41d39cb17dc233f10aa36bacaf06ca222261571c99d9e9754b512a7fb3"
+   "sha256": "f860d352bf4b99ce742287ef005ea0802af87db921a0e30ac42476fbd0684ea7"
   },
   {
    "id": "activities__brushing_teeth",
@@ -103,11 +103,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities__brushing_teeth.bin",
-   "size": 5133,
-   "hash": "40e91dae",
+   "size": 754,
+   "hash": "15119b00",
    "visibility": "public",
    "frames": 5,
-   "sha256": "40e91daee32757cdd519f9ef5a6aaa5df2a9245cfcbadf5cb069d3295593d510"
+   "sha256": "15119b004300b02b00b6c8540aea5c1dd37512255a2aaa3a47b7cb92f28ef5ac"
   },
   {
    "id": "activities_helloo",
@@ -115,11 +115,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_helloo.bin",
-   "size": 10258,
-   "hash": "55f93b2d",
+   "size": 984,
+   "hash": "1475b038",
    "visibility": "public",
    "frames": 10,
-   "sha256": "55f93b2db4adbc5783676c5dfa00bb64d4bcc0709a532098ef6d939b0a971193"
+   "sha256": "1475b0389fc5f02092451dda313f359e4b9df41ac90cc0d7d0762ace3d8b84c5"
   },
   {
    "id": "activities_pounds",
@@ -127,11 +127,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_pounds.bin",
-   "size": 8208,
-   "hash": "a05a84ca",
+   "size": 860,
+   "hash": "ea94cdea",
    "visibility": "public",
    "frames": 8,
-   "sha256": "a05a84ca0736efd15a5875cfa7d62f77f2f6b96516fe351172bb940623cfd79c"
+   "sha256": "ea94cdea673a104555e353b247b3563d115d6b855f3ec43aff8257ad478c9914"
   },
   {
    "id": "play_once_flying_bro",
@@ -139,11 +139,11 @@
    "category": "Play once",
    "author": "breadboard",
    "file": "bin/play_once_flying_bro.bin",
-   "size": 37933,
-   "hash": "ef746db0",
+   "size": 2319,
+   "hash": "5ab5b81a",
    "visibility": "public",
    "frames": 37,
-   "sha256": "ef746db0713048e2a5cc1d3285dd5ebf43407efa590478a4271024faa7b0db83"
+   "sha256": "5ab5b81a309fbea9d5a088b49d9dd4d236eba7e3443b8ee26e8b13d822397a62"
   },
   {
    "id": "play_once_stickman_backflip",
@@ -151,11 +151,11 @@
    "category": "Play once",
    "author": "breadboard",
    "file": "bin/play_once_stickman_backflip.bin",
-   "size": 49208,
-   "hash": "38960f32",
+   "size": 5454,
+   "hash": "97b2e1fb",
    "visibility": "public",
    "frames": 48,
-   "sha256": "38960f32c2e7e64a7d35328f2c6993ed1aa9ed73369b89710b0a99fe03b17205"
+   "sha256": "97b2e1fb28ca7a2d25adbd2748890b8327d90566790529f52d41e786652c394e"
   },
   {
    "id": "animations_boot_boot_animation",
@@ -163,11 +163,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_boot_animation.bin",
-   "size": 113783,
-   "hash": "7a99ebf0",
+   "size": 62845,
+   "hash": "c103a9cd",
    "visibility": "public",
    "frames": 111,
-   "sha256": "7a99ebf09167c807714ccc2226060ebd042fe9dab8d1790755ce6ab3df207a88"
+   "sha256": "c103a9cd594fe1eb67fc6764780d7fc5eb3b33b0a12f6e91b7de3acb9970727c"
   },
   {
    "id": "animations_boot_error_blue_screen_of_death",
@@ -175,11 +175,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_error_blue_screen_of_death.bin",
-   "size": 1033,
-   "hash": "b62f5fec",
+   "size": 287,
+   "hash": "afbf3458",
    "visibility": "public",
    "frames": 1,
-   "sha256": "b62f5fec19e95fcdeb08b5b90e0498b3e35000ac1f8202ddbfb6ac34564d7f7a"
+   "sha256": "afbf34585c81f631577dc5aece40794fd0283f937f9294dcc8f8ea38792a4727"
   },
   {
    "id": "animations_boot_turning_on",
@@ -187,11 +187,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_turning_on.bin",
-   "size": 11283,
-   "hash": "ca8bf86b",
+   "size": 637,
+   "hash": "217160f2",
    "visibility": "public",
    "frames": 11,
-   "sha256": "ca8bf86b1076987a490a9b5409909f83d539f05f6420ad402ec1ad85ffa2de1c"
+   "sha256": "217160f2958961a0759636a19eb8139b2ac099f0e3144165df09304d457b4a0a"
   },
   {
    "id": "animations_boot_update_animation",
@@ -199,11 +199,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_update_animation.bin",
-   "size": 2058,
-   "hash": "a82893d9",
+   "size": 354,
+   "hash": "346a4f1a",
    "visibility": "public",
    "frames": 2,
-   "sha256": "a82893d9ba3ecd320d15747a2b3ac460099ea5eb7d4d9f45730920296a5ea3b3"
+   "sha256": "346a4f1a4293243af038511eab4e5def75dcf49e68cfde7209b45a06b89d6a74"
   },
   {
    "id": "animations_boot_charging",
@@ -211,11 +211,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_charging.bin",
-   "size": 6158,
-   "hash": "364c6bc2",
+   "size": 572,
+   "hash": "eda6d4ec",
    "visibility": "public",
    "frames": 6,
-   "sha256": "364c6bc2b82dc6ca1afe952da5a9e8224d7ce2e0e09b93d8e07b89f12d5ef52a"
+   "sha256": "eda6d4ec77374392ccea21591b9195044f431e647a40206fbf0cb21be748ac5f"
   },
   {
    "id": "animations_boot_connecting_to_wifi",
@@ -223,11 +223,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_connecting_to_wifi.bin",
-   "size": 21533,
-   "hash": "0cf3559d",
+   "size": 2770,
+   "hash": "c25cc03b",
    "visibility": "public",
    "frames": 21,
-   "sha256": "0cf3559d376a47d3275d13aef4aaa10d122897a371b39a498979f97c5f7baa94"
+   "sha256": "c25cc03b2c3f61769efa79f1ce7ec344e8d768d7cc474043e64cdbcb27471f3a"
   },
   {
    "id": "animations_boot_failed_to_connect",
@@ -235,11 +235,11 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_failed_to_connect.bin",
-   "size": 2058,
-   "hash": "03d49dc6",
+   "size": 725,
+   "hash": "ae495c49",
    "visibility": "public",
    "frames": 2,
-   "sha256": "03d49dc663ffba31ab42b1299fa5d431060494c438056355cb2887ac940d46e4"
+   "sha256": "ae495c49b4c0f236c28a2afed89e2c661d183f6b5b20b69d38322033cb4e96ef"
   },
   {
    "id": "animations_boot_low_battery",
@@ -247,23 +247,23 @@
    "category": "animations_boot",
    "author": "breadboard",
    "file": "bin/animations_boot_low_battery.bin",
-   "size": 1033,
-   "hash": "1ae919e3",
+   "size": 177,
+   "hash": "c65148d6",
    "visibility": "public",
    "frames": 1,
-   "sha256": "1ae919e3d1e966fd380ab4e9d7a5f154359ccd1a59aed05a28b44a75af08a21e"
+   "sha256": "c65148d6318c30db52ef46c62229f3a017e02d26187060be26a7a861cb597f8b"
   },
   {
    "id": "hello_geedo",
    "name": "Hello Geedo",
    "author": "breadboard",
    "file": "bin/hello_geedo.bin",
-   "size": 2058,
-   "hash": "79ab743b",
+   "size": 180,
+   "hash": "495c42a3",
    "visibility": "public",
    "frames": 2,
    "category": "studio",
-   "sha256": "79ab743b9270ead1679542120ece07220329e87463f0737e3d1857b8d5b5afca"
+   "sha256": "495c42a34d1e1fe6d8c8d9de732d3f383f26ed37dd0f6e44fa266d45f55d33c1"
   },
   {
    "id": "eating_burger",
@@ -271,11 +271,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_burger.bin",
-   "size": 1033,
-   "hash": "4052fc73",
+   "size": 252,
+   "hash": "84661537",
    "visibility": "public",
    "frames": 1,
-   "sha256": "4052fc7354ede4ac3d6ce63ea43aac7fa007455d4fc7aa203199c27db7086549"
+   "sha256": "84661537d3688b1b742e2c16a276861be0827adc4096277782c3a62cc4c0845f"
   },
   {
    "id": "eating_chips",
@@ -283,11 +283,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_chips.bin",
-   "size": 1033,
-   "hash": "7a5b8934",
+   "size": 199,
+   "hash": "f5011bb5",
    "visibility": "public",
    "frames": 1,
-   "sha256": "7a5b89349a85c766ecd67f035937c3dbd3df4de37fd47ef0f5a4f665a530502c"
+   "sha256": "f5011bb5e49d13b9b7d6d6991237004be5f5fb2594a687bbbde9298b19220931"
   },
   {
    "id": "eating_circut_board",
@@ -295,11 +295,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_circut_board.bin",
-   "size": 1033,
-   "hash": "66478ae2",
+   "size": 174,
+   "hash": "595bf3a9",
    "visibility": "public",
    "frames": 1,
-   "sha256": "66478ae24e7d5eb894825a84f820553ae32b21c056a0532080f34f8285bff9e0"
+   "sha256": "595bf3a9e6944e9b351a36421129da63b90e4342e5cefdcd65e712eeabca567d"
   },
   {
    "id": "eating_esp32",
@@ -307,11 +307,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_esp32.bin",
-   "size": 1033,
-   "hash": "4b594d17",
+   "size": 213,
+   "hash": "901e4482",
    "visibility": "public",
    "frames": 1,
-   "sha256": "4b594d17c4bf62e3c57e25db08a8d704fa3cea65b7590423ba738b7365fa0441"
+   "sha256": "901e4482fc6c711625164c8b278957436e11cc3c0e5e46d2e4eea1e8008f5ac4"
   },
   {
    "id": "eating_fries",
@@ -319,11 +319,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_fries.bin",
-   "size": 1033,
-   "hash": "1a5c6b51",
+   "size": 132,
+   "hash": "fc8434f8",
    "visibility": "public",
    "frames": 1,
-   "sha256": "1a5c6b51229bb56239272961aea618c9c37264317ce34711cc968fd71070b064"
+   "sha256": "fc8434f88750bbabfe1c10924bf3f8ee0fa12eec67860a98dbf5589c64edbc3f"
   },
   {
    "id": "eating_pizza",
@@ -331,11 +331,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_pizza.bin",
-   "size": 1033,
-   "hash": "2351b1a2",
+   "size": 123,
+   "hash": "124ec4dc",
    "visibility": "public",
    "frames": 1,
-   "sha256": "2351b1a275cee77b61885355d213b5ed16360660a43263bcc6547d30a66e130b"
+   "sha256": "124ec4dc50d939413d5d1491a6dcc85dcd72b5b12e609295a4be0f95fd5b6f7e"
   },
   {
    "id": "eating_ramen",
@@ -343,11 +343,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_ramen.bin",
-   "size": 1033,
-   "hash": "0a838e66",
+   "size": 255,
+   "hash": "13f86ade",
    "visibility": "public",
    "frames": 1,
-   "sha256": "0a838e66e6b60bc516d34f4246eca2e6f5973c8ea6b42bc117caca584f278ec9"
+   "sha256": "13f86ade1df81c453d31f25948a8294f7b9f6a5ae50a984f569cb9c709371a61"
   },
   {
    "id": "eating_ribs",
@@ -355,11 +355,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_ribs.bin",
-   "size": 1033,
-   "hash": "5a44cfdb",
+   "size": 206,
+   "hash": "dbd1df4f",
    "visibility": "public",
    "frames": 1,
-   "sha256": "5a44cfdb963d7bd43faa771c4abc4b7185b906c690749f935280861b94f5fbc3"
+   "sha256": "dbd1df4f0f2cc969592074347bfaa4dcffb9e22d5d7e45a563e15a90d84d947f"
   },
   {
    "id": "eating_cupcake",
@@ -367,11 +367,11 @@
    "category": "eating",
    "author": "breadboard",
    "file": "bin/eating_cupcake.bin",
-   "size": 1033,
-   "hash": "9c41ef55",
+   "size": 161,
+   "hash": "ffd22b93",
    "visibility": "public",
    "frames": 1,
-   "sha256": "9c41ef55515f530efdd8fb4ee954c3bf90f98ad02dd5a0511448726fd227cde9"
+   "sha256": "ffd22b93d76838a63aa44c77ec58701213274107ff7beffd7b9f2f8f008d624b"
   },
   {
    "id": "activities_mad_stick",
@@ -379,11 +379,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_mad_stick.bin",
-   "size": 10258,
-   "hash": "f4ed8e1f",
+   "size": 2928,
+   "hash": "cbcf4a9a",
    "visibility": "public",
    "frames": 10,
-   "sha256": "f4ed8e1feddbdb508f2f5c86df059a8b08454b7b6478ac01b5f21528e74c1e72"
+   "sha256": "cbcf4a9a31598ca96250ced34a3c4fc965013088a580d632a7bbbf1f129e93b7"
   },
   {
    "id": "activities_troll_boi",
@@ -391,11 +391,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_troll_boi.bin",
-   "size": 2058,
-   "hash": "d78d693d",
+   "size": 275,
+   "hash": "4ac5365d",
    "visibility": "public",
    "frames": 2,
-   "sha256": "d78d693df824e61dc19d79175cb5d3a196c3d4d9b3aa87215c0087e1f552116a"
+   "sha256": "4ac5365ddd94d005515a0e0c8bea701321bb69762ec90f663105725c2271dfb1"
   },
   {
    "id": "activities_stargazing",
@@ -403,11 +403,11 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_stargazing.bin",
-   "size": 30758,
-   "hash": "6d411dd8",
+   "size": 6787,
+   "hash": "d85f4c01",
    "visibility": "public",
    "frames": 30,
-   "sha256": "6d411dd89d6f8f9f43eab5221bd4928cd9e669c55eabe7a83ca103c4df40502d"
+   "sha256": "d85f4c01f9df88ee66b9efaf4163b0fc578e3713b12aa8cbf605eec7e61d0306"
   },
   {
    "id": "activities_coffee",
@@ -415,15 +415,16 @@
    "category": "activities",
    "author": "breadboard",
    "file": "bin/activities_coffee.bin",
-   "size": 24608,
-   "hash": "6803643a",
+   "size": 3687,
+   "hash": "2127dab4",
    "visibility": "public",
    "frames": 24,
-   "sha256": "6803643a0048bb6ce26ed77c601b532fdea35a9af5c978a83b7cd3dd8bfd85ff"
+   "sha256": "2127dab4ea1e3bd7137963d69906043bbd7a60569fca5e56c3673449e1c4ab96"
   }
  ],
  "packs": [
   "ocean",
-  "weather"
+  "weather",
+  "space"
  ]
 }

@@ -209,7 +209,7 @@ async function tryUnlock(){
 // The unboxing: a hand-drawn present that shakes, blows its lid, and zooms
 // into the camera - drawn frame by frame in Studio style, converted from the
 // original film with tools/video2geedo.py, and played here from the same
-// GDA1 bytes a robot would play. It runs ONCE per unlock (flags byte is 0),
+// bytes a robot would play. It runs ONCE per unlock (flags byte is 0),
 // a click skips it, and it is decoration: if the file is missing or the
 // visitor prefers reduced motion, the pack simply appears.
 async function playUnbox(){
@@ -239,22 +239,12 @@ async function playUnbox(){
   });
 }
 
-// ---- GDA1: 'GDA1' + [ver, frames, fps, flags] + durations[] + pixels[]
-// Page-major, one bit per pixel, bit set means lit. Same layout the robot
-// reads, so what plays here is byte-for-byte what plays on the screen.
+// ---- the robot's file, GDA1 raw or GDA2 packed: one decoder for the whole
+// site, in assets/geedo.js, so what plays here is byte-for-byte what plays
+// on the screen - and a redeemed pack still holding raw frames plays too.
 function unpackGda1(bytes){
-  const fc=bytes[5],fps=bytes[6],flags=bytes[7];
-  const body=8+fc, frames=[];
-  for(let f=0;f<fc;f++){
-    const px=new Uint8Array(128*64),off=body+f*1024;
-    for(let page=0;page<8;page++)
-      for(let x=0;x<128;x++){
-        const b=bytes[off+page*128+x];
-        for(let bit=0;bit<8;bit++) px[(page*8+bit)*128+x]=(b>>bit)&1;
-      }
-    frames.push({pixels:px,dur:bytes[8+f]||1});
-  }
-  return {fps:fps||8,loop:!!(flags&1),pp:!!(flags&2),frames};
+  const a=window.Geedo.unpack(bytes);
+  return {fps:a.fps||8,loop:a.loop,pp:a.pingpong,frames:a.frames};
 }
 
 let current=null;

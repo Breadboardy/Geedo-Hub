@@ -6,7 +6,10 @@ The Hub's copy of tools/pack.py from the source repo, for the publish action:
 same format, same fields. Every entry carries both hashes - the short one is
 the cache's identity and what the website shows, the full one is what a robot
 checks a download against. sign_manifests.py signs the result."""
-import json, os, glob, hashlib
+import json, os, glob, hashlib, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import gda      # the packed frame format, beside this file
 
 W, H = 128, 64
 
@@ -22,16 +25,15 @@ def pack_frame(pixels):
     return bytes(out)
 
 def pack(in_path, out_path):
+    """A Studio export -> the robot's file: GDA2, frames packed (gda.py)."""
     with open(in_path) as f: data = json.load(f)
     frames = data['frames']
-    fc = len(frames)
     fps = int(data.get('fps', 8))
-    flags = (1 if data.get('loop', True) else 0) | (2 if data.get('pp', False) else 0)
-    durations = bytes(min(255, int(f.get('dur', 1))) for f in frames)
-    header = b'GDA1' + bytes([1, fc, fps, flags]) + durations
-    body = b''.join(pack_frame(f['pixels']) for f in frames)
-    with open(out_path, 'wb') as f: f.write(header + body)
-    return len(header) + len(body), fc
+    loop, pp = bool(data.get('loop', True)), bool(data.get('pp', False))
+    blob = gda.encode([pack_frame(f['pixels']) for f in frames], fps, loop,
+                      [int(f.get('dur', 1)) for f in frames], pp=pp)
+    with open(out_path, 'wb') as f: f.write(blob)
+    return len(blob), len(frames)
 
 def sha256hex(path):
     h = hashlib.sha256()

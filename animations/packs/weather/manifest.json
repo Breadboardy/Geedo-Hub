@@ -18,9 +18,9 @@
    "name": "Rain",
    "file": "bin/weather_rain.bin",
    "size": 30758,
-   "hash": "8e415c03",
+   "hash": "dde1fee9",
    "frames": 30,
-   "sha256": "8e415c039f4da15ecd04dc0d3bcd1738951920b5c199b005b4a708d6bbda5084"
+   "sha256": "dde1fee9f5c30c2e7ad511610b4114f8a74784bf0c90f0f9e3cd75ad826aaf48"
   },
   {
    "id": "weather_snow",

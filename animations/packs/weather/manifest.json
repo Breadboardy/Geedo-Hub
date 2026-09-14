@@ -18,9 +18,9 @@
    "name": "Rain",
    "file": "bin/weather_rain.bin",
    "size": 30758,
-   "hash": "f30f3ace",
+   "hash": "8e415c03",
    "frames": 30,
-   "sha256": "f30f3ace2176d0822494418fb143e915b61fca476ed160479bc05ffc1f944561"
+   "sha256": "8e415c039f4da15ecd04dc0d3bcd1738951920b5c199b005b4a708d6bbda5084"
   },
   {
    "id": "weather_snow",
@@ -36,9 +36,9 @@
    "name": "Storm",
    "file": "bin/weather_storm.bin",
    "size": 36908,
-   "hash": "fc33e7aa",
+   "hash": "2d1c4ef3",
    "frames": 36,
-   "sha256": "fc33e7aad342118142c519653ab7fc776f08f778fc02098e2bcf627c75dd5b4d"
+   "sha256": "2d1c4ef309a21d8f722d26f29db4ab0156765a6e0b837ed3f727235adfa9906d"
   },
   {
    "id": "weather_fog",

@@ -423,6 +423,7 @@
   }
  ],
  "packs": [
-  "ocean"
+  "ocean",
+  "weather"
  ]
 }

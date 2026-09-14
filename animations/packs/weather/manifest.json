@@ -1,0 +1,62 @@
+{
+ "version": 1,
+ "id": "weather",
+ "name": "Weather Pack",
+ "rarity": "common",
+ "animations": [
+  {
+   "id": "weather_sun",
+   "name": "Sunshine",
+   "file": "bin/weather_sun.bin",
+   "size": 32808,
+   "hash": "aeefb9f6",
+   "frames": 32,
+   "sha256": "aeefb9f661a067185605382cab5d1fb42981e9072b321ae4fe3c724bf510423d"
+  },
+  {
+   "id": "weather_rain",
+   "name": "Rain",
+   "file": "bin/weather_rain.bin",
+   "size": 30758,
+   "hash": "f30f3ace",
+   "frames": 30,
+   "sha256": "f30f3ace2176d0822494418fb143e915b61fca476ed160479bc05ffc1f944561"
+  },
+  {
+   "id": "weather_snow",
+   "name": "Snow",
+   "file": "bin/weather_snow.bin",
+   "size": 41008,
+   "hash": "b90f2bcf",
+   "frames": 40,
+   "sha256": "b90f2bcf4d19247c8d67aaa84602ba130498cc479f7597beecb32916014445c7"
+  },
+  {
+   "id": "weather_storm",
+   "name": "Storm",
+   "file": "bin/weather_storm.bin",
+   "size": 36908,
+   "hash": "fc33e7aa",
+   "frames": 36,
+   "sha256": "fc33e7aad342118142c519653ab7fc776f08f778fc02098e2bcf627c75dd5b4d"
+  },
+  {
+   "id": "weather_fog",
+   "name": "Fog",
+   "file": "bin/weather_fog.bin",
+   "size": 36908,
+   "hash": "7836d577",
+   "frames": 36,
+   "sha256": "7836d57710793700252fc1606559c481979810c2f82a48e0e279c4d1c281ae63"
+  },
+  {
+   "id": "weather_wind",
+   "name": "Wind",
+   "file": "bin/weather_wind.bin",
+   "size": 45108,
+   "hash": "b2866c6e",
+   "frames": 44,
+   "sha256": "b2866c6ed74002bb817701feec0b7092aeb563c77c21f35a2856cea91b4bb7b6"
+  }
+ ]
+}

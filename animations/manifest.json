@@ -458,18 +458,6 @@
    "sha256": "9ca3b0fb9e7e902944bd6ff93daad278a09c9f04cd4e2c9f565c6d812a96c7f1"
   },
   {
-   "id": "ocean_whale",
-   "name": "Whale",
-   "category": "ocean",
-   "author": "breadboard",
-   "file": "bin/ocean_whale.bin",
-   "size": 36908,
-   "hash": "c7fd5b70",
-   "visibility": "public",
-   "frames": 36,
-   "sha256": "c7fd5b70180ab0f0c6642550ea2162e9ebde414afb09059009f3e33b2082a94a"
-  },
-  {
    "id": "ocean_jellyfish",
    "name": "Jellyfish",
    "category": "ocean",

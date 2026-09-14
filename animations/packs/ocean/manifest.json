@@ -5,15 +5,6 @@
   "rarity": "common",
   "animations": [
     {
-      "id": "ocean_angler",
-      "name": "Angler",
-      "file": "bin/ocean_angler.bin",
-      "size": 10258,
-      "hash": "c811798a",
-      "frames": 10,
-      "sha256": "c811798a527acb6d15dc6155a02022824d4d0bb7e8cc82b9afa50f99696fb7a0"
-    },
-    {
       "id": "chest",
       "name": "Chest",
       "file": "bin/chest.bin",
@@ -21,15 +12,6 @@
       "hash": "62443cab",
       "frames": 9,
       "sha256": "62443cabd9a09129424dcffd0f5e82ee067270e2bf4ee8a8967ae9d3df9ff183"
-    },
-    {
-      "id": "crab",
-      "name": "Crab",
-      "file": "bin/crab.bin",
-      "size": 12308,
-      "hash": "5907fea1",
-      "frames": 12,
-      "sha256": "5907fea18dc4553bd9f4f9c5a3660767b17d629dbb728864f5e82389afbb9352"
     },
     {
       "id": "diver",
@@ -75,6 +57,42 @@
       "hash": "7058cce3",
       "frames": 12,
       "sha256": "7058cce3edcdb1267ae7f821af4f2e55da4d81d14ade02749e4c31680cd18a49"
+    },
+    {
+      "id": "ocean_snorkel",
+      "name": "Snorkelling",
+      "file": "bin/ocean_snorkel.bin",
+      "size": 30758,
+      "hash": "90855398",
+      "frames": 30,
+      "sha256": "908553984d61df7f158722b756d4ae963f8d189e9cb76ef4211e5f082511f685"
+    },
+    {
+      "id": "ocean_boat",
+      "name": "Sailing",
+      "file": "bin/ocean_boat.bin",
+      "size": 30758,
+      "hash": "b892e047",
+      "frames": 30,
+      "sha256": "b892e0474c7a2d121423a1fb0f9c3e713adecfe858f8d0208a553fbc713d9fa0"
+    },
+    {
+      "id": "ocean_jellyfish",
+      "name": "Jellyfish",
+      "file": "bin/ocean_jellyfish.bin",
+      "size": 30758,
+      "hash": "a7455d08",
+      "frames": 30,
+      "sha256": "a7455d08737aa04678c0dd433d8040e0c2baec3aecadb5a17c13c1092ea48ca2"
+    },
+    {
+      "id": "ocean_sunset",
+      "name": "Sunset",
+      "file": "bin/ocean_sunset.bin",
+      "size": 41008,
+      "hash": "4189063d",
+      "frames": 40,
+      "sha256": "4189063dbcbd56c5899ecc0c3b49ced7769afee4d29967b1e88cc6d643fdc384"
     }
   ]
 }

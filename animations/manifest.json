@@ -396,6 +396,102 @@
    "visibility": "public",
    "frames": 2,
    "sha256": "d78d693df824e61dc19d79175cb5d3a196c3d4d9b3aa87215c0087e1f552116a"
+  },
+  {
+   "id": "activities_stargazing",
+   "name": "Stargazing",
+   "category": "activities",
+   "author": "breadboard",
+   "file": "bin/activities_stargazing.bin",
+   "size": 30758,
+   "hash": "6d411dd8",
+   "visibility": "public",
+   "frames": 30,
+   "sha256": "6d411dd89d6f8f9f43eab5221bd4928cd9e669c55eabe7a83ca103c4df40502d"
+  },
+  {
+   "id": "activities_coffee",
+   "name": "Coffee",
+   "category": "activities",
+   "author": "breadboard",
+   "file": "bin/activities_coffee.bin",
+   "size": 24608,
+   "hash": "6803643a",
+   "visibility": "public",
+   "frames": 24,
+   "sha256": "6803643a0048bb6ce26ed77c601b532fdea35a9af5c978a83b7cd3dd8bfd85ff"
+  },
+  {
+   "id": "ocean_snorkel",
+   "name": "Snorkelling",
+   "category": "ocean",
+   "author": "breadboard",
+   "file": "bin/ocean_snorkel.bin",
+   "size": 30758,
+   "hash": "90855398",
+   "visibility": "public",
+   "frames": 30,
+   "sha256": "908553984d61df7f158722b756d4ae963f8d189e9cb76ef4211e5f082511f685"
+  },
+  {
+   "id": "ocean_boat",
+   "name": "Sailing",
+   "category": "ocean",
+   "author": "breadboard",
+   "file": "bin/ocean_boat.bin",
+   "size": 30758,
+   "hash": "b892e047",
+   "visibility": "public",
+   "frames": 30,
+   "sha256": "b892e0474c7a2d121423a1fb0f9c3e713adecfe858f8d0208a553fbc713d9fa0"
+  },
+  {
+   "id": "ocean_fishing",
+   "name": "Fishing",
+   "category": "ocean",
+   "author": "breadboard",
+   "file": "bin/ocean_fishing.bin",
+   "size": 36908,
+   "hash": "9ca3b0fb",
+   "visibility": "public",
+   "frames": 36,
+   "sha256": "9ca3b0fb9e7e902944bd6ff93daad278a09c9f04cd4e2c9f565c6d812a96c7f1"
+  },
+  {
+   "id": "ocean_whale",
+   "name": "Whale",
+   "category": "ocean",
+   "author": "breadboard",
+   "file": "bin/ocean_whale.bin",
+   "size": 36908,
+   "hash": "c7fd5b70",
+   "visibility": "public",
+   "frames": 36,
+   "sha256": "c7fd5b70180ab0f0c6642550ea2162e9ebde414afb09059009f3e33b2082a94a"
+  },
+  {
+   "id": "ocean_jellyfish",
+   "name": "Jellyfish",
+   "category": "ocean",
+   "author": "breadboard",
+   "file": "bin/ocean_jellyfish.bin",
+   "size": 30758,
+   "hash": "a7455d08",
+   "visibility": "public",
+   "frames": 30,
+   "sha256": "a7455d08737aa04678c0dd433d8040e0c2baec3aecadb5a17c13c1092ea48ca2"
+  },
+  {
+   "id": "ocean_sunset",
+   "name": "Sunset",
+   "category": "ocean",
+   "author": "breadboard",
+   "file": "bin/ocean_sunset.bin",
+   "size": 41008,
+   "hash": "4189063d",
+   "visibility": "public",
+   "frames": 40,
+   "sha256": "4189063dbcbd56c5899ecc0c3b49ced7769afee4d29967b1e88cc6d643fdc384"
   }
  ],
  "packs": [

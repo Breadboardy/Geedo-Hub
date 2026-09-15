@@ -31,8 +31,11 @@ const W = 128, H = 64;
    control byte c < 0x80 means "the next c+1 bytes are literal", c >= 0x80
    means "the next byte repeats c-0x7F times", until the 1024 bytes of the
    page are out. Bold shapes on black pack to about a quarter, which is what
-   lets a robot's shelf hold every pack. tools/gda.py in the source repo
-   writes it; this and the firmware read it the same way.                   */
+   lets a robot's shelf hold every pack. A frame whose packed bytes are a
+   single byte is a reference: that byte is the index of an earlier frame,
+   shown again - how a long animation repeats a movement for five bytes a
+   frame. tools/gda.py in the source repo writes it; this and the firmware
+   read it the same way.                                                    */
 function unpackFrame(bytes, off, end){
   const page = new Uint8Array(1024);
   let ip = off, op = 0;
@@ -76,9 +79,16 @@ function unpack(bytes){
   } else {
     const t = 8 + count, dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     const off = i => dv.getUint32(t + 4 * i, true);
-    for (let f = 0; f < count; f++)
-      frames.push({ pixels: pageToPixels(unpackFrame(bytes, off(f), off(f + 1))),
-                    dur: bytes[8 + f] || 1 });
+    for (let f = 0; f < count; f++){
+      const a = off(f), b = off(f + 1);
+      let pixels;
+      if (b - a === 1){                       // a reference: an earlier frame, shown again
+        const j = bytes[a];
+        if (j >= f || off(j + 1) - off(j) === 1) throw new Error('bad frame reference');
+        pixels = frames[j].pixels.slice();
+      } else pixels = pageToPixels(unpackFrame(bytes, a, b));
+      frames.push({ pixels, dur: bytes[8 + f] || 1 });
+    }
   }
   return { frames, fps, loop: !!(flags & 1), pingpong: !!(flags & 2) };
 }

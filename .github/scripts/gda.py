@@ -34,6 +34,18 @@ The encoder is greedy and deterministic: the same frame always packs to the
 same bytes, which is what lets the Hub, the bot and this file agree on a
 hash. Runs shorter than three are written as literals - they cost the same.
 
+A frame whose packed bytes are exactly ONE byte is a reference (v29): the
+byte is the index of an earlier frame, and this frame is that one shown
+again. A real packed frame is never shorter than 16 bytes (eight runs of
+128), so the length alone tells the two apart. The target must come earlier
+in the file and be a real frame - one hop, never a chain - so a reader
+walking the file in order has already seen it, and a robot fetching one
+frame does at most one extra table lookup. encode() writes one for every
+frame identical to an earlier one, so a long animation that repeats a
+movement - a hammer, a trowel, a snowball being packed - costs five bytes a
+repeated frame (the table entry and the byte) instead of a packed frame
+each time. A file with no repeats is byte for byte what it was before.
+
 GDA1 (the raw kilobyte per frame, straight after the durations) is still
 read by everything, including the firmware: a redeemed pack sitting in a
 robot's flash is GDA1 and stays that way.
@@ -47,6 +59,8 @@ import struct
 
 FRAME = 1024
 FRAME_MAX = FRAME + 8          # every byte a literal: 8 chunks of 128
+FRAME_MIN = 16                 # eight runs of 128: no real frame packs smaller
+REF_LEN = 1                    # a one-byte frame is a reference to an earlier one
 HEADER = 8
 
 
@@ -112,8 +126,11 @@ def lit(page):
     return sum(bin(b).count('1') for b in page)
 
 
-def encode(frames, fps, loop, durs, pp=False):
-    """Raw 1024-byte frames -> a GDA2 file."""
+def encode(frames, fps, loop, durs, pp=False, refs=True):
+    """Raw 1024-byte frames -> a GDA2 file. With `refs` (the default) a frame
+    identical to an earlier one is written as a one-byte reference to the
+    first of them; without, every frame is packed in full - what a robot
+    older than v29 can play."""
     n = len(frames)
     if not 0 < n <= 255:
         raise ValueError(f"{n} frames: the format holds 1..255")
@@ -122,7 +139,14 @@ def encode(frames, fps, loop, durs, pp=False):
     flags = (1 if loop else 0) | (2 if pp else 0)
     head = bytearray(b'GDA2') + bytes([1, n, int(fps) & 0xFF, flags])
     head += bytes(min(255, max(1, int(d))) for d in durs)
-    packed = [pack_frame(f) for f in frames]
+    packed, first = [], {}
+    for f in frames:
+        key = bytes(f)
+        if refs and key in first:
+            packed.append(bytes([first[key]]))
+        else:
+            first.setdefault(key, len(packed))
+            packed.append(pack_frame(f))
     off = len(head) + 4 * (n + 1)
     table = bytearray()
     for p in packed:
@@ -152,9 +176,11 @@ def is_anim(blob):
 
 
 def decode(blob):
-    """Either file -> dict(fmt, n, fps, flags, loop, pp, durs, frames).
-    frames are raw 1024-byte page buffers whichever way they were stored.
-    Raises ValueError on anything malformed, the way the robot refuses it."""
+    """Either file -> dict(fmt, n, fps, flags, loop, pp, durs, frames, refs).
+    frames are raw 1024-byte page buffers whichever way they were stored -
+    a reference comes back as the frame it points to - and refs is how
+    many of them were references. Raises ValueError on anything malformed,
+    the way the robot refuses it."""
     blob = bytes(blob)
     if len(blob) < HEADER:
         raise ValueError("too short to be an animation")
@@ -170,7 +196,7 @@ def decode(blob):
         if len(blob) < body + n * FRAME:
             raise ValueError(f"truncated: {len(blob)} bytes cannot hold {n} frames")
         frames = [blob[body + i * FRAME:body + (i + 1) * FRAME] for i in range(n)]
-        fmt = 1
+        fmt, refs = 1, 0
     elif magic == b'GDA2':
         toff = HEADER + n
         tend = toff + 4 * (n + 1)
@@ -179,14 +205,21 @@ def decode(blob):
         table = struct.unpack('<%dI' % (n + 1), blob[toff:tend])
         if table[0] != tend:
             raise ValueError("the first frame is not where the table says")
-        frames = []
+        frames, refs = [], 0
         for i in range(n):
             a, b = table[i], table[i + 1]
             if b <= a or b - a > FRAME_MAX:
                 raise ValueError(f"frame {i} has an impossible length")
             if b > len(blob):
                 raise ValueError(f"frame {i} runs past the end of the file")
-            frames.append(unpack_frame(blob[a:b]))
+            if b - a == REF_LEN:
+                j = blob[a]
+                if j >= i or table[j + 1] - table[j] == REF_LEN:
+                    raise ValueError(f"frame {i} refers to frame {j}, which it may not")
+                frames.append(frames[j])
+                refs += 1
+            else:
+                frames.append(unpack_frame(blob[a:b]))
         if table[n] != len(blob):
             raise ValueError("bytes after the last frame")
         fmt = 2
@@ -194,7 +227,7 @@ def decode(blob):
         raise ValueError("not a Geedo animation - no GDA1 or GDA2 header")
     return {'fmt': fmt, 'n': n, 'fps': fps, 'flags': flags,
             'loop': bool(flags & 1), 'pp': bool(flags & 2),
-            'durs': durs, 'frames': frames}
+            'durs': durs, 'frames': frames, 'refs': refs}
 
 
 def to_gda2(blob):
@@ -221,4 +254,5 @@ if __name__ == '__main__':
         a = decode(raw)
         packed = to_gda2(raw)
         print(f"{path}: {a['n']} frames @ {a['fps']} fps, GDA{a['fmt']}, "
-              f"{len(raw)} B, packed {len(packed)} B ({len(raw) / max(1, len(packed)):.1f}x)")
+              f"{len(raw)} B, packed {len(packed)} B ({len(raw) / max(1, len(packed)):.1f}x)"
+              + (f", {a['refs']} of them references" if a['refs'] else ""))

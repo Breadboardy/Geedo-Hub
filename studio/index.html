@@ -666,8 +666,10 @@ function closeModal(id){document.getElementById(id).classList.remove('open')}
    GDA2, the format every Geedo plays and the Hub serves: an 8-byte header,
    one hold byte a frame, a table of offsets, then each 1024-byte page packed
    as chunks - a control byte under 0x80 means "the next c+1 bytes are as
-   they are", 0x80 and up means "the next byte, c-0x7F times". The same
-   packer as tools/gda.py in the source repo; the same reader everywhere. */
+   they are", 0x80 and up means "the next byte, c-0x7F times". A frame the
+   same as an earlier one is written as a single byte, the index of that
+   frame: a held pose or a repeated movement costs five bytes a frame. The
+   same packer as tools/gda.py in the source repo; the same reader everywhere. */
 function packRLE(page){
   const out=[];let i=0;
   while(i<1024){
@@ -685,7 +687,12 @@ function packRLE(page){
 }
 function encodeGda2(){
   const proj=projectData();
-  const packed=frames.map(f=>packRLE(packFrameC(f.pixels)));
+  const packed=[],first=new Map();
+  for(const f of frames){
+    const p=packRLE(packFrameC(f.pixels)),key=p.join(',');
+    if(first.has(key))packed.push([first.get(key)]);
+    else{first.set(key,packed.length);packed.push(p)}
+  }
   const n=frames.length,head=8+n+4*(n+1);
   const bytes=[0x47,0x44,0x41,0x32,1,n,proj.fps,(proj.loop?1:0)|(proj.pp?2:0)];
   for(const f of frames)bytes.push(Math.min(255,Math.max(1,f.dur|0)));

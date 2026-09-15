@@ -48,10 +48,10 @@
       "id": "space_impact",
       "name": "Impact",
       "file": "bin/space_impact.bin",
-      "size": 12132,
-      "hash": "d9c1d413",
+      "size": 11308,
+      "hash": "e8ddc996",
       "frames": 48,
-      "sha256": "d9c1d413ce3f8b05141a18966a902d08a26177af435d0932c8262546800fcb86",
+      "sha256": "e8ddc99618c2b319ed9bec933673668449bf70662f84d95e86db9f1af5566d43",
       "published_at": "2026-09-14"
     },
     {

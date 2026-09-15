@@ -33,11 +33,11 @@
       "category": "activities",
       "author": "Geedo",
       "file": "bin/activities_chill_glasses.bin",
-      "size": 826,
-      "hash": "74963879",
+      "size": 536,
+      "hash": "d16fa8ab",
       "visibility": "public",
       "frames": 8,
-      "sha256": "74963879954e6bba09d33736fdea79f6c31dfce97d23b5517e27be45229f393f",
+      "sha256": "d16fa8ab838940a27f25aa23298f769c5432d0a0a302b3a4188d6a874d779f85",
       "published_at": "2026-08-01"
     },
     {
@@ -72,11 +72,11 @@
       "category": "activities",
       "author": "Geedo",
       "file": "bin/activities_reading.bin",
-      "size": 2364,
-      "hash": "b0ef8557",
+      "size": 566,
+      "hash": "9fad67ba",
       "visibility": "public",
       "frames": 9,
-      "sha256": "b0ef85578482adc1984eb243e3bc5175f28a6c9f36c279f646e50903d4ea2ec2",
+      "sha256": "9fad67ba90f866ed75f3d280c8e88174cca772b5f764e14c064466f8f6768705",
       "published_at": "2026-08-01"
     },
     {
@@ -98,11 +98,11 @@
       "category": "activities",
       "author": "Geedo",
       "file": "bin/activities_waking_up.bin",
-      "size": 553,
-      "hash": "f860d352",
+      "size": 370,
+      "hash": "f87a15cd",
       "visibility": "public",
       "frames": 11,
-      "sha256": "f860d352bf4b99ce742287ef005ea0802af87db921a0e30ac42476fbd0684ea7",
+      "sha256": "f87a15cdeafdfd5760f0d75b95573485960cf51ef4c38290d575988e04748e29",
       "published_at": "2026-08-01"
     },
     {
@@ -150,11 +150,11 @@
       "category": "play_once",
       "author": "Geedo",
       "file": "bin/play_once_flying_bro.bin",
-      "size": 2319,
-      "hash": "5ab5b81a",
+      "size": 2276,
+      "hash": "877dc953",
       "visibility": "public",
       "frames": 37,
-      "sha256": "5ab5b81a309fbea9d5a088b49d9dd4d236eba7e3443b8ee26e8b13d822397a62",
+      "sha256": "877dc953d850531234de417afb8b43817d93d1f06b76888db1884c13b118bed8",
       "published_at": "2026-08-01"
     },
     {
@@ -163,11 +163,11 @@
       "category": "play_once",
       "author": "Geedo",
       "file": "bin/play_once_stickman_backflip.bin",
-      "size": 5454,
-      "hash": "97b2e1fb",
+      "size": 5348,
+      "hash": "72cd3329",
       "visibility": "public",
       "frames": 48,
-      "sha256": "97b2e1fb28ca7a2d25adbd2748890b8327d90566790529f52d41e786652c394e",
+      "sha256": "72cd3329589ea5daabe108390634372a837f1e5f994ab383fcc867694cb273d9",
       "published_at": "2026-08-01"
     },
     {
@@ -176,11 +176,11 @@
       "category": "animations_boot",
       "author": "Geedo",
       "file": "bin/animations_boot_boot_animation.bin",
-      "size": 62845,
-      "hash": "c103a9cd",
+      "size": 47942,
+      "hash": "ed845912",
       "visibility": "public",
       "frames": 111,
-      "sha256": "c103a9cd594fe1eb67fc6764780d7fc5eb3b33b0a12f6e91b7de3acb9970727c",
+      "sha256": "ed8459126300c58599693bfad6caeb21b6be363f4f2d49a2fe9ff1241d97ae4b",
       "published_at": "2026-08-01"
     },
     {
@@ -241,11 +241,11 @@
       "category": "animations_boot",
       "author": "Geedo",
       "file": "bin/animations_boot_connecting_to_wifi.bin",
-      "size": 2770,
-      "hash": "c25cc03b",
+      "size": 2474,
+      "hash": "12ec46fc",
       "visibility": "public",
       "frames": 21,
-      "sha256": "c25cc03b2c3f61769efa79f1ce7ec344e8d768d7cc474043e64cdbcb27471f3a",
+      "sha256": "12ec46fca87f2118ecf5ee9dc9859f727485d5cb085f7c52e79845a3778a0742",
       "published_at": "2026-08-01"
     },
     {
@@ -293,11 +293,11 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_burger.bin",
-      "size": 5497,
-      "hash": "f00a857c",
+      "size": 5399,
+      "hash": "e55c1bd8",
       "visibility": "public",
       "frames": 42,
-      "sha256": "f00a857c7dcb0742e65e3a46efcc0ba6fa85f430ef0e59a2eb749a81727c5554",
+      "sha256": "e55c1bd8685d699d88093b88ad3d3fac710c7b68121944c3e977b56f3be0e186",
       "published_at": "2026-09-15"
     },
     {
@@ -319,11 +319,11 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_circut_board.bin",
-      "size": 5803,
-      "hash": "7459787c",
+      "size": 5705,
+      "hash": "86219b50",
       "visibility": "public",
       "frames": 42,
-      "sha256": "7459787cd5148cd63043ebd29654a6bb96a1861c2bb8c5ce1cd0438681125f17",
+      "sha256": "86219b50997a58e7543dc947910cc150fbdab0382d114bd2ed36a8d6ddc9a971",
       "published_at": "2026-09-15"
     },
     {
@@ -332,11 +332,11 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_esp32.bin",
-      "size": 5827,
-      "hash": "41e120c9",
+      "size": 5729,
+      "hash": "79a1ed5b",
       "visibility": "public",
       "frames": 42,
-      "sha256": "41e120c96078b2fb03c241b021a715327eb913792b940d42a4a894b4dfefecdb",
+      "sha256": "79a1ed5bfd24888a06bd133f0943270ef6c9f519f43516261ec3265603d1c7e5",
       "published_at": "2026-09-15"
     },
     {
@@ -358,11 +358,11 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_pizza.bin",
-      "size": 5246,
-      "hash": "49eef5b8",
+      "size": 5197,
+      "hash": "cbfde51c",
       "visibility": "public",
       "frames": 42,
-      "sha256": "49eef5b86d25d66f8db50a314a2c91c83d3def479a479ac2901d58a735567847",
+      "sha256": "cbfde51cff700865834fa1e7cb290ea1c5ce96c948538f11aeaf348ca2c2556f",
       "published_at": "2026-09-15"
     },
     {
@@ -384,11 +384,11 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_ribs.bin",
-      "size": 5271,
-      "hash": "70b49486",
+      "size": 5173,
+      "hash": "446e7921",
       "visibility": "public",
       "frames": 35,
-      "sha256": "70b49486eccbcc6bb7dce9347516a4b9670877b168b876b1b5121889b3b8e87a",
+      "sha256": "446e7921134f397864aa31f2a26699d838d3abf3c7f4a1a8f896a26e87cf6402",
       "published_at": "2026-09-15"
     },
     {
@@ -397,11 +397,11 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_cupcake.bin",
-      "size": 4855,
-      "hash": "f2444dd4",
+      "size": 4735,
+      "hash": "b691d397",
       "visibility": "public",
       "frames": 35,
-      "sha256": "f2444dd4c0e08cc96a34026c81ac37207250cae7b7627e3654f9c233ed7d5890",
+      "sha256": "b691d3977e5044d4ec03536051037f33a78e44395b284a09576d16856446a305",
       "published_at": "2026-09-15"
     },
     {
@@ -436,11 +436,11 @@
       "category": "activities",
       "author": "Geedo",
       "file": "bin/activities_stargazing.bin",
-      "size": 6787,
-      "hash": "d85f4c01",
+      "size": 6561,
+      "hash": "6f22dbd2",
       "visibility": "public",
       "frames": 30,
-      "sha256": "d85f4c01f9df88ee66b9efaf4163b0fc578e3713b12aa8cbf605eec7e61d0306",
+      "sha256": "6f22dbd200a3ca3dcbca144502169a59eeefaca04896d79a48c7970ed16bd82a",
       "published_at": "2026-09-14"
     },
     {
@@ -462,11 +462,11 @@
       "category": "cooking",
       "author": "Geedo",
       "file": "bin/cooking_egg.bin",
-      "size": 12986,
-      "hash": "12c8e327",
+      "size": 12760,
+      "hash": "2af15646",
       "visibility": "public",
       "frames": 46,
-      "sha256": "12c8e32773753e2b857a0143446d2f951a503a6a7c4592c5a61886f05c6170a4",
+      "sha256": "2af156463bfc37fcd826d90ea4f7a51aba1984d09ea5a419a0c332e1d2f65a5e",
       "published_at": "2026-09-15"
     },
     {
@@ -488,11 +488,11 @@
       "category": "cooking",
       "author": "Geedo",
       "file": "bin/cooking_chopping.bin",
-      "size": 9032,
-      "hash": "cfb4cd7b",
+      "size": 8193,
+      "hash": "b5c1efef",
       "visibility": "public",
       "frames": 38,
-      "sha256": "cfb4cd7bf23238408c727679557147caa0ac24dbb056310906d7d86457b2bcb3",
+      "sha256": "b5c1efef5aa2b0c1b1cc0bfdcfad44a2a015205aea369f1b2c4316818b2e677e",
       "published_at": "2026-09-15"
     },
     {
@@ -501,11 +501,11 @@
       "category": "party",
       "author": "Geedo",
       "file": "bin/party_cake.bin",
-      "size": 10600,
-      "hash": "f6837024",
+      "size": 9602,
+      "hash": "61b0de83",
       "visibility": "public",
       "frames": 50,
-      "sha256": "f68370240aa1bfd209e8338802b35a72e51935a4a00f7811b1f4011ab269be91",
+      "sha256": "61b0de834ea36d6672ebb2c6fc365b5bec305138edc671bc230017874d44f18e",
       "published_at": "2026-09-15"
     },
     {
@@ -514,11 +514,11 @@
       "category": "party",
       "author": "Geedo",
       "file": "bin/party_balloon.bin",
-      "size": 6628,
-      "hash": "c94a2947",
+      "size": 5592,
+      "hash": "7536f2b4",
       "visibility": "public",
       "frames": 50,
-      "sha256": "c94a29471274fa015bb3f7b25cd6d7b401212fbf66f726bb0ba54a0aaa47f8d0",
+      "sha256": "7536f2b45206a229858f769a695db857f93f80ea7ea5b6f2ffa607823617757b",
       "published_at": "2026-09-15"
     },
     {
@@ -527,11 +527,11 @@
       "category": "party",
       "author": "Geedo",
       "file": "bin/party_claw.bin",
-      "size": 13509,
-      "hash": "cb3bf04b",
+      "size": 12855,
+      "hash": "7a225394",
       "visibility": "public",
       "frames": 52,
-      "sha256": "cb3bf04b6b048a878379087bdce1e5b15af85059d1b91b492e974d4996facb20",
+      "sha256": "7a22539466d894f73222a3b893060642e50a2229b619d4442a99fc7253cbbb47",
       "published_at": "2026-09-15"
     },
     {
@@ -540,11 +540,11 @@
       "category": "party",
       "author": "Geedo",
       "file": "bin/party_lolly.bin",
-      "size": 5358,
-      "hash": "32b97741",
+      "size": 4186,
+      "hash": "878787ef",
       "visibility": "public",
       "frames": 44,
-      "sha256": "32b9774177213fd95e234bc91d8b39c2e8939983c7a0745f57fbea7bb4544c07",
+      "sha256": "878787ef143edcd161a5be8aa24aa45d11ac5abca39b3d2cefb3d11ccaec9e43",
       "published_at": "2026-09-15"
     },
     {
@@ -553,11 +553,11 @@
       "category": "party",
       "author": "Geedo",
       "file": "bin/party_hiccups.bin",
-      "size": 2990,
-      "hash": "007b0f77",
+      "size": 834,
+      "hash": "eb877e7b",
       "visibility": "public",
       "frames": 40,
-      "sha256": "007b0f7744b59bb3874e7ee5814ffb8410b9201496a7e8079779bcee2bcbd4fc",
+      "sha256": "eb877e7b67caa7577e146a08ca0b10f12555106dd6f2e6bbbebe1ad740e25783",
       "published_at": "2026-09-15"
     },
     {
@@ -566,11 +566,11 @@
       "category": "party",
       "author": "Geedo",
       "file": "bin/party_polish.bin",
-      "size": 5138,
-      "hash": "68e0f163",
+      "size": 4644,
+      "hash": "1b6ea970",
       "visibility": "public",
       "frames": 44,
-      "sha256": "68e0f163cd9190ee37d077cbc9514caaa042f53f9bff09659447dda9db9447be",
+      "sha256": "1b6ea970dcd26e32f4887acfc4c23fb841fd7a141cba7e51003bec1b3836a681",
       "published_at": "2026-09-15"
     },
     {
@@ -579,11 +579,11 @@
       "category": "making",
       "author": "Geedo",
       "file": "bin/making_printer.bin",
-      "size": 9038,
-      "hash": "c0ee33c8",
+      "size": 8008,
+      "hash": "49d26dbd",
       "visibility": "public",
       "frames": 54,
-      "sha256": "c0ee33c8d6caa80d65245b949e498457bbde6b289bd82530a3f503cd9da9062e",
+      "sha256": "49d26dbdc9e67f11917521c61186b069fe51d91b952ef2b668cd18201bd3d836",
       "published_at": "2026-09-15"
     },
     {
@@ -592,11 +592,11 @@
       "category": "making",
       "author": "Geedo",
       "file": "bin/making_tower.bin",
-      "size": 7793,
-      "hash": "6a572f42",
+      "size": 7595,
+      "hash": "c519a7f6",
       "visibility": "public",
       "frames": 48,
-      "sha256": "6a572f42f5d8980d42abcf5599079dd19c69ea48b6051ca94093ae795689b7d1",
+      "sha256": "c519a7f6aafea00362f861a6817b4fa926898a35861fe5e3dc0d5b9c1d3f0608",
       "published_at": "2026-09-15"
     },
     {
@@ -605,11 +605,11 @@
       "category": "making",
       "author": "Geedo",
       "file": "bin/making_chemistry.bin",
-      "size": 12313,
-      "hash": "019e5d90",
+      "size": 11573,
+      "hash": "f9b21f36",
       "visibility": "public",
       "frames": 50,
-      "sha256": "019e5d907009d18246e85eea09455558138e4ba1280847400684a544a15e7a86",
+      "sha256": "f9b21f36b06338541a8d963419cb95910ccb4352dae8af19c22b8131e8ae1e56",
       "published_at": "2026-09-15"
     },
     {
@@ -675,6 +675,58 @@
       "visibility": "public",
       "frames": 50,
       "sha256": "1a42c0729ccce41fcb9761f8d7e8ae36dd0b8f0ad9c950060a1fdf44b49f5e22",
+      "published_at": "2026-09-15"
+    },
+    {
+      "id": "building_house",
+      "name": "House",
+      "category": "building",
+      "author": "Geedo",
+      "file": "bin/building_house.bin",
+      "size": 23900,
+      "hash": "c34374cb",
+      "visibility": "public",
+      "frames": 158,
+      "sha256": "c34374cbb30b116bd88dde002de3afbcb21e9a64a904bcc341b737042e8145d0",
+      "published_at": "2026-09-15"
+    },
+    {
+      "id": "building_snowman",
+      "name": "Snowman",
+      "category": "building",
+      "author": "Geedo",
+      "file": "bin/building_snowman.bin",
+      "size": 19554,
+      "hash": "af29e124",
+      "visibility": "public",
+      "frames": 137,
+      "sha256": "af29e124b983cf06d640648a568fd2e723facdcf507f70610f1679653038314a",
+      "published_at": "2026-09-15"
+    },
+    {
+      "id": "building_robot",
+      "name": "Tiny robot",
+      "category": "building",
+      "author": "Geedo",
+      "file": "bin/building_robot.bin",
+      "size": 8372,
+      "hash": "51ca7ddc",
+      "visibility": "public",
+      "frames": 83,
+      "sha256": "51ca7ddc741c12bf912a307236e8fd439c6dc5ca0a62f75c5b7e2c5861c5ca2d",
+      "published_at": "2026-09-15"
+    },
+    {
+      "id": "building_sandcastle",
+      "name": "Sandcastle",
+      "category": "building",
+      "author": "Geedo",
+      "file": "bin/building_sandcastle.bin",
+      "size": 18995,
+      "hash": "b4bd728c",
+      "visibility": "public",
+      "frames": 97,
+      "sha256": "b4bd728cb0ad368c4e725904890bf20a7d9d975417bc6dd4f5010f62fc80283d",
       "published_at": "2026-09-15"
     }
   ],

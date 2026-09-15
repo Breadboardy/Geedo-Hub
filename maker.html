@@ -90,7 +90,8 @@
   $('crumb').textContent = '› ' + name;
   const latest = mine.reduce((m, a) => (a.published_at || '') > m ? a.published_at : m, '');
   const packs = new Set(mine.filter(a => a.pack).map(a => a.pack));
-  $('sub').textContent = `${mine.length} animation${mine.length === 1 ? '' : 's'}`
+  if (name === G.OFFICIAL) $('name').insertAdjacentHTML('beforeend', ' <span class="tag blue" style="font-size:14px;vertical-align:middle;position:relative;top:-8px">official</span>');
+  $('sub').textContent = (name === G.OFFICIAL ? 'His own animations, drawn by the Geedo team · ' : '') + `${mine.length} animation${mine.length === 1 ? '' : 's'}`
     + (packs.size ? ` · ${packs.size} pack${packs.size === 1 ? '' : 's'}` : '')
     + (latest ? ` · latest ${G.ago(latest)}` : '');
   $('feed').replaceChildren(...G.newest(mine).map(a => G.card(a)));

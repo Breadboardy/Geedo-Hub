@@ -79,7 +79,7 @@
     <div class="panel-head">
       <div>
         <h2 class="h2">Makers</h2>
-        <p class="sub">The people drawing his day.</p>
+        <p class="sub" id="makers-sub">The people drawing his day.</p>
       </div>
       <a class="more" href="makers.html">Everyone →</a>
     </div>
@@ -133,9 +133,9 @@
       s.el.querySelector('canvas').style.width = '100%';
       document.getElementById('hero-screen').replaceWith(s.el);
       const cap = document.getElementById('hero-cap');
-      cap.innerHTML = '<b></b> by <b></b> <span></span>';
+      cap.innerHTML = G.official(hero) ? '<b></b> · <b>Geedo</b> official <span></span>' : '<b></b> by <b></b> <span></span>';
       cap.querySelectorAll('b')[0].textContent = G.pretty(hero.name);
-      cap.querySelectorAll('b')[1].textContent = hero.by;
+      if (!G.official(hero)) cap.querySelectorAll('b')[1].textContent = hero.by;
       cap.querySelector('span').textContent = hero.pack ? '· ' + G.pretty(hero.packName) : (hero.published_at ? '· ' + G.ago(hero.published_at) : '');
       const st = document.getElementById('hero-sticker');
       st.hidden = false;
@@ -152,18 +152,22 @@
   }
   feed.replaceChildren(...picks.map(a => G.card(a)));
 
-  // Makers, from the manifest's own author fields.
+  // Makers, from the manifest's own author fields. Geedo's own animations
+  // come first with an "official" tag; everyone else is a person.
   const makers = document.getElementById('makers');
-  for (const m of G.makers(shown).slice(0, 12)) {
+  const all_makers = G.makers(shown);
+  for (const m of all_makers.slice(0, 12)) {
     const a = document.createElement('a');
     a.className = 'maker';
     a.href = G.makerHref(m.name);
-    a.innerHTML = '<i></i><span></span><span class="count"></span>';
+    a.innerHTML = '<i></i><span></span>' + (m.official ? '<span class="tag blue">official</span>' : '') + '<span class="count"></span>';
     a.querySelector('i').textContent = G.initial(m.name);
     a.querySelectorAll('span')[0].textContent = m.name;
     a.querySelector('.count').textContent = '· ' + m.count;
     makers.append(a);
   }
+  if (!all_makers.some(m => !m.official))
+    document.getElementById('makers-sub').textContent = 'So far it is just us. Your name goes here the moment your first one is approved.';
   const you = document.createElement('a');
   you.className = 'maker';
   you.href = 'make.html';

@@ -17,6 +17,8 @@
   .person .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
   .person .mini .screen{padding:3px;border-radius:9px}
   .person .mini canvas{border-radius:6px}
+  .person.first{background:var(--yellow)}
+  .person h3 .tag{font-size:11px;vertical-align:middle;position:relative;top:-2px}
 </style>
 </head>
 <body>
@@ -75,9 +77,10 @@
   catch (e) { host.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
 
   host.replaceChildren();
-  for (const m of G.makers(all.anims.filter(a => !G.isSystem(a)))) {
+  const makers = G.makers(all.anims.filter(a => !G.isSystem(a)));
+  for (const m of makers) {
     const el = document.createElement('a');
-    el.className = 'person';
+    el.className = 'person' + (m.official ? ' official' : '');
     el.href = G.makerHref(m.name);
     el.innerHTML = `
       <div class="head"><span class="avatar lg"></span>
@@ -85,7 +88,9 @@
       <div class="mini"></div>`;
     el.querySelector('.avatar').textContent = G.initial(m.name);
     el.querySelector('h3').textContent = m.name;
+    if (m.official) el.querySelector('h3').insertAdjacentHTML('beforeend', ' <span class="tag blue">official</span>');
     el.querySelector('.sub').textContent =
+      (m.official ? 'His own animations · ' : '') +
       `${m.count} animation${m.count === 1 ? '' : 's'}` + (m.latest ? ` · latest ${G.ago(m.latest)}` : '');
     host.append(el);
     const mini = el.querySelector('.mini');
@@ -99,6 +104,18 @@
         ph.replaceWith(s.el);
       }).catch(() => ph.remove());
     }
+  }
+  // Nobody outside the team yet: say so, and leave the first slot open.
+  if (!makers.some(m => !m.official)) {
+    const first = document.createElement('a');
+    first.className = 'person first';
+    first.href = 'make.html';
+    first.innerHTML = `
+      <div class="head"><span class="avatar lg" style="background:var(--ink)">?</span>
+        <div><h3>Your name here</h3><p class="sub">Nobody outside the Geedo team has published yet.</p></div></div>
+      <p style="margin-top:14px;font-weight:600">Draw him something and be the first. It goes up with your name on it the moment it is approved.</p>
+      <span class="btn ink sm" style="margin-top:14px">Draw him something</span>`;
+    host.append(first);
   }
 })();
 </script>

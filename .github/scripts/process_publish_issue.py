@@ -185,13 +185,16 @@ def main():
         # the title. The maker: the form's field, or the GitHub name.
         raw_name = field(body, 'Name') or data.get('name') or re.sub(r'^publish:\s*', '', title, flags=re.I) or 'anim'
         raw_name = raw_name.strip()[:40]
-        maker = (field(body, 'Maker name') or author or 'someone').strip()[:32]
+        # The repository's owner IS the Geedo team: what they hand in is one of
+        # his own, under the maker name "Geedo", unless the form says otherwise.
+        is_owner = bool(author and owner and author.lower() == owner.lower())
+        maker = (field(body, 'Maker name') or ('Geedo' if is_owner else author) or 'someone').strip()[:32]
         maker = re.sub(r'[^\w .\-]', '', maker).strip() or (author or 'someone')
         aid = safe_id(raw_name)
         if aid.startswith('animations_boot_') or aid.startswith('animations_'):
             aid = 'user_' + aid
-        if author and owner and author.lower() != owner.lower():
-            aid = 'user_' + safe_id(author) + '_' + aid
+        if not is_owner:
+            aid = 'user_' + safe_id(author or 'someone') + '_' + aid
         with open(MANIFEST) as f:
             manifest = json.load(f)
         exists = any(a['id'] == aid for a in manifest['animations'])
@@ -230,7 +233,7 @@ def main():
                 raise Refused("packed, but the manifest did not pick it up")
             entry['name'] = raw_name
             entry['author'] = maker
-            entry['category'] = 'community'
+            entry['category'] = 'studio' if is_owner else 'community'
             entry['published_at'] = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             entry['issue'] = int(number) if str(number).isdigit() else number
             if remix_of:

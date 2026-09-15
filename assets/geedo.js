@@ -195,13 +195,19 @@ function pretty(name){
    Everything a robot can play: the free list, plus every pack channel the
    main manifest names. One flat list, each entry knowing where it came from,
    so the browse page, the maker pages and the search see packs too. */
+/* His own animations carry the maker name "Geedo" - the ones the Geedo team
+   draws, in the packs and the free list. Anything else is a community maker,
+   a person, with a page of their own. */
+const OFFICIAL = 'Geedo';
+const official = a => a.by === OFFICIAL;
+
 let allP = null;
 function all(){
   if (allP) return allP;
   allP = (async () => {
     const m = await manifest();
     const anims = (m.animations || []).map(a => ({
-      ...a, pack: null, by: a.author || 'breadboard', src: a.file,
+      ...a, pack: null, by: a.author || OFFICIAL, src: a.file,
       key: a.id, href: `animation.html?id=${encodeURIComponent(a.id)}`
     }));
     const packs = [];
@@ -215,7 +221,7 @@ function all(){
         packs.push(pm);
         for (const a of pm.animations) anims.push({
           ...a, pack: id, packName: pm.name || pretty(id), rarity: pm.rarity || 'common',
-          by: a.author || pm.author || 'breadboard', category: a.category || `pack:${id}`,
+          by: a.author || pm.author || OFFICIAL, category: a.category || `pack:${id}`,
           published_at: a.published_at || pm.published_at || null,
           src: `packs/${id}/${a.file}`, key: `${id}/${a.id}`,
           href: `animation.html?id=${encodeURIComponent(a.id)}&pack=${encodeURIComponent(id)}`
@@ -270,8 +276,8 @@ function makers(anims){
     if ((a.published_at || '') > m.latest) m.latest = a.published_at || '';
   }
   return [...by.values()]
-    .map(m => ({ ...m, count: m.anims.length }))
-    .sort((x, y) => y.count - x.count || x.name.localeCompare(y.name));
+    .map(m => ({ ...m, count: m.anims.length, official: m.name === OFFICIAL }))
+    .sort((x, y) => (y.official - x.official) || y.count - x.count || x.name.localeCompare(y.name));
 }
 const makerHref = name => `maker.html?name=${encodeURIComponent(name)}`;
 const initial = name => (name || '?').trim().charAt(0);
@@ -291,8 +297,8 @@ function card(a, { sticker = true, scale = 2 } = {}){
   const by = document.createElement('div');
   by.className = 'by';
   const who = document.createElement('span');
-  who.innerHTML = 'by <b></b>';
-  who.querySelector('b').textContent = a.by;
+  if (official(a)) who.innerHTML = '<b>Geedo</b> official';
+  else { who.innerHTML = 'by <b></b>'; who.querySelector('b').textContent = a.by; }
   const when = document.createElement('span');
   when.className = 'when';
   when.textContent = a.pack ? pretty(a.packName) : ago(a.published_at);
@@ -340,5 +346,6 @@ document.readyState === 'loading'
   : nav();
 
 window.Geedo = { W, H, unpack, unpackGda1, Screen, loadBin, manifest, firmware, pretty, HUB,
-                 all, isSystem, newest, ago, datestr, isNew, kb, param, makers, makerHref, initial, card, bigScreen };
+                 all, isSystem, newest, ago, datestr, isNew, kb, param, makers, makerHref, initial, card, bigScreen,
+                 OFFICIAL, official };
 })();

@@ -81,7 +81,7 @@ def main():
         entry = {
             "id": name,
             "name": meta.get('name', name),
-            "author": meta.get('author', 'breadboard'),
+            "author": meta.get('author', 'Geedo'),
             "file": "bin/" + name + ".bin",
             "size": size,
             "hash": h,

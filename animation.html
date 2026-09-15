@@ -133,6 +133,11 @@
   who.querySelector('i').textContent = G.initial(a.by);
   who.querySelector('span').textContent = a.by;
   meta.append(who);
+  if (G.official(a)) {
+    const t = document.createElement('span');
+    t.className = 'tag blue'; t.textContent = 'official';
+    meta.append(t);
+  }
   if (a.pack) {
     const t = document.createElement('a');
     t.className = 'tag'; t.href = 'packs.html#' + encodeURIComponent(a.pack);
@@ -193,7 +198,7 @@
   const more = all.anims.filter(x => x !== a && !G.isSystem(x) && (a.pack ? x.pack === a.pack : x.by === a.by));
   if (more.length) {
     $('more').hidden = false;
-    $('more-title').textContent = a.pack ? `More from the ${G.pretty(a.packName)}` : `More by ${a.by}`;
+    $('more-title').textContent = a.pack ? `More from the ${G.pretty(a.packName)}` : G.official(a) ? 'More of his own' : `More by ${a.by}`;
     $('more-link').href = a.pack ? 'packs.html#' + encodeURIComponent(a.pack) : G.makerHref(a.by);
     $('more-feed').replaceChildren(...G.newest(more).slice(0, 8).map(x => G.card(x)));
   }

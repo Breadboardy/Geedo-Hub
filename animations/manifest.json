@@ -293,12 +293,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_burger.bin",
-      "size": 252,
-      "hash": "84661537",
+      "size": 5497,
+      "hash": "f00a857c",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "84661537d3688b1b742e2c16a276861be0827adc4096277782c3a62cc4c0845f",
-      "published_at": "2026-08-01"
+      "frames": 42,
+      "sha256": "f00a857c7dcb0742e65e3a46efcc0ba6fa85f430ef0e59a2eb749a81727c5554",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_chips",
@@ -306,12 +306,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_chips.bin",
-      "size": 199,
-      "hash": "f5011bb5",
+      "size": 7916,
+      "hash": "44ded26f",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "f5011bb5e49d13b9b7d6d6991237004be5f5fb2594a687bbbde9298b19220931",
-      "published_at": "2026-08-01"
+      "frames": 39,
+      "sha256": "44ded26f99f8c724705f2bc125677cdd228bba38678153ba9ec23c2513cfa063",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_circut_board",
@@ -319,12 +319,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_circut_board.bin",
-      "size": 174,
-      "hash": "595bf3a9",
+      "size": 5803,
+      "hash": "7459787c",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "595bf3a9e6944e9b351a36421129da63b90e4342e5cefdcd65e712eeabca567d",
-      "published_at": "2026-08-01"
+      "frames": 42,
+      "sha256": "7459787cd5148cd63043ebd29654a6bb96a1861c2bb8c5ce1cd0438681125f17",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_esp32",
@@ -332,12 +332,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_esp32.bin",
-      "size": 213,
-      "hash": "901e4482",
+      "size": 5827,
+      "hash": "41e120c9",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "901e4482fc6c711625164c8b278957436e11cc3c0e5e46d2e4eea1e8008f5ac4",
-      "published_at": "2026-08-01"
+      "frames": 42,
+      "sha256": "41e120c96078b2fb03c241b021a715327eb913792b940d42a4a894b4dfefecdb",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_fries",
@@ -345,12 +345,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_fries.bin",
-      "size": 132,
-      "hash": "fc8434f8",
+      "size": 6177,
+      "hash": "61d48cd1",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "fc8434f88750bbabfe1c10924bf3f8ee0fa12eec67860a98dbf5589c64edbc3f",
-      "published_at": "2026-08-01"
+      "frames": 38,
+      "sha256": "61d48cd15926522c7bb2c78c96d3e760cbea22c7f1857ede226dd86552255989",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_pizza",
@@ -358,12 +358,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_pizza.bin",
-      "size": 123,
-      "hash": "124ec4dc",
+      "size": 5246,
+      "hash": "49eef5b8",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "124ec4dc50d939413d5d1491a6dcc85dcd72b5b12e609295a4be0f95fd5b6f7e",
-      "published_at": "2026-08-01"
+      "frames": 42,
+      "sha256": "49eef5b86d25d66f8db50a314a2c91c83d3def479a479ac2901d58a735567847",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_ramen",
@@ -371,12 +371,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_ramen.bin",
-      "size": 255,
-      "hash": "13f86ade",
+      "size": 8825,
+      "hash": "71de7757",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "13f86ade1df81c453d31f25948a8294f7b9f6a5ae50a984f569cb9c709371a61",
-      "published_at": "2026-08-01"
+      "frames": 39,
+      "sha256": "71de7757254a7ddeb29b3e2296d930b10fdb5ba7043797486ffbfaf0bc19ceb7",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_ribs",
@@ -384,12 +384,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_ribs.bin",
-      "size": 206,
-      "hash": "dbd1df4f",
+      "size": 5271,
+      "hash": "70b49486",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "dbd1df4f0f2cc969592074347bfaa4dcffb9e22d5d7e45a563e15a90d84d947f",
-      "published_at": "2026-08-01"
+      "frames": 35,
+      "sha256": "70b49486eccbcc6bb7dce9347516a4b9670877b168b876b1b5121889b3b8e87a",
+      "published_at": "2026-09-15"
     },
     {
       "id": "eating_cupcake",
@@ -397,12 +397,12 @@
       "category": "eating",
       "author": "Geedo",
       "file": "bin/eating_cupcake.bin",
-      "size": 161,
-      "hash": "ffd22b93",
+      "size": 4855,
+      "hash": "f2444dd4",
       "visibility": "public",
-      "frames": 1,
-      "sha256": "ffd22b93d76838a63aa44c77ec58701213274107ff7beffd7b9f2f8f008d624b",
-      "published_at": "2026-08-01"
+      "frames": 35,
+      "sha256": "f2444dd4c0e08cc96a34026c81ac37207250cae7b7627e3654f9c233ed7d5890",
+      "published_at": "2026-09-15"
     },
     {
       "id": "activities_mad_stick",

@@ -455,6 +455,45 @@
       "frames": 24,
       "sha256": "2127dab4ea1e3bd7137963d69906043bbd7a60569fca5e56c3673449e1c4ab96",
       "published_at": "2026-09-14"
+    },
+    {
+      "id": "cooking_egg",
+      "name": "Frying an egg",
+      "category": "cooking",
+      "author": "Geedo",
+      "file": "bin/cooking_egg.bin",
+      "size": 12986,
+      "hash": "12c8e327",
+      "visibility": "public",
+      "frames": 46,
+      "sha256": "12c8e32773753e2b857a0143446d2f951a503a6a7c4592c5a61886f05c6170a4",
+      "published_at": "2026-09-15"
+    },
+    {
+      "id": "cooking_soup",
+      "name": "Soup",
+      "category": "cooking",
+      "author": "Geedo",
+      "file": "bin/cooking_soup.bin",
+      "size": 16430,
+      "hash": "b14a9c36",
+      "visibility": "public",
+      "frames": 48,
+      "sha256": "b14a9c3617a0e58315612bba648ca24fef5fde4edd56d6fc164869e12d198e6a",
+      "published_at": "2026-09-15"
+    },
+    {
+      "id": "cooking_chopping",
+      "name": "Chopping an onion",
+      "category": "cooking",
+      "author": "Geedo",
+      "file": "bin/cooking_chopping.bin",
+      "size": 9032,
+      "hash": "cfb4cd7b",
+      "visibility": "public",
+      "frames": 38,
+      "sha256": "cfb4cd7bf23238408c727679557147caa0ac24dbb056310906d7d86457b2bcb3",
+      "published_at": "2026-09-15"
     }
   ],
   "packs": [

@@ -191,13 +191,147 @@ function pretty(name){
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/* ---- the whole shelf ------------------------------------------------------
+   Everything a robot can play: the free list, plus every pack channel the
+   main manifest names. One flat list, each entry knowing where it came from,
+   so the browse page, the maker pages and the search see packs too. */
+let allP = null;
+function all(){
+  if (allP) return allP;
+  allP = (async () => {
+    const m = await manifest();
+    const anims = (m.animations || []).map(a => ({
+      ...a, pack: null, by: a.author || 'breadboard', src: a.file,
+      key: a.id, href: `animation.html?id=${encodeURIComponent(a.id)}`
+    }));
+    const packs = [];
+    for (const id of m.packs || []){
+      try {
+        const r = await fetch(`animations/packs/${id}/manifest.json`);
+        if (!r.ok) throw new Error(r.status);
+        const pm = await r.json();
+        pm.id = pm.id || id;
+        pm.animations = pm.animations || [];
+        packs.push(pm);
+        for (const a of pm.animations) anims.push({
+          ...a, pack: id, packName: pm.name || pretty(id), rarity: pm.rarity || 'common',
+          by: a.author || pm.author || 'breadboard', category: a.category || `pack:${id}`,
+          published_at: a.published_at || pm.published_at || null,
+          src: `packs/${id}/${a.file}`, key: `${id}/${a.id}`,
+          href: `animation.html?id=${encodeURIComponent(a.id)}&pack=${encodeURIComponent(id)}`
+        });
+      } catch (e) { /* a missing channel is the packs page's job to report */ }
+    }
+    return { anims, packs, manifest: m };
+  })();
+  return allP;
+}
+
+/* System screens: what he shows while booting, updating or failing. Real
+   animations, on the Hub like the rest, but not what a visitor came to see
+   first, so the front page's picks skip them. */
+const isSystem = a => /hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
+
+/* Newest first; something with no date sorts after everything with one. */
+function newest(anims){
+  return [...anims].sort((a, b) =>
+    String(b.published_at || '').localeCompare(String(a.published_at || '')) ||
+    pretty(a.name).localeCompare(pretty(b.name)));
+}
+
+/* "3 days ago" for cards, the full date for the animation page. */
+function ago(iso){
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 7) return `${days} days ago`;
+  if (days < 30){ const w = Math.floor(days / 7); return w === 1 ? 'last week' : `${w} weeks ago`; }
+  return d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+}
+function datestr(iso){
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+}
+const isNew = a => a.published_at && (Date.now() - new Date(a.published_at).getTime()) < 7 * 86400000;
+const kb = n => `${(n / 1024).toFixed(1)} KB`;
+const param = name => new URLSearchParams(location.search).get(name);
+
+/* The people. Grouped from the manifest's author fields - there is no
+   separate list to fall out of date with. */
+function makers(anims){
+  const by = new Map();
+  for (const a of anims){
+    if (!by.has(a.by)) by.set(a.by, { name: a.by, anims: [], latest: '' });
+    const m = by.get(a.by);
+    m.anims.push(a);
+    if ((a.published_at || '') > m.latest) m.latest = a.published_at || '';
+  }
+  return [...by.values()]
+    .map(m => ({ ...m, count: m.anims.length }))
+    .sort((x, y) => y.count - x.count || x.name.localeCompare(y.name));
+}
+const makerHref = name => `maker.html?name=${encodeURIComponent(name)}`;
+const initial = name => (name || '?').trim().charAt(0);
+
+/* ---- a card: one animation on a page ---------------------------------------
+   The screen, the name, who drew it, and how long ago. The file loads after
+   the card is on the page, so a hundred cards appear at once and fill in. */
+function card(a, { sticker = true, scale = 2 } = {}){
+  const el = document.createElement('a');
+  el.className = 'card';
+  el.href = a.href;
+  const holder = document.createElement('div');
+  holder.className = 'screen sm blank';
+  const name = document.createElement('div');
+  name.className = 'name';
+  name.textContent = pretty(a.name || a.id);
+  const by = document.createElement('div');
+  by.className = 'by';
+  const who = document.createElement('span');
+  who.innerHTML = 'by <b></b>';
+  who.querySelector('b').textContent = a.by;
+  const when = document.createElement('span');
+  when.className = 'when';
+  when.textContent = a.pack ? pretty(a.packName) : ago(a.published_at);
+  by.append(who, when);
+  el.append(holder, name, by);
+  if (sticker && isNew(a) && !a.pack){
+    const s = document.createElement('span');
+    s.className = 'sticker';
+    s.textContent = 'NEW';
+    el.append(s);
+  }
+  loadBin(a.src).then(anim => {
+    const s = new Screen(anim, { scale, className: 'sm' });
+    s.el.querySelector('canvas').style.width = '100%';
+    el.replaceChild(s.el, holder);
+    el._screen = s;
+  }).catch(() => {
+    holder.classList.remove('blank');
+    holder.style.aspectRatio = '2/1';
+    el.style.opacity = '.5';
+    when.textContent = 'unavailable';
+  });
+  return el;
+}
+
+/* A big screen for a hero or an animation page: integer scale, capped by
+   the column it sits in. */
+function bigScreen(anim, scale = 3, className = ''){
+  const s = new Screen(anim, { scale, className });
+  return s;
+}
+
 /* ---- nav ----------------------------------------------------------------- */
 function nav(){
   const btn = document.querySelector('.nav-toggle');
   const links = document.querySelector('.nav-links');
   if (btn && links) btn.addEventListener('click', () => links.classList.toggle('open'));
   const here = location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-links a.link').forEach(a => {
+  document.querySelectorAll('.nav-links a').forEach(a => {
     if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page');
   });
 }
@@ -205,5 +339,6 @@ document.readyState === 'loading'
   ? document.addEventListener('DOMContentLoaded', nav)
   : nav();
 
-window.Geedo = { W, H, unpack, unpackGda1, Screen, loadBin, manifest, firmware, pretty, HUB };
+window.Geedo = { W, H, unpack, unpackGda1, Screen, loadBin, manifest, firmware, pretty, HUB,
+                 all, isSystem, newest, ago, datestr, isNew, kb, param, makers, makerHref, initial, card, bigScreen };
 })();

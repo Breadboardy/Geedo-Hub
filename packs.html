@@ -2,186 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Packs — Geedo</title>
-<meta name="description" content="Themed sets of animations that arrive on your Geedo together. Some are public, some come with a code.">
+<meta name="description" content="Themed sets of animations that arrive on your Geedo together. Free packs go to every Geedo; some come with a code.">
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  .pack{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-lift)}
-  .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:20px 22px}
-  .pack-screens{display:flex;gap:10px;overflow-x:auto;padding:0 22px 20px}
-  .pack-screens>*{flex:none}
-  .rarity{font-family:var(--pixel);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
-  .r-common{color:var(--dim)} .r-uncommon{color:var(--good)}
-  .r-rare{color:var(--accent)} .r-legendary{color:var(--warn)}
-  .ladder{width:100%;border-collapse:collapse;font-size:13px}
-  .ladder th,.ladder td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-  .ladder th{color:var(--dim);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
-  .ladder td:first-child{color:var(--text);white-space:nowrap}
-  .ladder .free{color:var(--good)}
-  .ladder .dear{color:var(--bad)}
-  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,52px)}
-  .shop{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-  .product{background:var(--bg-lift);border:1px solid var(--line);border-radius:16px;
-           padding:22px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:6px}
-  .product .boxart{width:min(240px,70vw);margin:6px auto 14px;
-                   filter:drop-shadow(0 10px 14px rgba(90,70,40,.16))}
-  .product h3{font-size:17px}
-  .product .tag2{color:var(--mute);font-size:13.5px;line-height:1.55;flex:1}
-  .product .rowb{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
-  .product.soon .boxart{filter:grayscale(.85) opacity(.55) drop-shadow(0 10px 14px rgba(90,70,40,.1))}
+  .shop{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .product{background:var(--paper);color:var(--ink);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:6px;position:relative}
+  .product .boxart{width:min(220px,70vw);margin:6px auto 14px}
+  .product h3{font-size:22px}
+  .product .blurb{color:var(--mute);font-size:14.5px;line-height:1.5;flex:1}
+  .product .rowb{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap}
+  .product .rowb a{font-weight:800;color:var(--blue)}
+  .product .rowb a:hover{text-decoration:underline}
+  .pack{background:var(--paper-2);border-radius:20px;overflow:hidden;scroll-margin-top:20px}
+  .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:20px 22px 12px;flex-wrap:wrap}
+  .pack-head .note{margin:0}
+  .pack-screens{display:flex;gap:10px;overflow-x:auto;padding:0 22px 20px;scrollbar-width:thin}
+  .pack-screens>*{flex:none;width:200px}
+  .pack-screens figcaption{margin-top:6px;font-size:13px;font-weight:700;color:var(--mute)}
+  .rarity{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-in">
-    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
-    <div class="grow"></div>
-    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+    <a class="logo" href="index.html"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">≡</button>
+    <div class="nav-links">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="makers.html">Makers</a>
       <a class="link" href="connect.html">Set up</a>
-      <a class="link" href="unlock.html">Redeem</a>
-      <a class="link" href="studio/index.html">Studio</a>
+      <a class="hot" href="make.html">Draw one</a>
     </div>
-    <button class="nav-toggle" aria-label="Menu">≡</button>
   </div>
 </nav>
 
-<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
+<main class="wrap">
 
-  <div class="two" style="align-items:center">
+  <header class="hero">
     <div>
-      <h1 class="h1">Animation packs</h1>
-      <p class="lead" style="margin-top:12px">
-        A pack is a set of animations for your Geedo. Free packs go to every
-        Geedo automatically. Code packs need a code from a card or a giveaway.
+      <h1 class="display">Packs.</h1>
+      <p class="lead">
+        A pack is a set of animations on a theme that arrive on your Geedo
+        together. Free packs go to every Geedo by themselves. Code packs need
+        a code from a card or a giveaway.
       </p>
-      <div class="row" style="margin-top:22px">
-        <a class="btn primary" href="unlock.html">Redeem a code</a>
-        <a class="btn" href="connect.html">How packs reach Geedo</a>
+      <div class="actions">
+        <a class="btn yellow" href="unlock.html">Redeem a code</a>
+        <a class="btn" href="#inside">Look inside the packs</a>
       </div>
     </div>
-    <div class="boxart" id="boxart">
-      <img src="assets/box.png" alt="The Geedo animations box"
-           width="245" height="186" style="width:100%;height:auto">
+    <div class="hero-shot" style="width:min(100%,380px)">
+      <div class="boxart"><img src="assets/box.png" alt="The Geedo animations box" width="245" height="186"></div>
     </div>
-  </div>
+  </header>
 
-  <section>
-    <div class="sec-head"><span class="micro">The packs</span><span class="fill rule"></span>
-      <span class="micro" id="n-packs"></span></div>
-    <div class="shop">
+  <section class="shop" style="margin-top:28px">
 
-      <article class="product" id="p-ocean">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
-             style="width:100%;height:auto"></div>
-        <h3>Ocean Pack</h3>
-        <p class="tag2">10 ocean animations: sailing, snorkelling, a sunset, a
-           jellyfish, a submarine, a treasure chest and more.</p>
-        <div class="rowb">
-          <span class="chip good">Free · on every Geedo</span>
-          <a class="btn plain" href="#inside">Look inside →</a>
-        </div>
-      </article>
+    <article class="product" id="p-ocean">
+      <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"></div>
+      <h3>Ocean Pack</h3>
+      <p class="blurb">10 ocean animations: sailing, snorkelling, a sunset, a jellyfish, a submarine, a treasure chest and more.</p>
+      <div class="rowb"><span class="tag good">Free · on every Geedo</span><a href="#pack-ocean">Look inside →</a></div>
+    </article>
 
-      <article class="product" id="p-weather">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
-             style="width:100%;height:auto"></div>
-        <h3>Weather Pack</h3>
-        <p class="tag2">5 skies with Geedo under them: sunshine, rain, snow, a
-           storm and a gale.</p>
-        <div class="rowb">
-          <span class="chip good">Free · on every Geedo</span>
-          <a class="btn plain" href="#inside">Look inside →</a>
-        </div>
-      </article>
+    <article class="product" id="p-weather">
+      <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"></div>
+      <h3>Weather Pack</h3>
+      <p class="blurb">5 skies with Geedo under them: sunshine, rain, snow, a storm and a gale.</p>
+      <div class="rowb"><span class="tag good">Free · on every Geedo</span><a href="#pack-weather">Look inside →</a></div>
+    </article>
 
-      <article class="product" id="p-stick2">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
-             style="width:100%;height:auto"></div>
-        <h3>Stickman Pack Vol. 2</h3>
-        <p class="tag2">6 stickman animations: backflips, fishing, skating and
-           more.</p>
-        <div class="rowb">
-          <span class="chip on">With code · giveaways</span>
-          <a class="btn plain" href="unlock.html">Redeem →</a>
-        </div>
-      </article>
+    <article class="product" id="p-space">
+      <span class="sticker">NEW</span>
+      <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"></div>
+      <h3>Space Pack</h3>
+      <p class="blurb">11 space animations: a rocket flyby, the solar system, an asteroid belt, a collision, an impact, a supernova, a moon landing, a ringed planet, a meteor shower, a black hole and a spacewalk.</p>
+      <div class="rowb"><span class="tag good">Free · on every Geedo</span><a href="#pack-space">Look inside →</a></div>
+    </article>
 
-      <article class="product" id="p-space">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
-             style="width:100%;height:auto"></div>
-        <h3>Space Pack</h3>
-        <p class="tag2">11 space animations: a rocket flyby, the solar system, an
-           asteroid belt, a collision, an impact, a supernova, a moon landing, a
-           ringed planet, a meteor shower, a black hole and a spacewalk.</p>
-        <div class="rowb">
-          <span class="chip good">Free · on every Geedo</span>
-          <a class="btn plain" href="#inside">Look inside →</a>
-        </div>
-      </article>
+    <article class="product" id="p-stick2">
+      <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"></div>
+      <h3>Stickman Pack Vol. 2</h3>
+      <p class="blurb">6 stickman animations: backflips, fishing, skating and more. Comes with a code.</p>
+      <div class="rowb"><span class="tag">With a code · giveaways</span><a href="unlock.html">Redeem →</a></div>
+    </article>
 
+  </section>
+
+  <section class="panel" id="inside">
+    <div class="panel-head">
+      <div><h2 class="h2">Look inside</h2><p class="sub">Every animation in every free pack, playing.</p></div>
+      <span class="mute" id="n-packs"></span>
+    </div>
+    <div class="stack" style="--s:18px" id="packs">
+      <div class="empty"><span class="spin"></span> Checking the Hub…</div>
     </div>
   </section>
 
-  <section id="inside">
-    <div class="sec-head"><span class="micro">Look inside</span><span class="fill rule"></span></div>
-    <div class="stack" style="--s:22px" id="packs">
-      <div class="empty"><span class="spin" style="display:inline-block"></span> Checking the Hub…</div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head"><span class="micro">How a pack gets to your robot</span><span class="fill rule"></span></div>
-    <div class="two">
-      <div class="steps" style="border-block:1px solid var(--line)">
-        <div class="step"><div>
-          <h3 class="h3">Public packs</h3>
-          <p>These are on for everyone. Your Geedo finds them at his next
-             check and downloads them himself.</p>
-        </div></div>
-        <div class="step"><div>
-          <h3 class="h3">Code packs</h3>
-          <p>You get a code like <b>GD-K7X9-PQ4M</b> from a card or a
-             giveaway. Type it in on the Redeem page and the pack is yours.</p>
-        </div></div>
+  <section class="panel">
+    <h2 class="h2">How a pack gets to your robot</h2>
+    <div class="two" style="margin-top:18px;align-items:start">
+      <div class="steps">
+        <div class="step"><div><h3>Free packs</h3>
+          <p>Switched on for everyone. Your Geedo finds them at his next check and downloads them himself. Nothing to do.</p></div></div>
+        <div class="step"><div><h3>Code packs</h3>
+          <p>You get a code like <b>GD-K7X9-PQ4M</b> from a card or a giveaway. Type it on the Redeem page, and Geedo can take it himself from his setup page too.</p></div></div>
       </div>
-      <div>
-        <h2 class="h2">Codes are safe.</h2>
-        <p class="lead" style="margin-top:14px;font-size:15px">
-          Your code is never saved anywhere on the website. Each code pack is
-          locked with real encryption, and the code you type is the only key
-          that opens it.
-        </p>
-        <p class="small mute" style="margin-top:16px">
-          That's also why the Redeem page pauses for a second when you type a
-          code: the lock is built to be slow on purpose, so nobody can guess
-          codes by trying millions of them.
-        </p>
+      <div class="box soft">
+        <h3>Codes are safe.</h3>
+        <p>Your code is never saved anywhere on the website. Each code pack is a locked box, and the code you type is the only key that opens it.</p>
+        <p style="margin-top:10px;color:var(--mute);font-size:14px">That is also why the Redeem page pauses for a second: the lock is built to be slow on purpose, so nobody can guess codes by trying millions of them.</p>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer class="wrap">
-  <div class="spread">
-    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-    <div class="row" style="gap:22px">
-      <a class="small mute" href="browse.html">Animations</a>
-      <a class="small mute" href="unlock.html">Redeem a code</a>
-      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-    </div>
+<footer class="foot">
+  <div>
+    <div class="brand">Geedo</div>
+    <p>A little robot with a face. What people draw for him goes to every Geedo in the world, once a person has looked at it.</p>
+  </div>
+  <div class="cols">
+    <div class="col"><span class="micro">Explore</span><a href="browse.html">Animations</a><a href="packs.html">Packs</a><a href="makers.html">Makers</a></div>
+    <div class="col"><span class="micro">Make</span><a href="make.html">Draw one</a><a href="studio/index.html">Studio</a><a href="make.html#rules">The rules</a></div>
+    <div class="col"><span class="micro">Owners</span><a href="connect.html">Set up</a><a href="unlock.html">Redeem a code</a><a href="GUIDE.md">Owner's guide</a></div>
+    <div class="col"><span class="micro">Community</span><a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a><a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a></div>
   </div>
 </footer>
 
 <script src="assets/geedo.js"></script>
 <script>
 (async () => {
-  const { Screen, loadBin, manifest, pretty } = window.Geedo;
+  const { Screen, loadBin, manifest, pretty, datestr } = window.Geedo;
   const host = document.getElementById('packs');
 
   let m;
@@ -190,21 +148,19 @@
 
   const ids = m.packs || [];
   document.getElementById('n-packs').textContent = ids.length
-    ? `${ids.length} pack${ids.length === 1 ? '' : 's'}` : '';
+    ? `${ids.length} free pack${ids.length === 1 ? '' : 's'}` : '';
 
   if (!ids.length) {
-    // An honest empty state beats inventing packs that do not exist. It says
-    // what a pack is and where the first one will come from.
+    // An honest empty state beats inventing packs that do not exist.
     host.innerHTML = `
-      <div class="pack" style="padding:28px 22px">
-        <h3 class="h2" style="margin-bottom:10px">No public packs are switched on right now.</h3>
-        <p class="lead" style="font-size:15px;margin:0">
+      <div class="pack" style="padding:24px 22px">
+        <h3 class="h3">No free packs are switched on right now.</h3>
+        <p class="mute" style="margin-top:8px">
           Packs get announced in the Discord first, and giveaway codes are drawn
-          there. If you're holding a code already, it still works — the Unlock
-          page doesn't need a pack to be public.
+          there. If you're holding a code already, it still works.
         </p>
-        <div class="row" style="margin-top:20px">
-          <a class="btn primary" href="unlock.html">Redeem a code</a>
+        <div class="row" style="margin-top:18px">
+          <a class="btn blue" href="unlock.html">Redeem a code</a>
           <a class="btn" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
         </div>
       </div>`;
@@ -224,50 +180,53 @@
       const bad = document.createElement('div');
       bad.className = 'pack';
       bad.style.padding = '20px 22px';
-      bad.innerHTML = `<h3 class="h3">${pretty(id)}</h3>
-        <p class="note bad small" style="margin-top:10px">
-          Listed on the Hub, but <code>animations/packs/${id}/manifest.json</code>
-          isn't there. Robots asking for this pack get the same 404.</p>`;
+      bad.innerHTML = `<h3 class="h3"></h3><p class="note bad" style="margin-top:10px"></p>`;
+      bad.querySelector('h3').textContent = pretty(id);
+      bad.querySelector('p').textContent = `Listed on the Hub, but animations/packs/${id}/manifest.json isn't there. Robots asking for this pack get the same 404.`;
       host.append(bad);
       continue;
     }
 
     const anims = pm.animations || [];
-    const rarity = (pm.rarity || 'common').toLowerCase();
     const el = document.createElement('article');
     el.className = 'pack';
+    el.id = 'pack-' + id;
     el.innerHTML = `
       <div class="pack-head">
         <div>
-          <h3 class="h2">${pretty(pm.name || id)}</h3>
-          <p class="small mute" style="margin:6px 0 0">${pm.note || ''}</p>
+          <h3 class="h3"></h3>
+          <p class="mute small" style="margin:4px 0 0"></p>
         </div>
-        <div style="text-align:right;white-space:nowrap">
-          <span class="rarity r-${rarity}">${rarity}</span>
-          <p class="micro" style="margin:6px 0 0">${anims.length} animation${anims.length===1?'':'s'}</p>
+        <div style="text-align:right">
+          <span class="rarity"></span>
+          <p class="small mute" style="margin:4px 0 0"></p>
         </div>
       </div>
       <div class="pack-screens"></div>`;
+    el.querySelector('h3').textContent = pretty(pm.name || id);
+    el.querySelector('.pack-head p').textContent = (pm.note || '') + (pm.published_at ? (pm.note ? ' · ' : '') + 'since ' + datestr(pm.published_at) : '');
+    el.querySelector('.rarity').textContent = pm.rarity || 'common';
+    el.querySelector('.pack-head > div:last-child p').textContent = `${anims.length} animation${anims.length === 1 ? '' : 's'}`;
     host.append(el);
 
     const shelf = el.querySelector('.pack-screens');
-    for (const a of anims.slice(0, 8)) {
+    for (const a of anims) {
       try {
-        const anim = await loadBin(`packs/${id}/${a.file}`.replace(/^packs\//, 'packs/'));
-        const fig = document.createElement('figure');
-        fig.style.margin = '0';
-        fig.append(new Screen(anim, { scale: 2 }).el);
+        const anim = await loadBin(`packs/${id}/${a.file}`);
+        const fig = document.createElement('a');
+        fig.href = `animation.html?id=${encodeURIComponent(a.id)}&pack=${encodeURIComponent(id)}`;
+        fig.style.display = 'block';
+        const s = new Screen(anim, { scale: 2, className: 'sm' });
+        s.el.querySelector('canvas').style.width = '100%';
         const cap = document.createElement('figcaption');
-        cap.className = 'micro';
-        cap.style.marginTop = '8px';
         cap.textContent = pretty(a.name || a.id);
-        fig.append(cap);
+        fig.append(s.el, cap);
         shelf.append(fig);
       } catch (e) { /* skip the one file, keep the pack */ }
     }
     if (!shelf.children.length) shelf.innerHTML = '<p class="small mute">Previews unavailable.</p>';
   }
-
+  if (location.hash) { const t = document.querySelector(location.hash); if (t) t.scrollIntoView(); }
 })();
 </script>
 </body>

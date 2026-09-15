@@ -1,53 +1,60 @@
 {
- "version": 1,
- "id": "weather",
- "name": "Weather Pack",
- "rarity": "common",
- "animations": [
-  {
-   "id": "weather_sun",
-   "name": "Sunshine",
-   "file": "bin/weather_sun.bin",
-   "size": 8531,
-   "hash": "a5fc5973",
-   "frames": 32,
-   "sha256": "a5fc59739e38034e58da8200962b04c8d6c11de4ffbef35853b8891181d26b50"
-  },
-  {
-   "id": "weather_rain",
-   "name": "Rain",
-   "file": "bin/weather_rain.bin",
-   "size": 7622,
-   "hash": "8246394a",
-   "frames": 30,
-   "sha256": "8246394aad32b9b779f85b814126bfe64f4a01bb30f4b7269755eca2cdadb4d6"
-  },
-  {
-   "id": "weather_snow",
-   "name": "Snow",
-   "file": "bin/weather_snow.bin",
-   "size": 9583,
-   "hash": "ddfb4f4c",
-   "frames": 40,
-   "sha256": "ddfb4f4c27390395eeb9aa0df65d2b23aa9dbbbb86688e9c8765e1b153e5cb2c"
-  },
-  {
-   "id": "weather_storm",
-   "name": "Storm",
-   "file": "bin/weather_storm.bin",
-   "size": 13946,
-   "hash": "ecbb66da",
-   "frames": 36,
-   "sha256": "ecbb66da1df22930788cffa667edb490db680f0ad8443948eccb634a1e1f2ff8"
-  },
-  {
-   "id": "weather_wind",
-   "name": "Wind",
-   "file": "bin/weather_wind.bin",
-   "size": 14213,
-   "hash": "a7f9def2",
-   "frames": 48,
-   "sha256": "a7f9def26a4dd9340bb2f42aaf4e9caade4860392b7f1c7c5a5c8cba5f8eb19a"
-  }
- ]
+  "version": 1,
+  "id": "weather",
+  "name": "Weather Pack",
+  "rarity": "common",
+  "animations": [
+    {
+      "id": "weather_sun",
+      "name": "Sunshine",
+      "file": "bin/weather_sun.bin",
+      "size": 8531,
+      "hash": "a5fc5973",
+      "frames": 32,
+      "sha256": "a5fc59739e38034e58da8200962b04c8d6c11de4ffbef35853b8891181d26b50",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "weather_rain",
+      "name": "Rain",
+      "file": "bin/weather_rain.bin",
+      "size": 7622,
+      "hash": "8246394a",
+      "frames": 30,
+      "sha256": "8246394aad32b9b779f85b814126bfe64f4a01bb30f4b7269755eca2cdadb4d6",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "weather_snow",
+      "name": "Snow",
+      "file": "bin/weather_snow.bin",
+      "size": 9583,
+      "hash": "ddfb4f4c",
+      "frames": 40,
+      "sha256": "ddfb4f4c27390395eeb9aa0df65d2b23aa9dbbbb86688e9c8765e1b153e5cb2c",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "weather_storm",
+      "name": "Storm",
+      "file": "bin/weather_storm.bin",
+      "size": 13946,
+      "hash": "ecbb66da",
+      "frames": 36,
+      "sha256": "ecbb66da1df22930788cffa667edb490db680f0ad8443948eccb634a1e1f2ff8",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "weather_wind",
+      "name": "Wind",
+      "file": "bin/weather_wind.bin",
+      "size": 14213,
+      "hash": "a7f9def2",
+      "frames": 48,
+      "sha256": "a7f9def26a4dd9340bb2f42aaf4e9caade4860392b7f1c7c5a5c8cba5f8eb19a",
+      "published_at": "2026-09-14"
+    }
+  ],
+  "published_at": "2026-09-14",
+  "author": "breadboard"
 }

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Animation — Geedo</title>
+<meta name="description" content="One animation on the Geedo Hub: who drew it, when, and the exact file every Geedo plays.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  .show{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(22px,4vw,48px);align-items:center;padding:28px 0 8px}
+  .show .shot{position:relative}
+  .meta{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--blue-soft);font-weight:600}
+  .meta .maker{font-size:15px}
+  .stats{margin-top:20px}
+  .stat{background:rgba(255,255,255,.14);color:#fff}
+  .stat .k{color:var(--blue-soft)}
+  .actions{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+  .crumbs{color:var(--blue-soft);font-weight:700;font-size:14px;padding-top:22px}
+  .crumbs a:hover{color:#fff;text-decoration:underline}
+  @media (max-width:800px){.show{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">≡</button>
+    <div class="nav-links">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="makers.html">Makers</a>
+      <a class="link" href="connect.html">Set up</a>
+      <a class="hot" href="make.html">Draw one</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <p class="crumbs"><a href="browse.html">Animations</a> <span id="crumb"></span></p>
+
+  <div class="show" id="show">
+    <div class="shot">
+      <span class="sticker" id="sticker" hidden>NEW</span>
+      <div class="screen blank" id="screen"></div>
+    </div>
+    <div>
+      <h1 class="h1" id="name">…</h1>
+      <div class="meta" id="meta"></div>
+      <div class="stats" id="stats"></div>
+      <div class="actions">
+        <a class="btn yellow" id="dl" download hidden>Download .bin</a>
+        <a class="btn" id="remix" hidden>Open in Studio</a>
+      </div>
+      <p class="small" id="remixof" style="margin-top:14px;color:var(--blue-soft)" hidden></p>
+    </div>
+  </div>
+
+  <div id="missing" class="panel" hidden>
+    <h2 class="h2">No animation by that name.</h2>
+    <p class="sub" style="margin-top:8px">It may have been taken down, or the link is not quite right.</p>
+    <a class="btn blue" href="browse.html">See everything he does</a>
+  </div>
+
+  <section class="panel" id="how">
+    <h2 class="h2">How it gets to your Geedo</h2>
+    <p class="sub" id="how-text">It is already there. Every Geedo checks the Hub once a minute and keeps everything on the list in his own memory, so there is nothing to install and nothing to plug in.</p>
+    <div class="two" style="align-items:start">
+      <div class="box soft"><h3 style="font-size:20px">The file</h3>
+        <p>The download is the exact file the robot plays: <code>GDA2</code>, one bit a pixel, frames packed. Handy if you build your own screen, or want to remix it in the Studio.</p></div>
+      <div class="box soft"><h3 style="font-size:20px">Remix it</h3>
+        <p>Open in Studio loads these frames into the editor. Change it, give it a new name, publish it, and it goes up with a line saying what it started from.</p></div>
+    </div>
+  </section>
+
+  <section class="panel" id="more" hidden>
+    <div class="panel-head">
+      <div><h2 class="h2" id="more-title">More</h2></div>
+      <a class="more" id="more-link" href="makers.html">All of them →</a>
+    </div>
+    <div class="feed" id="more-feed"></div>
+  </section>
+
+  <section class="panel" id="remixes" hidden>
+    <div class="panel-head"><div><h2 class="h2">Remixes of this one</h2><p class="sub">Other people took it and ran.</p></div></div>
+    <div class="feed" id="remix-feed"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div>
+    <div class="brand">Geedo</div>
+    <p>A little robot with a face. What people draw for him goes to every Geedo in the world, once a person has looked at it.</p>
+  </div>
+  <div class="cols">
+    <div class="col"><span class="micro">Explore</span><a href="browse.html">Animations</a><a href="packs.html">Packs</a><a href="makers.html">Makers</a></div>
+    <div class="col"><span class="micro">Make</span><a href="make.html">Draw one</a><a href="studio/index.html">Studio</a><a href="make.html#rules">The rules</a></div>
+    <div class="col"><span class="micro">Owners</span><a href="connect.html">Set up</a><a href="unlock.html">Redeem a code</a><a href="GUIDE.md">Owner's guide</a></div>
+    <div class="col"><span class="micro">Community</span><a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a><a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a></div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script>
+(async () => {
+  const G = window.Geedo;
+  const $ = id => document.getElementById(id);
+  const id = G.param('id'), pack = G.param('pack');
+
+  let all;
+  try { all = await G.all(); }
+  catch (e) { $('name').textContent = 'Could not reach the Hub.'; return; }
+
+  const a = all.anims.find(x => x.id === id && (pack ? x.pack === pack : !x.pack))
+         || all.anims.find(x => x.id === id);
+  if (!a) {
+    $('show').hidden = true; $('how').hidden = true;
+    $('missing').hidden = false;
+    return;
+  }
+
+  const name = G.pretty(a.name || a.id);
+  document.title = `${name} — Geedo`;
+  $('name').textContent = name;
+  $('crumb').textContent = '› ' + name;
+  $('sticker').hidden = !G.isNew(a);
+
+  const meta = $('meta');
+  const who = document.createElement('a');
+  who.className = 'maker'; who.href = G.makerHref(a.by);
+  who.innerHTML = '<i></i><span></span>';
+  who.querySelector('i').textContent = G.initial(a.by);
+  who.querySelector('span').textContent = a.by;
+  meta.append(who);
+  if (a.pack) {
+    const t = document.createElement('a');
+    t.className = 'tag'; t.href = 'packs.html#' + encodeURIComponent(a.pack);
+    t.textContent = G.pretty(a.packName);
+    meta.append(t);
+  }
+  if (a.published_at) {
+    const w = document.createElement('span');
+    w.textContent = 'published ' + G.datestr(a.published_at);
+    meta.append(w);
+  }
+  if (a.category === 'community') {
+    const t = document.createElement('span');
+    t.className = 'tag'; t.textContent = 'community';
+    meta.append(t);
+  }
+
+  let anim;
+  try { anim = await G.loadBin(a.src); }
+  catch (e) { $('screen').classList.remove('blank'); $('screen').style.aspectRatio = '2/1'; return; }
+
+  const s = G.bigScreen(anim, 4);
+  s.el.querySelector('canvas').style.width = '100%';
+  $('screen').replaceWith(s.el);
+
+  const stats = $('stats');
+  const stat = (v, k) => {
+    const d = document.createElement('div');
+    d.className = 'stat';
+    d.innerHTML = '<span class="v"></span><span class="k"></span>';
+    d.querySelector('.v').textContent = v; d.querySelector('.k').textContent = k;
+    return d;
+  };
+  stats.append(stat(anim.frames.length, 'frames'), stat(anim.fps, 'fps'), stat(G.kb(a.size), 'packed'),
+               stat(anim.pingpong ? 'ping-pong' : anim.loop ? 'loops' : 'once', 'plays'));
+
+  const dl = $('dl');
+  dl.href = 'animations/' + a.src;
+  dl.download = a.id + '.bin';
+  dl.hidden = false;
+  const rx = $('remix');
+  rx.href = 'studio/index.html?open=' + encodeURIComponent(a.src);
+  rx.hidden = false;
+
+  if (a.remix_of) {
+    const parent = all.anims.find(x => x.id === a.remix_of);
+    const p = $('remixof');
+    p.innerHTML = 'A remix of <a style="color:#fff;font-weight:800;text-decoration:underline"></a>.';
+    const link = p.querySelector('a');
+    link.textContent = parent ? G.pretty(parent.name) : a.remix_of;
+    link.href = parent ? parent.href : '#';
+    p.hidden = false;
+  }
+  if (a.pack) $('how-text').textContent =
+    `It is in the ${G.pretty(a.packName)}. Free packs go to every Geedo like everything else: he finds the pack at his next check, downloads it, and keeps it.`;
+
+  // More by the same maker (or from the same pack), and any remixes.
+  const more = all.anims.filter(x => x !== a && !G.isSystem(x) && (a.pack ? x.pack === a.pack : x.by === a.by));
+  if (more.length) {
+    $('more').hidden = false;
+    $('more-title').textContent = a.pack ? `More from the ${G.pretty(a.packName)}` : `More by ${a.by}`;
+    $('more-link').href = a.pack ? 'packs.html#' + encodeURIComponent(a.pack) : G.makerHref(a.by);
+    $('more-feed').replaceChildren(...G.newest(more).slice(0, 8).map(x => G.card(x)));
+  }
+  const remixes = all.anims.filter(x => x.remix_of === a.id);
+  if (remixes.length) {
+    $('remixes').hidden = false;
+    $('remix-feed').replaceChildren(...G.newest(remixes).map(x => G.card(x)));
+  }
+})();
+</script>
+</body>
+</html>

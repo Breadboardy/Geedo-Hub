@@ -2,209 +2,160 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Animations — Geedo</title>
-<meta name="description" content="Every animation on the Geedo Hub, playing the same files the robots download.">
+<meta name="description" content="Every animation on the Geedo Hub, playing the same files the robots download. Search, filter, and see who drew what.">
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:28px}
-  .bar .field{width:auto;flex:1;min-width:180px;max-width:280px}
-  .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(268px,1fr))}
-  figure.anim{margin:0;cursor:pointer}
-  figure.anim .screen{transition:border-color .15s}
-  figure.anim:hover .screen{border-color:var(--accent)}
-  figure.anim figcaption{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-top:10px}
-  figure.anim h3{font-size:14px}
-  figure.anim .m{font-size:11px;color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums}
-  dialog{border:0;padding:0;background:0;max-width:none;max-height:none}
-  dialog::backdrop{background:rgba(4,5,7,.86);backdrop-filter:blur(8px)}
-  .sheet{background:var(--bg);border:1px solid var(--line-bright);border-radius:14px;
-         padding:clamp(20px,3vw,32px);width:min(560px,92vw)}
+  .bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:14px}
+  .bar select.field{width:auto;min-width:150px}
+  .counts{color:var(--blue-soft);font-weight:600;margin-top:12px}
+  .counts b{color:#fff}
+  @media (max-width:560px){.bar{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-in">
-    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
-    <div class="grow"></div>
-    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+    <a class="logo" href="index.html"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">≡</button>
+    <div class="nav-links">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="makers.html">Makers</a>
       <a class="link" href="connect.html">Set up</a>
-      <a class="link" href="unlock.html">Redeem</a>
-      <a class="link" href="studio/index.html">Studio</a>
+      <a class="hot" href="make.html">Draw one</a>
     </div>
-    <button class="nav-toggle" aria-label="Menu">≡</button>
   </div>
 </nav>
 
-<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
+<main class="wrap">
 
-  <div class="spread" style="margin-bottom:34px">
-    <div>
-      <h1 class="h1">Animations</h1>
-      <p class="lead" style="margin-top:10px">
-        Everything on the Hub, playing right now. Each one is the same
-        <code>.bin</code> your Geedo downloads — 1 KB a frame, one bit a pixel.
-      </p>
+  <header style="padding:28px 0 6px">
+    <h1 class="h1">Everything he does.</h1>
+    <p class="lead" style="margin-top:14px;color:var(--blue-soft)">
+      Every animation on the Hub, playing right now. These are the same files
+      the robots download, so what you see here is what a Geedo shows.
+    </p>
+    <p class="counts" id="counts"></p>
+  </header>
+
+  <section class="panel tight" style="margin-top:22px">
+    <div class="bar">
+      <input class="field" id="q" type="search" placeholder="Search animations, makers, packs…" autocomplete="off" aria-label="Search">
+      <select class="field" id="sort" aria-label="Sort">
+        <option value="new">Newest first</option>
+        <option value="az">A to Z</option>
+        <option value="maker">By maker</option>
+      </select>
     </div>
-    <div class="tiles cols-2" style="min-width:220px">
-      <div class="tile" style="padding:14px 18px"><span class="num accent" id="n-anims" style="font-size:24px">··</span><span class="micro">animations</span></div>
-      <div class="tile" style="padding:14px 18px"><span class="num" id="n-frames" style="font-size:24px">··</span><span class="micro">frames</span></div>
-    </div>
-  </div>
+    <div class="chips" id="chips"></div>
+  </section>
 
-  <div class="bar" id="filters">
-    <input class="field" id="q" type="search" placeholder="Search…" autocomplete="off">
-  </div>
-
-  <div class="grid" id="grid"><div class="empty">Loading the Hub…</div></div>
-  <div class="empty" id="none" hidden>Nothing matches that.</div>
+  <section class="panel" style="margin-top:18px">
+    <div class="feed" id="feed"><div class="empty"><span class="spin"></span> Loading the Hub…</div></div>
+    <div class="empty" id="none" hidden>Nothing matches that.</div>
+  </section>
 
 </main>
 
-<dialog id="dlg">
-  <div class="sheet stack" style="--s:16px">
-    <div class="spread" style="align-items:flex-start">
-      <div>
-        <h2 class="h2" id="d-name">—</h2>
-        <p class="micro" id="d-meta" style="margin-top:6px">—</p>
-      </div>
-      <button class="btn plain" id="d-close" aria-label="Close" style="font-size:20px;line-height:1">×</button>
-    </div>
-    <div id="d-screen"></div>
-    <div class="row">
-      <a class="btn primary" id="d-dl" download>Download .bin</a>
-      <a class="btn" id="d-raw" target="_blank" rel="noopener">View raw</a>
-    </div>
-    <p class="small mute" style="margin:0">
-      Drop a <code>.bin</code> into your own build, or just let the Hub deliver it —
-      every Geedo picks new animations up within a minute.
-    </p>
+<footer class="foot">
+  <div>
+    <div class="brand">Geedo</div>
+    <p>A little robot with a face. What people draw for him goes to every Geedo in the world, once a person has looked at it.</p>
   </div>
-</dialog>
-
-<footer class="wrap">
-  <div class="spread">
-    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-    <div class="row" style="gap:22px">
-      <a class="small mute" href="packs.html">Packs</a>
-      <a class="small mute" href="connect.html">Connect</a>
-      <a class="small mute" href="unlock.html">Redeem a code</a>
-      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-    </div>
+  <div class="cols">
+    <div class="col"><span class="micro">Explore</span><a href="browse.html">Animations</a><a href="packs.html">Packs</a><a href="makers.html">Makers</a></div>
+    <div class="col"><span class="micro">Make</span><a href="make.html">Draw one</a><a href="studio/index.html">Studio</a><a href="make.html#rules">The rules</a></div>
+    <div class="col"><span class="micro">Owners</span><a href="connect.html">Set up</a><a href="unlock.html">Redeem a code</a><a href="GUIDE.md">Owner's guide</a></div>
+    <div class="col"><span class="micro">Community</span><a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a><a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a></div>
   </div>
 </footer>
 
 <script src="assets/geedo.js"></script>
 <script>
 (async () => {
-  const { Screen, loadBin, manifest, pretty } = window.Geedo;
-  const grid = document.getElementById('grid');
+  const G = window.Geedo;
+  const feed = document.getElementById('feed');
   const none = document.getElementById('none');
 
-  let anims = [];
-  try { anims = (await manifest()).animations || []; }
-  catch (e) { grid.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
+  let all;
+  try { all = await G.all(); }
+  catch (e) { feed.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
+  const anims = all.anims;
 
-  document.getElementById('n-anims').textContent = anims.length;
+  const CAT = { animations_boot: 'Boot screens', play_once: 'Play once', community: 'Community', studio: 'Studio' };
+  const catName = c => c.startsWith('pack:')
+    ? G.pretty((all.packs.find(p => p.id === c.slice(5)) || {}).name || c.slice(5))
+    : (CAT[c] || G.pretty(c));
 
-  // Category buttons come from the data, so a new category on the Hub turns up
-  // here without anyone editing this file.
-  const cats = [...new Set(anims.map(a => a.category).filter(Boolean))].sort();
-  const bar = document.getElementById('filters');
-  let active = 'all';
-  const mkChip = (val, label) => {
+  const makers = G.makers(anims);
+  document.getElementById('counts').innerHTML =
+    `<b>${anims.length}</b> animations · <b>${makers.length}</b> maker${makers.length === 1 ? '' : 's'} · <b>${all.packs.length}</b> pack${all.packs.length === 1 ? '' : 's'}`;
+
+  // Filter buttons come from the data: a new category or a new pack on the
+  // Hub turns up here without anyone editing this file.
+  const counts = new Map();
+  for (const a of anims) counts.set(a.category || 'other', (counts.get(a.category || 'other') || 0) + 1);
+  const cats = [...counts.keys()].sort((x, y) => {
+    const px = x.startsWith('pack:'), py = y.startsWith('pack:');
+    return px !== py ? (px ? 1 : -1) : catName(x).localeCompare(catName(y));
+  });
+  const chips = document.getElementById('chips');
+  let active = G.param('cat') || 'all';
+  if (active !== 'all' && !counts.has(active)) active = 'all';
+  const mkChip = (val, label, n) => {
     const b = document.createElement('button');
-    b.className = 'chip'; b.textContent = label; b.dataset.cat = val;
-    b.setAttribute('aria-pressed', val === 'all');
+    b.className = 'chip';
+    b.dataset.cat = val;
+    b.innerHTML = '<span></span><span class="count"></span>';
+    b.firstChild.textContent = label;
+    b.lastChild.textContent = n;
+    b.setAttribute('aria-pressed', val === active);
     b.onclick = () => {
       active = val;
-      bar.querySelectorAll('button.chip').forEach(x =>
-        x.setAttribute('aria-pressed', x.dataset.cat === val));
+      chips.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.cat === val));
+      history.replaceState(null, '', val === 'all' ? location.pathname : `?cat=${encodeURIComponent(val)}`);
       apply();
     };
     return b;
   };
-  bar.prepend(...[mkChip('all', 'All'), ...cats.map(c => mkChip(c, pretty(c)))]);
+  chips.append(mkChip('all', 'All', anims.length), ...cats.map(c => mkChip(c, catName(c), counts.get(c))));
 
-  // Build every card up front, then show/hide. Rebuilding on each keystroke
-  // would throw away decoded frames and re-fetch, which is both slower and
-  // visibly restarts every animation mid-loop.
-  grid.replaceChildren();
-  let totalFrames = 0;
-  const cards = [];
-
-  for (const a of anims) {
-    const fig = document.createElement('figure');
-    fig.className = 'anim';
-    fig.tabIndex = 0;
-    fig.setAttribute('role', 'button');
-    const holder = document.createElement('div');
-    holder.className = 'screen';
-    holder.style.aspectRatio = '2/1';
-    const cap = document.createElement('figcaption');
-    cap.innerHTML = `<h3 class="h3"></h3><span class="m">…</span>`;
-    cap.querySelector('h3').textContent = pretty(a.name);
-    fig.append(holder, cap);
-    grid.append(fig);
-
-    const card = { el: fig, data: a, hay: `${a.name} ${a.id} ${a.category || ''} ${a.author || ''}`.toLowerCase() };
-    cards.push(card);
-
-    loadBin(a.file).then(anim => {
-      totalFrames += anim.frames.length;
-      document.getElementById('n-frames').textContent = totalFrames;
-      const s = new Screen(anim, { scale: 2 });
-      s.el.style.width = '100%';
-      fig.replaceChild(s.el, holder);
-      cap.querySelector('.m').textContent = `${anim.frames.length}f · ${anim.fps}fps`;
-      card.anim = anim;
-      const open = () => show(a, anim);
-      fig.onclick = open;
-      fig.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
-    }).catch(() => {
-      cap.querySelector('.m').textContent = 'unavailable';
-      fig.style.opacity = '.45';
-    });
-  }
+  // Every card is built once and then shown, hidden and reordered. Rebuilding
+  // on each keystroke would throw away decoded frames and restart every
+  // animation mid-loop.
+  const cards = anims.map(a => ({
+    el: G.card(a), data: a,
+    hay: `${a.name} ${a.id} ${a.by} ${catName(a.category || '')} ${a.packName || ''}`.toLowerCase()
+  }));
+  feed.replaceChildren(...cards.map(c => c.el));
 
   const q = document.getElementById('q');
+  const sort = document.getElementById('sort');
+  if (G.param('q')) q.value = G.param('q');
+
   function apply(){
     const term = q.value.trim().toLowerCase();
+    const order = sort.value;
+    const list = [...cards];
+    if (order === 'new') list.sort((x, y) => String(y.data.published_at || '').localeCompare(String(x.data.published_at || '')) || G.pretty(x.data.name).localeCompare(G.pretty(y.data.name)));
+    else if (order === 'az') list.sort((x, y) => G.pretty(x.data.name).localeCompare(G.pretty(y.data.name)));
+    else list.sort((x, y) => x.data.by.localeCompare(y.data.by) || G.pretty(x.data.name).localeCompare(G.pretty(y.data.name)));
     let shown = 0;
-    for (const c of cards) {
-      const ok = (active === 'all' || c.data.category === active) &&
-                 (!term || c.hay.includes(term));
+    for (const c of list) {
+      const ok = (active === 'all' || (c.data.category || 'other') === active) && (!term || c.hay.includes(term));
       c.el.hidden = !ok;
       if (ok) shown++;
+      feed.append(c.el);                 // re-appending moves it to the end: the sort
     }
     none.hidden = shown > 0;
   }
   q.addEventListener('input', apply);
-
-  const dlg = document.getElementById('dlg');
-  let big = null;
-  function show(a, anim){
-    document.getElementById('d-name').textContent = pretty(a.name);
-    document.getElementById('d-meta').textContent =
-      `${pretty(a.category) || 'Animation'} · ${anim.frames.length} frames · ${anim.fps} fps` +
-      `${anim.loop ? ' · loops' : ''}${anim.pingpong ? ' · ping-pong' : ''} · ${(a.size/1024).toFixed(1)} KB`;
-    const dl = document.getElementById('d-dl');
-    dl.href = 'animations/' + a.file;
-    dl.download = a.id + '.bin';
-    document.getElementById('d-raw').href = 'animations/' + a.file;
-    if (big) big.destroy();
-    big = new Screen(anim, { scale: 4 });
-    big.el.style.width = '100%';
-    document.getElementById('d-screen').replaceChildren(big.el);
-    dlg.showModal();
-  }
-  document.getElementById('d-close').onclick = () => dlg.close();
-  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-  dlg.addEventListener('close', () => { if (big) { big.destroy(); big = null; } });
+  sort.addEventListener('change', apply);
+  apply();
 })();
 </script>
 </body>

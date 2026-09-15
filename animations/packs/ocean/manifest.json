@@ -11,7 +11,8 @@
       "size": 1351,
       "hash": "b0bcaa50",
       "frames": 9,
-      "sha256": "b0bcaa50e8132217fcf2612cff5470393f04c1c73a467984d837ddda1dc126cb"
+      "sha256": "b0bcaa50e8132217fcf2612cff5470393f04c1c73a467984d837ddda1dc126cb",
+      "published_at": "2026-08-18"
     },
     {
       "id": "diver",
@@ -20,7 +21,8 @@
       "size": 3169,
       "hash": "407d1474",
       "frames": 21,
-      "sha256": "407d1474d2b2559cab580e54cf105892861d43f2f8e07cd67e915296f301371b"
+      "sha256": "407d1474d2b2559cab580e54cf105892861d43f2f8e07cd67e915296f301371b",
+      "published_at": "2026-08-18"
     },
     {
       "id": "going_underwater",
@@ -29,7 +31,8 @@
       "size": 1940,
       "hash": "ecdcbc15",
       "frames": 9,
-      "sha256": "ecdcbc1529189e11ff0c8ff89e99b7e6e5238529b5d7cde544b9b3868f1fbf2f"
+      "sha256": "ecdcbc1529189e11ff0c8ff89e99b7e6e5238529b5d7cde544b9b3868f1fbf2f",
+      "published_at": "2026-08-18"
     },
     {
       "id": "jellyfish",
@@ -38,7 +41,8 @@
       "size": 2697,
       "hash": "27b19b49",
       "frames": 10,
-      "sha256": "27b19b496d28142b6f2952d0518a2f30ac26acbbadd886da9e61c1e7e922f20b"
+      "sha256": "27b19b496d28142b6f2952d0518a2f30ac26acbbadd886da9e61c1e7e922f20b",
+      "published_at": "2026-08-18"
     },
     {
       "id": "ocean_waves",
@@ -47,7 +51,8 @@
       "size": 1387,
       "hash": "514b4b81",
       "frames": 11,
-      "sha256": "514b4b812114940b6780c4fc7fcedfc28acef58d7032a9eaa06e4efc87e54c41"
+      "sha256": "514b4b812114940b6780c4fc7fcedfc28acef58d7032a9eaa06e4efc87e54c41",
+      "published_at": "2026-08-18"
     },
     {
       "id": "submarine",
@@ -56,7 +61,8 @@
       "size": 2593,
       "hash": "3aacb00e",
       "frames": 12,
-      "sha256": "3aacb00e05f1dc321d1fed5170f9e8c1a79bc6be23ac02d7e2eb4f28e7991521"
+      "sha256": "3aacb00e05f1dc321d1fed5170f9e8c1a79bc6be23ac02d7e2eb4f28e7991521",
+      "published_at": "2026-08-18"
     },
     {
       "id": "ocean_snorkel",
@@ -65,7 +71,8 @@
       "size": 6412,
       "hash": "65dbc1c4",
       "frames": 30,
-      "sha256": "65dbc1c471796f83d2e743954a90376407369858406c3a2cbb6bd1863d2e16b8"
+      "sha256": "65dbc1c471796f83d2e743954a90376407369858406c3a2cbb6bd1863d2e16b8",
+      "published_at": "2026-08-18"
     },
     {
       "id": "ocean_boat",
@@ -74,7 +81,8 @@
       "size": 5320,
       "hash": "8f07e0c0",
       "frames": 30,
-      "sha256": "8f07e0c074466341f0b81a56d1c9989ad86fb7d1942247bea46ee52ff49afeec"
+      "sha256": "8f07e0c074466341f0b81a56d1c9989ad86fb7d1942247bea46ee52ff49afeec",
+      "published_at": "2026-08-18"
     },
     {
       "id": "ocean_jellyfish",
@@ -83,7 +91,8 @@
       "size": 8761,
       "hash": "bec039fb",
       "frames": 30,
-      "sha256": "bec039fb581bfc698855cb1ce61c9027c9dfb5bf1c18891917c19f52e89cad8b"
+      "sha256": "bec039fb581bfc698855cb1ce61c9027c9dfb5bf1c18891917c19f52e89cad8b",
+      "published_at": "2026-08-18"
     },
     {
       "id": "ocean_sunset",
@@ -92,7 +101,10 @@
       "size": 4616,
       "hash": "1cf56be4",
       "frames": 40,
-      "sha256": "1cf56be45665fc21de8eff3b965818743a9eb0c216c81cf717d7d422036d96e6"
+      "sha256": "1cf56be45665fc21de8eff3b965818743a9eb0c216c81cf717d7d422036d96e6",
+      "published_at": "2026-08-18"
     }
-  ]
+  ],
+  "published_at": "2026-08-18",
+  "author": "breadboard"
 }

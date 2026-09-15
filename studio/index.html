@@ -2,109 +2,154 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Geedo Studio</title>
+<link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Silkscreen&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Silkscreen&display=swap" rel="stylesheet">
 <style>
+  /* The Studio wears the Hub's toy-box look: blue ground, white panels with
+     big corners, black type, one yellow button. The stage is the one dark
+     place, so the screen reads as a screen. */
   :root{
-    --bg:#0b0f14;--bg2:#11161d;--panel:#161c25;--panel2:#1c2330;
-    --line:#243042;--text:#e7ecf3;--mute:#8a98ab;
-    --accent:#22d3ee;--good:#34d399;--warn:#fbbf24;--bad:#f87171;
+    --blue:#2a5cff;--blue-deep:#1c45d9;--blue-soft:#e4ebff;--yellow:#ffd21f;
+    --ink:#111;--paper:#fff;--paper-2:#f2f4fb;--paper-3:#e6e9f5;
+    --mute:#555a66;--dim:#8a8f9c;--good:#168a4a;--good-soft:#dcf5e6;--bad:#c8321f;--bad-soft:#ffe1dc;--warn:#8a5a00;--warn-soft:#fff1bf;
+    --font:'Bricolage Grotesque','Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --mono:ui-monospace,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace;overflow:hidden;user-select:none}
+  html,body{margin:0;height:100%;background:var(--blue);color:var(--ink);font-family:var(--font);font-weight:600;overflow:hidden;user-select:none;-webkit-font-smoothing:antialiased}
   button,input,select{font-family:inherit;color:inherit}
-  button{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;transition:all .15s}
-  button:hover{background:#222b3a;border-color:#2f3e57}
-  button.active{background:var(--accent);color:#001018;border-color:var(--accent);font-weight:700}
+  button{background:var(--paper-2);border:2px solid transparent;color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:800;transition:background .12s,border-color .12s,transform .12s;white-space:nowrap}
+  button:hover{border-color:var(--ink)}
+  button:active{transform:translateY(1px)}
+  button.active{background:var(--blue);color:#fff;border-color:transparent}
+  button.yellow{background:var(--yellow)}
   button.ghost{background:transparent}
-  button.danger:hover{background:#3a1d1d;border-color:#8a3535;color:#fca5a5}
-  input[type=number],input[type=text]{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;width:60px}
-  input[type=range]{accent-color:var(--accent)}
-  .app{display:grid;grid-template-rows:48px 1fr 180px;height:100vh}
-  .topbar{display:flex;align-items:center;gap:12px;padding:0 14px;background:linear-gradient(180deg,#11161d,#0d1218);border-bottom:1px solid var(--line)}
-  .brand{display:flex;align-items:center;gap:10px;font-family:'Silkscreen',monospace;font-size:18px;letter-spacing:1px}
-  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
-  .brand small{font-family:'JetBrains Mono';font-size:10px;color:var(--mute);letter-spacing:2px;margin-left:4px}
+  button.ghost:hover{background:var(--paper-2);border-color:transparent}
+  button.danger:hover{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+  button[disabled]{opacity:.4;cursor:not-allowed;transform:none;border-color:transparent}
+  input[type=number],input[type=text]{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 9px;font-size:13px;width:64px;font-weight:600}
+  input[type=number]:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,92,255,.2)}
+  input[type=range]{accent-color:var(--blue)}
+  select{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 8px;font-size:13px;font-weight:600}
+  a{color:var(--blue);font-weight:800}
+  .app{display:grid;grid-template-rows:58px 1fr 196px;height:100vh}
+  .topbar{display:flex;align-items:center;gap:12px;padding:0 14px;color:#fff}
+  .topbar button{background:#fff}
+  .topbar button.ghost{background:transparent;color:#fff}
+  .topbar button.ghost:hover{background:rgba(255,255,255,.16);border-color:transparent}
+  .topbar button.yellow{background:var(--yellow);color:var(--ink)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:21px;letter-spacing:-.02em;color:#fff;text-decoration:none}
+  .brand .face{width:32px;height:32px;border-radius:50%;background:#fff;padding:2px;display:block}
+  .brand small{font-size:11px;color:var(--blue-soft);letter-spacing:.14em;margin-left:2px;font-weight:800}
   .topbar .spacer{flex:1}
   .topbar .group{display:flex;gap:6px;align-items:center}
-  .main{display:grid;grid-template-columns:220px 1fr 240px;min-height:0}
-  .sidebar{background:var(--panel);border-right:1px solid var(--line);padding:12px;overflow-y:auto}
-  .sidebar.right{border-right:none;border-left:1px solid var(--line)}
-  .sec-title{font-size:10px;letter-spacing:2px;color:var(--mute);text-transform:uppercase;margin:14px 0 8px;font-weight:700}
+  .pill{display:inline-block;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;font-size:11px;letter-spacing:.08em;font-weight:800}
+  .main{display:grid;grid-template-columns:232px 1fr 252px;min-height:0;gap:10px;padding:0 10px}
+  .sidebar{background:var(--paper);border-radius:20px;padding:14px;overflow-y:auto}
+  .sec-title{font-size:11px;letter-spacing:.12em;color:var(--mute);text-transform:uppercase;margin:16px 0 8px;font-weight:800}
   .sec-title:first-child{margin-top:0}
   .tools{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-  .tools button{padding:8px 0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px}
-  .tools button .ico{font-size:16px;line-height:1;font-family:'Silkscreen'}
-  .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12px}
-  .row label{color:var(--mute);flex:1}
+  .tools button{padding:8px 0;font-size:10px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .tools button .ico{font-size:16px;line-height:1;font-family:'Silkscreen',monospace}
+  .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}
+  .row label{color:var(--mute);flex:1;font-weight:700}
   .row.compact{margin:4px 0}
   .swatches{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-  .swatch{height:28px;border-radius:6px;border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--mute)}
-  .swatch.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.2)}
-  .swatch.white{background:#e7ecf3;color:#000}
-  .swatch.black{background:#000}
-  .stage{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#141b25 0%,#0b0f14 70%);position:relative;min-height:0;overflow:hidden}
-  .device{background:#0a0d12;border:1px solid #1c2330;border-radius:18px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
-  .device::before{content:"GEEDO";position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:'Silkscreen';font-size:10px;letter-spacing:4px;color:var(--mute)}
-  .canvas-wrap{position:relative;width:1024px;height:512px;background:#000;border-radius:6px;overflow:hidden}
+  .swatch{height:30px;border-radius:10px;border:3px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+  .swatch.sel{border-color:var(--blue)}
+  .swatch.white{background:#fff;color:#111;box-shadow:inset 0 0 0 2px var(--paper-3)}
+  .swatch.black{background:#000;color:#fff}
+  .stage{display:flex;align-items:center;justify-content:center;background:#0b1440;border-radius:20px;position:relative;min-height:0;overflow:hidden}
+  .device{background:#000;border:6px solid #fff;border-radius:24px;padding:14px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);position:relative}
+  .canvas-wrap{position:relative;width:1024px;height:512px;background:#000;border-radius:10px;overflow:hidden}
   #canvas,#onion,#preview{position:absolute;top:0;left:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
   #onion{opacity:.3;pointer-events:none}
   #preview{pointer-events:none;opacity:.7}
-  .stage-info{position:absolute;bottom:12px;left:12px;font-size:10px;color:var(--mute);letter-spacing:1px}
-  .stage-info b{color:var(--text)}
-  .zoom-ctrl{position:absolute;bottom:12px;right:12px;display:flex;gap:6px;align-items:center;font-size:11px;color:var(--mute)}
-  .drop-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(34,211,238,.1);border:3px dashed var(--accent);border-radius:10px;font-family:'Silkscreen';color:var(--accent);font-size:16px;pointer-events:none;z-index:50}
+  .stage-info{position:absolute;bottom:12px;left:14px;font-size:12px;color:#aab8ff;font-weight:700}
+  .stage-info b{color:#fff}
+  .zoom-ctrl{position:absolute;bottom:9px;right:12px;display:flex;gap:6px;align-items:center;font-size:12px;color:#fff;font-weight:800}
+  .zoom-ctrl button{background:#fff;padding:4px 10px}
+  .drop-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(42,92,255,.35);border:4px dashed var(--yellow);border-radius:10px;color:var(--yellow);font-size:22px;font-weight:800;pointer-events:none;z-index:50}
   .drop-hint.show{display:flex}
-  .timeline{background:var(--panel);border-top:1px solid var(--line);display:grid;grid-template-rows:36px 1fr;min-height:0}
-  .tl-head{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line)}
+  .timeline{background:var(--paper);border-radius:20px 20px 0 0;margin:10px 10px 0;display:grid;grid-template-rows:42px 1fr;min-height:0}
+  .tl-head{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:3px solid var(--paper-3)}
   .tl-head .left,.tl-head .right{display:flex;gap:6px;align-items:center}
   .tl-head .spacer{flex:1}
   .frames{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;align-items:center}
-  .frame{flex:0 0 auto;width:128px;height:80px;background:#000;border:2px solid var(--line);border-radius:8px;position:relative;cursor:pointer;transition:border-color .15s}
-  .frame:hover{border-color:#3a4a66}
-  .frame.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.25)}
-  .frame canvas{width:100%;height:100%;image-rendering:pixelated;border-radius:6px}
-  .frame .num{position:absolute;top:2px;left:4px;font-size:9px;color:#9bb0c9;font-family:'Silkscreen'}
-  .frame .dur{position:absolute;bottom:2px;right:4px;font-size:9px;color:var(--mute)}
-  .frame .x{position:absolute;top:0;right:0;width:18px;height:18px;display:none;align-items:center;justify-content:center;color:var(--bad);background:rgba(0,0,0,.6);border-radius:0 6px 0 6px;font-size:12px}
+  .frame{flex:0 0 auto;width:128px;height:80px;background:#000;border:3px solid var(--paper-3);border-radius:12px;position:relative;cursor:pointer;transition:border-color .12s}
+  .frame:hover{border-color:var(--dim)}
+  .frame.sel{border-color:var(--blue)}
+  .frame canvas{width:100%;height:100%;image-rendering:pixelated;border-radius:8px}
+  .frame .num{position:absolute;top:3px;left:7px;font-size:10px;color:#fff;font-weight:800}
+  .frame .dur{position:absolute;bottom:3px;right:7px;font-size:10px;color:#aab8ff;font-weight:800}
+  .frame .x{position:absolute;top:0;right:0;width:20px;height:20px;display:none;align-items:center;justify-content:center;color:#fff;background:var(--bad);border-radius:0 8px 0 8px;font-size:12px;font-weight:800}
   .frame:hover .x{display:flex}
-  .add-frame{flex:0 0 auto;width:60px;height:80px;background:transparent;border:2px dashed var(--line);border-radius:8px;color:var(--mute);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center}
-  .add-frame:hover{border-color:var(--accent);color:var(--accent)}
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100}
+  .add-frame{flex:0 0 auto;width:60px;height:80px;background:transparent;border:3px dashed var(--paper-3);border-radius:12px;color:var(--dim);cursor:pointer;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .add-frame:hover{border-color:var(--blue);color:var(--blue)}
+  .modal-bg{position:fixed;inset:0;background:rgba(10,20,60,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
   .modal-bg.open{display:flex}
-  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;width:480px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .modal{background:var(--paper);border-radius:28px;padding:26px;width:500px;max-width:100%;max-height:92vh;overflow:auto}
   .modal.wide{width:640px}
-  .modal h2{margin:0 0 4px;font-family:'Silkscreen';font-size:16px;letter-spacing:2px}
-  .modal p{color:var(--mute);font-size:12px;line-height:1.5;margin:0 0 14px}
-  .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-  .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:10px;color:var(--mute);letter-spacing:1px}
+  .modal h2{margin:0 0 6px;font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+  .modal p{color:var(--mute);font-size:14px;line-height:1.5;margin:0 0 14px;font-weight:500}
+  .modal p b{color:var(--ink);font-weight:800}
+  .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+  .modal .actions button{padding:11px 18px;font-size:14px}
+  .modal .step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--paper-2);border-radius:16px;padding:14px;margin-top:10px}
+  .modal .step .n{width:34px;height:34px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;font-weight:800}
+  .modal .step h3{margin:5px 0 4px;font-size:16px;letter-spacing:-.01em}
+  .modal .step p{margin:0;font-size:13px}
+  .modal .step button{margin-top:10px;padding:9px 14px}
+  .modal .step.done .n{background:var(--good);color:#fff}
+  .modal label.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:600;padding:5px 0;cursor:pointer;line-height:1.4}
+  .modal label.chk input{width:20px;height:20px;accent-color:var(--blue);flex:none;margin:0}
+  .modal .row input[type=text]{width:auto;flex:1}
+  .note{background:var(--paper-2);border-radius:14px;padding:11px 14px;font-size:13px;line-height:1.5;font-weight:500;margin:10px 0}
+  .note.ok{background:var(--good-soft);color:var(--good)}
+  .note.bad{background:var(--bad-soft);color:var(--bad)}
+  .note.warn{background:var(--warn-soft);color:var(--warn)}
   .stamps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-  .stamp{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:8px 4px;text-align:center;font-size:13px;cursor:pointer}
-  .stamp:hover{border-color:var(--accent)}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:12px;color:var(--text);opacity:0;transition:all .25s;z-index:200;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .stamp{background:var(--paper-2);border:2px solid transparent;border-radius:10px;padding:8px 4px;text-align:center;font-size:13px;cursor:pointer}
+  .stamp:hover{border-color:var(--blue)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:800;opacity:0;transition:all .25s;z-index:200;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .kbd{font-family:'JetBrains Mono';background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--mute)}
-  .img-prev{background:#000;border:1px solid var(--line);border-radius:6px;width:100%;height:160px;image-rendering:pixelated;display:block}
+  .kbd{font-family:var(--mono);background:var(--paper-2);border-radius:5px;padding:1px 5px;font-size:10px;color:var(--mute)}
+  .img-prev{background:#000;border:4px solid #fff;border-radius:12px;width:100%;height:160px;image-rendering:pixelated;display:block}
+  .tiny{display:none}
+  @media (max-width:900px){
+    html,body{overflow:auto}
+    .app{display:none}
+    .tiny{display:block;color:#fff;padding:40px 24px;max-width:36ch;margin:0 auto;font-size:18px;line-height:1.5}
+    .tiny h1{font-size:34px;letter-spacing:-.03em;margin:0 0 12px}
+    .tiny a{display:inline-block;background:var(--yellow);color:var(--ink);padding:12px 20px;border-radius:999px;margin-top:20px;text-decoration:none}
+  }
 </style>
 </head>
 <body>
+<div class="tiny">
+  <h1>The Studio needs a bigger screen.</h1>
+  It is a pixel editor with a 128 by 64 canvas, three panels and a timeline, and it wants a laptop or a tablet turned sideways.
+  <a href="../index.html">Back to the Hub</a>
+</div>
 <div class="app">
   <div class="topbar">
-    <div class="brand"><span class="dot"></span> GEEDO STUDIO <small>v3.1</small></div>
+    <a class="brand" href="../index.html" title="Back to the Hub"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo <small>STUDIO</small></a>
     <div class="group">
       <button id="btnNew" class="ghost">New</button>
       <button id="btnOpen" class="ghost">Open</button>
       <button id="btnSave" class="ghost">Save</button>
-      <button id="btnImport" class="ghost">Import Image</button>
+      <button id="btnImport" class="ghost">Import image</button>
     </div>
     <div class="spacer"></div>
     <span class="pill" id="statusPill">READY</span>
     <div class="group">
-      <button id="btnExport">Export .ino</button>
-      <button id="btnSend" class="active">Send to Geedo</button>
-      <button id="btnPublish">Publish to Hub</button>
+      <button id="btnExport" class="ghost">Export</button>
+      <button id="btnSend">Try on Geedo</button>
+      <button id="btnPublish" class="yellow">Publish</button>
     </div>
   </div>
 
@@ -194,7 +239,7 @@
         <input type="text" id="projName" value="my_anim" style="flex:1;width:auto">
       </div>
       <div class="row compact">
-        <label>FPS</label><input type="number" id="fps" min="1" max="60" value="8">
+        <label>FPS</label><input type="number" id="fps" min="1" max="30" value="8">
       </div>
       <div class="row compact">
         <label>Loop</label><input type="checkbox" id="chkLoop" checked>
@@ -288,41 +333,51 @@
   </div>
 </div>
 
+<div class="modal-bg" id="modalExport">
+  <div class="modal">
+    <h2>Export</h2>
+    <p>Two kinds of file. <b>Save</b> in the top bar keeps your project (a <code>.geedo.json</code>) for coming back to; these are for taking it elsewhere.</p>
+    <div class="step"><span class="n">⬇</span><div><h3>The robot's file</h3>
+      <p>A <code>.bin</code> exactly as a Geedo plays it: <code>GDA2</code>, one bit a pixel, frames packed. The Hub and the robots read this format.</p>
+      <button onclick="exportBin()">Save .bin</button></div></div>
+    <div class="step"><span class="n">⬇</span><div><h3>Arduino code</h3>
+      <p>The frames as <code>PROGMEM</code> byte arrays for your own sketch and your own screen.</p>
+      <button onclick="exportIno()">Save .ino</button></div></div>
+    <div class="actions"><button onclick="closeModal('modalExport')" class="ghost">Close</button></div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modalSend">
   <div class="modal">
-    <h2>SEND TO GEEDO</h2>
-    <p>Push this animation to your Geedo over Wi-Fi. Make sure your Geedo is on the same network and in "Sync" mode (hold button for 3s).</p>
-    <div class="row"><label>Geedo IP</label><input type="text" id="geedoIp" value="192.168.1.42" style="flex:1;width:auto"></div>
-    <div class="row"><label>Slot</label>
-      <select id="sendSlot" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
-        <option>1 - User slot 1</option><option>2 - User slot 2</option><option>3 - User slot 3</option>
-        <option>4 - User slot 4</option><option>5 - User slot 5</option>
-      </select>
-    </div>
+    <h2>Try it on a Geedo</h2>
+    <p>Right now a Geedo only plays what is on the Hub: he checks it once a minute and keeps everything on the list. So the way to see your animation on a real Geedo is to <b>publish it</b>. Once a person has approved it, every Geedo, yours included, is doing it within the minute.</p>
+    <p>Sending an animation straight to your own Geedo over WiFi, before publishing, is coming in a firmware update. Until then you can play it here with <b>Play</b>, or save the robot's own file to keep.</p>
     <div class="actions">
-      <button onclick="closeModal('modalSend')" class="ghost">Cancel</button>
-      <button onclick="doSend()" class="active">Send</button>
+      <button onclick="closeModal('modalSend')" class="ghost">Close</button>
+      <button onclick="exportBin()">Save the .bin</button>
+      <button onclick="closeModal('modalSend');openPublish()" class="yellow">Publish it</button>
     </div>
   </div>
 </div>
 
 <div class="modal-bg" id="modalPub">
   <div class="modal">
-    <h2>PUBLISH TO HUB</h2>
-    <p>Share with the Geedo community, or send to friends only via a private code.</p>
-    <div class="row"><label>Visibility</label>
-      <select id="pubVis" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
-        <option value="public">Public — anyone can find it</option>
-        <option value="discover">Random Discovery — rare drop</option>
-        <option value="capsule">Time Capsule — unlocks on a date</option>
-        <option value="private">Private Code — friends only</option>
-      </select>
-    </div>
-    <div class="row"><label>Tags</label><input type="text" id="pubTags" placeholder="cute, dance, eyes" style="flex:1;width:auto"></div>
-    <div class="actions">
-      <button onclick="closeModal('modalPub')" class="ghost">Cancel</button>
-      <button onclick="doPublish()" class="active">Publish</button>
-    </div>
+    <h2>Publish to the Hub</h2>
+    <p>A person looks at every animation before it goes out to the robots, so publishing is two steps: save the file, then hand it in. It takes a minute, and you are told either way.</p>
+    <div class="row"><label>Name</label><input type="text" id="pubName" maxlength="40" placeholder="what it's called on the Hub"></div>
+    <div class="row"><label>Maker name</label><input type="text" id="pubMaker" maxlength="32" placeholder="the name shown next to it"></div>
+    <div id="pubCheck" class="note"></div>
+    <label class="chk"><input type="checkbox" class="rule"> I drew this myself. It's not a character from a game, a film or a show.</label>
+    <label class="chk"><input type="checkbox" class="rule"> It's kind. Nothing rude, mean or scary; kids watch these screens.</label>
+    <label class="chk"><input type="checkbox" class="rule"> I know a person looks at it first and might say no.</label>
+    <div class="step" id="pubStep1"><span class="n">1</span><div><h3>Save the file</h3>
+      <p>Your animation as a <code>.geedo.json</code> file, ready to hand in.</p>
+      <button id="pubSaveBtn" onclick="pubSave()">Save the file</button></div></div>
+    <div class="step" id="pubStep2"><span class="n">2</span><div><h3>Hand it in on GitHub</h3>
+      <p>Opens the submission form with the name filled in. Drop the file you just saved into the box and press <b>Submit</b>. The bot posts a preview within a minute; a person answers usually within a day.</p>
+      <button id="pubGoBtn" onclick="pubGo()" disabled>Open the form</button></div></div>
+    <p style="margin-top:14px">No GitHub account? Post the file in <b>#animations</b> on the <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a> and it gets handed in for you. <a href="../make.html#rules" target="_blank">The rules</a>.</p>
+    <div class="actions"><button onclick="closeModal('modalPub')" class="ghost">Close</button></div>
   </div>
 </div>
 
@@ -330,6 +385,7 @@
 
 <input type="file" id="fileImg" accept="image/*" style="display:none">
 
+<script src="../assets/geedo.js"></script>
 <script>
 const W=128,H=64; let ZOOM=8;
 const canvas=document.getElementById('canvas'),onion=document.getElementById('onion'),preview=document.getElementById('preview');
@@ -590,7 +646,13 @@ function exportIno(){
   download(name+'.ino',s);toast('Exported '+name+'.ino');
 }
 function download(filename,content){const blob=new Blob([content],{type:'text/plain'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
-function saveProject(){const proj={name:document.getElementById('projName').value,fps:parseInt(document.getElementById('fps').value),loop:document.getElementById('chkLoop').checked,pp:document.getElementById('chkPP').checked,frames:frames.map(f=>({pixels:Array.from(f.pixels),dur:f.dur}))};download((proj.name||'anim')+'.geedo.json',JSON.stringify(proj));toast('Project saved')}
+function projectData(){
+  const proj={name:document.getElementById('projName').value,fps:Math.min(30,Math.max(1,parseInt(document.getElementById('fps').value)||8)),loop:document.getElementById('chkLoop').checked,pp:document.getElementById('chkPP').checked,frames:frames.map(f=>({pixels:Array.from(f.pixels),dur:f.dur}))};
+  const maker=(document.getElementById('pubMaker').value||'').trim();if(maker)proj.maker=maker;
+  if(REMIX_OF)proj.remix_of=REMIX_OF;
+  return proj;
+}
+function saveProject(){const proj=projectData();download((proj.name||'anim')+'.geedo.json',JSON.stringify(proj));toast('Project saved')}
 function openProject(){
   const inp=document.createElement('input');inp.type='file';inp.accept='.json';
   inp.onchange=e=>{const file=e.target.files[0],r=new FileReader();r.onload=()=>{try{const p=JSON.parse(r.result);frames=p.frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur||1}));cur=0;document.getElementById('projName').value=p.name||'anim';document.getElementById('fps').value=p.fps||8;document.getElementById('chkLoop').checked=!!p.loop;document.getElementById('chkPP').checked=!!p.pp;buildFrameList();renderAll();toast('Project loaded')}catch(err){toast('Bad file')}};r.readAsText(file)};
@@ -600,8 +662,130 @@ function newProject(){if(!confirm('Start new project? Current work will be lost.
 
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-function doSend(){const ip=document.getElementById('geedoIp').value;toast('Sending to '+ip+'…');setTimeout(()=>{toast('Geedo received '+frames.length+' frames');closeModal('modalSend')},1200)}
-function doPublish(){const v=document.getElementById('pubVis').value,code='GD-'+Math.random().toString(36).slice(2,8).toUpperCase();closeModal('modalPub');if(v==='private')alert('Private code:\n\n'+code+'\n\nShare this with your friends!');else toast('Published ('+v+')')}
+/* -------- the robot's file --------
+   GDA2, the format every Geedo plays and the Hub serves: an 8-byte header,
+   one hold byte a frame, a table of offsets, then each 1024-byte page packed
+   as chunks - a control byte under 0x80 means "the next c+1 bytes are as
+   they are", 0x80 and up means "the next byte, c-0x7F times". The same
+   packer as tools/gda.py in the source repo; the same reader everywhere. */
+function packRLE(page){
+  const out=[];let i=0;
+  while(i<1024){
+    let r=1;while(i+r<1024&&page[i+r]===page[i]&&r<128)r++;
+    if(r>=3){out.push(0x7F+r,page[i]);i+=r;continue}
+    const start=i;i++;
+    while(i<1024&&i-start<128){
+      let rr=1;while(i+rr<1024&&page[i+rr]===page[i]&&rr<3)rr++;
+      if(rr>=3)break;
+      i++;
+    }
+    out.push(i-start-1);for(let k=start;k<i;k++)out.push(page[k]);
+  }
+  return out;
+}
+function encodeGda2(){
+  const proj=projectData();
+  const packed=frames.map(f=>packRLE(packFrameC(f.pixels)));
+  const n=frames.length,head=8+n+4*(n+1);
+  const bytes=[0x47,0x44,0x41,0x32,1,n,proj.fps,(proj.loop?1:0)|(proj.pp?2:0)];
+  for(const f of frames)bytes.push(Math.min(255,Math.max(1,f.dur|0)));
+  let off=head;
+  const offs=[];for(const p of packed){offs.push(off);off+=p.length}offs.push(off);
+  for(const o of offs)bytes.push(o&255,(o>>8)&255,(o>>16)&255,(o>>24)&255);
+  for(const p of packed)for(const b of p)bytes.push(b);
+  return new Uint8Array(bytes);
+}
+function downloadBytes(filename,bytes){const url=URL.createObjectURL(new Blob([bytes],{type:'application/octet-stream'})),a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
+function exportBin(){
+  if(frames.length>255){toast('The robot format holds 255 frames at most');return}
+  const name=(document.getElementById('projName').value||'anim').replace(/[^A-Za-z0-9_-]+/g,'_');
+  const bin=encodeGda2();downloadBytes(name+'.bin',bin);toast('Saved '+name+'.bin, '+bin.length+' bytes')
+}
+
+/* -------- the robot's flash rule --------
+   A big flash is a frame-to-frame swing of more than a quarter of the screen;
+   more than three inside any one second and Geedo refuses to play it. Told
+   here before publishing, so nobody finds out from the bot. A loop's last
+   frame hands to its first, so that step counts too. */
+function flashWorst(){
+  const fps=Math.min(30,Math.max(1,parseInt(document.getElementById('fps').value)||8)),base=1000/fps;
+  const loop=document.getElementById('chkLoop').checked;
+  const seq=frames.slice();if(loop&&seq.length>1)seq.push(seq[0]);
+  let t=0,prev=null;const swings=[];
+  for(const f of seq){let n=0;for(let i=0;i<f.pixels.length;i++)n+=f.pixels[i];
+    if(prev!==null&&Math.abs(n-prev)>2048)swings.push(t);prev=n;t+=base*Math.max(1,f.dur|0)}
+  let worst=0;for(const s of swings){let c=0;for(const g of swings)if(g>=s&&g<s+1000)c++;if(c>worst)worst=c}
+  return worst;
+}
+
+/* -------- publishing, for real --------
+   The Hub is a public repository and every animation on it went through a
+   person. So Publish here does two honest things: saves the file, and opens
+   the submission form with the name filled in. The bot checks it and posts a
+   preview; a person approves it; the robots do the rest. */
+let pubSaved=false;
+function pubReport(){
+  const bin=encodeGda2(),worst=flashWorst(),fps=parseInt(document.getElementById('fps').value)||8;
+  const bad=[];
+  if(frames.length>96)bad.push(frames.length+' frames is more than Geedo has room for (96 at most)');
+  if(bin.length>32*1024)bad.push('packed it is '+(bin.length/1024).toFixed(1)+' KB; the limit is 32 KB');
+  if(worst>3)bad.push('it flashes '+worst+' times in one second; the limit is 3, and Geedo refuses more');
+  if(fps<1||fps>30)bad.push('Geedo plays 1 to 30 frames a second');
+  const el=document.getElementById('pubCheck');
+  if(bad.length){el.className='note bad';el.textContent='Not yet: '+bad.join('; ')+'.'}
+  else{el.className='note ok';el.textContent=frames.length+' frame'+(frames.length===1?'':'s')+' at '+fps+' fps, '+(bin.length/1024).toFixed(1)+' KB packed, '+worst+' big flash'+(worst===1?'':'es')+' in the busiest second. The robot would play it.'}
+  return !bad.length;
+}
+function pubUpdate(){
+  const ok=pubReport();
+  const rules=[...document.querySelectorAll('#modalPub .rule')].every(c=>c.checked);
+  const name=document.getElementById('pubName').value.trim();
+  document.getElementById('pubSaveBtn').disabled=!(ok&&name);
+  document.getElementById('pubGoBtn').disabled=!(ok&&name&&rules&&pubSaved);
+  document.getElementById('pubStep1').classList.toggle('done',pubSaved);
+}
+function openPublish(){
+  pubSaved=false;
+  const pn=document.getElementById('pubName');if(!pn.value)pn.value=document.getElementById('projName').value||'';
+  openModal('modalPub');pubUpdate();
+}
+function pubSave(){
+  const name=document.getElementById('pubName').value.trim();if(!name)return;
+  document.getElementById('projName').value=name;
+  saveProject();pubSaved=true;pubUpdate();
+}
+function pubGo(){
+  const name=document.getElementById('pubName').value.trim(),maker=document.getElementById('pubMaker').value.trim();
+  const u=new URL('https://github.com/Breadboardy/Geedo-Hub/issues/new');
+  u.searchParams.set('template','publish-animation.yml');
+  u.searchParams.set('title','Publish: '+name);
+  u.searchParams.set('name',name);
+  if(maker)u.searchParams.set('maker',maker);
+  window.open(u.toString(),'_blank','noopener');
+}
+['pubName','pubMaker'].forEach(id=>document.getElementById(id).addEventListener('input',pubUpdate));
+document.querySelectorAll('#modalPub .rule').forEach(c=>c.addEventListener('change',pubUpdate));
+
+/* -------- opening a Hub animation to remix --------
+   animation.html links here with ?open=<file under animations/>. The bytes
+   are the robot's own file, decoded by the site's decoder; what lands on the
+   canvas is exactly what the robot shows. The project remembers what it
+   started from, so the Hub can say so. */
+let REMIX_OF='';
+async function openFromHub(){
+  const want=new URLSearchParams(location.search).get('open');
+  if(!want||!/^(bin|packs\/[a-z0-9_-]+\/bin)\/[A-Za-z0-9_.-]+\.bin$/.test(want))return;
+  try{
+    const r=await fetch('../animations/'+want);if(!r.ok)throw new Error(r.status);
+    const a=window.Geedo.unpack(new Uint8Array(await r.arrayBuffer()));
+    const id=want.replace(/^.*\//,'').replace(/\.bin$/,'');
+    frames=a.frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur||1}));cur=0;undoStack=[];redoStack=[];
+    document.getElementById('fps').value=Math.min(30,a.fps||8);
+    document.getElementById('chkLoop').checked=!!a.loop;document.getElementById('chkPP').checked=!!a.pingpong;
+    document.getElementById('projName').value=id+'_remix';REMIX_OF=id;
+    buildFrameList();renderAll();toast('Opened '+id+' from the Hub. Make it yours.');
+  }catch(e){toast('Could not open that one from the Hub')}
+}
 
 let toastTimer=null;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2000)}
@@ -623,7 +807,7 @@ document.getElementById('btnPlay').onclick=play;document.getElementById('btnPrev
 document.getElementById('btnDup').onclick=duplicateFrame;document.getElementById('btnDel').onclick=()=>deleteFrame(cur);
 document.getElementById('btnStampText').onclick=()=>{const txt=document.getElementById('txtInput').value;if(txt)stampText(txt,parseInt(document.getElementById('txtSize').value))};
 document.getElementById('btnNew').onclick=newProject;document.getElementById('btnOpen').onclick=openProject;document.getElementById('btnSave').onclick=saveProject;
-document.getElementById('btnExport').onclick=exportIno;document.getElementById('btnSend').onclick=()=>openModal('modalSend');document.getElementById('btnPublish').onclick=()=>openModal('modalPub');
+document.getElementById('btnExport').onclick=()=>openModal('modalExport');document.getElementById('btnSend').onclick=()=>openModal('modalSend');document.getElementById('btnPublish').onclick=openPublish;
 document.getElementById('btnImport').onclick=openImport;
 document.getElementById('fps').onchange=updateStatus;
 document.getElementById('zoomIn').onclick=()=>setZoom(ZOOM+1);document.getElementById('zoomOut').onclick=()=>setZoom(ZOOM-1);
@@ -646,7 +830,7 @@ window.addEventListener('keydown',(e)=>{
   if(e.key==='x'){const other=document.querySelector('.swatch:not(.sel)');if(other)other.click()}
 });
 
-buildFrameList();buildStamps();setZoom(8);setupDropZone();renderAll();
+buildFrameList();buildStamps();setZoom(8);setupDropZone();renderAll();openFromHub();
 </script>
 </body>
 </html>

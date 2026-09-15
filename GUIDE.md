@@ -122,7 +122,9 @@ New animations land on Geedo **by themselves**. He checks the Hub every
 survives a power cut.
 
 Browse what's available at the **Geedo Hub**, or make your own in the Studio
-and publish it — every Geedo picks it up within the minute.
+and publish it. A person looks at every animation before it goes out; once
+it's approved, every Geedo picks it up within the minute, with your name on
+it.
 
 Animations he has already downloaded keep playing even with the WiFi off, so
 he still works in the car, on a trip, or when the internet is down.

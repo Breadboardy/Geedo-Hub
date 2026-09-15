@@ -1,107 +1,120 @@
 {
- "version": 1,
- "id": "space",
- "name": "Space Pack",
- "rarity": "common",
- "animations": [
-  {
-   "id": "space_flyby",
-   "name": "Flyby",
-   "file": "bin/space_flyby.bin",
-   "size": 6760,
-   "hash": "009e1cd1",
-   "frames": 32,
-   "sha256": "009e1cd1fb18232d5f3d65c5ec56bec8d84d700d5810a286a5d2146b609b528a"
-  },
-  {
-   "id": "space_solar",
-   "name": "Solar System",
-   "file": "bin/space_solar.bin",
-   "size": 20301,
-   "hash": "fb2b6196",
-   "frames": 48,
-   "sha256": "fb2b6196fb64ccf37872bdadb2f2fdba36ed040ee07aa2ae366bc28c5796b7ae"
-  },
-  {
-   "id": "space_belt",
-   "name": "Asteroid Belt",
-   "file": "bin/space_belt.bin",
-   "size": 8581,
-   "hash": "41636e4a",
-   "frames": 40,
-   "sha256": "41636e4a85b34b8ad7b1f7bd5f64713d4554de5fe82ac07662c61c802fbdeb05"
-  },
-  {
-   "id": "space_collision",
-   "name": "Collision",
-   "file": "bin/space_collision.bin",
-   "size": 8672,
-   "hash": "7044ad35",
-   "frames": 44,
-   "sha256": "7044ad35ecda1a41485f4d4fb211e6a4d8494fa60936e511341dec1b9e84d446"
-  },
-  {
-   "id": "space_impact",
-   "name": "Impact",
-   "file": "bin/space_impact.bin",
-   "size": 12132,
-   "hash": "d9c1d413",
-   "frames": 48,
-   "sha256": "d9c1d413ce3f8b05141a18966a902d08a26177af435d0932c8262546800fcb86"
-  },
-  {
-   "id": "space_supernova",
-   "name": "Supernova",
-   "file": "bin/space_supernova.bin",
-   "size": 11152,
-   "hash": "acd1d1fb",
-   "frames": 44,
-   "sha256": "acd1d1fb8130778b16f774acb01f0f7662c033eb4b7f5d781f83584dc1ded84c"
-  },
-  {
-   "id": "space_moon",
-   "name": "Moon Landing",
-   "file": "bin/space_moon.bin",
-   "size": 10647,
-   "hash": "a9cb1306",
-   "frames": 40,
-   "sha256": "a9cb13067c3866f57c5117a526662d16e70366cbf30fc9b345f949f6f792dc2e"
-  },
-  {
-   "id": "space_planets",
-   "name": "Ringed Planet",
-   "file": "bin/space_planets.bin",
-   "size": 9082,
-   "hash": "e2241ebe",
-   "frames": 40,
-   "sha256": "e2241ebee614f06a7476b4d70ec90813d9d1bbacb4b349d263188bc19aa98e6e"
-  },
-  {
-   "id": "space_meteors",
-   "name": "Meteor Shower",
-   "file": "bin/space_meteors.bin",
-   "size": 7457,
-   "hash": "52a44417",
-   "frames": 30,
-   "sha256": "52a44417aca37c1be003f886e3f714a68b5f59d6278006edfa44514a211e5fad"
-  },
-  {
-   "id": "space_blackhole",
-   "name": "Black Hole",
-   "file": "bin/space_blackhole.bin",
-   "size": 15119,
-   "hash": "08beaf53",
-   "frames": 48,
-   "sha256": "08beaf53609199aab37d31c14b6b56a37a26bd427bb5c2254bb75c1da0e0646d"
-  },
-  {
-   "id": "space_astronaut",
-   "name": "Spacewalk",
-   "file": "bin/space_astronaut.bin",
-   "size": 21696,
-   "hash": "3977a597",
-   "frames": 48,
-   "sha256": "3977a5972f8c3f8ded8300fe5eb4bff286460c2239b99eb783574e4f5b72e3d7"
-  }
- ]
+  "version": 1,
+  "id": "space",
+  "name": "Space Pack",
+  "rarity": "common",
+  "animations": [
+    {
+      "id": "space_flyby",
+      "name": "Flyby",
+      "file": "bin/space_flyby.bin",
+      "size": 6760,
+      "hash": "009e1cd1",
+      "frames": 32,
+      "sha256": "009e1cd1fb18232d5f3d65c5ec56bec8d84d700d5810a286a5d2146b609b528a",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_solar",
+      "name": "Solar System",
+      "file": "bin/space_solar.bin",
+      "size": 20301,
+      "hash": "fb2b6196",
+      "frames": 48,
+      "sha256": "fb2b6196fb64ccf37872bdadb2f2fdba36ed040ee07aa2ae366bc28c5796b7ae",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_belt",
+      "name": "Asteroid Belt",
+      "file": "bin/space_belt.bin",
+      "size": 8581,
+      "hash": "41636e4a",
+      "frames": 40,
+      "sha256": "41636e4a85b34b8ad7b1f7bd5f64713d4554de5fe82ac07662c61c802fbdeb05",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_collision",
+      "name": "Collision",
+      "file": "bin/space_collision.bin",
+      "size": 8672,
+      "hash": "7044ad35",
+      "frames": 44,
+      "sha256": "7044ad35ecda1a41485f4d4fb211e6a4d8494fa60936e511341dec1b9e84d446",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_impact",
+      "name": "Impact",
+      "file": "bin/space_impact.bin",
+      "size": 12132,
+      "hash": "d9c1d413",
+      "frames": 48,
+      "sha256": "d9c1d413ce3f8b05141a18966a902d08a26177af435d0932c8262546800fcb86",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_supernova",
+      "name": "Supernova",
+      "file": "bin/space_supernova.bin",
+      "size": 11152,
+      "hash": "acd1d1fb",
+      "frames": 44,
+      "sha256": "acd1d1fb8130778b16f774acb01f0f7662c033eb4b7f5d781f83584dc1ded84c",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_moon",
+      "name": "Moon Landing",
+      "file": "bin/space_moon.bin",
+      "size": 10647,
+      "hash": "a9cb1306",
+      "frames": 40,
+      "sha256": "a9cb13067c3866f57c5117a526662d16e70366cbf30fc9b345f949f6f792dc2e",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_planets",
+      "name": "Ringed Planet",
+      "file": "bin/space_planets.bin",
+      "size": 9082,
+      "hash": "e2241ebe",
+      "frames": 40,
+      "sha256": "e2241ebee614f06a7476b4d70ec90813d9d1bbacb4b349d263188bc19aa98e6e",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_meteors",
+      "name": "Meteor Shower",
+      "file": "bin/space_meteors.bin",
+      "size": 7457,
+      "hash": "52a44417",
+      "frames": 30,
+      "sha256": "52a44417aca37c1be003f886e3f714a68b5f59d6278006edfa44514a211e5fad",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_blackhole",
+      "name": "Black Hole",
+      "file": "bin/space_blackhole.bin",
+      "size": 15119,
+      "hash": "08beaf53",
+      "frames": 48,
+      "sha256": "08beaf53609199aab37d31c14b6b56a37a26bd427bb5c2254bb75c1da0e0646d",
+      "published_at": "2026-09-14"
+    },
+    {
+      "id": "space_astronaut",
+      "name": "Spacewalk",
+      "file": "bin/space_astronaut.bin",
+      "size": 21696,
+      "hash": "3977a597",
+      "frames": 48,
+      "sha256": "3977a5972f8c3f8ded8300fe5eb4bff286460c2239b99eb783574e4f5b72e3d7",
+      "published_at": "2026-09-14"
+    }
+  ],
+  "published_at": "2026-09-14",
+  "author": "breadboard"
 }

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draw him something — Geedo</title>
+<meta name="description" content="How an animation gets from your screen to every Geedo in the world: draw it in the Studio, send it in, a person looks at it, and he does it.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .rule{background:var(--paper-2);border-radius:20px;padding:20px}
+  .rule .big{font-size:34px;line-height:1;margin-bottom:10px}
+  .rule h3{font-size:19px;margin-bottom:6px}
+  .rule p{color:var(--mute);font-size:14.5px}
+  .spec{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:15px;align-items:baseline}
+  .spec dt{font-weight:800;white-space:nowrap}
+  .spec dd{margin:0;color:var(--mute)}
+  .hero .screen{max-width:420px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">≡</button>
+    <div class="nav-links">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="makers.html">Makers</a>
+      <a class="link" href="connect.html">Set up</a>
+      <a class="hot" href="make.html">Draw one</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1 class="display">Draw him<br><em>something.</em></h1>
+      <p class="lead">
+        His face is 128 by 64 pixels, black and white, and anyone can draw for
+        it. Here is how a drawing gets from your screen to every Geedo in the
+        world, and the few rules on the way.
+      </p>
+      <div class="actions">
+        <a class="btn yellow" href="studio/index.html">Open the Studio</a>
+        <a class="btn" href="browse.html">See what others made</a>
+      </div>
+    </div>
+    <div class="hero-shot">
+      <span class="sticker left">YOURS NEXT?</span>
+      <div class="screen tilt blank" id="hero-screen"></div>
+    </div>
+  </header>
+
+  <section class="panel">
+    <h2 class="h2">How it works</h2>
+    <p class="sub">Four steps. Only the first one is hard.</p>
+    <div class="steps">
+      <div class="step"><div>
+        <h3>Draw it in the Studio</h3>
+        <p>A pixel editor in your browser: pencil, shapes, bucket, text, frames with onion skin, and you can drop a photo in and turn it into pixels. Press <b>Play</b> to see it move. <b>Save</b> keeps a <code>.geedo.json</code> file on your computer so you can come back to it.</p>
+      </div></div>
+      <div class="step"><div>
+        <h3>Press Publish</h3>
+        <p>Studio saves your file and opens the submission form on GitHub. Give it a name, drop the file in, tick the three rules, send. No GitHub account? See the bottom of this page.</p>
+      </div></div>
+      <div class="step"><div>
+        <h3>A person looks at it</h3>
+        <p>The bot posts a preview and the numbers on your submission within a minute. Then we look at it, always, usually within a day. Kids watch these screens, so nothing goes out that nobody has seen. If it is a no, you are told why, and you can fix it and send it again.</p>
+      </div></div>
+      <div class="step"><div>
+        <h3>Watch him do it</h3>
+        <p>Approved means it is on the Hub with your name on it and its own page. Every Geedo checks the Hub once a minute and downloads anything new, so yours is doing it within the minute.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="rules">
+    <h2 class="h2">The rules</h2>
+    <p class="sub">Three you tick, one the bot measures.</p>
+    <div class="rules">
+      <div class="rule"><div class="big">✏️</div><h3>Your own drawing</h3>
+        <p>Not a character from a game, a film or a show, and not somebody else's pixel art. Geedo's own face is fair game: remix anything on the Hub.</p></div>
+      <div class="rule"><div class="big">💛</div><h3>Kind</h3>
+        <p>Nothing rude, mean or scary. A Geedo lives on somebody's desk, and a lot of those somebodies are kids.</p></div>
+      <div class="rule"><div class="big">🕶️</div><h3>Not flashy</h3>
+        <p>No more than three big flashes in any second. Fast flashing can hurt people. The bot measures it, and Geedo himself refuses to play anything over the line.</p></div>
+      <div class="rule"><div class="big">📦</div><h3>Small</h3>
+        <p>Up to 96 frames and under 32 KB once packed. His memory is tiny and every Geedo keeps every animation, so short and bold beats long and busy.</p></div>
+    </div>
+  </section>
+
+  <div class="strip" style="margin-top:18px">
+    <div class="box">
+      <h3>Good to know</h3>
+      <dl class="spec" style="margin:14px 0 0">
+        <dt>Screen</dt><dd>128 × 64 pixels, on or off. No grey, no colour.</dd>
+        <dt>Speed</dt><dd>1 to 30 frames a second, and any frame can hold for longer.</dd>
+        <dt>Plays</dt><dd>Looping, ping-pong, or once through.</dd>
+        <dt>Files</dt><dd><code>.geedo.json</code> is your Studio project. <code>.bin</code> is what the robot plays; the Studio can save that too.</dd>
+      </dl>
+    </div>
+    <div class="box y">
+      <h3>Remix anything</h3>
+      <p>Every animation page has <b>Open in Studio</b>. It loads those frames into the editor, and when you publish your version it goes up with a line saying what it started from, and a link back.</p>
+      <a class="btn ink" style="margin-top:16px" href="browse.html">Pick one to remix</a>
+    </div>
+    <div class="box b">
+      <h3>No GitHub account?</h3>
+      <p>Post your <code style="background:rgba(255,255,255,.2);color:#fff">.geedo.json</code> in <b>#animations</b> on the Discord. It gets submitted for you and you are told when it is live. Same rules, same look by a person.</p>
+      <a class="btn" style="margin-top:16px" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div><h2 class="h2">Freshly drawn</h2><p class="sub">The newest things people made for him.</p></div>
+      <a class="more" href="browse.html">All animations →</a>
+    </div>
+    <div class="feed" id="feed"></div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div>
+    <div class="brand">Geedo</div>
+    <p>A little robot with a face. What people draw for him goes to every Geedo in the world, once a person has looked at it.</p>
+  </div>
+  <div class="cols">
+    <div class="col"><span class="micro">Explore</span><a href="browse.html">Animations</a><a href="packs.html">Packs</a><a href="makers.html">Makers</a></div>
+    <div class="col"><span class="micro">Make</span><a href="make.html">Draw one</a><a href="studio/index.html">Studio</a><a href="make.html#rules">The rules</a></div>
+    <div class="col"><span class="micro">Owners</span><a href="connect.html">Set up</a><a href="unlock.html">Redeem a code</a><a href="GUIDE.md">Owner's guide</a></div>
+    <div class="col"><span class="micro">Community</span><a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a><a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a></div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script>
+(async () => {
+  const G = window.Geedo;
+  let all;
+  try { all = await G.all(); } catch (e) { return; }
+  const shown = G.newest(all.anims.filter(a => !G.isSystem(a)));
+  const hero = shown.find(a => /painting|homework|chill_work|reading/.test(a.id)) || shown[0];
+  if (hero) try {
+    const s = G.bigScreen(await G.loadBin(hero.src), 3, 'tilt');
+    s.el.querySelector('canvas').style.width = '100%';
+    document.getElementById('hero-screen').replaceWith(s.el);
+  } catch (e) {}
+  document.getElementById('feed').replaceChildren(...shown.slice(0, 4).map(a => G.card(a)));
+})();
+</script>
+</body>
+</html>

@@ -733,6 +733,7 @@
   "packs": [
     "ocean",
     "weather",
-    "space"
+    "space",
+    "weapons"
   ]
 }

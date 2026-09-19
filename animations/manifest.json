@@ -423,10 +423,10 @@
     }
   ],
   "packs": [
-    "ocean",
-    "weather"
+    "doodle"
   ],
   "packs_ready": [
-    "doodle"
+    "ocean",
+    "weather"
   ]
 }

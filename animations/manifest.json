@@ -735,5 +735,8 @@
     "weather",
     "space",
     "weapons"
+  ],
+  "packs_ready": [
+    "doodle"
   ]
 }

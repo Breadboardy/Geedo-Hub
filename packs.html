@@ -77,6 +77,14 @@
       <div class="rowb"><span class="tag good">Free · on every Geedo</span><a href="#pack-weather">Look inside →</a></div>
     </article>
 
+    <article class="product" id="p-doodle">
+      <span class="sticker">NEW</span>
+      <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"></div>
+      <h3>Doodle Pack</h3>
+      <p class="blurb">A whole second face: two dots and a mouth, drawn by hand and never quite the same twice. 12 of them, with real squash and stretch - a hop, a double take, a sneeze, a laugh, a nod, a no, and the stare.</p>
+      <div class="rowb"><span class="tag">Ready · not on the shelf yet</span><a href="#pack-doodle">Look inside →</a></div>
+    </article>
+
     <article class="product" id="p-weapons">
       <span class="sticker">NEW</span>
       <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"></div>
@@ -153,9 +161,14 @@
   try { m = await manifest(); }
   catch (e) { host.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
 
-  const ids = m.packs || [];
-  document.getElementById('n-packs').textContent = ids.length
-    ? `${ids.length} free pack${ids.length === 1 ? '' : 's'}` : '';
+  const live = m.packs || [];
+  // Packs that are built and signed on the Hub but not switched on: the
+  // shelf is only so big, so a finished pack can be waiting for room. They
+  // are shown here, marked, rather than hidden until there is space.
+  const ready = (m.packs_ready || []).filter(id => !live.includes(id));
+  const ids = [...live, ...ready];
+  document.getElementById('n-packs').textContent = live.length
+    ? `${live.length} free pack${live.length === 1 ? '' : 's'}` + (ready.length ? `, ${ready.length} waiting` : '') : '';
 
   if (!ids.length) {
     // An honest empty state beats inventing packs that do not exist.
@@ -212,7 +225,7 @@
       <div class="pack-screens"></div>`;
     el.querySelector('h3').textContent = pretty(pm.name || id);
     el.querySelector('.pack-head p').textContent = (pm.note || '') + (pm.published_at ? (pm.note ? ' · ' : '') + 'since ' + datestr(pm.published_at) : '');
-    el.querySelector('.rarity').textContent = pm.rarity || 'common';
+    el.querySelector('.rarity').textContent = ready.includes(id) ? 'not on the shelf yet' : (pm.rarity || 'common');
     el.querySelector('.pack-head > div:last-child p').textContent = `${anims.length} animation${anims.length === 1 ? '' : 's'}`;
     host.append(el);
 

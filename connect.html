@@ -388,11 +388,25 @@ no password needed!</div>
     const [used, total] = (kv.fs || '0/0').split('/').map(Number);
     const box = $('usb-info');
     box.hidden = false;
+    // v31 rests its radio between check-ins, so no address is not no WiFi.
+    const wifi = kv.ip && kv.ip !== 'none' ? `on WiFi at ${kv.ip}`
+               : kv.radio === 'quiet'      ? 'on WiFi, radio resting between check-ins'
+               :                              'not on WiFi yet';
     box.innerHTML =
       `<b>Geedo says hello.</b> Firmware v${kv.fw || '?'} &middot; ` +
       `${kv.packs || '0/0'} packs &middot; ` +
-      `${Math.round(used / 1024)} of ${Math.round(total / 1024)} KB used &middot; ` +
-      (kv.ip && kv.ip !== 'none' ? `on WiFi at ${kv.ip}` : 'not on WiFi yet');
+      `${Math.round(used / 1024)} of ${Math.round(total / 1024)} KB used &middot; ${wifi}` +
+      // v31 has two faces; the one he is wearing is the lit button.
+      (kv.face ? `<div class="row" style="margin-top:10px;align-items:center;gap:8px">` +
+                 `<span class="micro">Face</span>` +
+                 `<button class="btn${kv.face === 'og' ? ' primary' : ''}" data-face="og">OG eyes</button>` +
+                 `<button class="btn${kv.face === 'doodle' ? ' primary' : ''}" data-face="doodle">Doodle</button>` +
+                 `</div>` : '');
+    box.querySelectorAll('[data-face]').forEach(b => b.onclick = async () => {
+      b.disabled = true;
+      try { await ask(`FACE ${b.dataset.face}`, /^GEEDO (OK|ERR) FACE/, 6000); await showInfo(); }
+      catch (e) { say(`could not switch face: ${e.message || e}`, '#f87171'); b.disabled = false; }
+    });
   }
 
   const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';

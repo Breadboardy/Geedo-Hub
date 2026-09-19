@@ -396,11 +396,13 @@ no password needed!</div>
       `<b>Geedo says hello.</b> Firmware v${kv.fw || '?'} &middot; ` +
       `${kv.packs || '0/0'} packs &middot; ` +
       `${Math.round(used / 1024)} of ${Math.round(total / 1024)} KB used &middot; ${wifi}` +
-      // v31 has two faces; the one he is wearing is the lit button.
+      // v31 has two faces. By default he wears whichever the shelf says
+      // (the Doodle Pack on means doodle); the lit button is the mode chosen.
       (kv.face ? `<div class="row" style="margin-top:10px;align-items:center;gap:8px">` +
-                 `<span class="micro">Face</span>` +
-                 `<button class="btn${kv.face === 'og' ? ' primary' : ''}" data-face="og">OG eyes</button>` +
-                 `<button class="btn${kv.face === 'doodle' ? ' primary' : ''}" data-face="doodle">Doodle</button>` +
+                 `<span class="micro">Face: ${kv.face}</span>` +
+                 `<button class="btn${(kv.mode || 'auto') === 'auto' ? ' primary' : ''}" data-face="auto">Follow the pack</button>` +
+                 `<button class="btn${kv.mode === 'og' ? ' primary' : ''}" data-face="og">OG eyes</button>` +
+                 `<button class="btn${kv.mode === 'doodle' ? ' primary' : ''}" data-face="doodle">Doodle</button>` +
                  `</div>` : '');
     box.querySelectorAll('[data-face]').forEach(b => b.onclick = async () => {
       b.disabled = true;

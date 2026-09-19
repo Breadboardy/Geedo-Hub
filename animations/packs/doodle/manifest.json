@@ -5,6 +5,86 @@
   "rarity": "common",
   "animations": [
     {
+      "id": "doodle_drawing",
+      "name": "Drawing",
+      "file": "bin/doodle_drawing.bin",
+      "size": 6815,
+      "hash": "77ea9f00",
+      "sha256": "77ea9f0073399d3786344b0a758f9e4aea06d30916de2d6e6b5fb76d584a4135",
+      "frames": 44,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_coffee",
+      "name": "Coffee",
+      "file": "bin/doodle_coffee.bin",
+      "size": 5999,
+      "hash": "025d8199",
+      "sha256": "025d8199e26985fad413264aa15933602a9cf71699665302e6de006ba7cd0c0b",
+      "frames": 40,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_pizza",
+      "name": "Pizza",
+      "file": "bin/doodle_pizza.bin",
+      "size": 3296,
+      "hash": "19837922",
+      "sha256": "19837922fc5c28e4d6e1f1b6532d4e62c7f88fe272c2434106c7cba573345063",
+      "frames": 40,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_gaming",
+      "name": "Gaming",
+      "file": "bin/doodle_gaming.bin",
+      "size": 4848,
+      "hash": "27bf6e2f",
+      "sha256": "27bf6e2fe7d5e362738afef728a7270f1da165bde046d000fbc31d10e2e69734",
+      "frames": 40,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_music",
+      "name": "Music",
+      "file": "bin/doodle_music.bin",
+      "size": 4427,
+      "hash": "eaefded5",
+      "sha256": "eaefded52d45afe349e79fa292dd772275afe728bc6183ba73cbfb966f8d851d",
+      "frames": 32,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_cake",
+      "name": "Birthday Cake",
+      "file": "bin/doodle_cake.bin",
+      "size": 6162,
+      "hash": "c6588d4f",
+      "sha256": "c6588d4f9014a1ad3b3ec591352102a716b77c142978a9ead08c9026ccd2bbb0",
+      "frames": 40,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_plant",
+      "name": "Watering",
+      "file": "bin/doodle_plant.bin",
+      "size": 6982,
+      "hash": "314fb818",
+      "sha256": "314fb8185084989d07b0d661d0b7b2c46740d65fd2016fa58821ac9508cfa77f",
+      "frames": 44,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_balloon",
+      "name": "Balloon",
+      "file": "bin/doodle_balloon.bin",
+      "size": 5147,
+      "hash": "460acfd0",
+      "sha256": "460acfd02b4ee53c125c03db7c54ae223e3dce9ea67b460adc2c3913a8d95788",
+      "frames": 36,
+      "published_at": "2026-09-19"
+    },
+    {
       "id": "doodle_idle",
       "name": "Doodle Face",
       "file": "bin/doodle_idle.bin",
@@ -126,5 +206,6 @@
     }
   ],
   "published_at": "2026-09-19",
-  "author": "Geedo"
+  "author": "Geedo",
+  "note": "A second face, and him doing things with it"
 }

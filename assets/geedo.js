@@ -19,31 +19,80 @@
 
 const W = 128, H = 64;
 
-/* ---- GDA1 -----------------------------------------------------------------
+/* ---- the robot's file --------------------------------------------------------
    'GDA1' + [ver, frameCount, fps, flags] + durations[frameCount] + pixels[]
    Pixels are page-major: 8 pages of 128 bytes, each byte holding 8 vertical
    pixels, bit 0 at the top. That is the SSD1306's own memory layout, which is
    why the robot can blit a frame straight to the panel with no conversion.
-   flags: bit0 = loop, bit1 = ping-pong.                                     */
-function unpackGda1(bytes){
-  if (bytes.length < 8 || String.fromCharCode(...bytes.slice(0,4)) !== 'GDA1')
-    throw new Error('not a GDA1 animation');
-  const count = bytes[5], fps = bytes[6] || 8, flags = bytes[7];
-  const body = 8 + count, frames = [];
-  for (let f = 0; f < count; f++){
-    const px = new Uint8Array(W * H), off = body + f * 1024;
-    for (let page = 0; page < 8; page++){
-      for (let x = 0; x < W; x++){
-        const b = bytes[off + page * W + x];
-        if (!b) continue;                     // blank column: skip 8 writes
-        for (let bit = 0; bit < 8; bit++)
-          if (b >> bit & 1) px[(page * 8 + bit) * W + x] = 1;
-      }
+   flags: bit0 = loop, bit1 = ping-pong.
+
+   'GDA2' is the same header, then a table of uint32 offsets - one per frame
+   and one for the end of the last - and each frame packed as chunks: a
+   control byte c < 0x80 means "the next c+1 bytes are literal", c >= 0x80
+   means "the next byte repeats c-0x7F times", until the 1024 bytes of the
+   page are out. Bold shapes on black pack to about a quarter, which is what
+   lets a robot's shelf hold every pack. A frame whose packed bytes are a
+   single byte is a reference: that byte is the index of an earlier frame,
+   shown again - how a long animation repeats a movement for five bytes a
+   frame. tools/gda.py in the source repo writes it; this and the firmware
+   read it the same way.                                                    */
+function unpackFrame(bytes, off, end){
+  const page = new Uint8Array(1024);
+  let ip = off, op = 0;
+  while (op < 1024){
+    if (ip >= end) throw new Error('packed frame ends early');
+    const c = bytes[ip++];
+    if (c < 0x80){
+      const n = c + 1;
+      if (op + n > 1024 || ip + n > end) throw new Error('packed frame overruns');
+      page.set(bytes.subarray(ip, ip + n), op); ip += n; op += n;
+    } else {
+      const n = c - 0x7F;
+      if (op + n > 1024 || ip >= end) throw new Error('packed frame overruns');
+      page.fill(bytes[ip++], op, op + n); op += n;
     }
-    frames.push({ pixels: px, dur: bytes[8 + f] || 1 });
+  }
+  if (ip !== end) throw new Error('packed frame has bytes left over');
+  return page;
+}
+function pageToPixels(page){
+  const px = new Uint8Array(W * H);
+  for (let p = 0; p < 8; p++){
+    for (let x = 0; x < W; x++){
+      const b = page[p * W + x];
+      if (!b) continue;                       // blank column: skip 8 writes
+      for (let bit = 0; bit < 8; bit++)
+        if (b >> bit & 1) px[(p * 8 + bit) * W + x] = 1;
+    }
+  }
+  return px;
+}
+function unpack(bytes){
+  const magic = bytes.length >= 8 ? String.fromCharCode(...bytes.slice(0,4)) : '';
+  if (magic !== 'GDA1' && magic !== 'GDA2') throw new Error('not a Geedo animation');
+  const count = bytes[5], fps = bytes[6] || 8, flags = bytes[7], frames = [];
+  if (magic === 'GDA1'){
+    const body = 8 + count;
+    for (let f = 0; f < count; f++)
+      frames.push({ pixels: pageToPixels(bytes.subarray(body + f * 1024, body + (f + 1) * 1024)),
+                    dur: bytes[8 + f] || 1 });
+  } else {
+    const t = 8 + count, dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const off = i => dv.getUint32(t + 4 * i, true);
+    for (let f = 0; f < count; f++){
+      const a = off(f), b = off(f + 1);
+      let pixels;
+      if (b - a === 1){                       // a reference: an earlier frame, shown again
+        const j = bytes[a];
+        if (j >= f || off(j + 1) - off(j) === 1) throw new Error('bad frame reference');
+        pixels = frames[j].pixels.slice();
+      } else pixels = pageToPixels(unpackFrame(bytes, a, b));
+      frames.push({ pixels, dur: bytes[8 + f] || 1 });
+    }
   }
   return { frames, fps, loop: !!(flags & 1), pingpong: !!(flags & 2) };
 }
+const unpackGda1 = unpack;                   // the old name, for anything still calling it
 
 /* ---- one clock for every screen on the page ----------------------------- */
 const live = new Set();

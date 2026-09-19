@@ -87,6 +87,19 @@
         </div>
       </article>
 
+      <article class="product" id="p-doodle">
+        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+             style="width:100%;height:auto"></div>
+        <h3>Doodle Pack</h3>
+        <p class="tag2">A whole second face: two dots and a mouth, drawn by
+           hand and never quite the same twice. 12 of them, with real squash
+           and stretch - a hop, a double take, a sneeze, a laugh, and the stare.</p>
+        <div class="rowb">
+          <span class="chip">Ready · waiting for shelf room</span>
+          <a class="btn plain" href="#inside">Look inside →</a>
+        </div>
+      </article>
+
       <article class="product" id="p-weather">
         <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
              style="width:100%;height:auto"></div>
@@ -186,9 +199,15 @@
   try { m = await manifest(); }
   catch (e) { host.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
 
-  const ids = m.packs || [];
-  document.getElementById('n-packs').textContent = ids.length
-    ? `${ids.length} pack${ids.length === 1 ? '' : 's'}` : '';
+  const live = m.packs || [];
+  // Packs that are built and signed on the Hub but not switched on. Every
+  // listed animation lives on every robot's shelf for life, and the shelf
+  // is only so big, so a finished pack can be waiting its turn. Shown here
+  // and marked, rather than hidden until there is room.
+  const ready = (m.packs_ready || []).filter(id => !live.includes(id));
+  const ids = [...live, ...ready];
+  document.getElementById('n-packs').textContent = live.length
+    ? `${live.length} pack${live.length === 1 ? '' : 's'}` + (ready.length ? `, ${ready.length} waiting` : '') : '';
 
   if (!ids.length) {
     // An honest empty state beats inventing packs that do not exist. It says
@@ -231,7 +250,7 @@
     }
 
     const anims = pm.animations || [];
-    const rarity = (pm.rarity || 'common').toLowerCase();
+    const rarity = ready.includes(id) ? 'not on the shelf yet' : (pm.rarity || 'common').toLowerCase();
     const el = document.createElement('article');
     el.className = 'pack';
     el.innerHTML = `

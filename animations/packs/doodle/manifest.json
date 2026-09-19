@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "id": "doodle",
+  "name": "Doodle Pack",
+  "rarity": "common",
+  "animations": [
+    {
+      "id": "doodle_idle",
+      "name": "Doodle Face",
+      "file": "bin/doodle_idle.bin",
+      "size": 4203,
+      "hash": "41a71b24",
+      "sha256": "41a71b24accd1db2019299bb32689a06252a8c29e395679253cf585832856d62",
+      "frames": 40,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_bruh",
+      "name": "Bruh",
+      "file": "bin/doodle_bruh.bin",
+      "size": 5849,
+      "hash": "64349c36",
+      "sha256": "64349c3676e420e2826279e8f0dea9fd46314bf81e513c8a3a205fa4c2368fe8",
+      "frames": 46,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_take",
+      "name": "Double Take",
+      "file": "bin/doodle_take.bin",
+      "size": 3615,
+      "hash": "0a353482",
+      "sha256": "0a353482cdaec808d26f969f4143b0c8e955d9e5c99d772dc9d0754732ea26c4",
+      "frames": 30,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_laugh",
+      "name": "Laughing",
+      "file": "bin/doodle_laugh.bin",
+      "size": 3552,
+      "hash": "06923098",
+      "sha256": "0692309886cc8479f6163212ea5625b4dff090c942c7bcfda2f49e76cf05e62c",
+      "frames": 24,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_sneeze",
+      "name": "Sneeze",
+      "file": "bin/doodle_sneeze.bin",
+      "size": 3274,
+      "hash": "edb039fd",
+      "sha256": "edb039fd2fa99b3322fe7a7992b0315955d91d6acd7cb6a421a2a89b11c48d6e",
+      "frames": 28,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_bounce",
+      "name": "Bounce",
+      "file": "bin/doodle_bounce.bin",
+      "size": 2702,
+      "hash": "7281c9eb",
+      "sha256": "7281c9eb47717f100213c4ae70acbfb4a2d0da059b75a0bb1c746283c6d19a0e",
+      "frames": 26,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_wave",
+      "name": "Waving",
+      "file": "bin/doodle_wave.bin",
+      "size": 4180,
+      "hash": "89526190",
+      "sha256": "89526190e7c7538a996edef4af6147bfae5c520579474bcc7ed0acb0717c45e9",
+      "frames": 30,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_cheeky",
+      "name": "Cheeky",
+      "file": "bin/doodle_cheeky.bin",
+      "size": 3524,
+      "hash": "4c27b21e",
+      "sha256": "4c27b21e5660f137b85e8d2ba93f6138e6f41576ee004ca45965243dbc00587b",
+      "frames": 30,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_surprise",
+      "name": "Surprised",
+      "file": "bin/doodle_surprise.bin",
+      "size": 3459,
+      "hash": "1c847053",
+      "sha256": "1c847053455add46f3dfd99325131b5a11505abc6e94eed6c3f83fc0213b5d49",
+      "frames": 26,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_nod",
+      "name": "Nodding",
+      "file": "bin/doodle_nod.bin",
+      "size": 2548,
+      "hash": "506cd27c",
+      "sha256": "506cd27cf3484e0574e383e7ab67a387310b085e6c33807f5b670403758e491e",
+      "frames": 24,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_shake",
+      "name": "No",
+      "file": "bin/doodle_shake.bin",
+      "size": 1825,
+      "hash": "0b9776f6",
+      "sha256": "0b9776f69600bcd61e66cee87e718348a990d48bb5502725c23e6f5ed3b31973",
+      "frames": 26,
+      "published_at": "2026-09-19"
+    },
+    {
+      "id": "doodle_sleepy",
+      "name": "Sleepy",
+      "file": "bin/doodle_sleepy.bin",
+      "size": 2921,
+      "hash": "f9f7df70",
+      "sha256": "f9f7df70644efa67d7a50b17ac843db473e045e9112df713c85422675eb1fd19",
+      "frames": 34,
+      "published_at": "2026-09-19"
+    }
+  ],
+  "published_at": "2026-09-19",
+  "author": "Geedo"
+}

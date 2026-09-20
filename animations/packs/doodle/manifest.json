@@ -149,6 +149,132 @@
       "frames": 46
     },
     {
+      "id": "doodle_derp",
+      "name": "Derp",
+      "file": "bin/doodle_derp.bin",
+      "size": 3389,
+      "hash": "4e115a41",
+      "sha256": "4e115a41cef9bb6aaa4153e8947f19dc2007907ed0072ae96d5cbdbded3c7913",
+      "frames": 34
+    },
+    {
+      "id": "doodle_buffering",
+      "name": "Buffering",
+      "file": "bin/doodle_buffering.bin",
+      "size": 3878,
+      "hash": "b5a89600",
+      "sha256": "b5a896000a6b8f7ed55b2e1ba00455d3fdb4aa681cf3c340f7eeedc593cb3b25",
+      "frames": 42
+    },
+    {
+      "id": "doodle_crosseyed",
+      "name": "Cross-Eyed",
+      "file": "bin/doodle_crosseyed.bin",
+      "size": 4559,
+      "hash": "77409373",
+      "sha256": "774093734e827a19f77a110f91f07b5c53a82cbc10bbb26a1af4c3d98434899f",
+      "frames": 38
+    },
+    {
+      "id": "doodle_stare",
+      "name": "The Stare",
+      "file": "bin/doodle_stare.bin",
+      "size": 3381,
+      "hash": "fa459784",
+      "sha256": "fa459784d46eb65c6664895283ab0128a9ffd12234cd26cc430a4c455b87ead2",
+      "frames": 40
+    },
+    {
+      "id": "doodle_glitch",
+      "name": "Glitch",
+      "file": "bin/doodle_glitch.bin",
+      "size": 2683,
+      "hash": "dbc72223",
+      "sha256": "dbc722237019e311dd78a91068c970ca3c7c21841883ac3a994128ae5dffc480",
+      "frames": 32
+    },
+    {
+      "id": "doodle_yawn",
+      "name": "Yawn",
+      "file": "bin/doodle_yawn.bin",
+      "size": 3284,
+      "hash": "4212ac15",
+      "sha256": "4212ac156e7ba5d127524f1d66f527b74c514520f95a0ecc9d08333d42b572ba",
+      "frames": 34
+    },
+    {
+      "id": "doodle_blep",
+      "name": "Blep",
+      "file": "bin/doodle_blep.bin",
+      "size": 2830,
+      "hash": "1032dc26",
+      "sha256": "1032dc26ce374361e0ad10d98669d149d0e41693bbbf2f5b38e853a55167ef11",
+      "frames": 26
+    },
+    {
+      "id": "doodle_stunned",
+      "name": "Seeing Stars",
+      "file": "bin/doodle_stunned.bin",
+      "size": 8079,
+      "hash": "40e7e047",
+      "sha256": "40e7e047ccea9e375adee33d93d5658e01fe380e2488a71caf9f913dce7b6ef9",
+      "frames": 36
+    },
+    {
+      "id": "doodle_hypno",
+      "name": "Hypnotised",
+      "file": "bin/doodle_hypno.bin",
+      "size": 7019,
+      "hash": "df4fe721",
+      "sha256": "df4fe721c1eb4613ab5efe65c1ca526fab97805e46f927cc19ad627e93cf8cb1",
+      "frames": 36
+    },
+    {
+      "id": "doodle_chomp",
+      "name": "Chomp",
+      "file": "bin/doodle_chomp.bin",
+      "size": 3637,
+      "hash": "3594f228",
+      "sha256": "3594f228adcab09a842b8b9961fb43e4be5a7726b0c8cd3f4508b876a4a9b33d",
+      "frames": 32
+    },
+    {
+      "id": "doodle_panic",
+      "name": "Panic",
+      "file": "bin/doodle_panic.bin",
+      "size": 5608,
+      "hash": "4ee53da6",
+      "sha256": "4ee53da6406914762e5546ec4df281c095b4fc3fc3bbf110b503827e371bec89",
+      "frames": 34
+    },
+    {
+      "id": "doodle_raspberry",
+      "name": "Raspberry",
+      "file": "bin/doodle_raspberry.bin",
+      "size": 4149,
+      "hash": "9b3e8425",
+      "sha256": "9b3e8425daafa2f8b05efe27122549bf5e9238e30bee0d591a0665cf3753d334",
+      "frames": 30
+    },
+    {
+      "id": "doodle_evil",
+      "name": "Evil Plan",
+      "file": "bin/doodle_evil.bin",
+      "size": 3836,
+      "hash": "4dddebd2",
+      "sha256": "4dddebd27d6816e736ef7e11ed1dda86450124969a3fd0c21b5d56a57a3afbc4",
+      "frames": 34
+    },
+    {
+      "id": "doodle_droop",
+      "name": "Droop",
+      "file": "bin/doodle_droop.bin",
+      "size": 4375,
+      "hash": "43592d53",
+      "sha256": "43592d53900233c447216d712b14b302a7d61d49807ee760a86552803701a0f0",
+      "frames": 36
+    },
+    {
       "id": "doodle_idle",
       "name": "Doodle Face",
       "file": "bin/doodle_idle.bin",
@@ -257,7 +383,7 @@
       "frames": 34
     }
   ],
-  "published_at": "2026-09-19",
+  "published_at": "2026-09-20",
   "author": "Geedo",
   "note": "A second face, and him doing things with it"
 }

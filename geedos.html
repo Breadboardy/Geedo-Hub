@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Geedos — Geedo</title>
+<meta name="description" content="Plug a Geedo in and he shows up here: who he is, what he is holding, and what you can put on him.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  .bots{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:26px}
+  .bot{background:var(--bg-lift);border:1px solid var(--line);border-radius:10px;padding:20px}
+  .bot.busy{border-color:var(--accent)}
+  .bot .who{font-family:var(--pixel);font-size:20px;letter-spacing:.08em;color:var(--accent)}
+  .bot .sub{font-size:12px;color:var(--dim);margin-top:4px;letter-spacing:.05em}
+  .bot dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0 0;font-size:13px}
+  .bot dt{color:var(--dim);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .bot dd{margin:0;color:var(--mute)}
+  .meter{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:3px}
+  .meter i{display:block;height:100%;background:var(--accent)}
+  .waiting{border:1px dashed var(--line-bright);border-radius:10px;padding:18px;margin-top:22px;font-size:14px}
+  .log{background:#000;color:#e9ebef;border:1px solid var(--line-bright);border-radius:6px;
+       padding:12px;font-size:11px;line-height:1.6;max-height:180px;overflow:auto;margin-top:22px}
+  .log div.sent{color:#b08d57}.log div.his{color:#22d3ee}.log div.other{color:#71717a}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="connect.html">Set up</a>
+      <a class="link" href="geedos.html">My Geedos</a>
+      <a class="link" href="unlock.html">Redeem</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
+  <span class="micro">Your Geedos</span>
+  <h1 class="h1" style="margin-top:10px">Plug one in and he turns up here.</h1>
+  <p class="lead" style="margin-top:14px;max-width:62ch">
+    Not over WiFi — a web page cannot look around your network, and his radio
+    is off between check-ins anyway. This is the cable. Allow a Geedo once and
+    this page knows him after that: plug him in and he appears by himself, no
+    picker, no setup.
+  </p>
+
+  <div class="row" style="margin-top:22px">
+    <button class="btn primary" id="add">Add a Geedo</button>
+    <span class="small mute" id="state">looking for ones you have allowed…</span>
+  </div>
+
+  <div id="waiting" class="waiting" hidden></div>
+  <div class="bots" id="bots"></div>
+  <div class="log" id="log" hidden></div>
+
+  <p class="small mute" style="margin-top:30px;max-width:62ch">
+    Chrome and Edge only — Safari and Firefox cannot open serial devices at
+    all. Each Geedo needs allowing once per browser; that is the browser's
+    rule, not ours, and it is the whole reason a page cannot quietly list
+    your hardware.
+  </p>
+</main>
+
+<script type="module">
+import { GeedoLink } from './assets/geedolink.js';
+
+const $ = id => document.getElementById(id);
+const bots = $('bots'), state = $('state'), log = $('log');
+const live = new Map();                       // port -> {link, el}
+
+function say(line, kind) {
+  log.hidden = false;
+  const d = document.createElement('div');
+  d.className = kind === 'sent' ? 'sent' : kind ? 'his' : 'other';
+  d.textContent = line;
+  log.append(d);
+  log.scrollTop = log.scrollHeight;
+}
+
+if (!GeedoLink.supported) {
+  state.textContent = 'this browser cannot open serial devices';
+  $('add').disabled = true;
+}
+
+// A pack opened on the Redeem page, waiting for somewhere to go.
+function waitingPack() {
+  try {
+    const b64 = sessionStorage.getItem('geedoPack');
+    if (!b64) return null;
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return { bytes, name: sessionStorage.getItem('geedoPackName') || 'Pack' };
+  } catch (e) { return null; }
+}
+
+function drawWaiting() {
+  const p = waitingPack();
+  const box = $('waiting');
+  if (!p) { box.hidden = true; return; }
+  box.hidden = false;
+  box.innerHTML = `<b>${p.name}</b> is open and waiting &middot; ` +
+    `${Math.round(p.bytes.length / 1024)} KB &middot; ` +
+    `pick which Geedo it goes on below.`;
+}
+
+function card(link) {
+  const el = document.createElement('article');
+  el.className = 'bot';
+  el.innerHTML = '<div class="who">…</div><div class="sub">saying hello</div>';
+  bots.append(el);
+  return el;
+}
+
+function fill(link, el) {
+  const i = link.info || {};
+  const pack = waitingPack();
+  const pct = i.totalKB ? Math.round(100 * i.usedKB / i.totalKB) : 0;
+  el.innerHTML = `
+    <div class="who">${i.id || '??????'}</div>
+    <div class="sub">firmware v${i.fw || '?'} &middot; ${i.face || 'og'} face &middot;
+      ${i.radio === 'quiet' ? 'radio resting' : i.ip && i.ip !== 'none' ? 'on ' + i.ip : 'no WiFi'}</div>
+    <dl>
+      <dt>Animations</dt><dd>${i.anims || 0}</dd>
+      <dt>Packs</dt><dd>${i.packs || '0/0'}</dd>
+      <dt>Storage</dt><dd>${i.usedKB || 0} of ${i.totalKB || 0} KB
+        <div class="meter"><i style="width:${pct}%"></i></div></dd>
+      <dt>Last boot</dt><dd>${i.reset || '?'}${i.up ? ', ' + i.up + ' ago' : ''}</dd>
+    </dl>
+    <div class="row" style="margin-top:16px;gap:8px">
+      ${pack ? `<button class="btn primary" data-do="pack">Put ${pack.name} on him</button>` : ''}
+      <button class="btn" data-do="pet">Pet</button>
+      <button class="btn" data-do="face">${i.face === 'doodle' ? 'OG eyes' : 'Doodle'}</button>
+    </div>`;
+  el.querySelectorAll('[data-do]').forEach(b => b.onclick = () => act(link, el, b));
+}
+
+async function act(link, el, btn) {
+  const job = btn.dataset.do;
+  el.classList.add('busy');
+  btn.disabled = true;
+  try {
+    if (job === 'pet') await link.ask('PET', /^GEEDO OK PET/, 8000);
+    if (job === 'face') {
+      const want = (link.info || {}).face === 'doodle' ? 'og' : 'doodle';
+      await link.ask('FACE ' + want, /^GEEDO (OK|ERR) FACE/, 8000);
+    }
+    if (job === 'pack') {
+      const p = waitingPack();
+      if (!p) throw new Error('the pack is gone — open the code again');
+      await link.sendPack(p.bytes, f => btn.textContent = `sending… ${Math.round(f * 100)}%`);
+      sessionStorage.removeItem('geedoPack');
+      sessionStorage.removeItem('geedoPackName');
+      drawWaiting();
+      say('pack installed — watch his screen', true);
+    }
+    await link.hello();
+  } catch (e) {
+    say((e.message || e), false);
+  }
+  el.classList.remove('busy');
+  fill(link, el);
+}
+
+async function greet(link) {
+  if (live.has(link.port)) return;
+  const el = card(link);
+  live.set(link.port, { link, el });
+  link.onLine(say);
+  try {
+    await link.open();
+    await link.hello();
+    fill(link, el);
+    state.textContent = `${live.size} Geedo${live.size === 1 ? '' : 's'} connected`;
+  } catch (e) {
+    el.innerHTML = `<div class="who">—</div><div class="sub">${e.message || e}</div>`;
+  }
+}
+
+GeedoLink.watch(
+  link => greet(link),                        // plugged in: he appears himself
+  port => {
+    const row = live.get(port);
+    if (!row) return;
+    row.el.remove();
+    live.delete(port);
+    state.textContent = live.size
+      ? `${live.size} Geedo${live.size === 1 ? '' : 's'} connected` : 'unplugged';
+  });
+
+$('add').onclick = async () => {
+  try { await greet(await GeedoLink.pick()); }
+  catch (e) { state.textContent = /No port selected/i.test(e.message || '')
+    ? 'no device picked' : (e.message || 'could not connect'); };
+};
+
+drawWaiting();
+const known = await GeedoLink.known();
+state.textContent = known.length
+  ? `${known.length} you have allowed before — saying hello`
+  : 'none allowed yet — press Add a Geedo';
+for (const link of known) await greet(link);
+</script>
+</body>
+</html>

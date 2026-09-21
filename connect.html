@@ -2,23 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Set up — Geedo</title>
-<meta name="description" content="Set up a Geedo: join him to your WiFi once, and he does the rest by himself forever.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect — Geedo</title>
+<meta name="description" content="Set up a Geedo: join his WiFi network once, and he does the rest by himself forever.">
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  .flow{display:grid;gap:14px}
-  .flow-step{background:var(--paper-2);border-radius:20px;padding:clamp(18px,3vw,26px);
-             display:grid;grid-template-columns:1fr 300px;gap:clamp(18px,3vw,36px);align-items:center}
-  .flow-step .n{font-weight:800;font-size:13px;letter-spacing:.12em;color:var(--blue)}
-  .flow-step h2{margin-top:8px;font-size:24px}
-  .flow-step p{color:var(--mute);margin:10px 0 0;max-width:54ch}
-  .flow-step .fake{font-size:12px}
-  .screens figcaption{margin-top:8px;font-size:13px;font-weight:700;color:var(--mute)}
-  .usb{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(18px,3vw,36px);align-items:start}
-  #usb-log{margin-top:14px;max-height:190px;overflow:auto;background:#000;color:#e9ebef;border:4px solid #fff;
-           border-radius:14px;padding:12px;font-family:var(--mono);font-size:11.5px;line-height:1.6;font-weight:500}
+  .flow{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .flow-step{background:var(--bg);padding:clamp(22px,3vw,32px);
+             display:grid;grid-template-columns:1fr 296px;gap:clamp(20px,3vw,40px);align-items:center}
+  .flow-step:nth-child(even){background:var(--bg-lift)}
+  .flow-step .n{font-family:var(--pixel);font-size:13px;color:var(--accent);letter-spacing:.1em}
+  .flow-step h2{margin-top:10px}
+  .flow-step p{color:var(--mute);margin:12px 0 0;max-width:54ch}
+  .fake{background:#000;border:1px solid var(--line-bright);border-radius:6px;padding:16px 18px;
+        font-size:12px;line-height:1.7;color:#e9ebef;white-space:pre-wrap}
+  .fake b{color:var(--accent)}
+  .screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+  .screens figcaption{margin-top:8px;font-size:11px;color:var(--dim);letter-spacing:.06em}
+  table.meanings{width:100%;border-collapse:collapse;font-size:13px}
+  table.meanings td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.meanings td:first-child{color:var(--accent);white-space:nowrap;font-size:12px}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,52px)}
   @media (max-width:800px){.flow-step{grid-template-columns:1fr}}
 </style>
 </head>
@@ -26,80 +31,84 @@
 
 <nav class="nav">
   <div class="nav-in">
-    <a class="logo" href="index.html"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo</a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">≡</button>
-    <div class="nav-links">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
-      <a class="link" href="makers.html">Makers</a>
       <a class="link" href="connect.html">Set up</a>
-      <a class="hot" href="make.html">Draw one</a>
+      <a class="link" href="unlock.html">Redeem</a>
+      <a class="link" href="studio/index.html">Studio</a>
     </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
   </div>
 </nav>
 
-<main class="wrap">
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
 
-  <header style="padding:28px 0 6px;max-width:64ch">
+  <div style="max-width:62ch">
+    <p class="micro" style="margin:0 0 14px">Setting one up</p>
     <h1 class="h1">You do this once.</h1>
-    <p class="lead" style="margin-top:14px;color:var(--blue-soft)">
+    <p class="lead" style="margin-top:14px">
       Geedo joins your WiFi once and remembers it forever. After that every
       start goes straight to his face, and new animations turn up on their own.
       Set him up from this computer over the USB cable, or from your phone with
-      no cable at all.
+      no cable at all — either way you only do it once.
     </p>
-  </header>
+  </div>
 
-  <section class="panel" id="usb-sec">
-    <h2 class="h2">From this computer</h2>
-    <p class="sub">Plug him in and set him up right here.</p>
-    <div class="usb">
+  <section id="usb-sec">
+    <div class="sec-head"><span class="micro">From this computer</span><span class="fill rule"></span></div>
+    <div class="two">
       <div>
-        <p class="mute">
-          A Geedo who has never been on WiFi cannot be found <em>over</em> WiFi,
-          because there is nothing to find him on yet. The cable always works, so
-          this is the quickest way to get a brand-new one talking.
+        <h2 class="h2">Plug him in and set him up here.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          A Geedo who has never been on WiFi cannot be found <em>over</em> WiFi
+          — there is nothing to find him on yet. The cable always works, so this
+          is the quickest way to get a brand-new one talking.
         </p>
         <p class="small mute" style="margin-top:12px">
           Firmware v27 or newer. Works in Chrome and Edge; Safari and Firefox
-          can't talk to serial devices, so use the phone steps below on those.
+          can't talk to serial devices, so use the phone method below on those.
         </p>
         <div class="row" style="margin-top:20px">
-          <button class="btn blue" id="usb-go">Find my Geedo</button>
+          <button class="btn primary" id="usb-go">Find my Geedo</button>
           <span class="small mute" id="usb-state">not connected</span>
         </div>
-        <p class="small mute" style="margin-top:14px" id="usb-unsupported" hidden>
-          This browser can't open serial devices, so the cable route isn't
-          available here. Use the phone steps below; they work everywhere.
-        </p>
       </div>
       <div>
-        <div id="usb-info" class="note" hidden></div>
+        <div id="usb-pack" class="note small" hidden></div>
+        <div id="usb-info" class="note small" hidden></div>
         <div id="usb-nets" hidden style="margin-top:12px">
-          <label class="lbl" for="usb-ssid">Network</label>
-          <select class="field" id="usb-ssid"></select>
-          <label class="lbl" for="usb-pass">Password</label>
+          <label class="micro" for="usb-ssid">Network</label>
+          <select class="field" id="usb-ssid" style="margin-top:6px"></select>
+          <label class="micro" for="usb-pass" style="display:block;margin-top:12px">Password</label>
           <input class="field" id="usb-pass" type="password" autocomplete="off"
-                 placeholder="leave empty for an open network">
+                 placeholder="leave empty for an open network" style="margin-top:6px">
           <div class="row" style="margin-top:14px">
-            <button class="btn blue" id="usb-join">Connect him to WiFi</button>
+            <button class="btn primary" id="usb-join">Connect him to WiFi</button>
             <button class="btn" id="usb-rescan">Scan again</button>
           </div>
         </div>
-        <pre id="usb-log" hidden></pre>
+        <pre id="usb-log" hidden style="margin-top:14px;max-height:190px;overflow:auto;
+             background:#000;color:#e9ebef;border:1px solid var(--line-bright);
+             border-radius:6px;padding:12px;font-size:11px;line-height:1.6"></pre>
       </div>
     </div>
+    <p class="small mute" style="margin-top:18px" id="usb-unsupported" hidden>
+      This browser can't open serial devices, so the cable route isn't
+      available here. Use the phone steps below — they work everywhere.
+    </p>
   </section>
 
-  <section class="panel">
-    <h2 class="h2">Or from your phone</h2>
-    <p class="sub">Three steps, no cable.</p>
+  <section>
+    <div class="sec-head"><span class="micro">Or from your phone</span><span class="fill rule"></span></div>
     <div class="flow">
 
       <div class="flow-step">
         <div>
-          <span class="n">STEP 1</span>
-          <h2>Switch him on</h2>
+          <span class="n">STEP 01</span>
+          <h2 class="h2">Switch him on</h2>
           <p>His boot animation plays straight away, before he even looks for
              WiFi. If he's never been set up, he asks for it.</p>
         </div>
@@ -112,14 +121,14 @@ no password needed!</div>
 
       <div class="flow-step">
         <div>
-          <span class="n">STEP 2</span>
-          <h2>Join <b style="color:var(--blue)">GEEDO-Setup</b> on your phone</h2>
-          <p>Open your WiFi settings and connect to it; there's no password. A
+          <span class="n">STEP 02</span>
+          <h2 class="h2">Join <b class="accent">GEEDO-Setup</b> on your phone</h2>
+          <p>Open your WiFi settings and connect to it — there's no password. A
              page opens by itself. Pick your home network, type your password,
              hit save.</p>
-          <p class="small">
+          <p class="small" style="color:var(--dim)">
             If the page doesn't pop up, open a browser and go to
-            <b>192.168.4.1</b>. The setup network stays open for
+            <b class="accent">192.168.4.1</b>. The setup network stays open for
             5 minutes; switch him off and on to reopen it.</p>
         </div>
         <div class="fake">┌──────────────────────┐
@@ -134,74 +143,86 @@ no password needed!</div>
 
       <div class="flow-step">
         <div>
-          <span class="n">STEP 3</span>
-          <h2>That's it</h2>
+          <span class="n">STEP 03</span>
+          <h2 class="h2">That's it</h2>
           <p>He connects, fetches his animations, and comes alive. From then on
              the setup screen only ever comes back if he can't reach your WiFi.</p>
-          <p class="small">
-            Changed your WiFi password? Hold the button 5 seconds: he erases
+          <p class="small" style="color:var(--dim)">
+            Changed your WiFi password? Hold the button 5 seconds — he erases
             the old network and reopens setup. Let go early and nothing happens.</p>
         </div>
-        <div id="boot-screens" class="screens"></div>
+        <div id="boot-screens" class="screens" style="grid-template-columns:1fr"></div>
       </div>
 
     </div>
   </section>
 
-  <section class="panel">
-    <h2 class="h2">His screens, and what they mean</h2>
-    <div class="two" style="margin-top:18px;align-items:start">
-      <table class="table">
+  <section>
+    <div class="sec-head"><span class="micro">His screens, and what they mean</span><span class="fill rule"></span></div>
+    <div class="two">
+      <table class="meanings">
         <tbody>
-          <tr><td>Hi! Let's set me up</td><td>No WiFi saved: join <b>GEEDO-Setup</b>. Also shows if his saved network stops working</td></tr>
+          <tr><td>Hi! Let's set me up</td><td>No WiFi saved — join <b>GEEDO-Setup</b>. Also shows if his saved network stops working</td></tr>
           <tr><td>getting my stuff…</td><td>Downloading animations from the Hub</td></tr>
-          <tr><td>updating…</td><td>Installing new firmware. Leave him powered until he reboots himself</td></tr>
+          <tr><td>updating…</td><td>Installing new firmware — leave him powered until he reboots himself</td></tr>
           <tr><td>Fetch FAILED</td><td>On your WiFi but can't reach the Hub. Usually a login-page network (school, café, hotel)</td></tr>
-          <tr><td>LOW BATTERY</td><td>Plug in USB-C. He warns at most once every 90 seconds; he won't nag</td></tr>
+          <tr><td>LOW BATTERY</td><td>Plug in USB-C. He warns at most once every 90 seconds — he won't nag</td></tr>
           <tr><td>KEEP HOLDING</td><td>You're holding the button. Keep going to erase WiFi, or let go</td></tr>
         </tbody>
       </table>
-      <div class="box soft">
-        <h3>The button does two things.</h3>
-        <p><b>Tap</b> to pet him. He reacts straight away and cheers up a little. Keep tapping and he gets more and more wound up.</p>
-        <p style="margin-top:10px"><b>Hold 5 seconds</b> to erase his WiFi and start setup over.</p>
-        <p class="small mute" style="margin-top:14px">
+      <div>
+        <h2 class="h2">The button does two things.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          <b class="accent">Tap</b> to pet him — he reacts straight away and cheers
+          up a little. Keep tapping and he gets more and more wound up.
+        </p>
+        <p class="lead" style="margin-top:12px;font-size:15px">
+          <b class="accent">Hold 5 seconds</b> to erase his WiFi and start setup
+          over.
+        </p>
+        <p class="small mute" style="margin-top:16px">
           He remembers the petting. A Geedo who gets a tap every day wears a
-          different set of faces than one left on a shelf, and he keeps his mood
+          different set of faces than one left on a shelf — and he keeps his mood
           through a power cut and through updates. He never sulks, though, and
           never guilts you into picking him up.
         </p>
-        <p class="small mute" style="margin-top:10px">Secret: pet him ten times in a row and he sings his theme song.</p>
+        <p class="small" style="margin-top:14px;color:var(--dim)">
+          Secret: pet him ten times in a row and he sings his theme song.
+        </p>
       </div>
     </div>
   </section>
 
-  <section class="panel">
-    <h2 class="h2">Getting a pack onto him</h2>
-    <div class="two" style="margin-top:18px;align-items:start">
+  <section>
+    <div class="sec-head"><span class="micro">Getting a pack onto him</span><span class="fill rule"></span></div>
+    <div class="two">
       <div>
-        <h3 class="h3">Free packs need nothing from you.</h3>
-        <p class="mute" style="margin-top:10px">
+        <h2 class="h2">Public packs need nothing from you.</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
           He checks the Hub every 60 seconds. Anything newly switched on is
           downloaded and saved to his own storage, so it keeps playing with the
-          WiFi off: in the car, on a trip, or when the internet is down.
+          WiFi off — in the car, on a trip, or when the internet is down.
         </p>
-        <div class="row" style="margin-top:18px"><a class="btn" href="packs.html">See the packs</a></div>
+        <div class="row" style="margin-top:20px">
+          <a class="btn" href="packs.html">See the packs</a>
+        </div>
       </div>
       <div>
-        <h3 class="h3">Got a code?</h3>
-        <p class="mute" style="margin-top:10px">
-          Codes from a giveaway or a bought pack are redeemed on the Redeem page.
-          Type it in and the pack opens in your browser; you can watch every
+        <h2 class="h2">Got a code?</h2>
+        <p class="lead" style="margin-top:14px;font-size:15px">
+          Codes from a giveaway or a bought pack are redeemed on the Unlock page.
+          Type it in and the pack opens in your browser — you can watch every
           animation and download each one.
         </p>
-        <div class="row" style="margin-top:18px"><a class="btn blue" href="unlock.html">Redeem a code</a></div>
-        <div class="note" style="margin-top:18px">
+        <div class="row" style="margin-top:20px">
+          <a class="btn primary" href="unlock.html">Redeem a code</a>
+        </div>
+        <div class="note small" style="margin-top:22px">
           <b>Geedo can take the code himself</b> (firmware v27+): the setup page
           has a <b>Pack code</b> box, and so does the USB link above. Type it
           once and he downloads the pack, unlocks it with the same
-          key-stretching the Hub uses, and keeps it in his own memory. It
-          survives WiFi erases, Hub changes and power cuts, and never needs
+          key-stretching the Hub uses, and keeps it in his own memory — it
+          survives WiFi erases, Hub changes, and power cuts, and never needs
           the code again. He holds four packs; the page he serves on your
           network lets you remove one to make room.
         </div>
@@ -209,35 +230,34 @@ no password needed!</div>
     </div>
   </section>
 
-  <section class="panel">
-    <h2 class="h2">If something goes wrong</h2>
-    <table class="table" style="margin-top:14px">
+  <section>
+    <div class="sec-head"><span class="micro">If something goes wrong</span><span class="fill rule"></span></div>
+    <table class="meanings">
       <tbody>
-        <tr><td>No GEEDO-Setup</td><td>Some phones hide networks with no internet. Turn WiFi off and on, or check the full list. It only runs for 5 minutes after switch-on; restart him to reopen it</td></tr>
+        <tr><td>No GEEDO-Setup</td><td>Some phones hide networks with no internet. Turn WiFi off and on, or check the full list. It only runs for 5 minutes after switch-on — restart him to reopen it</td></tr>
         <tr><td>Page won't open</td><td>Browse to <b>192.168.4.1</b> by hand</td></tr>
         <tr><td>Fetch FAILED</td><td>Networks with a login page block him. He needs an ordinary home network, and he'll keep retrying on his own</td></tr>
         <tr><td>Blank screen</td><td>Press RESET inside the case. If he still appears on your WiFi, the display ribbon is probably loose</td></tr>
-        <tr><td>Update failed + code</td><td>He retries by himself, so usually just wait. The code says where it broke; the owner's guide lists them</td></tr>
+        <tr><td>Update failed + code</td><td>He retries by himself, so usually just wait. The code says where it broke — the owner's guide lists them</td></tr>
       </tbody>
     </table>
-    <p class="small mute" style="margin-top:18px">
-      Still stuck? Ask in the <a style="color:var(--blue);font-weight:800" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>,
-      or read the full <a style="color:var(--blue);font-weight:800" href="GUIDE.md">owner's guide</a>.
+    <p class="small mute" style="margin-top:20px">
+      Still stuck? Ask in the <a class="accent" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a> —
+      or read the full <a class="accent" href="GUIDE.md">owner's guide</a>.
     </p>
   </section>
 
 </main>
 
-<footer class="foot">
-  <div>
-    <div class="brand">Geedo</div>
-    <p>A little robot with a face. What people draw for him goes to every Geedo in the world, once a person has looked at it.</p>
-  </div>
-  <div class="cols">
-    <div class="col"><span class="micro">Explore</span><a href="browse.html">Animations</a><a href="packs.html">Packs</a><a href="makers.html">Makers</a></div>
-    <div class="col"><span class="micro">Make</span><a href="make.html">Draw one</a><a href="studio/index.html">Studio</a><a href="make.html#rules">The rules</a></div>
-    <div class="col"><span class="micro">Owners</span><a href="connect.html">Set up</a><a href="unlock.html">Redeem a code</a><a href="GUIDE.md">Owner's guide</a></div>
-    <div class="col"><span class="micro">Community</span><a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a><a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a></div>
+<footer class="wrap">
+  <div class="spread">
+    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+    <div class="row" style="gap:22px">
+      <a class="small mute" href="browse.html">Animations</a>
+      <a class="small mute" href="packs.html">Packs</a>
+      <a class="small mute" href="unlock.html">Redeem a code</a>
+      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+    </div>
   </div>
 </footer>
 
@@ -260,8 +280,8 @@ no password needed!</div>
       const anim = await loadBin(a.file);
       const fig = document.createElement('figure');
       fig.style.margin = '0';
-      const s = new Screen(anim, { scale: 2, className: 'md' });
-      s.el.querySelector('canvas').style.width = '100%';
+      const s = new Screen(anim, { scale: 2 });
+      s.el.style.width = '100%';
       fig.append(s.el, Object.assign(document.createElement('figcaption'),
         { textContent: pretty(a.name) }));
       host.append(fig);
@@ -307,7 +327,7 @@ no password needed!</div>
 
   function handle(line) {
     const mine = line.startsWith('GEEDO ');
-    say(line, mine ? '#ffd21f' : '#8a8f9c');
+    say(line, mine ? '#22d3ee' : '#71717a');
     if (!pending || !mine) return;
     pending.lines.push(line);
     if (pending.until.test(line)) {
@@ -332,7 +352,7 @@ no password needed!</div>
       // that, `JOIN "Open Net" ` backtracks into it and prints half the name.
       say('> ' + (shown || cmd.replace(
             /^(JOIN\s+(?:"[^"]*"|[^"\s]\S*))\s+(\S.*)$/, '$1 ********')),
-          '#8ab4ff');
+          '#b08d57');
       writer.write(new TextEncoder().encode(cmd + '\n')).catch(() => {});
     });
   }
@@ -357,6 +377,61 @@ no password needed!</div>
     }
     state.textContent = 'disconnected';
     writer = null; port = null;
+  }
+
+  // ---- a pack, straight down the cable ------------------------------------
+  // The Unlock page opened the code in the browser and left the PLAINTEXT
+  // pack here, so nothing secret travels and the robot never fetches
+  // anything: buy a pack, plug him in, done, with no WiFi in the story at
+  // all. He is told the length up front so he can refuse one too big for his
+  // heap before a byte is sent, and so a cable pulled out halfway is caught
+  // instead of installed as half a pack.
+  const CHUNK = 1368;                  // base64 chars a line, like FRAME
+
+  function pendingPack() {
+    try {
+      const b64 = sessionStorage.getItem('geedoPack');
+      if (!b64) return null;
+      return { b64, name: sessionStorage.getItem('geedoPackName') || 'Pack' };
+    } catch (e) { return null; }
+  }
+
+  function offerPack() {
+    const p = pendingPack();
+    const box = $('usb-pack');
+    if (!p) { box.hidden = true; return; }
+    const bytes = Math.round(atob(p.b64).length / 1024);
+    box.hidden = false;
+    box.innerHTML = `<b>${p.name}</b> is open and waiting &middot; ${bytes} KB` +
+      `<div class="row" style="margin-top:10px"><button class="btn primary" id="usb-send">` +
+      `Put it on this Geedo</button></div>`;
+    $('usb-send').onclick = () => sendPack(p).catch(e =>
+      say('pack upload failed: ' + (e.message || e), '#f87171'));
+  }
+
+  async function sendPack(p) {
+    const btn = $('usb-send');
+    if (btn) btn.disabled = true;
+    const raw = atob(p.b64);
+    const total = raw.length;
+    say(`sending ${p.name} (${total} bytes)`, '#22d3ee');
+    await ask(`PKNEW ${total}`, /^GEEDO (OK|ERR) PKNEW/, 15000);
+    // One line at a time, each acknowledged: the wire is slow and a silent
+    // overrun would land as a corrupt pack rather than an error.
+    for (let i = 0; i < p.b64.length; i += CHUNK) {
+      const part = p.b64.slice(i, i + CHUNK);
+      const out = await ask(`PKADD ${part}`, /^GEEDO (OK|ERR) PKADD/, 15000,
+                            `PKADD ...${Math.min(i + CHUNK, p.b64.length)}/${p.b64.length}`);
+      if (out[out.length - 1].startsWith('GEEDO ERR')) throw new Error(out[out.length - 1]);
+      if (btn) btn.textContent = `sending… ${Math.round(100 * (i + part.length) / p.b64.length)}%`;
+    }
+    const end = await ask('PKEND', /^GEEDO (OK|ERR) PKEND/, 60000);
+    const line = end[end.length - 1];
+    if (line.startsWith('GEEDO ERR')) throw new Error(line);
+    try { sessionStorage.removeItem('geedoPack'); sessionStorage.removeItem('geedoPackName'); } catch (e) {}
+    $('usb-pack').innerHTML =
+      `<b>${p.name} is on him.</b> Watch his screen — he is unwrapping it.`;
+    await showInfo();
   }
 
   async function showInfo() {
@@ -392,6 +467,8 @@ no password needed!</div>
     });
   }
 
+  offerPack();                         // before anything is plugged in, so the
+                                       // pack announces itself on arrival
   const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';
 
   async function scan() {

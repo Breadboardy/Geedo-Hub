@@ -66,6 +66,7 @@
       </div>
       <div id="aList"></div>
       <a id="aDownload" class="btn primary" download>Download for Geedo</a>
+      <button id="aSend" class="btn" hidden>Send it to my Geedo →</button>
       <p class="helper" style="margin-top:18px;text-align:left">
         <b class="accent">To put it on your Geedo:</b> hold his button for 5
         seconds, join <b>GEEDO-Setup</b> on your phone like the first time, and
@@ -165,7 +166,13 @@ async function openBox(key,box){
   // separate "does this code exist" check anywhere.
   try{
     const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(box.iv)},key,unb64(box.ct));
-    return JSON.parse(new TextDecoder().decode(pt));
+    const obj=JSON.parse(new TextDecoder().decode(pt));
+    // A pack's id on the robot is the hash of the plaintext it was opened
+    // from, so the cable route has to hand over THESE bytes - a re-serialised
+    // copy would give the same pack a second identity depending on how it
+    // travelled. Non-enumerable so nothing else ever serialises it by accident.
+    Object.defineProperty(obj,'__plain',{value:new Uint8Array(pt),enumerable:false});
+    return obj;
   }catch(e){return null}
 }
 
@@ -284,6 +291,27 @@ function showPack(pack){
     list.appendChild(b);
   });
   if(pack.anims.length) list.children[0].click();
+
+  // Straight onto a Geedo on this computer's USB, with no WiFi anywhere in
+  // the story: the pack is open in this page already, so the cable can carry
+  // the plaintext and the robot never has to fetch anything. The handover is
+  // sessionStorage rather than a second copy of the serial code - one
+  // implementation of the link, on the page that already owns it.
+  const send=document.getElementById('aSend');
+  if(send&&pack.__plain){
+    send.hidden=false;
+    send.onclick=()=>{
+      try{
+        let bin='';
+        for(const b of pack.__plain) bin+=String.fromCharCode(b);
+        sessionStorage.setItem('geedoPack',btoa(bin));
+        sessionStorage.setItem('geedoPackName',pack.name||'Pack');
+        location.href='connect.html#pack';
+      }catch(e){
+        showStatus('Could not hand the pack over: '+(e.message||e),'bad');
+      }
+    };
+  }
 }
 
 function play(anim){

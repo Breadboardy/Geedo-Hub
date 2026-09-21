@@ -57,7 +57,7 @@
       <h1 class="h1">Animation packs</h1>
       <p class="lead" style="margin-top:12px">
         A pack is a set of animations for your Geedo. Free packs go to every
-        Geedo automatically. Code packs need a code from a card or a giveaway.
+        Geedo automatically. Right now every pack needs a code from a card or a giveaway.
       </p>
       <div class="row" style="margin-top:22px">
         <a class="btn primary" href="unlock.html">Redeem a code</a>
@@ -82,7 +82,7 @@
         <p class="tag2">10 ocean animations: sailing, snorkelling, a sunset, a
            jellyfish, a submarine, a treasure chest and more.</p>
         <div class="rowb">
-          <span class="chip">Ready · waiting for shelf room</span>
+          <span class="chip on">With code · not on the shelf</span>
           <a class="btn plain" href="#inside">Look inside →</a>
         </div>
       </article>
@@ -98,7 +98,7 @@
            chilli - fourteen silly ones, from the derp to the thousand-yard
            stare - and twelve moods. 42 animations, all drawn by hand.</p>
         <div class="rowb">
-          <span class="chip good">Free · on every Geedo</span>
+          <span class="chip on">With code · not on the shelf</span>
           <a class="btn plain" href="#inside">Look inside →</a>
         </div>
       </article>
@@ -110,7 +110,7 @@
         <p class="tag2">5 skies with Geedo under them: sunshine, rain, snow, a
            storm and a gale.</p>
         <div class="rowb">
-          <span class="chip">Ready · waiting for shelf room</span>
+          <span class="chip on">With code · not on the shelf</span>
           <a class="btn plain" href="#inside">Look inside →</a>
         </div>
       </article>
@@ -210,7 +210,8 @@
   const ready = (m.packs_ready || []).filter(id => !live.includes(id));
   const ids = [...live, ...ready];
   document.getElementById('n-packs').textContent = live.length
-    ? `${live.length} pack${live.length === 1 ? '' : 's'}` + (ready.length ? `, ${ready.length} waiting` : '') : '';
+    ? `${live.length} free pack${live.length === 1 ? '' : 's'}` + (ready.length ? `, ${ready.length} with a code` : '')
+    : (ready.length ? `${ready.length} pack${ready.length === 1 ? '' : 's'}, every one needs a code` : '');
 
   if (!ids.length) {
     // An honest empty state beats inventing packs that do not exist. It says
@@ -253,7 +254,7 @@
     }
 
     const anims = pm.animations || [];
-    const rarity = ready.includes(id) ? 'not on the shelf yet' : (pm.rarity || 'common').toLowerCase();
+    const rarity = ready.includes(id) ? 'needs a code' : (pm.rarity || 'common').toLowerCase();
     const el = document.createElement('article');
     el.className = 'pack';
     el.innerHTML = `

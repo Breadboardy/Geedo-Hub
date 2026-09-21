@@ -422,10 +422,9 @@
       "sha256": "6803643a0048bb6ce26ed77c601b532fdea35a9af5c978a83b7cd3dd8bfd85ff"
     }
   ],
-  "packs": [
-    "doodle"
-  ],
+  "packs": [],
   "packs_ready": [
+    "doodle",
     "ocean",
     "weather"
   ]

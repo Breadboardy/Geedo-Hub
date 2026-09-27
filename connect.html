@@ -370,7 +370,9 @@ no password needed!</div>
 })();
 </script>
 
-<script type="module">
+<script src="assets/geedolink.js"></script>
+<script>
+(async () => {
 /* ---------------------------------------------------------------------------
    The control panel.
 
@@ -383,7 +385,7 @@ no password needed!</div>
    visit with no picker, and the 'connect' event means plugging him in makes
    the panel appear by itself.
    --------------------------------------------------------------------------- */
-import { GeedoLink } from './assets/geedolink.js';
+const GeedoLink = window.GeedoLink;
 
 const $ = id => document.getElementById(id);
 const log = $('log'), state = $('state');
@@ -626,6 +628,7 @@ drawWaiting();
 const known = await GeedoLink.known();
 if (known.length) await greet(known[0]);
 else state.textContent = 'Press Find my Geedo and pick him from the list.';
+})();
 </script>
 </body>
 </html>

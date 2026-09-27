@@ -461,6 +461,20 @@ async function act(btn, job) {
 }
 
 // ---- connecting
+// Chrome's own words for a failed open are "Failed to open serial port",
+// which is true and useless. Nearly every time it means one thing: another
+// program already has him, because only one can hold the cable at once.
+function why(e) {
+  const m = (e && e.message) || String(e);
+  if (/already open/i.test(m))
+    return 'This page already has him. Reload it if the panel is stuck.';
+  if (/Failed to open|Access denied|NetworkError/i.test(m))
+    return "Can't open him: something else is using the cable. Close any serial " +
+           'monitor, the flash station, or another tab with this page open, ' +
+           'then press Find my Geedo again.';
+  return m;
+}
+
 async function greet(l) {
   if (link) return;
   link = l;
@@ -473,7 +487,8 @@ async function greet(l) {
     state.textContent = `connected to GEEDO-${link.info.id}`;
     checkUpdate();
   } catch (e) {
-    state.textContent = e.message || 'could not talk to him';
+    state.textContent = why(e);
+    try { await l.close(); } catch (_) {}
     link = null;
   }
 }
@@ -492,7 +507,7 @@ $('find').onclick = async () => {
   try { await greet(await GeedoLink.pick()); }
   catch (e) {
     state.textContent = /No port selected/i.test(e.message || '')
-      ? 'no device picked' : (e.message || 'could not connect');
+      ? 'No Geedo picked. Press Find my Geedo and choose him from the list.' : why(e);
   }
 };
 

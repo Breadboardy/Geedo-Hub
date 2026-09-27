@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Connect — Geedo</title>
+<title>My Geedo — Geedo</title>
 <meta name="description" content="Set up a Geedo: join his WiFi network once, and he does the rest by himself forever.">
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -36,7 +36,7 @@
     <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
-      <a class="link" href="connect.html">Set up</a>
+      <a class="link" href="connect.html">My Geedo</a>
       <a class="link" href="unlock.html">Redeem</a>
       <a class="link" href="studio/index.html">Studio</a>
     </div>
@@ -58,47 +58,127 @@
   </div>
 
   <section id="usb-sec">
-    <div class="sec-head"><span class="micro">From this computer</span><span class="fill rule"></span></div>
-    <div class="two">
-      <div>
-        <h2 class="h2">Plug him in and set him up here.</h2>
-        <p class="lead" style="margin-top:14px;font-size:15px">
-          A Geedo who has never been on WiFi cannot be found <em>over</em> WiFi
-          — there is nothing to find him on yet. The cable always works, so this
-          is the quickest way to get a brand-new one talking.
-        </p>
-        <p class="small mute" style="margin-top:12px">
-          Firmware v27 or newer. Works in Chrome and Edge; Safari and Firefox
-          can't talk to serial devices, so use the phone method below on those.
-        </p>
-        <div class="row" style="margin-top:20px">
-          <button class="btn primary" id="usb-go">Find my Geedo</button>
-          <span class="small mute" id="usb-state">not connected</span>
-        </div>
-      </div>
-      <div>
-        <div id="usb-pack" class="note small" hidden></div>
-        <div id="usb-info" class="note small" hidden></div>
-        <div id="usb-nets" hidden style="margin-top:12px">
-          <label class="micro" for="usb-ssid">Network</label>
-          <select class="field" id="usb-ssid" style="margin-top:6px"></select>
-          <label class="micro" for="usb-pass" style="display:block;margin-top:12px">Password</label>
-          <input class="field" id="usb-pass" type="password" autocomplete="off"
-                 placeholder="leave empty for an open network" style="margin-top:6px">
-          <div class="row" style="margin-top:14px">
-            <button class="btn primary" id="usb-join">Connect him to WiFi</button>
-            <button class="btn" id="usb-rescan">Scan again</button>
+    <div class="sec-head"><span class="micro">Plug him in</span><span class="fill rule"></span></div>
+
+    <div id="hello">
+      <div class="two">
+        <div>
+          <h2 class="h2">He turns up here when you plug him in.</h2>
+          <p class="lead" style="margin-top:14px;font-size:15px">
+            Not over WiFi &mdash; a web page cannot look around your home network,
+            and his radio is off between check-ins anyway. This is the cable, and
+            it works on a Geedo who has never seen a network, which is exactly the
+            one you have just taken out of a box.
+          </p>
+          <p class="small mute" style="margin-top:12px">
+            Allow him once and this page knows him after that: plug him in and he
+            appears by himself. Chrome and Edge only &mdash; Safari and Firefox
+            cannot open serial devices at all.
+          </p>
+          <div class="row" style="margin-top:20px">
+            <button class="btn primary" id="find">Find my Geedo</button>
+            <span class="small mute" id="state">looking for one you have allowed&hellip;</span>
           </div>
         </div>
-        <pre id="usb-log" hidden style="margin-top:14px;max-height:190px;overflow:auto;
-             background:#000;color:#e9ebef;border:1px solid var(--line-bright);
-             border-radius:6px;padding:12px;font-size:11px;line-height:1.6"></pre>
+        <div>
+          <div class="note small" id="waiting" hidden></div>
+          <pre id="log" hidden style="margin-top:14px;max-height:200px;overflow:auto;
+               background:#000;color:#e9ebef;border:1px solid var(--line-bright);
+               border-radius:8px;padding:12px;font-size:11px;line-height:1.6"></pre>
+        </div>
       </div>
     </div>
-    <p class="small mute" style="margin-top:18px" id="usb-unsupported" hidden>
-      This browser can't open serial devices, so the cable route isn't
-      available here. Use the phone steps below — they work everywhere.
-    </p>
+
+    <!-- everything below appears once he answers -->
+    <div id="panel" hidden>
+      <div class="tiles cols-4" style="margin-top:8px">
+        <div class="tile">
+          <span class="micro">Who</span>
+          <span class="num" style="font-family:var(--pixel);font-size:clamp(20px,2.6vw,28px)"
+                id="t-id">&mdash;</span>
+          <span class="small mute" id="t-face"></span>
+        </div>
+        <div class="tile">
+          <span class="micro">Firmware</span>
+          <span class="num" id="t-fw">&mdash;</span>
+          <span class="small mute" id="t-fwnote"></span>
+        </div>
+        <div class="tile">
+          <span class="micro">Animations</span>
+          <span class="num" id="t-anims">&mdash;</span>
+          <span class="small mute" id="t-packs"></span>
+        </div>
+        <div class="tile">
+          <span class="micro">Battery</span>
+          <span class="num" id="t-bat">&mdash;</span>
+          <span class="small mute" id="t-store"></span>
+        </div>
+      </div>
+
+      <div class="cards" style="margin-top:22px">
+
+        <article class="card">
+          <span class="micro">Updates</span>
+          <p class="small" id="up-say" style="margin:8px 0 0;color:var(--mute)">Checking&hellip;</p>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="up-check">Check the Hub</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="micro">Packs</span>
+          <div id="pk-list" class="small" style="margin:8px 0 0;color:var(--mute)">&hellip;</div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="pk-refresh">List what he holds</button>
+            <a class="btn plain" href="unlock.html">Redeem a code &rarr;</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="micro">His face</span>
+          <p class="small" style="margin:8px 0 0;color:var(--mute)">
+            Out of the box it follows the shelf: the Doodle Pack on him means the
+            doodle face.</p>
+          <div class="row" style="margin-top:12px;gap:8px" id="face-row"></div>
+        </article>
+
+        <article class="card">
+          <span class="micro">WiFi</span>
+          <p class="small" id="wf-say" style="margin:8px 0 0;color:var(--mute)"></p>
+          <div id="wf-pick" hidden style="margin-top:10px">
+            <select class="field" id="wf-ssid"></select>
+            <input class="field" id="wf-pass" type="password" autocomplete="off"
+                   placeholder="password (leave empty if open)" style="margin-top:8px">
+          </div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="wf-scan">See what is nearby</button>
+            <button class="btn primary" id="wf-join" hidden>Join it</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="micro">Check-up</span>
+          <p class="small" style="margin:8px 0 0;color:var(--mute)">
+            Every part of him, asked through the cable. Nothing to open, no meter.</p>
+          <div id="ck-out" class="small" style="margin-top:8px;color:var(--mute);
+               font-family:var(--mono);font-size:11px;line-height:1.7"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="ck-run">Ask him how he is</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="micro">And the rest</span>
+          <p class="small" style="margin:8px 0 0;color:var(--mute)">
+            Say hello, or send him to sleep. A tap on his button wakes him again.</p>
+          <div class="row" style="margin-top:12px;gap:8px">
+            <button class="btn" id="x-pet">Pet him</button>
+            <button class="btn" id="x-off">Switch off</button>
+          </div>
+        </article>
+
+      </div>
+    </div>
   </section>
 
   <section>
@@ -290,256 +370,247 @@ no password needed!</div>
 })();
 </script>
 
-<script>
+<script type="module">
 /* ---------------------------------------------------------------------------
-   The USB link.
+   The control panel.
 
-   A Geedo who has never joined a network cannot be found over the network, so
-   the cable is how a computer meets a new one. Chrome and Edge expose serial
-   ports to an ordinary HTTPS page, and Geedo already IS a serial device -
-   that is how he gets flashed.
+   A page cannot find a Geedo over WiFi - there is no browser API that scans
+   a network, and his radio is off between check-ins anyway - so the cable is
+   how the site meets him. assets/geedolink.js is the one implementation of
+   that cable; this page only decides what to ask him and how to show it.
 
-   He prints a lot of ordinary debug chatter to the same port, so every ANSWER
-   he gives starts with "GEEDO ". That prefix is the whole protocol: it is what
-   lets this page tell a reply from a log line without guessing.
+   Once a visitor has allowed a Geedo, getPorts() hands him back on the next
+   visit with no picker, and the 'connect' event means plugging him in makes
+   the panel appear by itself.
    --------------------------------------------------------------------------- */
-(() => {
-  const $ = id => document.getElementById(id);
-  const state = $('usb-state'), log = $('usb-log');
+import { GeedoLink } from './assets/geedolink.js';
 
-  if (!('serial' in navigator)) {
-    $('usb-go').disabled = true;
-    state.textContent = 'not available in this browser';
-    $('usb-unsupported').hidden = false;
-    return;
+const $ = id => document.getElementById(id);
+const log = $('log'), state = $('state');
+let link = null;
+
+function say(line, kind) {
+  log.hidden = false;
+  const d = document.createElement('div');
+  d.textContent = line;
+  d.style.color = kind === 'sent' ? '#b08d57' : kind ? '#22d3ee' : '#71717a';
+  log.append(d);
+  log.scrollTop = log.scrollHeight;
+}
+
+if (!GeedoLink.supported) {
+  state.textContent = 'this browser cannot open serial devices - use Chrome or Edge, or the phone steps below';
+  $('find').disabled = true;
+}
+
+// ---- a pack opened on the Redeem page, waiting for somewhere to go
+function waitingPack() {
+  try {
+    const b64 = sessionStorage.getItem('geedoPack');
+    if (!b64) return null;
+    const bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return { bytes, name: sessionStorage.getItem('geedoPackName') || 'Pack' };
+  } catch (e) { return null; }
+}
+function drawWaiting() {
+  const p = waitingPack(), box = $('waiting');
+  if (!p) { box.hidden = true; return; }
+  box.hidden = false;
+  box.innerHTML = `<b>${p.name}</b> is open and waiting (${Math.round(p.bytes.length / 1024)} KB).` +
+    (link ? ` <button class="btn primary" id="pk-send" style="margin-left:8px">Put it on him</button>`
+          : ` Plug him in and it goes straight on.`);
+  const b = $('pk-send');
+  if (b) b.onclick = () => sendPack(b).catch(e => say(e.message || String(e)));
+}
+
+// ---- what he told us, on the tiles
+function fill(i) {
+  $('t-id').textContent = 'GEEDO-' + (i.id || '??????');
+  $('t-face').textContent = i.face ? `wearing the ${i.face} face` : '';
+  $('t-fw').textContent = 'v' + (i.fw || '?');
+  $('t-fwnote').textContent = i.reset ? `last started: ${i.reset}` : '';
+  $('t-anims').textContent = i.anims || '0';
+  $('t-packs').textContent = `${(i.packs || '0/0').split('/')[0]} pack(s) of ${(i.packs || '0/4').split('/')[1]}`;
+  const mv = parseInt(i.bat, 10);
+  $('t-bat').textContent = mv ? (mv / 1000).toFixed(2) + ' V' : '—';
+  $('t-store').textContent = i.totalKB ? `${i.usedKB} of ${i.totalKB} KB used` : '';
+  // the face buttons, with the chosen mode lit
+  const row = $('face-row');
+  row.innerHTML = '';
+  if (!i.face) { row.innerHTML = '<span class="small mute">needs firmware v31</span>'; return; }
+  for (const [mode, label] of [['auto', 'Follow the pack'], ['og', 'OG eyes'], ['doodle', 'Doodle']]) {
+    const b = document.createElement('button');
+    b.className = 'btn' + ((i.mode || 'auto') === mode ? ' primary' : '');
+    b.textContent = label;
+    b.onclick = () => act(b, async () => { await link.ask('FACE ' + mode, /^GEEDO (OK|ERR) FACE/); });
+    row.append(b);
   }
+}
 
-  let port = null, writer = null, pending = null;
+async function refresh() { fill(await link.hello()); drawWaiting(); }
 
-  function say(text, colour) {
-    log.hidden = false;
-    const d = document.createElement('div');
-    d.textContent = text;
-    if (colour) d.style.color = colour;
-    log.append(d);
-    log.scrollTop = log.scrollHeight;
+// run a job with its button busy, then show him again
+async function act(btn, job) {
+  const was = btn.textContent;
+  btn.disabled = true;
+  try { await job(); await refresh(); }
+  catch (e) { say(e.message || String(e)); }
+  btn.disabled = false;
+  if (btn.isConnected && btn.textContent.startsWith('sending')) btn.textContent = was;
+}
+
+// ---- connecting
+async function greet(l) {
+  if (link) return;
+  link = l;
+  link.onLine(say);
+  state.textContent = 'connected - saying hello';
+  try {
+    await link.open();
+    await refresh();
+    $('panel').hidden = false;
+    state.textContent = `connected to GEEDO-${link.info.id}`;
+    checkUpdate();
+  } catch (e) {
+    state.textContent = e.message || 'could not talk to him';
+    link = null;
   }
+}
 
-  function handle(line) {
-    const mine = line.startsWith('GEEDO ');
-    say(line, mine ? '#22d3ee' : '#71717a');
-    if (!pending || !mine) return;
-    pending.lines.push(line);
-    if (pending.until.test(line)) {
-      clearTimeout(pending.timer);
-      const p = pending; pending = null;
-      p.done(p.lines);
+GeedoLink.watch(
+  l => greet(l),                                     // plugged in: he appears
+  port => {
+    if (!link || link.port !== port) return;
+    link = null;
+    $('panel').hidden = true;
+    state.textContent = 'unplugged - plug him back in and he comes straight back';
+    drawWaiting();
+  });
+
+$('find').onclick = async () => {
+  try { await greet(await GeedoLink.pick()); }
+  catch (e) {
+    state.textContent = /No port selected/i.test(e.message || '')
+      ? 'no device picked' : (e.message || 'could not connect');
+  }
+};
+
+// ---- updates: compare what he runs with what the Hub publishes
+async function checkUpdate() {
+  const out = $('up-say');
+  const fw = parseInt(link.info.fw, 10);
+  try {
+    const m = await (await fetch('firmware/manifest.json', { cache: 'no-store' })).json();
+    if (fw >= m.version) {
+      out.innerHTML = `He is on <b>v${fw}</b>, which is the newest the Hub has. Nothing to do.`;
+    } else {
+      out.innerHTML = `He is on <b>v${fw}</b> and the Hub has <b>v${m.version}</b>. ` +
+        `He fetches it himself the next time he checks in over WiFi &mdash; ` +
+        `nothing to download here.`;
     }
+  } catch (e) {
+    out.textContent = `He is on v${fw}. Could not reach the Hub's firmware list to compare.`;
   }
+}
+$('up-check').onclick = e => act(e.target, checkUpdate);
 
-  /* Ask, then collect his GEEDO lines until one matches `until`. Every answer
-     he gives ends with a line that says so - OK, ERR or END - so nothing here
-     has to guess when he has finished talking. */
-  function ask(cmd, until, ms = 8000, shown) {
-    return new Promise((done, fail) => {
-      if (!writer) return fail(new Error('not connected'));
-      pending = { lines: [], until, done, timer: setTimeout(() => {
-        pending = null; fail(new Error('Geedo did not answer'));
-      }, ms) };
-      // A password must never reach the log. The caller that has one says what
-      // to print instead; the regex is a backstop for any future caller that
-      // forgets. Note the unquoted branch refuses a leading quote - without
-      // that, `JOIN "Open Net" ` backtracks into it and prints half the name.
-      say('> ' + (shown || cmd.replace(
-            /^(JOIN\s+(?:"[^"]*"|[^"\s]\S*))\s+(\S.*)$/, '$1 ********')),
-          '#b08d57');
-      writer.write(new TextEncoder().encode(cmd + '\n')).catch(() => {});
-    });
+// ---- packs
+$('pk-refresh').onclick = e => act(e.target, async () => {
+  const out = await link.ask('PACKS', /^GEEDO END PACKS/, 8000);
+  const rows = out.filter(l => l.startsWith('GEEDO PACK '));
+  const box = $('pk-list');
+  if (!rows.length) { box.textContent = 'He is not holding any packs yet.'; return; }
+  box.innerHTML = '';
+  for (const r of rows) {
+    const m = r.match(/^GEEDO PACK (\S+) (\d+) (\d+) "(.*)"$/);
+    if (!m) continue;
+    const [, id, n, bytes, name] = m;
+    const line = document.createElement('div');
+    line.style.cssText = 'display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:6px';
+    line.innerHTML = `<span><b style="color:var(--text)">${name}</b> &middot; ${n} animations, ${Math.round(bytes / 1024)} KB</span>`;
+    const rm = document.createElement('button');
+    rm.className = 'btn plain'; rm.textContent = 'remove';
+    rm.onclick = () => {
+      if (rm.dataset.sure !== '1') { rm.dataset.sure = '1'; rm.textContent = 'remove it for good?'; return; }
+      act(rm, async () => { await link.ask('FORGET ' + id, /^GEEDO (OK|ERR) FORGET/); line.remove(); });
+    };
+    line.append(rm);
+    box.append(line);
   }
+});
 
-  async function readLoop() {
-    const dec = new TextDecoderStream();
-    port.readable.pipeTo(dec.writable).catch(() => {});
-    const reader = dec.readable.getReader();
-    let buf = '';
-    for (;;) {
-      let chunk;
-      try { chunk = await reader.read(); } catch (e) { break; }
-      if (chunk.done) break;
-      buf += chunk.value;
-      let i;
-      while ((i = buf.indexOf('\n')) >= 0) {
-        const line = buf.slice(0, i).replace(/\r$/, '');
-        buf = buf.slice(i + 1);
-        if (line) handle(line);
-      }
-      if (buf.length > 4096) buf = '';       // a robot mid-boot can spew
-    }
-    state.textContent = 'disconnected';
-    writer = null; port = null;
-  }
-
-  // ---- a pack, straight down the cable ------------------------------------
-  // The Unlock page opened the code in the browser and left the PLAINTEXT
-  // pack here, so nothing secret travels and the robot never fetches
-  // anything: buy a pack, plug him in, done, with no WiFi in the story at
-  // all. He is told the length up front so he can refuse one too big for his
-  // heap before a byte is sent, and so a cable pulled out halfway is caught
-  // instead of installed as half a pack.
-  const CHUNK = 1368;                  // base64 chars a line, like FRAME
-
-  function pendingPack() {
-    try {
-      const b64 = sessionStorage.getItem('geedoPack');
-      if (!b64) return null;
-      return { b64, name: sessionStorage.getItem('geedoPackName') || 'Pack' };
-    } catch (e) { return null; }
-  }
-
-  function offerPack() {
-    const p = pendingPack();
-    const box = $('usb-pack');
-    if (!p) { box.hidden = true; return; }
-    const bytes = Math.round(atob(p.b64).length / 1024);
-    box.hidden = false;
-    box.innerHTML = `<b>${p.name}</b> is open and waiting &middot; ${bytes} KB` +
-      `<div class="row" style="margin-top:10px"><button class="btn primary" id="usb-send">` +
-      `Put it on this Geedo</button></div>`;
-    $('usb-send').onclick = () => sendPack(p).catch(e =>
-      say('pack upload failed: ' + (e.message || e), '#f87171'));
-  }
-
-  async function sendPack(p) {
-    const btn = $('usb-send');
-    if (btn) btn.disabled = true;
-    const raw = atob(p.b64);
-    const total = raw.length;
-    say(`sending ${p.name} (${total} bytes)`, '#22d3ee');
-    await ask(`PKNEW ${total}`, /^GEEDO (OK|ERR) PKNEW/, 15000);
-    // One line at a time, each acknowledged: the wire is slow and a silent
-    // overrun would land as a corrupt pack rather than an error.
-    for (let i = 0; i < p.b64.length; i += CHUNK) {
-      const part = p.b64.slice(i, i + CHUNK);
-      const out = await ask(`PKADD ${part}`, /^GEEDO (OK|ERR) PKADD/, 15000,
-                            `PKADD ...${Math.min(i + CHUNK, p.b64.length)}/${p.b64.length}`);
-      if (out[out.length - 1].startsWith('GEEDO ERR')) throw new Error(out[out.length - 1]);
-      if (btn) btn.textContent = `sending… ${Math.round(100 * (i + part.length) / p.b64.length)}%`;
-    }
-    const end = await ask('PKEND', /^GEEDO (OK|ERR) PKEND/, 60000);
-    const line = end[end.length - 1];
-    if (line.startsWith('GEEDO ERR')) throw new Error(line);
+async function sendPack(btn) {
+  const p = waitingPack();
+  if (!p) throw new Error('the pack is gone - open the code again');
+  await act(btn, async () => {
+    await link.sendPack(p.bytes, f => btn.textContent = `sending… ${Math.round(f * 100)}%`);
     try { sessionStorage.removeItem('geedoPack'); sessionStorage.removeItem('geedoPackName'); } catch (e) {}
-    $('usb-pack').innerHTML =
-      `<b>${p.name} is on him.</b> Watch his screen — he is unwrapping it.`;
-    await showInfo();
+    say(`${p.name} is on him - watch his screen`, true);
+  });
+}
+
+// ---- WiFi
+const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';
+$('wf-scan').onclick = e => act(e.target, async () => {
+  $('wf-say').textContent = 'Looking…';
+  const out = await link.ask('SCAN', /^GEEDO END SCAN/, 25000);
+  const nets = out.filter(l => l.startsWith('GEEDO NET ')).map(l => {
+    const m = l.match(/^GEEDO NET (-?\d+) (\S+) "(.*)"$/);
+    return m ? { rssi: +m[1], open: m[2] === 'open', ssid: m[3] } : null;
+  }).filter(Boolean).sort((a, b) => b.rssi - a.rssi);
+  const sel = $('wf-ssid');
+  sel.innerHTML = '';
+  for (const n of nets) {
+    const o = document.createElement('option');
+    o.value = n.ssid; o.textContent = `${bars(n.rssi)}  ${n.ssid}${n.open ? '  (open)' : ''}`;
+    sel.append(o);
   }
+  $('wf-say').textContent = nets.length ? `${nets.length} network(s) nearby.` : 'Nothing nearby - try again.';
+  $('wf-pick').hidden = !nets.length;
+  $('wf-join').hidden = !nets.length;
+});
+$('wf-join').onclick = e => act(e.target, async () => {
+  const ssid = $('wf-ssid').value, pass = $('wf-pass').value;
+  $('wf-say').textContent = `Joining ${ssid}…`;
+  const out = await link.ask(`JOIN "${ssid}" ${pass}`, /^GEEDO (OK|ERR) JOIN/, 30000,
+                             `JOIN "${ssid}" ${pass ? '********' : ''}`);
+  const last = out[out.length - 1];
+  $('wf-pass').value = '';
+  $('wf-say').textContent = last.startsWith('GEEDO OK')
+    ? `Joined ${ssid}. He fetches his animations on his next check-in.`
+    : (pass ? 'Could not join - check the password.' : 'Could not join - that network probably needs a password.');
+});
 
-  async function showInfo() {
-    const out = await ask('INFO', /^GEEDO INFO /, 6000);
-    const kv = {};
-    out[out.length - 1].slice(11).trim().split(/\s+/).forEach(p => {
-      const eq = p.indexOf('=');
-      if (eq > 0) kv[p.slice(0, eq)] = p.slice(eq + 1);
-    });
-    const [used, total] = (kv.fs || '0/0').split('/').map(Number);
-    const box = $('usb-info');
-    box.hidden = false;
-    // v31 rests its radio between check-ins, so no address is not no WiFi.
-    const wifi = kv.ip && kv.ip !== 'none' ? `on WiFi at ${kv.ip}`
-               : kv.radio === 'quiet'      ? 'on WiFi, radio resting between check-ins'
-               :                              'not on WiFi yet';
-    box.innerHTML =
-      `<b>Geedo says hello.</b> Firmware v${kv.fw || '?'} &middot; ` +
-      `${kv.packs || '0/0'} packs &middot; ` +
-      `${Math.round(used / 1024)} of ${Math.round(total / 1024)} KB used &middot; ${wifi}` +
-      // v31 has two faces. By default he wears whichever the shelf says
-      // (the Doodle Pack on means doodle); the lit button is the mode chosen.
-      (kv.face ? `<div class="row" style="margin-top:10px;align-items:center;gap:8px">` +
-                 `<span class="micro">Face: ${kv.face}</span>` +
-                 `<button class="btn${(kv.mode || 'auto') === 'auto' ? ' primary' : ''}" data-face="auto">Follow the pack</button>` +
-                 `<button class="btn${kv.mode === 'og' ? ' primary' : ''}" data-face="og">OG eyes</button>` +
-                 `<button class="btn${kv.mode === 'doodle' ? ' primary' : ''}" data-face="doodle">Doodle</button>` +
-                 `</div>` : '');
-    box.querySelectorAll('[data-face]').forEach(b => b.onclick = async () => {
-      b.disabled = true;
-      try { await ask(`FACE ${b.dataset.face}`, /^GEEDO (OK|ERR) FACE/, 6000); await showInfo(); }
-      catch (e) { say(`could not switch face: ${e.message || e}`, '#f87171'); b.disabled = false; }
-    });
+// ---- check-up
+$('ck-run').onclick = e => act(e.target, async () => {
+  const box = $('ck-out');
+  if (parseInt(link.info.fw, 10) < 33) { box.textContent = 'The check-up needs firmware v33.'; return; }
+  const out = await link.ask('CHECK', /^GEEDO END CHECK/, 10000);
+  box.innerHTML = '';
+  for (const l of out.filter(l => l.startsWith('GEEDO CHECK '))) {
+    const body = l.slice('GEEDO CHECK '.length);
+    const bad = /MISSING|FLAT|NO SENSE|NO BUTTON/.test(body);
+    const d = document.createElement('div');
+    d.style.color = bad ? 'var(--bad)' : 'var(--mute)';
+    d.textContent = (bad ? '✕ ' : '· ') + body;
+    box.append(d);
   }
+});
 
-  offerPack();                         // before anything is plugged in, so the
-                                       // pack announces itself on arrival
-  const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';
+// ---- the rest
+$('x-pet').onclick = e => act(e.target, () => link.ask('PET', /^GEEDO OK PET/));
+$('x-off').onclick = e => {
+  const b = e.target;
+  if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Really? A tap wakes him'; return; }
+  act(b, () => link.ask('OFF', /^GEEDO (OK|ERR) OFF/));
+};
 
-  async function scan() {
-    state.textContent = 'looking for networks…';
-    // A scan takes the radio a few seconds, and longer in a crowded street.
-    const out = await ask('SCAN', /^GEEDO END SCAN/, 30000);
-    const nets = [], seen = new Set();
-    for (const l of out) {
-      const m = l.match(/^GEEDO NET (-?\d+) (\S+) "(.*)"$/);
-      if (!m || !m[3] || seen.has(m[3])) continue;   // hidden or a repeat
-      seen.add(m[3]);
-      nets.push({ rssi: +m[1], open: m[2] === 'open', ssid: m[3] });
-    }
-    nets.sort((a, b) => b.rssi - a.rssi);            // strongest first
-    const sel = $('usb-ssid');
-    sel.replaceChildren();
-    for (const n of nets) {
-      const o = document.createElement('option');
-      o.value = n.ssid;
-      o.textContent = `${n.ssid}   ${bars(n.rssi)}${n.open ? '  open' : ''}`;
-      sel.append(o);
-    }
-    $('usb-nets').hidden = !nets.length;
-    state.textContent = nets.length
-      ? `${nets.length} network${nets.length === 1 ? '' : 's'} nearby`
-      : 'no networks found — try again';
-  }
-
-  $('usb-go').onclick = async () => {
-    try {
-      port = await navigator.serial.requestPort();
-      await port.open({ baudRate: 115200 });
-      writer = port.writable.getWriter();
-      readLoop();
-      state.textContent = 'connected — saying hello';
-      // Opening the port can reset him. Let him finish booting before asking
-      // anything, or the first command lands in the bootloader's lap.
-      await new Promise(r => setTimeout(r, 1500));
-      await showInfo();
-      await scan();
-    } catch (e) {
-      state.textContent = /No port selected/i.test(e.message || '')
-        ? 'no device picked' : (e.message || 'could not connect');
-    }
-  };
-
-  $('usb-rescan').onclick = () => scan().catch(e => state.textContent = e.message);
-
-  $('usb-join').onclick = async () => {
-    const ssid = $('usb-ssid').value, pass = $('usb-pass').value;
-    if (!ssid) return;
-    state.textContent = 'joining…';
-    try {
-      // He is given up to 20 s to join, so wait longer than that for his answer.
-      const out = await ask(`JOIN "${ssid}" ${pass}`, /^GEEDO (OK|ERR) JOIN/, 30000,
-                            `JOIN "${ssid}" ${pass ? '********' : ''}`);
-      const last = out[out.length - 1];
-      if (last.startsWith('GEEDO OK JOIN')) {
-        $('usb-pass').value = '';
-        state.textContent = 'joined ' + ssid;
-        await showInfo();
-      } else {
-        state.textContent = pass
-          ? 'could not join — check the password'
-          : 'could not join — that network probably needs a password';
-      }
-    } catch (e) {
-      state.textContent = 'no answer from Geedo';
-    }
-  };
-})();
+// ---- on arrival: anyone already allowed comes straight back
+drawWaiting();
+const known = await GeedoLink.known();
+if (known.length) await greet(known[0]);
+else state.textContent = 'Press Find my Geedo and pick him from the list.';
 </script>
 </body>
 </html>

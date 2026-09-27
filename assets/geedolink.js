@@ -20,10 +20,15 @@
  * Identity still costs a round trip: Web Serial deliberately does not hand
  * out serial numbers, so which Geedo a port is can only be learned by
  * opening it and asking. That is what INFO is for.
+ *
+ * A plain script, not a module, on purpose. Chrome refuses to load a module
+ * into a page opened straight from the disk, and people do double-click
+ * these pages - the old connect page worked that way and must keep working.
+ * Load it with <script src="assets/geedolink.js"> and use window.GeedoLink.
  */
 const ESP32 = 0x303a;                  // Espressif's USB vendor id
 
-export class GeedoLink {
+class GeedoLink {
   static get supported() { return 'serial' in navigator; }
 
   /** Geedos this visitor has already allowed, ready to reconnect silently. */
@@ -164,3 +169,5 @@ export class GeedoLink {
     return line;
   }
 }
+
+window.GeedoLink = GeedoLink;

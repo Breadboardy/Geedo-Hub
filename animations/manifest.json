@@ -881,6 +881,7 @@
   "packs_ready": [
     "doodle",
     "ocean",
-    "weather"
+    "weather",
+    "3d"
   ]
 }

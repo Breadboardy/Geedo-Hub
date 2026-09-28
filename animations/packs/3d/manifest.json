@@ -68,6 +68,15 @@
       "frames": 24
     },
     {
+      "id": "3d_portal",
+      "name": "Portals",
+      "file": "bin/3d_portal.bin",
+      "size": 15675,
+      "hash": "7568e1ba",
+      "sha256": "7568e1bac3d1da54bcf6780fffb94d5117533210607340f54ba12b474b5295d3",
+      "frames": 30
+    },
+    {
       "id": "3d_pyramid",
       "name": "Pyramid",
       "file": "bin/3d_pyramid.bin",
@@ -87,11 +96,11 @@
     },
     {
       "id": "3d_ship",
-      "name": "Spaceship",
+      "name": "Starfighter",
       "file": "bin/3d_ship.bin",
-      "size": 9363,
-      "hash": "c528c31c",
-      "sha256": "c528c31cc37040416884274c6a863c8ccb65667632f301ced910166b58d9cc00",
+      "size": 11093,
+      "hash": "8076f6ba",
+      "sha256": "8076f6ba0e5705312f819710794391999677918671080651e3ba5b0d7403d3ca",
       "frames": 36
     },
     {
@@ -120,15 +129,6 @@
       "hash": "ee9ad7f2",
       "sha256": "ee9ad7f2cdb44f9262206d81d7abc3db56b2e40e54da10e882c81d9a1f5d13c7",
       "frames": 30
-    },
-    {
-      "id": "3d_tunnel",
-      "name": "Tunnel",
-      "file": "bin/3d_tunnel.bin",
-      "size": 7035,
-      "hash": "312b123b",
-      "sha256": "312b123b86e01daccfa2f67c2bc825146dff2a73965c8fd950577c5f5665695d",
-      "frames": 24
     }
   ],
   "published_at": "2026-09-28",

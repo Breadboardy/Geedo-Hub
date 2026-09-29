@@ -291,17 +291,13 @@
 <div class="modal-bg" id="modalSend">
   <div class="modal">
     <h2>SEND TO GEEDO</h2>
-    <p>Push this animation to your Geedo over Wi-Fi. Make sure your Geedo is on the same network and in "Sync" mode (hold button for 3s).</p>
-    <div class="row"><label>Geedo IP</label><input type="text" id="geedoIp" value="192.168.1.42" style="flex:1;width:auto"></div>
-    <div class="row"><label>Slot</label>
-      <select id="sendSlot" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
-        <option>1 - User slot 1</option><option>2 - User slot 2</option><option>3 - User slot 3</option>
-        <option>4 - User slot 4</option><option>5 - User slot 5</option>
-      </select>
-    </div>
+    <p>Plug him in with his cable and press Send: it goes down the wire, he checks it the way he checks everything, and he unboxes it. Chrome or Edge on a computer &mdash; a phone cannot open the cable.</p>
+    <p>No cable? <b>Download the .bin</b> and drop it on his own page (Connect &rarr; His page). Either way it stays on him for good, whatever the Hub says.</p>
+    <p id="sendSay" style="min-height:1.4em"></p>
     <div class="actions">
+      <button onclick="downloadBin()" class="ghost">Download .bin</button>
       <button onclick="closeModal('modalSend')" class="ghost">Cancel</button>
-      <button onclick="doSend()" class="active">Send</button>
+      <button id="sendGo" onclick="doSend()" class="active">Send</button>
     </div>
   </div>
 </div>
@@ -330,6 +326,7 @@
 
 <input type="file" id="fileImg" accept="image/*" style="display:none">
 
+<script src="../assets/geedolink.js"></script>
 <script>
 const W=128,H=64; let ZOOM=8;
 const canvas=document.getElementById('canvas'),onion=document.getElementById('onion'),preview=document.getElementById('preview');
@@ -600,7 +597,73 @@ function newProject(){if(!confirm('Start new project? Current work will be lost.
 
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-function doSend(){const ip=document.getElementById('geedoIp').value;toast('Sending to '+ip+'…');setTimeout(()=>{toast('Geedo received '+frames.length+' frames');closeModal('modalSend')},1200)}
+/* -------- the robot's file: GDA2, byte for byte what tools/gda.py writes --------
+   8-byte header, one duration a frame, a table of offsets, then each frame packed
+   as runs and literals; a frame identical to an earlier one is a one-byte
+   reference to it. The robot, the Hub and this page all read the same bytes. */
+function packPage(page){
+  const out=[];let i=0;
+  while(i<1024){
+    let j=i+1;while(j<1024&&page[j]===page[i]&&j-i<128)j++;
+    if(j-i>=3){out.push(0x80+(j-i-1),page[i]);i=j;continue}
+    let k=i;while(k<1024&&k-i<128){if(k+2<1024&&page[k]===page[k+1]&&page[k+1]===page[k+2])break;k++}
+    out.push(k-i-1);for(let q=i;q<k;q++)out.push(page[q]);i=k;
+  }
+  return out;
+}
+function buildBin(){
+  const n=frames.length;
+  if(n<1||n>255)throw new Error(n<1?'Nothing to send yet':'He plays up to 255 frames');
+  const fps=parseInt(document.getElementById('fps').value)||8;
+  const loop=document.getElementById('chkLoop').checked,pp=document.getElementById('chkPP').checked;
+  const head=[0x47,0x44,0x41,0x32,1,n,fps&255,(loop?1:0)|(pp?2:0)];
+  const durs=frames.map(f=>Math.min(255,Math.max(1,f.dur|0)));
+  const packed=[],first=new Map();
+  for(const f of frames){
+    const page=packFrameC(f.pixels),key=page.join(',');
+    if(first.has(key))packed.push([first.get(key)]);
+    else{first.set(key,packed.length);packed.push(packPage(page))}
+  }
+  let off=8+n+4*(n+1);const table=[];
+  const le32=v=>table.push(v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255);
+  for(const p of packed){le32(off);off+=p.length}
+  le32(off);
+  return Uint8Array.from([...head,...durs,...table,...packed.flat()]);
+}
+const SEND_MAX=64*1024;   // a shelf record: what one animation may be, packed
+async function doSend(){
+  const say=document.getElementById('sendSay'),go=document.getElementById('sendGo');
+  let bytes;
+  try{bytes=buildBin()}catch(e){say.textContent=e.message;return}
+  if(bytes.length>SEND_MAX){say.textContent=`Too big for him: ${Math.round(bytes.length/1024)} KB packed, and he takes 64. Fewer frames, or simpler ones.`;return}
+  if(!window.GeedoLink||!GeedoLink.supported){say.textContent='This browser cannot open his cable. Use Chrome or Edge on a computer, or download the .bin and drop it on his page.';return}
+  go.disabled=true;
+  let link=null;
+  try{
+    const known=await GeedoLink.known();
+    link=known[0]||await GeedoLink.pick();
+    say.textContent='Saying hello…';
+    await link.open();
+    const info=await link.hello();
+    if(parseInt(info.fw,10)<35){say.textContent=`He is on firmware v${info.fw}. Sending needs v35, which he fetches himself at his next check-in.`;return}
+    const name=document.getElementById('projName').value||'my drawing';
+    await link.sendAnim(bytes,name,f=>say.textContent=`Sending… ${Math.round(f*100)}%`);
+    say.textContent='';closeModal('modalSend');toast('On him - watch his screen');
+  }catch(e){
+    const m=e.message||String(e);
+    say.textContent=/No port selected/i.test(m)?'No Geedo picked. Plug him in and press Send again.'
+      :/Failed to open|Access denied|already open/i.test(m)?'Something else has his cable - close any serial monitor or the Connect page, then try again.'
+      :'He said no: '+m+'.';
+  }finally{go.disabled=false;if(link){try{await link.close()}catch(e){}}}
+}
+function downloadBin(){
+  let bytes;
+  try{bytes=buildBin()}catch(e){toast(e.message);return}
+  const name=(document.getElementById('projName').value||'anim').replace(/[^A-Za-z0-9_-]/g,'_');
+  const blob=new Blob([bytes],{type:'application/octet-stream'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=name+'.bin';a.click();URL.revokeObjectURL(url);
+  toast(`Saved ${name}.bin, ${Math.round(bytes.length/102.4)/10} KB packed`);
+}
 function doPublish(){const v=document.getElementById('pubVis').value,code='GD-'+Math.random().toString(36).slice(2,8).toUpperCase();closeModal('modalPub');if(v==='private')alert('Private code:\n\n'+code+'\n\nShare this with your friends!');else toast('Published ('+v+')')}
 
 let toastTimer=null;

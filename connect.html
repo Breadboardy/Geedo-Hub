@@ -135,6 +135,18 @@
         </article>
 
         <article class="card">
+          <span class="micro">His page</span>
+          <p class="small" id="pg-say" style="margin:8px 0 0;color:var(--mute)">
+            On your WiFi he serves a page of his own: everything on his shelf with a
+            tick beside it, a place to drop your own animations, his packs. His radio
+            rests between check-ins, so ask him to bring it up first.</p>
+          <div class="row" style="margin-top:12px;gap:8px">
+            <button class="btn" id="pg-up">Bring his radio up</button>
+            <a class="btn plain" id="pg-link" hidden target="_blank" rel="noopener">Open his page &rarr;</a>
+          </div>
+        </article>
+
+        <article class="card">
           <span class="micro">His face</span>
           <p class="small" style="margin:8px 0 0;color:var(--mute)">
             Out of the box it follows the shelf: the Doodle Pack on him means the
@@ -566,6 +578,27 @@ async function sendPack(btn) {
     say(`${p.name} is on him - watch his screen`, true);
   });
 }
+
+// ---- his page: the radio up, and the address it answers with
+$('pg-up').onclick = e => act(e.target, async () => {
+  const out = $('pg-say');
+  if (parseInt(link.info.fw, 10) < 35) {
+    out.textContent = 'His own page needs firmware v35, which he fetches himself at his next check-in.';
+    return;
+  }
+  out.textContent = 'Joining his WiFi\u2026';
+  let ip;
+  try { ip = await link.radioOn(); }
+  catch (err) {
+    out.textContent = 'He could not join his WiFi (' + err.message + '). Is he set up on this network? See WiFi, below.';
+    return;
+  }
+  const a = $('pg-link');
+  a.href = `http://${ip}/`;
+  a.hidden = false;
+  out.innerHTML = `His radio is up and his page is at <b>http://${ip}/</b> &mdash; on this ` +
+    `network only. He keeps it up for ten minutes after your last click there, then rests again.`;
+});
 
 // ---- WiFi
 const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';

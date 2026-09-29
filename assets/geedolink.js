@@ -149,13 +149,22 @@ class GeedoLink {
     return kv;
   }
 
-  /** A pack, down the wire. `plain` is the decrypted pack, as bytes. */
-  async sendPack(plain, onProgress) {
-    const CHUNK = 1368;                       // base64 chars a line, like FRAME
+  /** Bytes as one base64 string, no line breaks: what PKADD carries. */
+  static b64(bytes) {
     let bin = '';
-    for (const b of plain) bin += String.fromCharCode(b);
-    const b64 = btoa(bin);
-    await this.ask(`PKNEW ${plain.length}`, /^GEEDO (OK|ERR) PKNEW/, 15000);
+    for (const b of bytes) bin += String.fromCharCode(b);
+    return btoa(bin);
+  }
+
+  /** His refusal in words: "GEEDO ERR UPEND no-room" -> "no room". */
+  static why(line) {
+    const m = /^GEEDO ERR \S+ (.+)$/.exec(line);
+    return m ? m[1].replace(/-/g, ' ') : line;
+  }
+
+  /** The chunks of a transfer, whatever PKNEW or UPNEW opened. */
+  async _chunks(b64, onProgress) {
+    const CHUNK = 1368;                       // base64 chars a line, like FRAME
     for (let i = 0; i < b64.length; i += CHUNK) {
       const part = b64.slice(i, i + CHUNK);
       const out = await this.ask(`PKADD ${part}`, /^GEEDO (OK|ERR) PKADD/, 15000,
@@ -163,10 +172,42 @@ class GeedoLink {
       if (out[out.length - 1].startsWith('GEEDO ERR')) throw new Error(out[out.length - 1]);
       if (onProgress) onProgress((i + part.length) / b64.length);
     }
+  }
+
+  /** A pack, down the wire. `plain` is the decrypted pack, as bytes. */
+  async sendPack(plain, onProgress) {
+    await this.ask(`PKNEW ${plain.length}`, /^GEEDO (OK|ERR) PKNEW/, 15000);
+    await this._chunks(GeedoLink.b64(plain), onProgress);
     const end = await this.ask('PKEND', /^GEEDO (OK|ERR) PKEND/, 60000);
     const line = end[end.length - 1];
     if (line.startsWith('GEEDO ERR')) throw new Error(line);
     return line;
+  }
+
+  /** One animation of the owner's own, down the wire (firmware v35).
+   *  `bytes` is a .bin as the Studio saves it, `name` what he calls it.
+   *  Resolves to its id on him (up_xxxxxxxx); throws his reason when he
+   *  refuses - too big, flashes too much, no room, already on him. */
+  async sendAnim(bytes, name, onProgress) {
+    const clean = String(name || '').replace(/[^\x20-\x7e]/g, '').trim().slice(0, 24);
+    const start = await this.ask(`UPNEW ${bytes.length}${clean ? ' ' + clean : ''}`,
+                                 /^GEEDO (OK|ERR) UPNEW/, 15000);
+    if (start[start.length - 1].startsWith('GEEDO ERR'))
+      throw new Error(GeedoLink.why(start[start.length - 1]));
+    await this._chunks(GeedoLink.b64(bytes), onProgress);
+    const end = await this.ask('UPEND', /^GEEDO (OK|ERR) UPEND/, 60000);
+    const line = end[end.length - 1];
+    if (line.startsWith('GEEDO ERR')) throw new Error(GeedoLink.why(line));
+    return line.split(/\s+/)[3];
+  }
+
+  /** Bring his radio up on the network he remembers and hold it there ten
+   *  minutes (firmware v35). Resolves to the address his own page is at. */
+  async radioOn() {
+    const out = await this.ask('RADIO on', /^GEEDO (OK|ERR) RADIO/, 20000);
+    const line = out[out.length - 1];
+    if (line.startsWith('GEEDO ERR')) throw new Error(GeedoLink.why(line));
+    return line.split(/\s+/)[4];
   }
 }
 

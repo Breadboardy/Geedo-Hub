@@ -117,15 +117,38 @@ screen.
 
 ## Getting new animations
 
-New animations land on Geedo **by themselves**. He checks the Hub every
-60 seconds, downloads anything new, and saves it to his internal storage so it
-survives a power cut.
+New animations land on Geedo **by themselves**. He checks the Hub every few
+minutes, downloads anything new, and saves it to his internal storage so it
+survives a power cut. Something new arrives inside a box: he shakes it, the
+wrapping comes off, and he shows you what was in it.
 
 Browse what's available at the **Geedo Hub**, or make your own in the Studio
-and publish it — every Geedo picks it up within the minute.
+and publish it — every Geedo picks it up within a few minutes.
 
 Animations he has already downloaded keep playing even with the WiFi off, so
 he still works in the car, on a trip, or when the internet is down.
+
+### His own page
+
+On your WiFi, Geedo serves a small page of his own. On it: everything on his
+shelf with a tick beside it, his packs, and a place to drop an animation of
+your own. Untick what he can live without and the room goes to what you tick;
+tick it back any time and he fetches it again at his next check-in.
+
+His radio rests between check-ins, so the page is not always there. Plug him
+in, open **Connect** on the Hub, and press **Bring his radio up**: it shows
+the address (something like `http://192.168.1.42/`), and he keeps the radio
+up for ten minutes after your last click there.
+
+### Your own drawings
+
+Draw something in the **Studio** and press **Send to Geedo** with him plugged
+in: it goes down the cable, he checks it the way he checks everything (a
+drawing that flashes too much is turned away), and he unboxes it. No cable
+to hand? **Download the .bin** from the same window and drop it on his page.
+
+Your own drawings stay on him for good, whatever the Hub does — the same as a
+pack. Take one off from his page.
 
 ---
 

@@ -350,11 +350,13 @@
 <div class="modal-bg" id="modalSend">
   <div class="modal">
     <h2>Try it on a Geedo</h2>
-    <p>Right now a Geedo only plays what is on the Hub: he checks it once a minute and keeps everything on the list. So the way to see your animation on a real Geedo is to <b>publish it</b>. Once a person has approved it, every Geedo, yours included, is doing it within the minute.</p>
-    <p>Sending an animation straight to your own Geedo over WiFi, before publishing, is coming in a firmware update. Until then you can play it here with <b>Play</b>, or save the robot's own file to keep.</p>
+    <p>Plug him in with his cable and press <b>Send</b>: the animation goes down the wire, he checks it the way he checks everything, and he unboxes it. It stays on him for good, whatever the Hub says, and comes off from his own page. Chrome or Edge on a computer &mdash; a phone cannot open the cable.</p>
+    <p>No cable? <b>Save the .bin</b> and drop it on his own page (Connect &rarr; His page). And when it is ready for every Geedo, <b>publish it</b>: a person looks at it, and then it is on all of them, yours included, with your name on it.</p>
+    <p id="sendSay" style="min-height:1.4em"></p>
     <div class="actions">
       <button onclick="closeModal('modalSend')" class="ghost">Close</button>
-      <button onclick="exportBin()">Save the .bin</button>
+      <button onclick="exportBin()" class="ghost">Save the .bin</button>
+      <button id="sendGo" onclick="doSend()">Send</button>
       <button onclick="closeModal('modalSend');openPublish()" class="yellow">Publish it</button>
     </div>
   </div>
@@ -386,6 +388,7 @@
 <input type="file" id="fileImg" accept="image/*" style="display:none">
 
 <script src="../assets/geedo.js"></script>
+<script src="../assets/geedolink.js"></script>
 <script>
 const W=128,H=64; let ZOOM=8;
 const canvas=document.getElementById('canvas'),onion=document.getElementById('onion'),preview=document.getElementById('preview');
@@ -707,6 +710,37 @@ function exportBin(){
   if(frames.length>255){toast('The robot format holds 255 frames at most');return}
   const name=(document.getElementById('projName').value||'anim').replace(/[^A-Za-z0-9_-]+/g,'_');
   const bin=encodeGda2();downloadBytes(name+'.bin',bin);toast('Saved '+name+'.bin, '+bin.length+' bytes')
+}
+
+/* -------- down the cable (firmware v35) --------
+   The same bytes exportBin() saves, sent to him with UPNEW / PKADD / UPEND
+   through assets/geedolink.js. He checks it, keeps it as his own (up_<sha8>,
+   permanent like a pack member) and unboxes it. */
+const SEND_MAX=64*1024;   // a shelf record: what one animation may be, packed
+async function doSend(){
+  const say=document.getElementById('sendSay'),go=document.getElementById('sendGo');
+  if(frames.length>255){say.textContent='The robot format holds 255 frames at most.';return}
+  const bytes=encodeGda2();
+  if(bytes.length>SEND_MAX){say.textContent=`Too big for him: ${Math.round(bytes.length/1024)} KB packed, and he takes 64. Fewer frames, or simpler ones.`;return}
+  if(!window.GeedoLink||!GeedoLink.supported){say.textContent='This browser cannot open his cable. Use Chrome or Edge on a computer, or save the .bin and drop it on his page.';return}
+  go.disabled=true;
+  let link=null;
+  try{
+    const known=await GeedoLink.known();
+    link=known[0]||await GeedoLink.pick();
+    say.textContent='Saying hello…';
+    await link.open();
+    const info=await link.hello();
+    if(parseInt(info.fw,10)<35){say.textContent=`He is on firmware v${info.fw}. Sending needs v35, which he fetches himself at his next check-in.`;return}
+    const name=document.getElementById('projName').value||'my drawing';
+    await link.sendAnim(bytes,name,f=>say.textContent=`Sending… ${Math.round(f*100)}%`);
+    say.textContent='';closeModal('modalSend');toast('On him - watch his screen');
+  }catch(e){
+    const m=e.message||String(e);
+    say.textContent=/No port selected/i.test(m)?'No Geedo picked. Plug him in and press Send again.'
+      :/Failed to open|Access denied|already open/i.test(m)?'Something else has his cable - close any serial monitor or the Connect page, then try again.'
+      :'He said no: '+m+'.';
+  }finally{go.disabled=false;if(link){try{await link.close()}catch(e){}}}
 }
 
 /* -------- the robot's flash rule --------

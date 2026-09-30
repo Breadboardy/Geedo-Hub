@@ -275,15 +275,6 @@
       "frames": 36
     },
     {
-      "id": "doodle_idle",
-      "name": "Doodle Face",
-      "file": "bin/doodle_idle.bin",
-      "size": 5548,
-      "hash": "ec653391",
-      "sha256": "ec653391c4e4868fb0261f7e7772cf12661bba25e6e7d7f6f7365f9789110010",
-      "frames": 40
-    },
-    {
       "id": "doodle_bruh",
       "name": "Bruh",
       "file": "bin/doodle_bruh.bin",

@@ -14,6 +14,24 @@
       "frames": 24
     },
     {
+      "id": "3d_balloon",
+      "name": "Balloon",
+      "file": "bin/3d_balloon.bin",
+      "size": 5813,
+      "hash": "b2dcb208",
+      "sha256": "b2dcb208d57fa6bc23a4c6ce785c00f04cdafc9d63d1568ccd670f12a1fa7085",
+      "frames": 40
+    },
+    {
+      "id": "3d_catch",
+      "name": "Catch!",
+      "file": "bin/3d_catch.bin",
+      "size": 12983,
+      "hash": "cb22f74c",
+      "sha256": "cb22f74c08fd0410ba4f4d7ab90593a116934921707090387758bf7c1304c3c6",
+      "frames": 40
+    },
+    {
       "id": "3d_cube",
       "name": "Cube",
       "file": "bin/3d_cube.bin",
@@ -21,6 +39,15 @@
       "hash": "542de787",
       "sha256": "542de787b00abe2d559e8a7c23c71db762fc8ca558c738b5d2a66949647689dd",
       "frames": 36
+    },
+    {
+      "id": "3d_dice",
+      "name": "Rolling a die",
+      "file": "bin/3d_dice.bin",
+      "size": 17136,
+      "hash": "c9ae78ec",
+      "sha256": "c9ae78eceb061b853068314677471400d5b18955020a217ba4733a499a9174b5",
+      "frames": 46
     },
     {
       "id": "3d_die",
@@ -50,6 +77,15 @@
       "frames": 32
     },
     {
+      "id": "3d_globe",
+      "name": "The globe",
+      "file": "bin/3d_globe.bin",
+      "size": 10944,
+      "hash": "5d339fd5",
+      "sha256": "5d339fd5a3fbf0ad2bd3968d824ecbcdc34db8955089a40e11a165d271180686",
+      "frames": 36
+    },
+    {
       "id": "3d_helix",
       "name": "Helix",
       "file": "bin/3d_helix.bin",
@@ -66,6 +102,33 @@
       "hash": "f4c10dc0",
       "sha256": "f4c10dc05383f31902245b2c5aaedbf06f88211ffa1dfaeae82da40eeff14510",
       "frames": 24
+    },
+    {
+      "id": "3d_juggle",
+      "name": "Juggling",
+      "file": "bin/3d_juggle.bin",
+      "size": 9482,
+      "hash": "0afdacf0",
+      "sha256": "0afdacf037229b7d3537a7264497e11493f252b9f87c2ec30e97b32cd30e2919",
+      "frames": 36
+    },
+    {
+      "id": "3d_orbit",
+      "name": "A moon round his head",
+      "file": "bin/3d_orbit.bin",
+      "size": 4934,
+      "hash": "c1f1dce2",
+      "sha256": "c1f1dce2d861b3638e3c42572a3a851a4fc55dd17c37a00cf7578aafdea9f5f8",
+      "frames": 40
+    },
+    {
+      "id": "3d_palm",
+      "name": "On his palm",
+      "file": "bin/3d_palm.bin",
+      "size": 5517,
+      "hash": "4e8c85a0",
+      "sha256": "4e8c85a0d52d77c9cb31b615c593b7d2fb08c84270ca5c57c8ef650d2566520b",
+      "frames": 32
     },
     {
       "id": "3d_portal",
@@ -102,6 +165,15 @@
       "hash": "8076f6ba",
       "sha256": "8076f6ba0e5705312f819710794391999677918671080651e3ba5b0d7403d3ca",
       "frames": 36
+    },
+    {
+      "id": "3d_stack",
+      "name": "Stacking cubes",
+      "file": "bin/3d_stack.bin",
+      "size": 13754,
+      "hash": "967ceb50",
+      "sha256": "967ceb50083594175915f66c997768e81373198efafc54d41a1290e39ec6915e",
+      "frames": 48
     },
     {
       "id": "3d_star",

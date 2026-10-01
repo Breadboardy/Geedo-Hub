@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "id": "doodle_3d",
+  "name": "Doodle: 3D",
+  "rarity": "common",
+  "published_at": "2026-10-01",
+  "author": "Geedo",
+  "note": "Real 3D things in his mitts and round his head, as the Doodle",
+  "animations": [
+    {
+      "id": "doodle_3d_balloon",
+      "name": "Balloon",
+      "file": "bin/doodle_3d_balloon.bin",
+      "size": 6069,
+      "hash": "ec77c82f",
+      "sha256": "ec77c82f0c93217619f997744159a5627a5bba260f6281fdf8f930e5c5c62ff7",
+      "frames": 40
+    },
+    {
+      "id": "doodle_3d_catch",
+      "name": "Catch!",
+      "file": "bin/doodle_3d_catch.bin",
+      "size": 13068,
+      "hash": "5c273de7",
+      "sha256": "5c273de7517c4ef7924cdb54804ef9f0c868d13a182da5b0c02b4ee3e632698e",
+      "frames": 40
+    },
+    {
+      "id": "doodle_3d_dice",
+      "name": "Rolling a die",
+      "file": "bin/doodle_3d_dice.bin",
+      "size": 17332,
+      "hash": "3c4a8bc2",
+      "sha256": "3c4a8bc221905b5fa4855dc4c820e5ddf7666cac495f22b08612b52fcb0aa3fb",
+      "frames": 46
+    },
+    {
+      "id": "doodle_3d_globe",
+      "name": "The globe",
+      "file": "bin/doodle_3d_globe.bin",
+      "size": 10760,
+      "hash": "e49af44b",
+      "sha256": "e49af44bc80838f6370343eed1e965e0f5c92ee4bc831439c411fe2938a4364e",
+      "frames": 36
+    },
+    {
+      "id": "doodle_3d_juggle",
+      "name": "Juggling",
+      "file": "bin/doodle_3d_juggle.bin",
+      "size": 9391,
+      "hash": "8e280233",
+      "sha256": "8e280233c36daded2f4b08bb99af97ab0030ee7d4c9d7d5544338d5516f06f7b",
+      "frames": 36
+    },
+    {
+      "id": "doodle_3d_orbit",
+      "name": "A moon round his head",
+      "file": "bin/doodle_3d_orbit.bin",
+      "size": 5402,
+      "hash": "39f81878",
+      "sha256": "39f81878de9ff1646c5a17ccab6b0939901969906247f394c05c1e9a037ea283",
+      "frames": 40
+    },
+    {
+      "id": "doodle_3d_palm",
+      "name": "On his palm",
+      "file": "bin/doodle_3d_palm.bin",
+      "size": 5422,
+      "hash": "694c54db",
+      "sha256": "694c54dbf01b887e31a0e69411c35cbc63959de672975e0541aa406ab50f1154",
+      "frames": 32
+    },
+    {
+      "id": "doodle_3d_stack",
+      "name": "Stacking cubes",
+      "file": "bin/doodle_3d_stack.bin",
+      "size": 13600,
+      "hash": "656ad71c",
+      "sha256": "656ad71cefb93d47a4571b9a853ff2655f3e438299bc3655ea7099bef95bc201",
+      "frames": 48
+    }
+  ]
+}

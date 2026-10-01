@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "id": "doodle_skies",
+  "name": "Doodle: Skies and seas",
+  "rarity": "common",
+  "published_at": "2026-10-01",
+  "author": "Geedo",
+  "note": "The weather and the ocean, as the Doodle",
+  "animations": [
+    {
+      "id": "doodle_weather_fog",
+      "name": "Fog",
+      "file": "bin/doodle_weather_fog.bin",
+      "size": 12229,
+      "hash": "eed79d8c",
+      "sha256": "eed79d8c168c78bb4fcd5b3510674c12faad7ae58078866d97770bf1aacda38d",
+      "frames": 36
+    },
+    {
+      "id": "doodle_weather_rain",
+      "name": "Rain",
+      "file": "bin/doodle_weather_rain.bin",
+      "size": 8251,
+      "hash": "0c989694",
+      "sha256": "0c989694c2e7d0820160aaf0013d4cd64160e77d4d7b2cf89a7aca23bfde24ca",
+      "frames": 30
+    },
+    {
+      "id": "doodle_weather_snow",
+      "name": "Snow",
+      "file": "bin/doodle_weather_snow.bin",
+      "size": 9788,
+      "hash": "812f0e12",
+      "sha256": "812f0e127604ca3fe257360b160e2330286faea5adc0ec1b3a3d5f1f4b2118c6",
+      "frames": 40
+    },
+    {
+      "id": "doodle_weather_storm",
+      "name": "Storm",
+      "file": "bin/doodle_weather_storm.bin",
+      "size": 13809,
+      "hash": "9e1f3583",
+      "sha256": "9e1f358379a6766245d09d2ff68364d262b18e40aa557373b96d627ac0878df9",
+      "frames": 36
+    },
+    {
+      "id": "doodle_weather_sun",
+      "name": "Sunshine",
+      "file": "bin/doodle_weather_sun.bin",
+      "size": 8521,
+      "hash": "8643ba94",
+      "sha256": "8643ba945843504dec067112498b99fd99d2d87e2ba68bceb85d2399e9ef7916",
+      "frames": 32
+    },
+    {
+      "id": "doodle_weather_wind",
+      "name": "Wind",
+      "file": "bin/doodle_weather_wind.bin",
+      "size": 14026,
+      "hash": "843237ba",
+      "sha256": "843237baabc1408ee094f3a5ce073b67ff5ef221d1c6b1ae62cf25d329ff5476",
+      "frames": 48
+    },
+    {
+      "id": "doodle_ocean_boat",
+      "name": "Sailing",
+      "file": "bin/doodle_ocean_boat.bin",
+      "size": 5245,
+      "hash": "908b95e2",
+      "sha256": "908b95e250850e75b914c1c4e78cafeaf55d903c8d5d0766c1bf1711b0f66ed4",
+      "frames": 30
+    },
+    {
+      "id": "doodle_ocean_fishing",
+      "name": "Fishing",
+      "file": "bin/doodle_ocean_fishing.bin",
+      "size": 5726,
+      "hash": "6c23239b",
+      "sha256": "6c23239b563d20434f3583fec44c5e8f512cb372fb57956bcc0fd3a58d0425a2",
+      "frames": 36
+    },
+    {
+      "id": "doodle_ocean_jellyfish",
+      "name": "Jellies",
+      "file": "bin/doodle_ocean_jellyfish.bin",
+      "size": 8640,
+      "hash": "20474237",
+      "sha256": "20474237abf82e6d32bb297e69cae7290b10cf20ca8788d88fcda4571956593b",
+      "frames": 30
+    },
+    {
+      "id": "doodle_ocean_snorkel",
+      "name": "Snorkelling",
+      "file": "bin/doodle_ocean_snorkel.bin",
+      "size": 6339,
+      "hash": "5a284ac5",
+      "sha256": "5a284ac5a29bb804a343012cdd2d0221153c6b41fa88722401b812444abb3ba7",
+      "frames": 30
+    },
+    {
+      "id": "doodle_ocean_sunset",
+      "name": "Sunset",
+      "file": "bin/doodle_ocean_sunset.bin",
+      "size": 4680,
+      "hash": "d4c94ce7",
+      "sha256": "d4c94ce7fdc1f33f050e458c4f5221a960d82ea6d48e8d8584ab3daede6ad19e",
+      "frames": 40
+    },
+    {
+      "id": "doodle_ocean_whale",
+      "name": "Whale",
+      "file": "bin/doodle_ocean_whale.bin",
+      "size": 3938,
+      "hash": "bc05efc6",
+      "sha256": "bc05efc6df317f16453cb96c5509ca32cbf774139a9b8eb01ec995089b50be7d",
+      "frames": 36
+    }
+  ]
+}

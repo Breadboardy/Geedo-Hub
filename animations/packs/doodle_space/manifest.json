@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "id": "doodle_space",
+  "name": "Doodle: Space",
+  "rarity": "common",
+  "published_at": "2026-10-01",
+  "author": "Geedo",
+  "note": "The Space Pack, as the Doodle",
+  "animations": [
+    {
+      "id": "doodle_space_astronaut",
+      "name": "Spacewalk",
+      "file": "bin/doodle_space_astronaut.bin",
+      "size": 21257,
+      "hash": "0e39eb86",
+      "sha256": "0e39eb86061d21a339f5d3a29572540d58eca3fcc41d2b734df3faa12a2f6a4e",
+      "frames": 48
+    },
+    {
+      "id": "doodle_space_belt",
+      "name": "Asteroid Belt",
+      "file": "bin/doodle_space_belt.bin",
+      "size": 8177,
+      "hash": "36ba80f4",
+      "sha256": "36ba80f49af2e8a781c684e7beb179fc156931c11dfa3dad1d9ea287fff3d5db",
+      "frames": 40
+    },
+    {
+      "id": "doodle_space_blackhole",
+      "name": "Black Hole",
+      "file": "bin/doodle_space_blackhole.bin",
+      "size": 14761,
+      "hash": "6cf18bf2",
+      "sha256": "6cf18bf222a52b7ac9bbd7506690956341f9537d649b75587086134f30671d95",
+      "frames": 48
+    },
+    {
+      "id": "doodle_space_collision",
+      "name": "Collision",
+      "file": "bin/doodle_space_collision.bin",
+      "size": 8602,
+      "hash": "55755b7b",
+      "sha256": "55755b7bcf86e2d6c94b395c91f55c796673e7a548508ce58d8e27c987fbb8b5",
+      "frames": 44
+    },
+    {
+      "id": "doodle_space_flyby",
+      "name": "Flyby",
+      "file": "bin/doodle_space_flyby.bin",
+      "size": 6488,
+      "hash": "c7351af6",
+      "sha256": "c7351af6bd5e0ab8debad5d45772a8fd36447dfcde2ff5f7c8597f917c29dc8e",
+      "frames": 32
+    },
+    {
+      "id": "doodle_space_impact",
+      "name": "Impact",
+      "file": "bin/doodle_space_impact.bin",
+      "size": 10957,
+      "hash": "96bea724",
+      "sha256": "96bea7249108fbf44fea70dd2a9000bc48f365e39c15cbf160f3ae4dbb786f66",
+      "frames": 48
+    },
+    {
+      "id": "doodle_space_meteors",
+      "name": "Meteor Shower",
+      "file": "bin/doodle_space_meteors.bin",
+      "size": 7364,
+      "hash": "1775b2b5",
+      "sha256": "1775b2b588904dc12cf6ca8936adeacab2f1be5415b03282dad19c68f512b02b",
+      "frames": 30
+    },
+    {
+      "id": "doodle_space_moon",
+      "name": "Moon Landing",
+      "file": "bin/doodle_space_moon.bin",
+      "size": 10244,
+      "hash": "5a064b8e",
+      "sha256": "5a064b8ed3884736b5345361cbd8eff7866f5c1fe3d06ce0fb59da50055d64f3",
+      "frames": 40
+    },
+    {
+      "id": "doodle_space_planets",
+      "name": "Ringed Planet",
+      "file": "bin/doodle_space_planets.bin",
+      "size": 8835,
+      "hash": "4b8bb156",
+      "sha256": "4b8bb15678fa66ec86a854852783f5a8ca55cbc8ca0c3f198c58b5e0600fa26e",
+      "frames": 40
+    },
+    {
+      "id": "doodle_space_solar",
+      "name": "Solar System",
+      "file": "bin/doodle_space_solar.bin",
+      "size": 19809,
+      "hash": "0b7bb07f",
+      "sha256": "0b7bb07f703883a02b3d5b45b8861e03fe54af551ecef0fe167d83a5258c6131",
+      "frames": 48
+    },
+    {
+      "id": "doodle_space_supernova",
+      "name": "Supernova",
+      "file": "bin/doodle_space_supernova.bin",
+      "size": 10853,
+      "hash": "4321d656",
+      "sha256": "4321d656daf5dcc088998ac8c1cfa32a36064f2fa50ce4b2e32da19e6bc576ef",
+      "frames": 44
+    }
+  ]
+}

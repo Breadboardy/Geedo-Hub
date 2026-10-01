@@ -737,6 +737,10 @@
     "weapons"
   ],
   "packs_ready": [
-    "doodle"
+    "doodle",
+    "doodle_activities",
+    "doodle_more",
+    "doodle_space",
+    "doodle_skies"
   ]
 }

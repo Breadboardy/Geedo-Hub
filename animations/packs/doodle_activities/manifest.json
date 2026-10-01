@@ -1,0 +1,461 @@
+{
+  "version": 1,
+  "id": "doodle_activities",
+  "name": "Doodle: Activities",
+  "rarity": "common",
+  "published_at": "2026-10-01",
+  "author": "Geedo",
+  "note": "Everything he does around the house, wearing his Doodle face",
+  "animations": [
+    {
+      "id": "doodle_activities_bins",
+      "name": "Bin day",
+      "file": "bin/doodle_activities_bins.bin",
+      "size": 7329,
+      "hash": "1df303f4",
+      "sha256": "1df303f41c1a005f000294e396b05e8a49afad54572e05c4c401ea62c5480128",
+      "frames": 42
+    },
+    {
+      "id": "doodle_activities_cat",
+      "name": "The cat",
+      "file": "bin/doodle_activities_cat.bin",
+      "size": 9979,
+      "hash": "2e36fc9f",
+      "sha256": "2e36fc9f53aad51338a037ef0420f7a243479f6216f0796afbb2b2f5bdbeac1e",
+      "frames": 48
+    },
+    {
+      "id": "doodle_activities_cereal",
+      "name": "Cereal",
+      "file": "bin/doodle_activities_cereal.bin",
+      "size": 6888,
+      "hash": "6cdf7687",
+      "sha256": "6cdf76877c50b4fdeebf48348fda455e9d3db33ece0624735bc53fe1bffbb08a",
+      "frames": 30
+    },
+    {
+      "id": "doodle_activities_chess",
+      "name": "Chess",
+      "file": "bin/doodle_activities_chess.bin",
+      "size": 7098,
+      "hash": "be057bc7",
+      "sha256": "be057bc73934eab6ed12c23cfb2eb5da01d12304791663a0482e71f7a172452c",
+      "frames": 44
+    },
+    {
+      "id": "doodle_activities_clockwatch",
+      "name": "Clock watching",
+      "file": "bin/doodle_activities_clockwatch.bin",
+      "size": 6191,
+      "hash": "5d099a15",
+      "sha256": "5d099a1569ae8cb764b0b64745c512d94398e9abe85ccceddeb589548efff1a9",
+      "frames": 30
+    },
+    {
+      "id": "doodle_activities_curtains",
+      "name": "Sunrise",
+      "file": "bin/doodle_activities_curtains.bin",
+      "size": 8876,
+      "hash": "82b2b810",
+      "sha256": "82b2b810716ffb78610cb55fc8598b707154eb81a966b483ac945fd18e1c2aae",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_cycling",
+      "name": "Cycling",
+      "file": "bin/doodle_activities_cycling.bin",
+      "size": 4073,
+      "hash": "ddffd827",
+      "sha256": "ddffd827eba7e2537bfb8355fed4e2f946806d206f71988bf176ba885ff60b0f",
+      "frames": 12
+    },
+    {
+      "id": "doodle_activities_dishes",
+      "name": "Dishes",
+      "file": "bin/doodle_activities_dishes.bin",
+      "size": 4792,
+      "hash": "1937a69a",
+      "sha256": "1937a69a8dd29a4d51f55fe07d4de2e414c59534e02dc8cfc00557c69fbb699b",
+      "frames": 16
+    },
+    {
+      "id": "doodle_activities_dog",
+      "name": "Walking the dog",
+      "file": "bin/doodle_activities_dog.bin",
+      "size": 5315,
+      "hash": "fbf6b486",
+      "sha256": "fbf6b48662a3d6b310e7229f13311374415ae1612683e76f399cdf918a7b7974",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_dusting",
+      "name": "Dusting",
+      "file": "bin/doodle_activities_dusting.bin",
+      "size": 6073,
+      "hash": "83516621",
+      "sha256": "8351662143680af77030a8fe6641b56f300384f31a972b1ce50ddd18b430ef84",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_fishbowl",
+      "name": "Fish bowl",
+      "file": "bin/doodle_activities_fishbowl.bin",
+      "size": 7558,
+      "hash": "95c204c7",
+      "sha256": "95c204c739d2b97fb76081d44017df8f6ed29a86cbcfb8772eac0bc049c57a8d",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_icecream",
+      "name": "Ice cream",
+      "file": "bin/doodle_activities_icecream.bin",
+      "size": 5748,
+      "hash": "227cf8f4",
+      "sha256": "227cf8f4241e20a30c23ea393738d35776376bd33819d07e0c46cdf4f7c6877b",
+      "frames": 44
+    },
+    {
+      "id": "doodle_activities_ironing",
+      "name": "Ironing",
+      "file": "bin/doodle_activities_ironing.bin",
+      "size": 5755,
+      "hash": "bd79770a",
+      "sha256": "bd79770adc7dfcfed262605ed1638945fa74d12075e5f1fc0cbb94598ef22709",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_kettle",
+      "name": "Kettle",
+      "file": "bin/doodle_activities_kettle.bin",
+      "size": 8798,
+      "hash": "0a579b6d",
+      "sha256": "0a579b6dd72de4472e785aec09f01ea2c3343d97a8b3717ce12524ec4cfe51aa",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_microwave",
+      "name": "Microwave",
+      "file": "bin/doodle_activities_microwave.bin",
+      "size": 8313,
+      "hash": "c50004f3",
+      "sha256": "c50004f3bdde332e936859b751a90a8a16be26f72945d58c7013bd741ed21961",
+      "frames": 46
+    },
+    {
+      "id": "doodle_activities_music",
+      "name": "Music",
+      "file": "bin/doodle_activities_music.bin",
+      "size": 6119,
+      "hash": "0012fc7e",
+      "sha256": "0012fc7e4ed027f3bd21d0710fb7c9889e92ba5dc14e9abb207a78feff392138",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_napping",
+      "name": "Napping",
+      "file": "bin/doodle_activities_napping.bin",
+      "size": 6700,
+      "hash": "04a007f1",
+      "sha256": "04a007f1aa93442c30579e0c37edfdda18b711bbb3d6a377db1fe637e8b69e42",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_news",
+      "name": "The paper",
+      "file": "bin/doodle_activities_news.bin",
+      "size": 7055,
+      "hash": "690e08c3",
+      "sha256": "690e08c318ea292c33bc63136ec5f70dfc5eff4d86e7e617971ce14ece8d1a3d",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_phone",
+      "name": "Scrolling",
+      "file": "bin/doodle_activities_phone.bin",
+      "size": 5475,
+      "hash": "99dc7bbc",
+      "sha256": "99dc7bbc4f16fb29021bffbee0c0c955c036f07d2e86e3e0b08355db621c64b5",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_popcorn",
+      "name": "Popcorn",
+      "file": "bin/doodle_activities_popcorn.bin",
+      "size": 5898,
+      "hash": "866f77bc",
+      "sha256": "866f77bc1bfca1c84f412a17a0d070ab6a33caa54d468bcf7302f33bb1fbb3d8",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_pushups",
+      "name": "Push-ups",
+      "file": "bin/doodle_activities_pushups.bin",
+      "size": 3523,
+      "hash": "f3592b99",
+      "sha256": "f3592b99314a8e36a507ba120c6af6d064f8c4d87489c253f68a35ed6ec99456",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_sandwich",
+      "name": "Sandwich",
+      "file": "bin/doodle_activities_sandwich.bin",
+      "size": 8857,
+      "hash": "8527dd9f",
+      "sha256": "8527dd9fce2912e7d74896ae7b197f960c1c1e8536981023819f5d966077fe4d",
+      "frames": 46
+    },
+    {
+      "id": "doodle_activities_selfie",
+      "name": "Selfie",
+      "file": "bin/doodle_activities_selfie.bin",
+      "size": 4156,
+      "hash": "d67dd7e4",
+      "sha256": "d67dd7e478eec1a932544169a2636029a883410841f01c9b3ec0f58ea74b1068",
+      "frames": 44
+    },
+    {
+      "id": "doodle_activities_shopping",
+      "name": "Shopping",
+      "file": "bin/doodle_activities_shopping.bin",
+      "size": 8810,
+      "hash": "ffaee954",
+      "sha256": "ffaee95420fc09ee3a6065e63ea5df5ad3968d37a7430fa81cf6b98bc324216c",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_shower",
+      "name": "Shower",
+      "file": "bin/doodle_activities_shower.bin",
+      "size": 5162,
+      "hash": "4a8a76f1",
+      "sha256": "4a8a76f19d30c7f41f5e226bcb7c7d863fc049a4015854aaf009dc361e8f07ec",
+      "frames": 12
+    },
+    {
+      "id": "doodle_activities_stretch",
+      "name": "Stretch",
+      "file": "bin/doodle_activities_stretch.bin",
+      "size": 4956,
+      "hash": "7e9b61f0",
+      "sha256": "7e9b61f0e510bb612fb023643dd06b32d2734ea94f8da4c8cf32ee13f0a61150",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_sweeping",
+      "name": "Sweeping",
+      "file": "bin/doodle_activities_sweeping.bin",
+      "size": 5755,
+      "hash": "0398937c",
+      "sha256": "0398937c2245ee83bfb5a64df509d3881ccfaceed51f2302fca2558179366595",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_tea",
+      "name": "Tea",
+      "file": "bin/doodle_activities_tea.bin",
+      "size": 6189,
+      "hash": "b8be357f",
+      "sha256": "b8be357f2df0e3984d07ebcd16a7d474a5016023d18ca7f25c56e0d337fa761a",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_treadmill",
+      "name": "Treadmill",
+      "file": "bin/doodle_activities_treadmill.bin",
+      "size": 3902,
+      "hash": "6b5c0a64",
+      "sha256": "6b5c0a6437cd5ba13a28df22dab05d0a70bc9ac5e4f8b014ea66f9ec679ef3a4",
+      "frames": 12
+    },
+    {
+      "id": "doodle_activities_tv",
+      "name": "Channel hopping",
+      "file": "bin/doodle_activities_tv.bin",
+      "size": 8269,
+      "hash": "4aff43b3",
+      "sha256": "4aff43b3b680dc639553c3fd222180b5cca9bca2354d8943059ecf0d0e7fbe40",
+      "frames": 48
+    },
+    {
+      "id": "doodle_activities_typing",
+      "name": "Typing",
+      "file": "bin/doodle_activities_typing.bin",
+      "size": 4557,
+      "hash": "df7ff2f9",
+      "sha256": "df7ff2f9af1fb560f571d96faa623589752a9964bc4cf417d1a705e453aa7f1c",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_umbrella",
+      "name": "Umbrella",
+      "file": "bin/doodle_activities_umbrella.bin",
+      "size": 6427,
+      "hash": "f738d677",
+      "sha256": "f738d677e4c700ece3923339d7f8ac021af15283c15fda9b6277ed3f39ca5ecd",
+      "frames": 12
+    },
+    {
+      "id": "doodle_activities_vacuum",
+      "name": "Vacuum",
+      "file": "bin/doodle_activities_vacuum.bin",
+      "size": 5316,
+      "hash": "8b1d4f73",
+      "sha256": "8b1d4f73b030e247d4b4455179938fe1a3f1aee30dbf8d3f6bc75698925ac2a1",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_videocall",
+      "name": "Video call",
+      "file": "bin/doodle_activities_videocall.bin",
+      "size": 6582,
+      "hash": "0d64143d",
+      "sha256": "0d64143d92c741b570a4577493c1d0416feca5a46cf31ad1f5910bed69576f2c",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_yoga",
+      "name": "Yoga",
+      "file": "bin/doodle_activities_yoga.bin",
+      "size": 6329,
+      "hash": "ffcddb59",
+      "sha256": "ffcddb59fe0b328190d71cc573d573ae00b2d120be7e1dc833a01c528e218b41",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_coffee",
+      "name": "Coffee",
+      "file": "bin/doodle_activities_coffee.bin",
+      "size": 3632,
+      "hash": "42bf4cdc",
+      "sha256": "42bf4cdc2b5305f8da801caa5643f6f3f776c98ff2cf344d9c3a1e7c56822674",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_stargazing",
+      "name": "Stargazing",
+      "file": "bin/doodle_activities_stargazing.bin",
+      "size": 6598,
+      "hash": "f2d60cf2",
+      "sha256": "f2d60cf20b3f79a5136a42291bdf02b19998e2840fcb1e10669d86635555f9a8",
+      "frames": 30
+    },
+    {
+      "id": "doodle_activities_alarm",
+      "name": "Alarm",
+      "file": "bin/doodle_activities_alarm.bin",
+      "size": 6656,
+      "hash": "869fafa4",
+      "sha256": "869fafa48fbb38a55278c4d8a7f3973b2ea64027806a3a1022bac57627b09e60",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_bubbles",
+      "name": "Bubbles",
+      "file": "bin/doodle_activities_bubbles.bin",
+      "size": 8389,
+      "hash": "ac8e8431",
+      "sha256": "ac8e8431901f38e63804a763c4232822554223b35de2a47ed26368479eda29c7",
+      "frames": 40
+    },
+    {
+      "id": "doodle_activities_gaming",
+      "name": "Gaming",
+      "file": "bin/doodle_activities_gaming.bin",
+      "size": 7213,
+      "hash": "b3a09dd1",
+      "sha256": "b3a09dd1ef60c150c150c0aa6b88902a58a6992eb4ffaea10caea08b11313e0a",
+      "frames": 32
+    },
+    {
+      "id": "doodle_activities_homework",
+      "name": "Homework",
+      "file": "bin/doodle_activities_homework.bin",
+      "size": 9054,
+      "hash": "10f9c943",
+      "sha256": "10f9c9433728a97b1e5b540157fe70921f7d97e87dad466fa36186ec648ed0ab",
+      "frames": 40
+    },
+    {
+      "id": "doodle_activities_juggling",
+      "name": "Juggling",
+      "file": "bin/doodle_activities_juggling.bin",
+      "size": 6029,
+      "hash": "6dd92370",
+      "sha256": "6dd92370a263d486fd4dc4c78414254316fc9ded5663220bb03347fec7b972f3",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_laundry",
+      "name": "Laundry",
+      "file": "bin/doodle_activities_laundry.bin",
+      "size": 8264,
+      "hash": "a40c4bf5",
+      "sha256": "a40c4bf5db694635e27b68a749d4e680caa7e9f328beb8601ff9f150f732fbb4",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_painting",
+      "name": "Painting",
+      "file": "bin/doodle_activities_painting.bin",
+      "size": 10729,
+      "hash": "47f5a0ab",
+      "sha256": "47f5a0abcc1b92fe6cffdfef863cb05d081f0b3813e594d2fa40dd8833770f55",
+      "frames": 48
+    },
+    {
+      "id": "doodle_activities_pancake",
+      "name": "Pancake",
+      "file": "bin/doodle_activities_pancake.bin",
+      "size": 8084,
+      "hash": "c915c49e",
+      "sha256": "c915c49e8fdf5bd53dab64cb1f4392c771d281b5e2837a71d3164c9a2dfaad7c",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_skipping",
+      "name": "Skipping",
+      "file": "bin/doodle_activities_skipping.bin",
+      "size": 4698,
+      "hash": "ba3e9d71",
+      "sha256": "ba3e9d71a356bfdc5dfa45b29a5e8d74c2af5aec9670f5574e873899d72aa99e",
+      "frames": 24
+    },
+    {
+      "id": "doodle_activities_soldering",
+      "name": "Soldering",
+      "file": "bin/doodle_activities_soldering.bin",
+      "size": 8062,
+      "hash": "d1388629",
+      "sha256": "d138862947ab6d6de5685e8bfb5d1f69788d8e6feddd728f2aa739ad692ee853",
+      "frames": 36
+    },
+    {
+      "id": "doodle_activities_toast",
+      "name": "Toast",
+      "file": "bin/doodle_activities_toast.bin",
+      "size": 8602,
+      "hash": "ad1b9edd",
+      "sha256": "ad1b9edda5824e5c1f3332991cd68ffab01154e74856374f6265cb0d34572d61",
+      "frames": 44
+    },
+    {
+      "id": "doodle_activities_watering",
+      "name": "Watering",
+      "file": "bin/doodle_activities_watering.bin",
+      "size": 11452,
+      "hash": "7078653d",
+      "sha256": "7078653d720619ea388edd97d4aee020a3215fce0f701f63c969a062daf673e8",
+      "frames": 48
+    },
+    {
+      "id": "doodle_activities_workout",
+      "name": "Workout",
+      "file": "bin/doodle_activities_workout.bin",
+      "size": 7155,
+      "hash": "eaa6c7ce",
+      "sha256": "eaa6c7ce6e278a3eebd37fe6d771ceccfed78faf74662d1a10e3776c16f52ad6",
+      "frames": 32
+    }
+  ]
+}

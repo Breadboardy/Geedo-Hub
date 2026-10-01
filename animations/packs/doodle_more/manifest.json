@@ -1,0 +1,371 @@
+{
+  "version": 1,
+  "id": "doodle_more",
+  "name": "Doodle: More of his day",
+  "rarity": "common",
+  "published_at": "2026-10-01",
+  "author": "Geedo",
+  "note": "Cooking, eating, parties, making things, sport, building and the toy chest, as the Doodle",
+  "animations": [
+    {
+      "id": "doodle_cooking_chopping",
+      "name": "Chopping an onion",
+      "file": "bin/doodle_cooking_chopping.bin",
+      "size": 8639,
+      "hash": "066bad66",
+      "sha256": "066bad6637e8cec0efe8bc0576997d802a93b8294de08314b99618d13737ff38",
+      "frames": 38
+    },
+    {
+      "id": "doodle_cooking_egg",
+      "name": "Frying an egg",
+      "file": "bin/doodle_cooking_egg.bin",
+      "size": 12901,
+      "hash": "10f0fc63",
+      "sha256": "10f0fc635f114c4054694e8d7b2f916f7be05a25a3a59753c3d437ca0001c2f0",
+      "frames": 46
+    },
+    {
+      "id": "doodle_cooking_soup",
+      "name": "Soup",
+      "file": "bin/doodle_cooking_soup.bin",
+      "size": 16571,
+      "hash": "b7d90ee0",
+      "sha256": "b7d90ee0a97a4d2b23c55b3b2ce258c233657aab5ec3ec3763d11c4123b4f965",
+      "frames": 48
+    },
+    {
+      "id": "doodle_eating_burger",
+      "name": "Burger",
+      "file": "bin/doodle_eating_burger.bin",
+      "size": 5762,
+      "hash": "b1d8d507",
+      "sha256": "b1d8d507458a1746f057f80f378f2075d9b0b2e439a34b400d99514ac1cc0dbb",
+      "frames": 42
+    },
+    {
+      "id": "doodle_eating_chips",
+      "name": "Chips",
+      "file": "bin/doodle_eating_chips.bin",
+      "size": 8153,
+      "hash": "7841d862",
+      "sha256": "7841d8626085b16626fbfb39aa4daebe2ee6fa4ffbfe0fc37f07a79e747630f2",
+      "frames": 39
+    },
+    {
+      "id": "doodle_eating_circut_board",
+      "name": "Circut Board",
+      "file": "bin/doodle_eating_circut_board.bin",
+      "size": 5661,
+      "hash": "acd7a5de",
+      "sha256": "acd7a5deb096658632f79bf46ed8067952922e8852377f6ea161b646c94d0d8f",
+      "frames": 42
+    },
+    {
+      "id": "doodle_eating_cupcake",
+      "name": "cupcake",
+      "file": "bin/doodle_eating_cupcake.bin",
+      "size": 5060,
+      "hash": "f5935fcd",
+      "sha256": "f5935fcd9fe69dde860d1a12b7f7dd86ad6ed29bcc7c31c7b19e58328942f158",
+      "frames": 35
+    },
+    {
+      "id": "doodle_eating_esp32",
+      "name": "Esp32",
+      "file": "bin/doodle_eating_esp32.bin",
+      "size": 5674,
+      "hash": "32578420",
+      "sha256": "3257842034d8f4a6e83c9f9e8afa0a8e8f83ac52f8502aaad21cd7670a7121ec",
+      "frames": 42
+    },
+    {
+      "id": "doodle_eating_fries",
+      "name": "Fries",
+      "file": "bin/doodle_eating_fries.bin",
+      "size": 6537,
+      "hash": "7b95d186",
+      "sha256": "7b95d1867f8837dd76e4dda360341f35d4b79e7b2bd3f9f80436dd15b2c14791",
+      "frames": 38
+    },
+    {
+      "id": "doodle_eating_pizza",
+      "name": "Pizza",
+      "file": "bin/doodle_eating_pizza.bin",
+      "size": 5603,
+      "hash": "0b987268",
+      "sha256": "0b987268609e12c50ba03f2cf0fdffd39d4332fe8eb804bd106256f9b9d8944b",
+      "frames": 42
+    },
+    {
+      "id": "doodle_eating_ramen",
+      "name": "Ramen",
+      "file": "bin/doodle_eating_ramen.bin",
+      "size": 9148,
+      "hash": "d3377c14",
+      "sha256": "d3377c141005a935c5a3fea6c460d4220b700f61111a519fc52f96b5efb5e350",
+      "frames": 39
+    },
+    {
+      "id": "doodle_eating_ribs",
+      "name": "Ribs",
+      "file": "bin/doodle_eating_ribs.bin",
+      "size": 5467,
+      "hash": "ef9f1153",
+      "sha256": "ef9f1153be46c4033a7d06038b382784d2f12af3bc53cac529b7cf358ff0833a",
+      "frames": 35
+    },
+    {
+      "id": "doodle_party_balloon",
+      "name": "Balloon",
+      "file": "bin/doodle_party_balloon.bin",
+      "size": 6211,
+      "hash": "de5fafb9",
+      "sha256": "de5fafb9e81d18539ac07ebde95b7052920a6366d6e51f1674ca8ecbeb081d64",
+      "frames": 50
+    },
+    {
+      "id": "doodle_party_cake",
+      "name": "Birthday cake",
+      "file": "bin/doodle_party_cake.bin",
+      "size": 9441,
+      "hash": "4706859b",
+      "sha256": "4706859bf9d033b9877e9d0a675baba17fd6ea17f8be2420c4a0b89cc0b37ecd",
+      "frames": 50
+    },
+    {
+      "id": "doodle_party_claw",
+      "name": "Claw machine",
+      "file": "bin/doodle_party_claw.bin",
+      "size": 12688,
+      "hash": "87a4d9f4",
+      "sha256": "87a4d9f4861d3d323e99f961a5bedd1f78d1321a33c7c945732e0d277a469ce2",
+      "frames": 52
+    },
+    {
+      "id": "doodle_party_hiccups",
+      "name": "Hiccups",
+      "file": "bin/doodle_party_hiccups.bin",
+      "size": 1009,
+      "hash": "ea29ed32",
+      "sha256": "ea29ed328ea6c1bd99e393b2c2ac3f6cd1c649bd5a46901828174af1e101117c",
+      "frames": 40
+    },
+    {
+      "id": "doodle_party_lolly",
+      "name": "Ice lolly",
+      "file": "bin/doodle_party_lolly.bin",
+      "size": 4977,
+      "hash": "0a475c32",
+      "sha256": "0a475c323c07a754a96b17d2707561c45690dc3eb6859c22d7c28e8f0a0118b1",
+      "frames": 44
+    },
+    {
+      "id": "doodle_party_polish",
+      "name": "Polishing his screen",
+      "file": "bin/doodle_party_polish.bin",
+      "size": 4392,
+      "hash": "1d738c09",
+      "sha256": "1d738c09c9296937d110199565e8e3efbb9e18c68c660dee9adb817a6692d9ad",
+      "frames": 44
+    },
+    {
+      "id": "doodle_making_chemistry",
+      "name": "Chemistry set",
+      "file": "bin/doodle_making_chemistry.bin",
+      "size": 11039,
+      "hash": "1ac8814f",
+      "sha256": "1ac8814f4c3d73837edefc70218f2c032514e3765e66fbfa9f305437adbe50a6",
+      "frames": 50
+    },
+    {
+      "id": "doodle_making_drums",
+      "name": "Drums",
+      "file": "bin/doodle_making_drums.bin",
+      "size": 9868,
+      "hash": "cbd88cc7",
+      "sha256": "cbd88cc7147e7cea897d88ac8226dd1d52b485b2da6a059b120734b6d330031d",
+      "frames": 32
+    },
+    {
+      "id": "doodle_making_guitar",
+      "name": "Guitar",
+      "file": "bin/doodle_making_guitar.bin",
+      "size": 13715,
+      "hash": "4eec1b37",
+      "sha256": "4eec1b37dfa66df01cac73a30a85ec9694317bced17984f045bfcb84274090ab",
+      "frames": 46
+    },
+    {
+      "id": "doodle_making_printer",
+      "name": "3D printer",
+      "file": "bin/doodle_making_printer.bin",
+      "size": 7970,
+      "hash": "797d627b",
+      "sha256": "797d627b345ce7d076623c9ba0229c7531e144fad6d2e6752e268d05f327118c",
+      "frames": 54
+    },
+    {
+      "id": "doodle_making_tower",
+      "name": "Tower of blocks",
+      "file": "bin/doodle_making_tower.bin",
+      "size": 7793,
+      "hash": "fcb5c8ab",
+      "sha256": "fcb5c8abf9448cef44ef9ab6b337261a7ef1bdf727cbca67558959514117842a",
+      "frames": 48
+    },
+    {
+      "id": "doodle_sports_football",
+      "name": "Football",
+      "file": "bin/doodle_sports_football.bin",
+      "size": 5389,
+      "hash": "8fdee2b4",
+      "sha256": "8fdee2b4c19b009fd6a70dda901bc2ce8f2c9f86b0bd49a9be6cfebc422ab654",
+      "frames": 50
+    },
+    {
+      "id": "doodle_sports_snowball",
+      "name": "Snowball fight",
+      "file": "bin/doodle_sports_snowball.bin",
+      "size": 7843,
+      "hash": "6e8b0d8e",
+      "sha256": "6e8b0d8e6fe90a55809d21f469d666b2f7fffa41fc1a4a2aa740932da03a5906",
+      "frames": 48
+    },
+    {
+      "id": "doodle_sports_trampoline",
+      "name": "Trampoline",
+      "file": "bin/doodle_sports_trampoline.bin",
+      "size": 8451,
+      "hash": "4d3dae48",
+      "sha256": "4d3dae48a6194fc492675893d664e9fdc9c511c1630d66f80a8de2e1f2dac22d",
+      "frames": 40
+    },
+    {
+      "id": "doodle_building_house",
+      "name": "House",
+      "file": "bin/doodle_building_house.bin",
+      "size": 23524,
+      "hash": "f603e1bc",
+      "sha256": "f603e1bc7c9342e70ba1d9b57f6af6b51e2cd376f35cd90e4599591e724b7453",
+      "frames": 158
+    },
+    {
+      "id": "doodle_building_robot",
+      "name": "Tiny robot",
+      "file": "bin/doodle_building_robot.bin",
+      "size": 8307,
+      "hash": "0c01e7ce",
+      "sha256": "0c01e7cea430d1a2990d907b8ffead7f7fef25bb58a76d27b30a62cc1b295f3b",
+      "frames": 83
+    },
+    {
+      "id": "doodle_building_sandcastle",
+      "name": "Sandcastle",
+      "file": "bin/doodle_building_sandcastle.bin",
+      "size": 18815,
+      "hash": "01b73930",
+      "sha256": "01b73930e1df8109a88cddfc6607bcded325724ff7039eeb9b19f80d4d384dfe",
+      "frames": 97
+    },
+    {
+      "id": "doodle_building_snowman",
+      "name": "Snowman",
+      "file": "bin/doodle_building_snowman.bin",
+      "size": 19769,
+      "hash": "b87e8c8c",
+      "sha256": "b87e8c8c30fd432af3dc48f63dec9555ccca92691b3b6e5a01a4c8765ea923c9",
+      "frames": 137
+    },
+    {
+      "id": "doodle_weapons_axe",
+      "name": "Throwing axe",
+      "file": "bin/doodle_weapons_axe.bin",
+      "size": 8212,
+      "hash": "6f3e0546",
+      "sha256": "6f3e05468d3d4eefcd0aec664ea74220d7a2ff05471a48e7de96b895e34385ea",
+      "frames": 38
+    },
+    {
+      "id": "doodle_weapons_blaster",
+      "name": "Ray gun",
+      "file": "bin/doodle_weapons_blaster.bin",
+      "size": 7018,
+      "hash": "d1b19a37",
+      "sha256": "d1b19a37b3b0f276268218c5e6ea0a0e8978747fa80dab5915c03887a9b8a72e",
+      "frames": 38
+    },
+    {
+      "id": "doodle_weapons_boomerang",
+      "name": "Boomerang",
+      "file": "bin/doodle_weapons_boomerang.bin",
+      "size": 5693,
+      "hash": "3c709dd7",
+      "sha256": "3c709dd795952a0988b8ae28769d9759f9b20a9fc2b5ee0da58466c6e99453f9",
+      "frames": 42
+    },
+    {
+      "id": "doodle_weapons_bow",
+      "name": "Bow and arrow",
+      "file": "bin/doodle_weapons_bow.bin",
+      "size": 9888,
+      "hash": "0e818a90",
+      "sha256": "0e818a90b46bb7d09bacf9b67cd87d90ae49c53de42b535f31f6c8c687be0af0",
+      "frames": 46
+    },
+    {
+      "id": "doodle_weapons_cannon",
+      "name": "Cannon",
+      "file": "bin/doodle_weapons_cannon.bin",
+      "size": 9125,
+      "hash": "08892bea",
+      "sha256": "08892bea84c37e06ca9e5fa7a4dbeecb27edf85a0a7a735f695d909f6318ddb4",
+      "frames": 42
+    },
+    {
+      "id": "doodle_weapons_catapult",
+      "name": "Catapult",
+      "file": "bin/doodle_weapons_catapult.bin",
+      "size": 8988,
+      "hash": "e5079d7f",
+      "sha256": "e5079d7fbe1c21b415dab14d6c5ab65cfdf7711c2f8b9d52e53fd285f18aa62a",
+      "frames": 42
+    },
+    {
+      "id": "doodle_weapons_helmet",
+      "name": "Helmet",
+      "file": "bin/doodle_weapons_helmet.bin",
+      "size": 3086,
+      "hash": "92116106",
+      "sha256": "921161067a187fe45f73eceb64e61a401587ae607090758b1b0c8c248f712d91",
+      "frames": 24
+    },
+    {
+      "id": "doodle_weapons_laser_sword",
+      "name": "Laser sword",
+      "file": "bin/doodle_weapons_laser_sword.bin",
+      "size": 4438,
+      "hash": "c9891d7b",
+      "sha256": "c9891d7b0bbd207055ce77f690c11d7238bdda3bfbc1e3cbb781aeb32a13d199",
+      "frames": 24
+    },
+    {
+      "id": "doodle_weapons_shield",
+      "name": "Shield",
+      "file": "bin/doodle_weapons_shield.bin",
+      "size": 3780,
+      "hash": "04f58a40",
+      "sha256": "04f58a403b290d5247010f1e90b74d0a8f6c5fb56e38ae47c81606033f84f491",
+      "frames": 24
+    },
+    {
+      "id": "doodle_weapons_sword",
+      "name": "Sword",
+      "file": "bin/doodle_weapons_sword.bin",
+      "size": 6787,
+      "hash": "7ea19e75",
+      "sha256": "7ea19e75c1fb036edf854434ece78fe0764c10d42d9c1d4e53a01bb6df467826",
+      "frames": 40
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "id": "3d",
+  "name": "3D Pack",
+  "rarity": "rare",
+  "animations": [
+    {
+      "id": "3d_ball",
+      "name": "Bouncing ball",
+      "file": "bin/3d_ball.bin",
+      "size": 6435,
+      "hash": "ed9e64b1",
+      "sha256": "ed9e64b11f49e62a13153708736609d25fea4488dbda37879bac563f242d4ead",
+      "frames": 24
+    },
+    {
+      "id": "3d_balloon",
+      "name": "Balloon",
+      "file": "bin/3d_balloon.bin",
+      "size": 5813,
+      "hash": "b2dcb208",
+      "sha256": "b2dcb208d57fa6bc23a4c6ce785c00f04cdafc9d63d1568ccd670f12a1fa7085",
+      "frames": 40
+    },
+    {
+      "id": "3d_catch",
+      "name": "Catch!",
+      "file": "bin/3d_catch.bin",
+      "size": 12983,
+      "hash": "cb22f74c",
+      "sha256": "cb22f74c08fd0410ba4f4d7ab90593a116934921707090387758bf7c1304c3c6",
+      "frames": 40
+    },
+    {
+      "id": "3d_cube",
+      "name": "Cube",
+      "file": "bin/3d_cube.bin",
+      "size": 5868,
+      "hash": "542de787",
+      "sha256": "542de787b00abe2d559e8a7c23c71db762fc8ca558c738b5d2a66949647689dd",
+      "frames": 36
+    },
+    {
+      "id": "3d_dice",
+      "name": "Rolling a die",
+      "file": "bin/3d_dice.bin",
+      "size": 17136,
+      "hash": "c9ae78ec",
+      "sha256": "c9ae78eceb061b853068314677471400d5b18955020a217ba4733a499a9174b5",
+      "frames": 46
+    },
+    {
+      "id": "3d_die",
+      "name": "Die",
+      "file": "bin/3d_die.bin",
+      "size": 10905,
+      "hash": "541077b8",
+      "sha256": "541077b8913bbd3e29e9e30847068f169ff6ff1cabb8dc7af25b40f24b6432bc",
+      "frames": 36
+    },
+    {
+      "id": "3d_disco",
+      "name": "Disco ball",
+      "file": "bin/3d_disco.bin",
+      "size": 5705,
+      "hash": "b03b6d7c",
+      "sha256": "b03b6d7c53c74544b0f2de3c5435f51b287948589e42c2416426bf5052062208",
+      "frames": 24
+    },
+    {
+      "id": "3d_geedo",
+      "name": "Geedo in 3D",
+      "file": "bin/3d_geedo.bin",
+      "size": 8987,
+      "hash": "c4ac8e80",
+      "sha256": "c4ac8e80afbeee7647ab9067b23d083fcf0f787ba8f25b1f3cc5658b129fe160",
+      "frames": 32
+    },
+    {
+      "id": "3d_globe",
+      "name": "The globe",
+      "file": "bin/3d_globe.bin",
+      "size": 10944,
+      "hash": "5d339fd5",
+      "sha256": "5d339fd5a3fbf0ad2bd3968d824ecbcdc34db8955089a40e11a165d271180686",
+      "frames": 36
+    },
+    {
+      "id": "3d_helix",
+      "name": "Helix",
+      "file": "bin/3d_helix.bin",
+      "size": 5641,
+      "hash": "64e8a075",
+      "sha256": "64e8a07572244145e1e12501091dba56c0bae64899b9429207f7b56f4e45d025",
+      "frames": 24
+    },
+    {
+      "id": "3d_house",
+      "name": "House",
+      "file": "bin/3d_house.bin",
+      "size": 9932,
+      "hash": "f4c10dc0",
+      "sha256": "f4c10dc05383f31902245b2c5aaedbf06f88211ffa1dfaeae82da40eeff14510",
+      "frames": 24
+    },
+    {
+      "id": "3d_juggle",
+      "name": "Juggling",
+      "file": "bin/3d_juggle.bin",
+      "size": 9482,
+      "hash": "0afdacf0",
+      "sha256": "0afdacf037229b7d3537a7264497e11493f252b9f87c2ec30e97b32cd30e2919",
+      "frames": 36
+    },
+    {
+      "id": "3d_orbit",
+      "name": "A moon round his head",
+      "file": "bin/3d_orbit.bin",
+      "size": 4934,
+      "hash": "c1f1dce2",
+      "sha256": "c1f1dce2d861b3638e3c42572a3a851a4fc55dd17c37a00cf7578aafdea9f5f8",
+      "frames": 40
+    },
+    {
+      "id": "3d_palm",
+      "name": "On his palm",
+      "file": "bin/3d_palm.bin",
+      "size": 5517,
+      "hash": "4e8c85a0",
+      "sha256": "4e8c85a0d52d77c9cb31b615c593b7d2fb08c84270ca5c57c8ef650d2566520b",
+      "frames": 32
+    },
+    {
+      "id": "3d_portal",
+      "name": "Portals",
+      "file": "bin/3d_portal.bin",
+      "size": 15675,
+      "hash": "7568e1ba",
+      "sha256": "7568e1bac3d1da54bcf6780fffb94d5117533210607340f54ba12b474b5295d3",
+      "frames": 30
+    },
+    {
+      "id": "3d_pyramid",
+      "name": "Pyramid",
+      "file": "bin/3d_pyramid.bin",
+      "size": 6299,
+      "hash": "9a234943",
+      "sha256": "9a2349434d115cf00e7f5ab8d3dfde11820b4ee84012eb4eb509f2fbef10154f",
+      "frames": 30
+    },
+    {
+      "id": "3d_saturn",
+      "name": "Saturn",
+      "file": "bin/3d_saturn.bin",
+      "size": 10270,
+      "hash": "154b1c09",
+      "sha256": "154b1c092fbaabe5688671a333c306e56b0cd15e54b359222a7356698a5b6c35",
+      "frames": 24
+    },
+    {
+      "id": "3d_ship",
+      "name": "Starfighter",
+      "file": "bin/3d_ship.bin",
+      "size": 11093,
+      "hash": "8076f6ba",
+      "sha256": "8076f6ba0e5705312f819710794391999677918671080651e3ba5b0d7403d3ca",
+      "frames": 36
+    },
+    {
+      "id": "3d_stack",
+      "name": "Stacking cubes",
+      "file": "bin/3d_stack.bin",
+      "size": 13754,
+      "hash": "967ceb50",
+      "sha256": "967ceb50083594175915f66c997768e81373198efafc54d41a1290e39ec6915e",
+      "frames": 48
+    },
+    {
+      "id": "3d_star",
+      "name": "Star",
+      "file": "bin/3d_star.bin",
+      "size": 4525,
+      "hash": "fc4ffab5",
+      "sha256": "fc4ffab51f3bd6f91640a88d55e2ea10834873a9ab5abb45b56011eeb4df8a96",
+      "frames": 30
+    },
+    {
+      "id": "3d_text",
+      "name": "GEEDO",
+      "file": "bin/3d_text.bin",
+      "size": 17450,
+      "hash": "9bf8ae8a",
+      "sha256": "9bf8ae8af88e45219ccd5303c13f294d2500bd5bb5d6b66a8b1f09ba7b6ad908",
+      "frames": 30
+    },
+    {
+      "id": "3d_torus",
+      "name": "Doughnut",
+      "file": "bin/3d_torus.bin",
+      "size": 7042,
+      "hash": "ee9ad7f2",
+      "sha256": "ee9ad7f2cdb44f9262206d81d7abc3db56b2e40e54da10e882c81d9a1f5d13c7",
+      "frames": 30
+    }
+  ],
+  "published_at": "2026-09-28",
+  "author": "Geedo",
+  "note": "Everything 3D: things that turn, in perspective"
+}

@@ -5,7 +5,8 @@
     python3 tools/sign_manifests.py --check [hub-dir]      verify every .sig, change nothing
     python3 tools/sign_manifests.py --test-key [hub-dir]   tests only: the committed test key
 
-Two things happen to each manifest - animations/manifest.json and every
+Two things happen to each manifest - animations/manifest.json, the Doodle
+list animations/manifest_doodle.json when there is one, and every
 animations/packs/<id>/manifest.json:
 
   1. Every entry gets a "sha256": the full hash of its .bin, computed here
@@ -121,7 +122,8 @@ def main(argv):
     test_key = "--test-key" in argv
     rest = [a for a in argv if not a.startswith("--")]
     hub = os.path.abspath(rest[0]) if rest else os.getcwd()
-    manifests = [p for p in [os.path.join(hub, "animations", "manifest.json")] if os.path.isfile(p)]
+    manifests = [p for p in [os.path.join(hub, "animations", "manifest.json"),
+                             os.path.join(hub, "animations", "manifest_doodle.json")] if os.path.isfile(p)]
     manifests += sorted(glob.glob(os.path.join(hub, "animations", "packs", "*", "manifest.json")))
     if not manifests:
         die(f"no animations/manifest.json under {hub}")

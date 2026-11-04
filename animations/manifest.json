@@ -145,32 +145,6 @@
       "published_at": "2026-08-01"
     },
     {
-      "id": "play_once_flying_bro",
-      "name": "Flying bro",
-      "category": "play_once",
-      "author": "Geedo",
-      "file": "bin/play_once_flying_bro.bin",
-      "size": 2276,
-      "hash": "877dc953",
-      "visibility": "public",
-      "frames": 37,
-      "sha256": "877dc953d850531234de417afb8b43817d93d1f06b76888db1884c13b118bed8",
-      "published_at": "2026-08-01"
-    },
-    {
-      "id": "play_once_stickman_backflip",
-      "name": "Stickman_Backflip",
-      "category": "play_once",
-      "author": "Geedo",
-      "file": "bin/play_once_stickman_backflip.bin",
-      "size": 5348,
-      "hash": "72cd3329",
-      "visibility": "public",
-      "frames": 48,
-      "sha256": "72cd3329589ea5daabe108390634372a837f1e5f994ab383fcc867694cb273d9",
-      "published_at": "2026-08-01"
-    },
-    {
       "id": "animations_boot_boot_animation",
       "name": "Power-on animation",
       "category": "animations_boot",
@@ -403,32 +377,6 @@
       "frames": 35,
       "sha256": "b691d3977e5044d4ec03536051037f33a78e44395b284a09576d16856446a305",
       "published_at": "2026-09-15"
-    },
-    {
-      "id": "activities_mad_stick",
-      "name": "The mad stick",
-      "category": "activities",
-      "author": "Geedo",
-      "file": "bin/activities_mad_stick.bin",
-      "size": 2928,
-      "hash": "cbcf4a9a",
-      "visibility": "public",
-      "frames": 10,
-      "sha256": "cbcf4a9a31598ca96250ced34a3c4fc965013088a580d632a7bbbf1f129e93b7",
-      "published_at": "2026-08-21"
-    },
-    {
-      "id": "activities_troll_boi",
-      "name": "Troll boi stickman",
-      "category": "activities",
-      "author": "Geedo",
-      "file": "bin/activities_troll_boi.bin",
-      "size": 275,
-      "hash": "4ac5365d",
-      "visibility": "public",
-      "frames": 2,
-      "sha256": "4ac5365ddd94d005515a0e0c8bea701321bb69762ec90f663105725c2271dfb1",
-      "published_at": "2026-08-21"
     },
     {
       "id": "activities_stargazing",

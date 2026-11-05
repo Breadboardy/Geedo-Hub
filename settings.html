@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings — Geedo</title>
+<meta name="description" content="Your Geedo, your way: his face, what he does, how he feels, where he lives. Plug him in and everything is a switch.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  [hidden]{display:none!important}   /* the site's .btn sets display, which would beat the attribute */
+  /* the switches: the site has none yet */
+  .sw{position:relative;width:44px;height:26px;border-radius:99px;background:#d8d1c2;border:0;cursor:pointer;
+      flex:none;transition:background .15s}
+  .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;
+      box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s}
+  .sw[aria-checked=true]{background:var(--accent)}
+  .sw[aria-checked=true]::after{left:21px}
+  .sw[aria-checked=mixed]{background:#8ab9c4}
+  .sw[aria-checked=mixed]::after{left:12px}
+  .sw:disabled{opacity:.45;cursor:default}
+  .opt{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+  .opt:first-of-type{border-top:0}
+  .opt .g{flex:1;min-width:0}
+  .opt b{display:block;font-size:15px}
+  .opt span{color:var(--mute);font-size:13px}
+  .seg{display:inline-flex;border:1px solid var(--line-bright);border-radius:10px;overflow:hidden}
+  .seg button{font:inherit;border:0;background:#fff;color:var(--text);padding:9px 16px;cursor:pointer}
+  .seg button+button{border-left:1px solid var(--line-bright)}
+  .seg button[aria-pressed=true]{background:var(--accent);color:#fff}
+  .seg button:disabled{opacity:.5;cursor:default}
+  .range{width:100%;accent-color:var(--accent)}
+  .picks{display:none;margin:4px 0 0 0;padding:0 0 0 2px;columns:2;column-gap:24px}
+  .picks label{display:flex;gap:8px;align-items:center;font-size:13px;padding:4px 0;break-inside:avoid;color:var(--mute)}
+  .picks input{accent-color:var(--accent);margin:0}
+  details[open] .picks{display:block}
+  summary{cursor:pointer;color:var(--accent);font-size:13px;list-style:none;margin-top:6px}
+  summary::-webkit-details-marker{display:none}
+  .apply{position:sticky;bottom:12px;display:flex;gap:12px;align-items:center;background:var(--bg-lift);
+      border:1px solid var(--line-bright);border-radius:12px;padding:12px 16px;box-shadow:0 6px 24px rgba(0,0,0,.08);margin-top:18px}
+  .apply[hidden]{display:none}
+  .demo-tag{display:inline-block;background:#f3ebd9;color:#8a6a1f;border-radius:6px;padding:2px 8px;font-size:12px;margin-left:8px}
+  @media (max-width:600px){.picks{columns:1}}
+  @media (prefers-reduced-motion:reduce){.sw,.sw::after{transition:none}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.2vw,26px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="connect.html">My Geedo</a>
+      <a class="link" href="settings.html" aria-current="page">Settings</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
+
+  <header style="margin-bottom:28px">
+    <p class="micro" style="margin:0 0 14px">Settings</p>
+    <h1 class="h1">Your Geedo, your way.</h1>
+    <p class="lead" style="margin-top:14px">
+      Plug him in with his cable and everything on this page is a switch. His face, what he
+      gets up to, how he feels, where he lives. No files, no code, nothing to upload.
+    </p>
+    <div class="row" style="margin-top:20px;gap:10px;flex-wrap:wrap">
+      <button class="btn primary" id="find">Find my Geedo</button>
+      <button class="btn plain" id="demo">Try it without one</button>
+      <span class="small mute" id="state">looking for one you have allowed&hellip;</span>
+    </div>
+  </header>
+
+  <div id="panel" hidden>
+
+    <div class="tiles cols-4">
+      <div class="tile">
+        <span class="micro">Who</span>
+        <span class="num" style="font-family:var(--pixel);font-size:clamp(20px,2.6vw,28px)" id="t-id">&mdash;</span>
+        <span class="small mute" id="t-face"></span>
+      </div>
+      <div class="tile">
+        <span class="micro">Firmware</span>
+        <span class="num" id="t-fw">&mdash;</span>
+        <span class="small mute" id="t-fwnote"></span>
+      </div>
+      <div class="tile">
+        <span class="micro">On his shelf</span>
+        <span class="num" id="t-anims">&mdash;</span>
+        <span class="small mute" id="t-store"></span>
+      </div>
+      <div class="tile">
+        <span class="micro">Battery</span>
+        <span class="num" id="t-bat">&mdash;</span>
+        <span class="small mute" id="t-chg"></span>
+      </div>
+    </div>
+
+    <div class="cards" style="margin-top:22px">
+
+      <article class="card">
+        <span class="micro">His face</span>
+        <p class="small mute" style="margin:8px 0 12px">Two faces, drawn for every scene. Switch, and he fetches
+          the other set at the check-in that starts straight away. A few minutes, then he unboxes it.</p>
+        <div class="seg" id="face-seg">
+          <button data-face="og">OG eyes</button>
+          <button data-face="doodle">Doodle</button>
+        </div>
+        <p class="small mute" id="face-say" style="margin:10px 0 0"></p>
+      </article>
+
+      <article class="card">
+        <span class="micro">What he gets up to</span>
+        <p class="small mute" style="margin:8px 0 4px">Everything the Hub offers him, by kind. Switch a kind off and
+          he leaves those alone; open one to choose scene by scene.</p>
+        <div id="kinds"><p class="small mute">Loading the list&hellip;</p></div>
+        <div class="apply" id="apply" hidden>
+          <span class="small" id="apply-say"></span>
+          <div class="grow"></div>
+          <button class="btn plain" id="apply-undo">Undo</button>
+          <button class="btn primary" id="apply-go">Apply</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="micro">How he feels</span>
+        <p class="small mute" style="margin:8px 0 10px">His mood drifts through the day and petting lifts it.
+          Set where he starts from. <span id="mood-say"></span></p>
+        <input class="range" type="range" id="mood" min="40" max="100" step="5" value="70" aria-label="Mood">
+        <div class="row" style="justify-content:space-between;margin-top:2px">
+          <span class="small mute">content</span><span class="small mute">delighted</span>
+        </div>
+        <div class="row" style="margin-top:12px"><button class="btn" id="pet">Pet him</button></div>
+      </article>
+
+      <article class="card">
+        <div class="opt">
+          <div class="g"><span class="micro">Sound</span><b>Beeps and songs</b>
+            <span>He goes quiet on his own at night. This keeps him quiet all day.</span></div>
+          <button class="sw" id="sound" role="switch" aria-checked="true" aria-label="Sound"></button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="micro">Where he lives</span>
+        <p class="small mute" style="margin:8px 0 10px">So mornings are mornings, nights are quiet, and the clock on
+          his page is right.</p>
+        <select class="field" id="tz" aria-label="Time zone"></select>
+        <p class="small mute" id="tz-say" style="margin:8px 0 0"></p>
+      </article>
+
+      <article class="card">
+        <span class="micro">WiFi</span>
+        <p class="small mute" id="wf-say" style="margin:8px 0 0">The network he checks in on for new scenes and updates.</p>
+        <div id="wf-pick" hidden style="margin-top:10px">
+          <select class="field" id="wf-ssid"></select>
+          <input class="field" id="wf-pass" type="password" autocomplete="off"
+                 placeholder="password (leave empty if open)" style="margin-top:8px">
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="wf-scan">See what is nearby</button>
+          <button class="btn primary" id="wf-join" hidden>Join it</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="micro">Packs</span>
+        <div id="pk-list" class="small mute" style="margin:8px 0 0">&hellip;</div>
+        <div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap">
+          <input class="field" id="pk-code" placeholder="a code from a card" style="max-width:220px" autocomplete="off">
+          <button class="btn" id="pk-redeem">Redeem</button>
+          <button class="btn plain" id="pk-refresh">Refresh</button>
+        </div>
+        <p class="small mute" id="pk-say" style="margin:8px 0 0"></p>
+      </article>
+
+      <article class="card">
+        <span class="micro">Updates</span>
+        <p class="small mute" id="up-say" style="margin:8px 0 0">Checking&hellip;</p>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="up-go" hidden>Update him now</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="micro">Off</span>
+        <p class="small mute" style="margin:8px 0 0">Switch him off. A tap on his button wakes him.</p>
+        <div class="row" style="margin-top:12px"><button class="btn" id="off">Switch off</button></div>
+      </article>
+
+    </div>
+
+    <pre id="log" hidden style="margin-top:18px;max-height:180px;overflow:auto;background:#000;color:#e9ebef;
+         border:1px solid var(--line-bright);border-radius:8px;padding:12px;font-size:11px;line-height:1.6"></pre>
+  </div>
+
+</main>
+
+<script src="assets/geedolink.js"></script>
+<script>
+(async () => {
+/* ---------------------------------------------------------------------------
+   Settings: the owner's control panel. The cable (assets/geedolink.js) is the
+   one way a page meets him; everything here is a switch that becomes one
+   line over it. With no Geedo plugged in, "Try it without one" stands up a
+   pretend one that answers the same lines, so the page can be tried, and
+   argued with, on any browser.
+   --------------------------------------------------------------------------- */
+const GeedoLink = window.GeedoLink;
+const $ = id => document.getElementById(id);
+const state = $('state'), log = $('log');
+let robot = null;                      // a GeedoLink, or the demo
+let info = {};
+let hubList = null;                    // the list he follows, from the Hub
+let skipped = new Set();               // what he leaves alone, as he says
+let pending = new Map();               // id -> true (skip) / false (unskip)
+
+function say(line, kind) {
+  log.hidden = false;
+  const d = document.createElement('div');
+  d.textContent = line;
+  d.style.color = kind === 'sent' ? '#b08d57' : kind ? '#22d3ee' : '#71717a';
+  log.append(d); log.scrollTop = log.scrollHeight;
+}
+const fw = () => parseInt(info.fw, 10) || 0;
+const last = out => out[out.length - 1] || '';
+const ok = out => last(out).startsWith('GEEDO OK');
+
+// ---- a pretend Geedo, for the prototype: the same lines, answered locally
+class Demo {
+  constructor() {
+    this.s = { id: 'DEMO01', fw: 37, anims: 66, packs: '0/4', fs: '610304/720896', bat: '4120mV', chg: 'no',
+               face: 'og', mode: 'og', sound: 'on', tz: 'uk', mood: 70, build: 'normal', reset: 'power-on', up: 900,
+               skips: new Map(), packList: [] };
+    this.info = null;
+  }
+  onLine() { return this; }
+  async open() { return this; }
+  async close() {}
+  async hello() {
+    const s = this.s;
+    this.info = { id: s.id, fw: String(s.fw), anims: String(s.anims - s.skips.size), packs: s.packs, bat: s.bat, chg: s.chg,
+      face: s.face, mode: s.mode, sound: s.sound, build: s.build, reset: s.reset, up: s.up + 's',
+      usedKB: 596, totalKB: 704 };
+    return this.info;
+  }
+  async ask(cmd) {
+    await new Promise(r => setTimeout(r, 120));
+    say('> ' + cmd, 'sent');
+    const s = this.s, [verb, ...rest] = cmd.split(' '), arg = rest.join(' ');
+    let out;
+    switch (verb) {
+      case 'FACE': if (arg) { s.face = s.mode = arg; } out = [`GEEDO OK FACE ${s.face} ${s.mode}`]; break;
+      case 'MOOD': if (arg) s.mood = +arg; out = [`GEEDO OK MOOD ${s.mood}`]; break;
+      case 'PET': s.mood = Math.min(100, s.mood + 5); out = ['GEEDO OK PET']; break;
+      case 'SOUND': if (arg) s.sound = arg; out = [`GEEDO OK SOUND ${s.sound}`]; break;
+      case 'TZ': if (arg) s.tz = arg; out = [`GEEDO OK TZ ${s.tz}`]; break;
+      case 'SKIPS': out = [...s.skips].map(([id, nm]) => `GEEDO SKIP ${id} "${nm}"`).concat(['GEEDO END SKIPS']); break;
+      case 'SKIP': { const m = arg.match(/^(\S+)\s*(.*)$/); s.skips.set(m[1], m[2].replace(/^"|"$/g, '')); out = [`GEEDO OK SKIP ${m[1]}`]; break; }
+      case 'UNSKIP': s.skips.delete(arg); out = [`GEEDO OK UNSKIP ${arg}`]; break;
+      case 'SYNC': out = ['GEEDO OK SYNC starting']; break;
+      case 'SCAN': out = ['GEEDO NET -48 locked "Aardvark"', 'GEEDO NET -71 locked "BT-7HK2P"', 'GEEDO NET -80 open "cafe"', 'GEEDO END SCAN']; break;
+      case 'JOIN': out = ['GEEDO OK JOIN 192.168.1.42']; break;
+      case 'PACKS': out = s.packList.map(p => `GEEDO PACK ${p.id} ${p.n} ${p.bytes} "${p.name}"`).concat(['GEEDO END PACKS']); break;
+      case 'CODE': s.packList.push({ id: 'ab12cd34', n: 8, bytes: 81044, name: 'Doodle: 3D' }); s.packs = `${s.packList.length}/4`; out = ['GEEDO OK CODE Doodle: 3D']; break;
+      case 'FORGET': s.packList = s.packList.filter(p => p.id !== arg); s.packs = `${s.packList.length}/4`; out = [`GEEDO OK FORGET ${arg}`]; break;
+      case 'UPDATE': out = [`GEEDO OK UPDATE nothing-newer, running ${s.fw}`]; break;
+      case 'OFF': out = ['GEEDO OK OFF']; break;
+      default: out = ['GEEDO ERR ' + verb + ' unknown'];
+    }
+    for (const l of out) say(l, true);
+    return out;
+  }
+}
+
+// ---- the tiles and the switches, from what he says
+async function refresh() {
+  info = await robot.hello();
+  $('t-id').textContent = 'GEEDO-' + (info.id || '??????');
+  $('t-face').textContent = info.face ? `wearing the ${info.face} face` : '';
+  $('t-fw').textContent = 'v' + (info.fw || '?');
+  $('t-fwnote').textContent = info.reset ? `last started: ${info.reset}` : '';
+  $('t-anims').textContent = info.anims || '0';
+  $('t-store').textContent = info.totalKB ? `${info.usedKB} of ${info.totalKB} KB used` : '';
+  const mv = parseInt(info.bat, 10);
+  $('t-bat').textContent = mv ? (mv / 1000).toFixed(2) + ' V' : '—';
+  $('t-chg').textContent = info.chg === 'yes' ? 'charging' : (mv ? (mv > 3900 ? 'plenty' : mv > 3650 ? 'getting low' : 'charge him') : '');
+  // the face
+  for (const b of $('face-seg').querySelectorAll('button')) {
+    b.setAttribute('aria-pressed', String(b.dataset.face === info.face));
+    b.disabled = fw() < 31;
+  }
+  $('face-say').textContent = fw() < 37 ? 'Choosing a face for the whole library needs firmware v37. Until then the Doodle face comes with the Doodle Pack.' : '';
+  // sound
+  const sw = $('sound');
+  sw.setAttribute('aria-checked', String(info.sound !== 'off'));
+  sw.disabled = fw() < 37;
+  sw.title = fw() < 37 ? 'needs firmware v37' : '';
+}
+
+// ---- jobs: a control goes busy, the line goes down the wire, he is asked again
+async function act(el, job) {
+  el.disabled = true;
+  try { await job(); await refresh(); }
+  catch (e) { say(e.message || String(e)); }
+  el.disabled = false;
+}
+
+// ---- his face
+$('face-seg').onclick = e => {
+  const b = e.target.closest('button'); if (!b || b.getAttribute('aria-pressed') === 'true') return;
+  act(b, async () => {
+    const out = await robot.ask('FACE ' + b.dataset.face, /^GEEDO (OK|ERR) FACE/);
+    $('face-say').textContent = ok(out) ? `He is putting on the ${b.dataset.face} face and fetching its scenes. Give him a few minutes.` : GeedoLink.why(last(out));
+    await loadKinds();
+  });
+};
+
+// ---- what he gets up to
+const KIND = { activities: 'Everyday life', eating: 'Eating', play: 'Play once', hello: 'Hello', cooking: 'Cooking',
+               party: 'Party', making: 'Making', sports: 'Sport', building: 'Building', doodle: 'The Doodle face' };
+function kindOf(a) {
+  let id = a.id.replace(/^doodle_/, '');
+  const pre = id.split('_')[0];
+  return KIND[pre] || pre.charAt(0).toUpperCase() + pre.slice(1);
+}
+async function loadKinds() {
+  const box = $('kinds');
+  const which = info.face === 'doodle' ? 'animations/manifest_doodle.json' : 'animations/manifest.json';
+  try { hubList = (await (await fetch(which, { cache: 'no-store' })).json()).animations.filter(a => !a.id.startsWith('animations_boot')); }
+  catch (e) { box.innerHTML = '<p class="small mute">Could not read the Hub’s list.</p>'; return; }
+  skipped = new Set();
+  if (fw() >= 37) {
+    try {
+      const out = await robot.ask('SKIPS', /^GEEDO END SKIPS/, 8000);
+      for (const l of out) { const m = l.match(/^GEEDO SKIP (\S+)/); if (m) skipped.add(m[1]); }
+    } catch (e) {}
+  }
+  pending = new Map();
+  drawKinds();
+}
+const want = id => pending.has(id) ? !pending.get(id) : !skipped.has(id);   // true = he keeps it
+function drawKinds() {
+  const box = $('kinds'); box.innerHTML = '';
+  const groups = new Map();
+  for (const a of hubList) { const k = kindOf(a); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(a); }
+  const old = fw() < 37;
+  for (const [kind, items] of groups) {
+    const on = items.filter(a => want(a.id)).length;
+    const row = document.createElement('div'); row.className = 'opt';
+    row.innerHTML = `<div class="g"><b>${kind}</b><span>${items.length} scene${items.length === 1 ? '' : 's'}${on < items.length ? `, ${on} on` : ''}</span>
+      <details><summary>choose one by one</summary><div class="picks"></div></details></div>`;
+    const sw = document.createElement('button'); sw.className = 'sw'; sw.setAttribute('role', 'switch');
+    sw.setAttribute('aria-checked', on === items.length ? 'true' : on === 0 ? 'false' : 'mixed');
+    sw.setAttribute('aria-label', kind); sw.disabled = old;
+    sw.onclick = () => { const to = on < items.length; for (const a of items) setWant(a, to); drawKinds(); };
+    row.append(sw);
+    const picks = row.querySelector('.picks');
+    for (const a of items) {
+      const l = document.createElement('label');
+      const c = document.createElement('input'); c.type = 'checkbox'; c.checked = want(a.id); c.disabled = old;
+      c.onchange = () => { setWant(a, c.checked); drawKinds(); };
+      l.append(c, document.createTextNode(a.name)); picks.append(l);
+    }
+    box.append(row);
+  }
+  if (old) box.insertAdjacentHTML('beforeend', '<p class="small mute" style="margin-top:10px">Choosing what he does from here needs firmware v37. Until then, tick things on his own page.</p>');
+  const n = pending.size;
+  $('apply').hidden = !n;
+  $('apply-say').textContent = `${n} change${n === 1 ? '' : 's'} - he sorts his shelf out at the check-in that starts when you apply`;
+}
+function setWant(a, keep) {
+  const now = !skipped.has(a.id);
+  if (keep === now) pending.delete(a.id); else pending.set(a.id, !keep);
+}
+$('apply-undo').onclick = () => { pending = new Map(); drawKinds(); };
+$('apply-go').onclick = e => act(e.target, async () => {
+  for (const [id, skip] of pending) {
+    const a = hubList.find(x => x.id === id);
+    const line = skip ? `SKIP ${id} "${(a && a.name || id).replace(/"/g, "'")}"` : `UNSKIP ${id}`;
+    const out = await robot.ask(line, /^GEEDO (OK|ERR) (UN)?SKIP/, 8000);
+    if (!ok(out)) throw new Error(GeedoLink.why(last(out)));
+    if (skip) skipped.add(id); else skipped.delete(id);
+  }
+  pending = new Map();
+  await robot.ask('SYNC', /^GEEDO (OK|ERR) SYNC/, 8000);
+  drawKinds();
+  $('apply-say').textContent = 'Done. He is sorting his shelf out now.';
+});
+
+// ---- how he feels
+let moodTimer = null;
+$('mood').oninput = e => {
+  clearTimeout(moodTimer);
+  moodTimer = setTimeout(() => act(e.target, async () => {
+    const out = await robot.ask('MOOD ' + e.target.value, /^GEEDO (OK|ERR) MOOD/);
+    $('mood-say').textContent = ok(out) ? `Set to ${e.target.value}.` : GeedoLink.why(last(out));
+  }), 400);
+};
+$('pet').onclick = e => act(e.target, () => robot.ask('PET', /^GEEDO (OK|ERR) PET/));
+async function readMood() {
+  try { const out = await robot.ask('MOOD', /^GEEDO (OK|ERR) MOOD/); const m = last(out).match(/(\d+)\s*$/); if (m) $('mood').value = m[1]; } catch (e) {}
+}
+
+// ---- sound
+$('sound').onclick = e => {
+  const sw = e.target, to = sw.getAttribute('aria-checked') !== 'true';
+  act(sw, () => robot.ask('SOUND ' + (to ? 'on' : 'off'), /^GEEDO (OK|ERR) SOUND/));
+};
+
+// ---- where he lives
+const ZONES = [['pacific', 'Pacific (Los Angeles, Vancouver)'], ['mountain', 'Mountain (Denver)'], ['arizona', 'Arizona'],
+  ['central', 'Central (Chicago, Mexico City)'], ['eastern', 'Eastern (New York, Toronto)'], ['alaska', 'Alaska'], ['hawaii', 'Hawaii'],
+  ['uk', 'United Kingdom'], ['ireland', 'Ireland'], ['europe', 'Central Europe (Paris, Berlin, Madrid)'], ['india', 'India'],
+  ['japan', 'Japan'], ['sydney', 'Sydney'], ['utc', 'UTC']];
+for (const [v, label] of ZONES) { const o = document.createElement('option'); o.value = v; o.textContent = label; $('tz').append(o); }
+$('tz').onchange = e => act(e.target, async () => {
+  const out = await robot.ask('TZ ' + e.target.value, /^GEEDO (OK|ERR) TZ/);
+  $('tz-say').textContent = ok(out) ? 'Saved. His clock follows at his next check-in.' : GeedoLink.why(last(out));
+});
+async function readTz() {
+  try { const out = await robot.ask('TZ', /^GEEDO (OK|ERR) TZ/); const m = last(out).match(/^GEEDO OK TZ (\S+)/); if (m && ZONES.some(z => z[0] === m[1])) $('tz').value = m[1]; } catch (e) {}
+}
+
+// ---- WiFi
+const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';
+$('wf-scan').onclick = e => act(e.target, async () => {
+  $('wf-say').textContent = 'Looking…';
+  const out = await robot.ask('SCAN', /^GEEDO END SCAN/, 25000);
+  const nets = out.filter(l => l.startsWith('GEEDO NET ')).map(l => {
+    const m = l.match(/^GEEDO NET (-?\d+) (\S+) "(.*)"$/);
+    return m ? { rssi: +m[1], open: m[2] === 'open', ssid: m[3] } : null;
+  }).filter(Boolean).sort((a, b) => b.rssi - a.rssi);
+  const sel = $('wf-ssid'); sel.innerHTML = '';
+  for (const n of nets) { const o = document.createElement('option'); o.value = n.ssid; o.textContent = `${bars(n.rssi)}  ${n.ssid}${n.open ? '  (open)' : ''}`; sel.append(o); }
+  $('wf-say').textContent = nets.length ? `${nets.length} network(s) nearby.` : 'Nothing nearby - try again.';
+  $('wf-pick').hidden = !nets.length; $('wf-join').hidden = !nets.length;
+});
+$('wf-join').onclick = e => act(e.target, async () => {
+  const ssid = $('wf-ssid').value, pass = $('wf-pass').value;
+  $('wf-say').textContent = `Joining ${ssid}…`;
+  const out = await robot.ask(`JOIN "${ssid}" ${pass}`, /^GEEDO (OK|ERR) JOIN/, 30000, `JOIN "${ssid}" ${pass ? '********' : ''}`);
+  $('wf-pass').value = '';
+  $('wf-say').textContent = ok(out) ? `Joined ${ssid}. He fetches his scenes at his next check-in.`
+    : (pass ? 'Could not join - check the password.' : 'Could not join - that network probably needs a password.');
+});
+
+// ---- packs
+async function listPacks() {
+  const out = await robot.ask('PACKS', /^GEEDO END PACKS/, 8000);
+  const rows = out.filter(l => l.startsWith('GEEDO PACK ')), box = $('pk-list');
+  if (!rows.length) { box.textContent = 'No packs on him. Packs are extra scenes; a code from a card puts one on.'; return; }
+  box.innerHTML = '';
+  for (const r of rows) {
+    const m = r.match(/^GEEDO PACK (\S+) (\d+) (\d+) "(.*)"$/); if (!m) continue;
+    const [, id, n, bytes, name] = m;
+    const line = document.createElement('div'); line.className = 'opt';
+    line.innerHTML = `<div class="g"><b>${name}</b><span>${n} scenes, ${Math.round(bytes / 1024)} KB</span></div>`;
+    const rm = document.createElement('button'); rm.className = 'btn plain'; rm.textContent = 'remove';
+    rm.onclick = () => {
+      if (rm.dataset.sure !== '1') { rm.dataset.sure = '1'; rm.textContent = 'remove it for good?'; return; }
+      act(rm, async () => { await robot.ask('FORGET ' + id, /^GEEDO (OK|ERR) FORGET/); await listPacks(); });
+    };
+    line.append(rm); box.append(line);
+  }
+}
+$('pk-refresh').onclick = e => act(e.target, listPacks);
+$('pk-redeem').onclick = e => act(e.target, async () => {
+  const code = $('pk-code').value.trim(); if (!code) return;
+  $('pk-say').textContent = 'Asking the Hub… he needs his WiFi for this.';
+  const out = await robot.ask('CODE ' + code, /^GEEDO (OK|ERR) CODE/, 60000);
+  $('pk-say').textContent = ok(out) ? 'On him. Watch his face.' : GeedoLink.why(last(out));
+  if (ok(out)) { $('pk-code').value = ''; await listPacks(); }
+});
+
+// ---- updates
+async function checkUpdate() {
+  const out = $('up-say'), go = $('up-go');
+  try {
+    const m = await (await fetch('firmware/manifest.json', { cache: 'no-store' })).json();
+    if (fw() >= m.version) { out.innerHTML = `He is on <b>v${fw()}</b>, the newest the Hub has.`; go.hidden = true; }
+    else {
+      out.innerHTML = `He is on <b>v${fw()}</b> and the Hub has <b>v${m.version}</b>.` + (fw() >= 37 ? '' : ' He takes it himself at a check-in; from v37 on, this button does it now.');
+      go.hidden = fw() < 37;
+    }
+  } catch (e) { out.textContent = `He is on v${fw()}. Could not reach the Hub's firmware list.`; go.hidden = true; }
+}
+$('up-go').onclick = e => act(e.target, async () => {
+  $('up-say').textContent = 'Asking him to update. He takes the screen, downloads, restarts. Do not unplug.';
+  await robot.ask('UPDATE', /^GEEDO (OK|ERR) UPDATE/, 20000);
+});
+
+// ---- off
+$('off').onclick = e => {
+  const b = e.target;
+  if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Really? A tap wakes him'; return; }
+  act(b, () => robot.ask('OFF', /^GEEDO (OK|ERR) OFF/));
+};
+
+// ---- connecting
+function why(e) {
+  const m = (e && e.message) || String(e);
+  if (/already open/i.test(m)) return 'This page already has him. Reload it if the panel is stuck.';
+  if (/Failed to open|Access denied|NetworkError/i.test(m))
+    return "Can't open him: something else is using the cable. Close any serial monitor or other tab, then try again.";
+  return m;
+}
+async function greet(r, demo) {
+  if (robot) return;
+  robot = r;
+  robot.onLine(say);
+  state.textContent = demo ? '' : 'connected - saying hello';
+  try {
+    await robot.open();
+    await refresh();
+    $('panel').hidden = false;
+    state.innerHTML = demo ? 'a pretend Geedo, for trying the page <span class="demo-tag">demo</span>' : `connected to GEEDO-${info.id}`;
+    await Promise.all([loadKinds(), readMood(), readTz(), listPacks(), checkUpdate()]);
+  } catch (e) {
+    state.textContent = why(e);
+    try { await r.close(); } catch (_) {}
+    robot = null;
+  }
+}
+if (!GeedoLink.supported) {
+  state.textContent = 'this browser cannot open his cable - use Chrome or Edge on a computer, or try the page without him';
+  $('find').disabled = true;
+}
+GeedoLink.watch(l => greet(l, false), port => {
+  if (!robot || robot.port !== port) return;
+  robot = null; $('panel').hidden = true;
+  state.textContent = 'unplugged - plug him back in and he comes straight back';
+});
+$('find').onclick = async () => {
+  try { await greet(await GeedoLink.pick(), false); }
+  catch (e) { state.textContent = /No port selected/i.test(e.message || '') ? 'No Geedo picked.' : why(e); }
+};
+$('demo').onclick = async () => { if (robot) { try { await robot.close(); } catch (_) {} robot = null; } await greet(new Demo(), true); };
+const known = GeedoLink.supported ? await GeedoLink.known() : [];
+if (location.hash === '#demo') await greet(new Demo(), true);      // a link straight to the pretend one
+else if (known.length) await greet(known[0], false);
+else if (GeedoLink.supported) state.textContent = 'Press Find my Geedo and pick him from the list, or try the page without him.';
+})();
+</script>
+</body>
+</html>

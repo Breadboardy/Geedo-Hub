@@ -72,9 +72,13 @@
     </p>
     <div class="row" style="margin-top:20px;gap:10px;flex-wrap:wrap">
       <button class="btn primary" id="find">Find my Geedo</button>
+      <button class="btn primary" id="find-ble" hidden>Find him over Bluetooth</button>
       <button class="btn plain" id="demo">Try it without one</button>
       <span class="small mute" id="state">looking for one you have allowed&hellip;</span>
     </div>
+    <p class="small mute" id="how" style="margin:10px 0 0;max-width:60ch">On a computer, his cable. On an Android phone,
+      or a computer with Bluetooth, no cable at all: he shows up as GEEDO-XXXXXX and his face shows a code to type.
+      iPhones can't do Bluetooth from a web page yet.</p>
   </header>
 
   <div id="panel" hidden>
@@ -212,7 +216,7 @@
    pretend one that answers the same lines, so the page can be tried, and
    argued with, on any browser.
    --------------------------------------------------------------------------- */
-const GeedoLink = window.GeedoLink;
+const GeedoLink = window.GeedoLink, GeedoBle = window.GeedoBle;
 const $ = id => document.getElementById(id);
 const state = $('state'), log = $('log');
 let robot = null;                      // a GeedoLink, or the demo
@@ -524,9 +528,10 @@ async function greet(r, demo) {
     await robot.open();
     await refresh();
     $('panel').hidden = false;
-    state.innerHTML = demo ? 'a pretend Geedo, for trying the page <span class="demo-tag">demo</span>' : `connected to GEEDO-${info.id} - everything below is him`;
-    $('find').textContent = demo ? 'Find my Geedo' : 'Connected';
-    $('find').disabled = !demo;
+    const how = r.device ? 'over Bluetooth' : 'by cable';
+    state.innerHTML = demo ? 'a pretend Geedo, for trying the page <span class="demo-tag">demo</span>' : `connected to GEEDO-${info.id} ${how} - everything below is him`;
+    for (const id of ['find', 'find-ble']) { $(id).textContent = demo ? ($(id).dataset.label || $(id).textContent) : 'Connected ' + how; $(id).disabled = !demo; }
+    if (r.onGone !== undefined) r.onGone = () => gone();
     await Promise.all([loadKinds(), readMood(), readTz(), listPacks(), checkUpdate()]);
   } catch (e) {
     state.textContent = why(e);
@@ -535,15 +540,23 @@ async function greet(r, demo) {
   }
 }
 if (!GeedoLink.supported) {
-  state.textContent = 'this browser cannot open his cable - use Chrome or Edge on a computer, or try the page without him';
-  $('find').disabled = true;
+  $('find').hidden = true;
+  if (!GeedoBle.supported) state.textContent = 'this browser can open neither his cable nor Bluetooth - use Chrome or Edge, or try the page without him';
 }
-GeedoLink.watch(l => greet(l, false), port => {
-  if (!robot || robot.port !== port) return;
+function gone() {
   robot = null; $('panel').hidden = true;
-  $('find').textContent = 'Find my Geedo'; $('find').disabled = false;
-  state.textContent = 'unplugged - plug him back in and he comes straight back';
-});
+  for (const id of ['find', 'find-ble']) { $(id).textContent = $(id).dataset.label; $(id).disabled = false; }
+  state.textContent = 'he went away - plug him in or find him again and he comes straight back';
+}
+for (const id of ['find', 'find-ble']) $(id).dataset.label = $(id).textContent;
+GeedoLink.watch(l => greet(l, false), port => { if (robot && robot.port === port) gone(); });
+if (GeedoBle.supported) {
+  $('find-ble').hidden = false;
+  $('find-ble').onclick = async () => {
+    try { await greet(await GeedoBle.pick(), false); }
+    catch (e) { state.textContent = /cancelled|No device|User cancelled/i.test(e.message || '') ? 'No Geedo picked.' : (e.message || String(e)); }
+  };
+}
 $('find').onclick = async () => {
   try { await greet(await GeedoLink.pick(), false); }
   catch (e) { state.textContent = /No port selected/i.test(e.message || '') ? 'No Geedo picked.' : why(e); }
@@ -556,7 +569,7 @@ $('demo').onclick = async () => {
 const known = GeedoLink.supported ? await GeedoLink.known() : [];
 if (location.hash === '#demo') await greet(new Demo(), true);      // a link straight to the pretend one
 else if (known.length) await greet(known[0], false);
-else if (GeedoLink.supported) state.textContent = 'Press Find my Geedo and pick him from the list, or try the page without him.';
+else if (GeedoLink.supported || GeedoBle.supported) state.textContent = 'Find him, by cable or over Bluetooth, or try the page without him.';
 })();
 </script>
 </body>

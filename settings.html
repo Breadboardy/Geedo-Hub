@@ -63,12 +63,14 @@ a{color:var(--cyan)}
       background:var(--grad2);color:#fff;box-shadow:var(--shadow)}
 .hero::after{content:"";position:absolute;inset:auto -20% -60% auto;width:70%;aspect-ratio:1;border-radius:50%;
              background:radial-gradient(circle,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
-.hero .eyes{width:120px;height:60px;border-radius:10px;background:#000;display:grid;place-items:center;flex:none;
-            border:2px solid rgba(255,255,255,.25);box-shadow:0 0 40px rgba(34,211,238,.45)}
-.hero .eyes svg{width:100px;height:50px}
-.eyes .lid{animation:blink 5.5s infinite}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
-.eyes .lid{transform-origin:center;transform-box:fill-box}
+/* his hero shot: rendered from his real case, cut out, shadow and reflection in the picture's alpha */
+.hero .bot{position:relative;flex:none;width:min(62vw,250px);margin:-6px auto 6px;animation:float 7s ease-in-out infinite}
+.hero .bot::before{content:"";position:absolute;inset:18% -22% 10%;border-radius:50%;z-index:0;
+                   background:radial-gradient(closest-side,rgba(34,211,238,.42),rgba(34,211,238,0));filter:blur(14px)}
+.hero .bot img{display:block;width:100%;height:auto;position:relative;z-index:1}
+.hero .bot .blink{position:absolute;inset:0;opacity:0;animation:blink 5.5s infinite;z-index:2}
+@keyframes blink{0%,92.5%,100%{opacity:0}93.5%,96.5%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .hero h1{margin:0;font-size:clamp(22px,3.2vw,32px);letter-spacing:-.01em;text-wrap:balance}
 .hero p{margin:6px 0 0;color:rgba(255,255,255,.86);max-width:52ch}
 .hero .id{font-family:var(--pixel);font-size:clamp(16px,2.4vw,22px);letter-spacing:.06em;margin-top:2px}
@@ -136,9 +138,10 @@ pre.log{margin:14px 0 0;max-height:160px;overflow:auto;background:#000;color:#cf
 .screen{font-family:var(--mono);font-size:11px;background:#000;color:#22d3ee;border-radius:8px;padding:10px;white-space:pre;margin-top:10px;overflow-x:auto}
 footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
 @media (min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(3,1fr)}}
-@media (min-width:1040px){.grid{grid-template-columns:repeat(3,1fr)}.hero .in{display:flex;gap:28px;align-items:center}}
+@media (min-width:720px){.hero .in{display:flex;gap:28px;align-items:center}.hero .bot{order:2;width:min(30vw,330px);margin:-12px 0 -14px}}
+@media (min-width:1040px){.grid{grid-template-columns:repeat(3,1fr)}.hero .in{gap:40px}.hero .bot{width:min(28vw,360px);margin:-16px 10px -20px 0}}
 @media (max-width:600px){.tiles{grid-template-columns:repeat(2,1fr)}.picks{columns:1}}
-@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.eyes .lid{animation:none}}
+@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.hero .bot,.hero .bot .blink{animation:none}}
 </style>
 </head>
 <body>
@@ -157,7 +160,10 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
 
   <section class="hero">
     <div class="in">
-      <div class="eyes" aria-hidden="true"><svg viewBox="0 0 100 50"><g class="lid"><rect x="26" y="12" width="14" height="26" rx="4" fill="#22d3ee"/><rect x="60" y="12" width="14" height="26" rx="4" fill="#22d3ee"/></g></svg></div>
+      <div class="bot" aria-hidden="true">
+        <picture><source srcset="assets/app/hero.webp" type="image/webp"><img src="assets/app/hero.png" alt="" width="1371" height="1462" decoding="async" fetchpriority="high"></picture>
+        <img class="blink" src="assets/app/hero-blink.webp" alt="" width="1371" height="1462" decoding="async">
+      </div>
       <div style="min-width:0;flex:1">
         <h1 id="title">Your Geedo, your way.</h1>
         <div class="id" id="hid" hidden></div>
@@ -251,8 +257,8 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
         <div class="k">Off</div><h2>Lights out</h2>
         <p>Switch him off. A tap on his button wakes him.</p>
         <div class="row"><button class="btn sm" id="off">Switch off</button></div>
-        <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">His button</div><b>Tap to pet him, hold to start over</b>
-          <span>A tap cheers him up a little, and he remembers it. Hold it five seconds and he forgets his WiFi and asks to be set up again. Pet him ten times in a row and he sings his song.</span></div></div>
+        <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">His button</div><b>Tap to pet him, hold to switch him off</b>
+          <span>A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.</span></div></div>
       </article>
 
     </div>

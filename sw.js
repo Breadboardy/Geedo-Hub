@@ -2,9 +2,9 @@
    file comes from the Hub when it can, from the cache when it cannot. The
    manifests and animations are never cached here - the robot's own copies
    are the ones that matter, and the page asks the Hub fresh every time. */
-const SHELL = 'geedo-shell-v1';
+const SHELL = 'geedo-shell-v2';
 const FILES = ['settings.html', 'assets/geedo.css', 'assets/geedolink.js', 'assets/logo.png', 'assets/favicon.png',
-               'assets/app/icon-192.png', 'assets/app/icon-512.png'];
+               'assets/app/icon-192.png', 'assets/app/icon-512.png', 'assets/app/hero.webp', 'assets/app/hero-blink.webp'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });

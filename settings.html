@@ -235,6 +235,7 @@ const ok = out => last(out).startsWith('GEEDO OK');
 // ---- a pretend Geedo, for the prototype: the same lines, answered locally
 class Demo {
   constructor() {
+    this.isDemo = true;
     this.s = { id: 'DEMO01', fw: 37, anims: 66, packs: '0/4', fs: '610304/720896', bat: '4120mV', chg: 'no',
                face: 'og', mode: 'og', sound: 'on', tz: 'uk', mood: 70, build: 'normal', reset: 'power-on', up: 900,
                skips: new Map(), packList: [] };
@@ -512,6 +513,9 @@ function why(e) {
   return m;
 }
 async function greet(r, demo) {
+  // A real Geedo always takes over from the pretend one: the demo is for
+  // when there is nobody on the cable, not instead of him.
+  if (robot && robot.isDemo && !demo) { robot = null; $('panel').hidden = true; }
   if (robot) return;
   robot = r;
   robot.onLine(say);
@@ -520,7 +524,9 @@ async function greet(r, demo) {
     await robot.open();
     await refresh();
     $('panel').hidden = false;
-    state.innerHTML = demo ? 'a pretend Geedo, for trying the page <span class="demo-tag">demo</span>' : `connected to GEEDO-${info.id}`;
+    state.innerHTML = demo ? 'a pretend Geedo, for trying the page <span class="demo-tag">demo</span>' : `connected to GEEDO-${info.id} - everything below is him`;
+    $('find').textContent = demo ? 'Find my Geedo' : 'Connected';
+    $('find').disabled = !demo;
     await Promise.all([loadKinds(), readMood(), readTz(), listPacks(), checkUpdate()]);
   } catch (e) {
     state.textContent = why(e);
@@ -535,13 +541,18 @@ if (!GeedoLink.supported) {
 GeedoLink.watch(l => greet(l, false), port => {
   if (!robot || robot.port !== port) return;
   robot = null; $('panel').hidden = true;
+  $('find').textContent = 'Find my Geedo'; $('find').disabled = false;
   state.textContent = 'unplugged - plug him back in and he comes straight back';
 });
 $('find').onclick = async () => {
   try { await greet(await GeedoLink.pick(), false); }
   catch (e) { state.textContent = /No port selected/i.test(e.message || '') ? 'No Geedo picked.' : why(e); }
 };
-$('demo').onclick = async () => { if (robot) { try { await robot.close(); } catch (_) {} robot = null; } await greet(new Demo(), true); };
+$('demo').onclick = async () => {
+  if (robot && !robot.isDemo) { state.textContent = 'He is plugged in, so this page is already the real thing.'; return; }
+  if (robot) { try { await robot.close(); } catch (_) {} robot = null; }
+  await greet(new Demo(), true);
+};
 const known = GeedoLink.supported ? await GeedoLink.known() : [];
 if (location.hash === '#demo') await greet(new Demo(), true);      // a link straight to the pretend one
 else if (known.length) await greet(known[0], false);

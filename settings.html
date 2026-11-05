@@ -67,10 +67,26 @@ a{color:var(--cyan)}
 .hero .bot{position:relative;flex:none;width:min(62vw,250px);margin:-6px auto 6px;animation:float 7s ease-in-out infinite}
 .hero .bot::before{content:"";position:absolute;inset:18% -22% 10%;border-radius:50%;z-index:0;
                    background:radial-gradient(closest-side,rgba(34,211,238,.42),rgba(34,211,238,0));filter:blur(14px)}
-.hero .bot img{display:block;width:100%;height:auto;position:relative;z-index:1}
-.hero .bot .blink{position:absolute;inset:0;opacity:0;animation:blink 5.5s infinite;z-index:2}
-@keyframes blink{0%,92.5%,100%{opacity:0}93.5%,96.5%{opacity:1}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+/* the turntable: one view showing at a time, his screen drawn live over the glass, a button on each of his parts */
+.spin{position:relative;z-index:1;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.spin.drag{cursor:grabbing}
+.spin img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none}
+.spin img.f{position:absolute;inset:0;visibility:hidden}
+.spin .oled{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;image-rendering:pixelated;pointer-events:none;
+            box-shadow:0 0 14px 2px rgba(130,225,255,.5)}
+.spin .spot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;padding:0;border-radius:50%;border:2px solid #fff;cursor:pointer;
+            background:rgba(34,211,238,.4);box-shadow:0 0 0 3px rgba(34,211,238,.3),0 2px 8px rgba(0,0,0,.35);transition:transform .15s}
+.spin .spot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:ping 2.6s ease-out infinite}
+.spin .spot:hover,.spin .spot:focus-visible{transform:scale(1.18)}
+.spin .spot .tip{position:absolute;left:50%;top:-36px;transform:translateX(-50%);white-space:nowrap;background:rgba(0,0,0,.78);color:#fff;
+                 font:500 12px/1 var(--sans);padding:7px 9px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .15s}
+.spin .spot:hover .tip,.spin .spot:focus-visible .tip{opacity:1}
+@keyframes ping{0%{transform:scale(.75);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.hero .hint{position:relative;z-index:1;text-align:center;font-size:12px;color:rgba(255,255,255,.72);margin-top:2px;min-height:18px;transition:color .2s}
+.hero .hint.said{color:#fff;font-weight:600}
+.card.flash{animation:flash 1.4s}
+@keyframes flash{0%,100%{box-shadow:none}25%,60%{box-shadow:0 0 0 3px var(--cyan),0 0 30px rgba(34,211,238,.35)}}
 .hero h1{margin:0;font-size:clamp(22px,3.2vw,32px);letter-spacing:-.01em;text-wrap:balance}
 .hero p{margin:6px 0 0;color:rgba(255,255,255,.86);max-width:52ch}
 .hero .id{font-family:var(--pixel);font-size:clamp(16px,2.4vw,22px);letter-spacing:.06em;margin-top:2px}
@@ -141,7 +157,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
 @media (min-width:720px){.hero .in{display:flex;gap:28px;align-items:center}.hero .bot{order:2;width:min(30vw,330px);margin:-12px 0 -14px}}
 @media (min-width:1040px){.grid{grid-template-columns:repeat(3,1fr)}.hero .in{gap:40px}.hero .bot{width:min(28vw,360px);margin:-16px 10px -20px 0}}
 @media (max-width:600px){.tiles{grid-template-columns:repeat(2,1fr)}.picks{columns:1}}
-@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.hero .bot,.hero .bot .blink{animation:none}}
+@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.hero .bot,.spin .spot::after,.card.flash{animation:none}}
 </style>
 </head>
 <body>
@@ -160,9 +176,13 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
 
   <section class="hero">
     <div class="in">
-      <div class="bot" aria-hidden="true">
-        <picture><source srcset="assets/app/hero.webp" type="image/webp"><img src="assets/app/hero.png" alt="" width="1371" height="1462" decoding="async" fetchpriority="high"></picture>
-        <img class="blink" src="assets/app/hero-blink.webp" alt="" width="1371" height="1462" decoding="async">
+      <div class="bot">
+        <div class="spin" id="spin" aria-label="Geedo. Drag to turn him; his parts are buttons.">
+          <img class="view" id="view" src="assets/app/spin/f00.webp" alt="" width="940" height="997" decoding="async" fetchpriority="high" draggable="false">
+          <canvas class="oled" id="oled" width="128" height="64" hidden aria-hidden="true"></canvas>
+          <div class="spots" id="spots"></div>
+        </div>
+        <div class="hint" id="spin-hint">drag to turn him &middot; tap a part</div>
       </div>
       <div style="min-width:0;flex:1">
         <h1 id="title">Your Geedo, your way.</h1>
@@ -187,14 +207,14 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
   <div id="panel" hidden>
     <div class="grid">
 
-      <article class="card">
+      <article class="card" id="c-face">
         <div class="k">His face</div><h2>Two faces, drawn for every scene</h2>
         <p>Switch, and he fetches the other set at the check-in that starts straight away. A few minutes, then he unboxes it.</p>
         <div class="row"><div class="seg" id="face-seg"><button data-face="og">OG eyes</button><button data-face="doodle">Doodle</button></div></div>
         <p id="face-say"></p>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-mood">
         <div class="k">How he feels</div><h2>Where his day starts</h2>
         <p>His mood drifts through the day and petting lifts it. <span id="mood-say"></span></p>
         <div style="margin-top:12px"><input class="range" type="range" id="mood" min="40" max="100" step="5" value="70" aria-label="Mood"></div>
@@ -202,14 +222,14 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
         <div class="row"><button class="btn sm" id="pet">Pet him</button></div>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-sound">
         <div class="opt"><div class="g"><div class="k">Sound</div><b>Beeps and songs</b><span>He goes quiet on his own at night. This keeps him quiet all day.</span></div>
           <button class="sw" id="sound" role="switch" aria-checked="true" aria-label="Sound"></button></div>
         <div class="opt"><div class="g"><div class="k">Where he lives</div><b>His time zone</b><span>So mornings are mornings and nights are quiet.</span>
           <select class="field" id="tz" aria-label="Time zone" style="margin-top:8px"></select><span id="tz-say"></span></div></div>
       </article>
 
-      <article class="card wide">
+      <article class="card wide" id="c-kinds">
         <div class="k">What he gets up to</div><h2>Everything the Hub offers him, by kind</h2>
         <p>Switch a kind off and he leaves those alone; open one to choose scene by scene. Nothing changes until you apply.</p>
         <div id="kinds" style="margin-top:8px"><p>Loading the list&hellip;</p></div>
@@ -217,7 +237,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
           <button class="btn sm ghost" id="apply-undo">Undo</button><button class="btn sm p" id="apply-go">Apply</button></div>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-wifi">
         <div class="k">WiFi</div><h2>The network he checks in on</h2>
         <p id="wf-say">New scenes and updates come down it. Change it here, or set him up for the first time below.</p>
         <div id="wf-pick" hidden style="margin-top:10px"><select class="field" id="wf-ssid"></select>
@@ -225,7 +245,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
         <div class="row"><button class="btn sm" id="wf-scan">See what is nearby</button><button class="btn sm p" id="wf-join" hidden>Join it</button></div>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-packs">
         <div class="k">Packs</div><h2>Extra scenes, by code</h2>
         <div id="pk-wait" hidden class="opt"></div>
         <div id="pk-list" style="margin-top:4px"><p>&hellip;</p></div>
@@ -234,26 +254,26 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
         <p id="pk-say"></p>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-updates">
         <div class="k">Updates</div><h2 id="up-h">Firmware</h2>
         <p id="up-say">Checking&hellip;</p>
         <div class="row"><button class="btn sm p" id="up-go" hidden>Update him now</button></div>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-check">
         <div class="k">Check-up</div><h2>Every part of him, asked</h2>
         <p>Screen, flash, battery, button, radio. Nothing to open, no meter.</p>
         <div id="ck-out" class="mono" style="margin-top:8px"></div>
         <div class="row"><button class="btn sm" id="ck-run">Ask him how he is</button></div>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-page">
         <div class="k">His page</div><h2>On your WiFi, he serves his own</h2>
         <p id="pg-say">His shelf with a tick beside everything, a place to drop your own animations, his packs. His radio rests between check-ins, so wake it first.</p>
         <div class="row"><button class="btn sm" id="pg-up">Wake his radio</button><a class="btn sm ghost" id="pg-link" hidden target="_blank" rel="noopener">Open his page &rarr;</a></div>
       </article>
 
-      <article class="card">
+      <article class="card" id="c-off">
         <div class="k">Off</div><h2>Lights out</h2>
         <p>Switch him off. A tap on his button wakes him.</p>
         <div class="row"><button class="btn sm" id="off">Switch off</button></div>
@@ -283,6 +303,7 @@ no password needed!</div></div>
 </main>
 <footer>Geedo &middot; <a href="GUIDE.md">the owner's guide</a> &middot; <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a></footer>
 
+<script src="assets/geedo.js"></script>
 <script src="assets/geedolink.js"></script>
 <script>
 (async () => {
@@ -394,6 +415,7 @@ async function refresh() {
   $('t-chg').textContent = info.chg === 'yes' ? 'charging' : (mv ? (mv > 3900 ? 'plenty' : mv > 3650 ? 'getting low' : 'charge him') : '');
   $('t-face').textContent = info.face || '—';
   $('t-link').textContent = robot.isDemo ? 'pretend' : robot.device ? 'over Bluetooth' : 'by cable';
+  spin.face(info.face);
   for (const b of $('face-seg').querySelectorAll('button')) { b.setAttribute('aria-pressed', String(b.dataset.face === info.face)); b.disabled = fw() < 31; }
   $('face-say').textContent = fw() < 37 ? 'Choosing a face for the whole library needs firmware v37.' : '';
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
@@ -475,7 +497,7 @@ $('mood').oninput = e => { clearTimeout(moodTimer); moodTimer = setTimeout(() =>
   const out = await robot.ask('MOOD ' + e.target.value, /^GEEDO (OK|ERR) MOOD/);
   $('mood-say').textContent = ok(out) ? `Set to ${e.target.value}.` : GeedoLink.why(last(out));
 }), 400); };
-$('pet').onclick = e => act(e.target, () => robot.ask('PET', /^GEEDO (OK|ERR) PET/));
+$('pet').onclick = e => { spin.perk(); act(e.target, () => robot.ask('PET', /^GEEDO (OK|ERR) PET/)); };
 async function readMood() { try { const out = await robot.ask('MOOD', /^GEEDO (OK|ERR) MOOD/); const m = last(out).match(/(\d+)\s*$/); if (m) $('mood').value = m[1]; } catch (e) {} }
 
 // ---- sound
@@ -598,7 +620,7 @@ for (const id of ['find', 'find-ble']) $(id).dataset.label = $(id).textContent;
 function gone() {
   robot = null; $('panel').hidden = true; $('tiles').hidden = true; $('hid').hidden = true;
   for (const id of ['find', 'find-ble']) { $(id).textContent = $(id).dataset.label; $(id).disabled = false; }
-  $('title').textContent = 'Your Geedo, your way.'; $('sub').hidden = false;
+  $('title').textContent = 'Your Geedo, your way.'; $('sub').hidden = false; spin.face('og');
   state.textContent = 'he went away - plug him in or find him again and he comes straight back';
 }
 async function greet(r, demo) {
@@ -616,6 +638,7 @@ async function greet(r, demo) {
     state.innerHTML = demo ? 'for trying the page <span class="tag">demo</span>' : `connected ${how} - everything below is him`;
     for (const id of ['find', 'find-ble']) { $(id).textContent = demo ? $(id).dataset.label : 'Connected ' + how; $(id).disabled = !demo; }
     if (r.onGone !== undefined) r.onGone = () => gone();
+    if (!demo) spin.twirl();
     drawWaiting();
     await Promise.all([loadKinds(), readMood(), readTz(), listPacks(), checkUpdate()]);
   } catch (e) {
@@ -624,6 +647,137 @@ async function greet(r, demo) {
     robot = null;
   }
 }
+// ---- him, in the round: rendered views ten degrees apart, his screen drawn live over the glass, a button on each part
+const spin = (() => {
+  const box = $('spin'), view = $('view'), oled = $('oled'), spotsBox = $('spots'), hintEl = $('spin-hint');
+  const DIR = 'assets/app/spin/', calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NAMES = { oled: 'His screen: face, mood, scenes', button: 'The button: tap to pet him', usb: 'USB-C underneath: charging, updates', buzzer: 'His speaker: sound', light: 'Charge light: battery', wifi: 'His radio: WiFi' };
+  const CARD = { oled: 'c-face', buzzer: 'c-sound', wifi: 'c-wifi', usb: 'c-updates', light: 'c-updates' };
+  let meta = null, cur = 0, want = 0, vel = 0, dragging = false, lastX = 0, lastT = 0, raf = 0, said = 0;
+  const els = [view];
+  for (const [k, label] of Object.entries(NAMES)) {
+    const b = document.createElement('button'); b.className = 'spot'; b.type = 'button'; b.dataset.spot = k; b.hidden = true; b.setAttribute('aria-label', label);
+    b.innerHTML = `<span class="tip">${label}</span>`; b.addEventListener('pointerdown', e => e.stopPropagation()); b.onclick = () => tap(k); spotsBox.append(b);
+  }
+  function load(k) {
+    if (els[k]) return; const im = new Image(); im.className = 'f'; im.decoding = 'async'; im.draggable = false; im.alt = '';
+    im.src = DIR + 'f' + String(k).padStart(2, '0') + '.webp'; els[k] = im; box.insertBefore(im, oled);
+    im.decode().then(() => { if (want !== cur) show(want); }).catch(() => {});
+  }
+  const ready = k => els[k] && (els[k] === view || (els[k].complete && els[k].naturalWidth > 0));
+  function show(k) {
+    if (!meta) return; const n = meta.views; k = ((Math.round(k) % n) + n) % n;
+    let best = null;
+    for (let d = 0; d < n && best === null; d++) for (const c of [k + d, k - d]) { const m = ((c % n) + n) % n; if (ready(m)) { best = m; break; } }
+    if (best === null || best === cur) return;
+    for (let i = 0; i < n; i++) if (els[i]) els[i].style.visibility = i === best ? 'visible' : 'hidden';
+    cur = best; place();
+  }
+  function place() {
+    if (!meta) return;
+    const f = meta.frames[cur], s = box.clientWidth / meta.w;
+    for (const b of spotsBox.children) {
+      const p = f.spots[b.dataset.spot], on = !!p && p[2] > 0.15; b.hidden = !on;
+      if (on) { b.style.left = (p[0] / meta.w * 100) + '%'; b.style.top = (p[1] / meta.h * 100) + '%'; }
+    }
+    if (f.screen) { oled.hidden = false; oled.style.transform = homography(128, 64, f.screen.map(([x, y]) => [x * s, y * s])); }
+    else oled.hidden = true;
+  }
+  function homography(w, h, q) {                       // the canvas's corners onto the glass's, as a matrix3d
+    const src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], B = [];
+    for (let i = 0; i < 4; i++) { const [x, y] = src[i], [u, v] = q[i]; A.push([x, y, 1, 0, 0, 0, -x * u, -y * u]); B.push(u); A.push([0, 0, 0, x, y, 1, -x * v, -y * v]); B.push(v); }
+    for (let c = 0; c < 8; c++) {                       // gaussian elimination, partial pivoting
+      let piv = c; for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[piv][c])) piv = r;
+      [A[c], A[piv]] = [A[piv], A[c]]; [B[c], B[piv]] = [B[piv], B[c]];
+      for (let r = 0; r < 8; r++) { if (r === c) continue; const f = A[r][c] / A[c][c]; if (!f) continue; for (let j = c; j < 8; j++) A[r][j] -= f * A[c][j]; B[r] -= f * B[c]; }
+    }
+    const [a, b, c, d, e, f, g, hh] = B.map((v, i) => v / A[i][i]);
+    return `matrix3d(${a},${d},0,${g},${b},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
+  }
+  // turning him: a drag, then a glide
+  box.addEventListener('pointerdown', e => {
+    if (!meta || e.button) return; dragging = true; box.classList.add('drag'); box.setPointerCapture(e.pointerId);
+    lastX = e.clientX; lastT = performance.now(); vel = 0; cancelAnimationFrame(raf); want = cur;
+  });
+  box.addEventListener('pointermove', e => {
+    if (!dragging) return; const now = performance.now(), dx = e.clientX - lastX, per = box.clientWidth * 1.6 / meta.views;
+    want += dx / per; vel = 0.6 * vel + 0.4 * (dx / per) * 16 / Math.max(1, now - lastT); lastX = e.clientX; lastT = now; show(want);
+  });
+  const end = () => { if (!dragging) return; dragging = false; box.classList.remove('drag'); glide(); };
+  box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+  function glide() {
+    cancelAnimationFrame(raf);
+    const step = () => { vel *= 0.92; want += vel; if (Math.abs(vel) < 0.03) { want = Math.round(want); show(want); return; } show(want); raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+  }
+  function turn(views, ms) {                             // a smooth turn on his own, used for the twirl and the wiggle
+    if (calm || !meta) return; cancelAnimationFrame(raf);
+    const from = cur, t0 = performance.now();
+    const step = now => { const u = Math.min(1, (now - t0) / ms), ease = 1 - Math.pow(1 - u, 3); want = from + views * ease; show(want); if (u < 1) raf = requestAnimationFrame(step); else { want = Math.round(want); show(want); } };
+    raf = requestAnimationFrame(step);
+  }
+  // his screen: the OG eyes as the firmware draws them, or a Doodle scene from the Hub, with blinks and glances
+  const octx = oled.getContext('2d'), oimg = octx.createImageData(128, 64);
+  let face = 'og', anim = null, animI = 0, animAt = 0, blinkAt = performance.now() + 2500, glance = [0, 0], glanceAt = 0, perkAt = -1e9, drawn = '';
+  function rrect(d, x0, y0, x1, y1, r) {
+    for (let y = Math.max(0, Math.ceil(y0)); y < Math.min(64, y1); y++) for (let x = Math.max(0, Math.ceil(x0)); x < Math.min(128, x1); x++) {
+      const cx = x < x0 + r ? x0 + r : x > x1 - r ? x1 - r : x, cy = y < y0 + r ? y0 + r : y > y1 - r ? y1 - r : y;
+      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) { const p = (y * 128 + x) * 4; d[p] = 225; d[p + 1] = 246; d[p + 2] = 255; }
+    }
+  }
+  function paint(px) { const d = oimg.data; for (let i = 0, p = 0; i < 128 * 64; i++, p += 4) { const v = px[i]; d[p] = v ? 225 : 0; d[p + 1] = v ? 246 : 0; d[p + 2] = v ? 255 : 0; d[p + 3] = 255; } octx.putImageData(oimg, 0, 0); }
+  function eyes(now) {
+    let open = 1; const t = now - blinkAt;
+    if (t > 0) { open = t < 80 ? 1 - t / 80 : t < 170 ? (t - 80) / 90 : 1; if (t > 170) blinkAt = now + 2200 + Math.random() * 4000; }
+    if (now > glanceAt) { glance = Math.random() < 0.5 ? [0, 0] : [Math.round((Math.random() - 0.5) * 12), Math.round((Math.random() - 0.5) * 6)]; glanceAt = now + 900 + Math.random() * 3500; }
+    const perk = Math.max(0, 1 - (now - perkAt) / 650), key = `${open.toFixed(2)}|${glance}|${perk.toFixed(2)}`;
+    if (key === drawn) return; drawn = key;
+    const d = oimg.data; for (let p = 0; p < d.length; p += 4) { d[p] = d[p + 1] = d[p + 2] = 0; d[p + 3] = 255; }
+    const w = 46, h = 56 * Math.max(0.08, open) * (1 - 0.22 * perk), cy = 32 + glance[1] - 5 * perk, r = Math.min(8, h / 2);
+    for (const cx of [32 + glance[0], 96 + glance[0]]) rrect(d, cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2, r);
+    octx.putImageData(oimg, 0, 0);
+  }
+  function tick(now) {
+    if (!oled.hidden && !document.hidden) {
+      if (anim) { const f = anim.frames[animI]; if (now - animAt >= 1000 / anim.fps * (f.dur || 1)) { animAt = now; animI = (animI + 1) % anim.frames.length; paint(anim.frames[animI].pixels); } }
+      else eyes(now);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  async function setFace(which) {
+    face = which === 'doodle' ? 'doodle' : 'og';
+    if (face === 'og') { anim = null; drawn = ''; return; }
+    try { const a = await window.Geedo.loadBin('packs/doodle/bin/doodle_nod.bin'); if (face === 'doodle') { anim = a; animI = 0; animAt = 0; paint(a.frames[0].pixels); } } catch (e) { anim = null; }
+  }
+  // what a tap on a part does
+  function hint(text, ms = 3200) { hintEl.textContent = text; hintEl.classList.add('said'); clearTimeout(said); said = setTimeout(() => { hintEl.textContent = 'drag to turn him · tap a part'; hintEl.classList.remove('said'); }, ms); }
+  function flashCard(id) { const c = $(id); if (!c || c.closest('[hidden]')) return; c.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' }); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); }
+  function tap(k) {
+    if (k === 'button') {
+      perkAt = performance.now(); drawn = '';
+      if (robot) { act(spotsBox.querySelector('[data-spot=button]'), () => robot.ask('PET', /^GEEDO (OK|ERR) PET/)); hint('Petted. Hold his real button a second to switch him off.'); flashCard('c-off'); }
+      else hint('That was a pet. Find him and he feels it.');
+      return;
+    }
+    if (!robot) { hint('Find him first: then his parts open their settings.'); return; }
+    if (k === 'light' || k === 'usb') { const bat = $('t-bat').textContent; hint(k === 'light' ? `Battery ${bat}${$('t-chg').textContent ? ', ' + $('t-chg').textContent : ''}.` : 'Charge him here. Updates come over his WiFi.'); }
+    else if (k === 'oled') hint('His face, his mood and his scenes.');
+    else if (k === 'buzzer') hint('Beeps, songs, and when he goes quiet.');
+    else if (k === 'wifi') hint('The network he checks in on.');
+    flashCard(CARD[k]);
+  }
+  (async () => {
+    try { meta = await (await fetch(DIR + 'spin.json', { cache: 'force-cache' })).json(); } catch (e) { return; }
+    place(); new ResizeObserver(place).observe(box);
+    const order = []; for (let d = 1; d <= meta.views / 2; d++) { order.push(d % meta.views); if (d < meta.views / 2) order.push(meta.views - d); }
+    const idle = window.requestIdleCallback ? f => requestIdleCallback(f, { timeout: 800 }) : f => setTimeout(f, 120);
+    let i = 0; const next = () => { if (i < order.length) { load(order[i++]); idle(next); } }; idle(next);
+    setTimeout(() => { if (!dragging && cur === 0 && ready(1) && ready(2)) { turn(2, 500); setTimeout(() => turn(-2, 600), 650); } }, 1800);
+  })();
+  return { face: setFace, twirl: () => turn(meta ? meta.views : 0, 1400), perk: () => { perkAt = performance.now(); drawn = ''; } };
+})();
+
 if (!GeedoLink.supported) { $('find').hidden = true; if (!GeedoBle.supported) state.textContent = 'this browser can open neither his cable nor Bluetooth - use Chrome or Edge, or try the page without him'; }
 else GeedoLink.watch(l => greet(l, false), port => { if (robot && robot.port === port) gone(); });
 if (GeedoBle.supported) {

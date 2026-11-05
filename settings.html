@@ -74,7 +74,8 @@ a{color:var(--cyan)}
 .spin img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none}
 .spin img.f{position:absolute;inset:0;visibility:hidden}
 .spin .oled{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;image-rendering:pixelated;pointer-events:none;
-            box-shadow:0 0 14px 2px rgba(130,225,255,.5)}
+            box-shadow:0 0 14px 2px rgba(130,225,255,.5);transition:box-shadow .6s,opacity .6s}
+.spin .oled.dim{box-shadow:0 0 6px 0 rgba(130,225,255,.2);opacity:.7}
 .spin .spot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;padding:0;border-radius:50%;border:2px solid #fff;cursor:pointer;
             background:rgba(34,211,238,.4);box-shadow:0 0 0 3px rgba(34,211,238,.3),0 2px 8px rgba(0,0,0,.35);transition:transform .15s}
 .spin .spot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:ping 2.6s ease-out infinite}
@@ -274,9 +275,10 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
       </article>
 
       <article class="card" id="c-off">
-        <div class="k">Off</div><h2>Lights out</h2>
-        <p>Switch him off. A tap on his button wakes him.</p>
-        <div class="row"><button class="btn sm" id="off">Switch off</button></div>
+        <div class="k">Sleep and off</div><h2>A nap, or lights out</h2>
+        <p>Asleep, he dims, shuts his eyes and stirs now and then; a tap wakes him, and on battery he switches himself off after three hours. Off, he waits for a tap or a cable, and lasts for months.</p>
+        <div class="row"><button class="btn sm" id="sleep">Send him to sleep</button><button class="btn sm" id="wake">Wake him</button><button class="btn sm ghost" id="off">Switch off</button></div>
+        <span id="sleep-say" style="font-size:13px;color:var(--fg2)"></span>
         <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">His button</div><b>Tap to pet him, hold to switch him off</b>
           <span>A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.</span></div></div>
       </article>
@@ -352,7 +354,7 @@ const ok = out => last(out).startsWith('GEEDO OK');
 class Demo {
   constructor() {
     this.isDemo = true;
-    this.s = { id: 'DEMO01', fw: 37, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', tz: 'uk',
+    this.s = { id: 'DEMO01', fw: 37, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
                mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [] };
     this.info = null;
   }
@@ -362,7 +364,7 @@ class Demo {
   async hello() {
     const s = this.s;
     this.info = { id: s.id, fw: String(s.fw), anims: String(s.anims - s.skips.size), packs: s.packs, bat: s.bat, chg: s.chg, face: s.face, mode: s.mode,
-                  sound: s.sound, ble: s.ble, build: s.build, reset: s.reset, up: s.up + 's', usedKB: 596, totalKB: 704 };
+                  sound: s.sound, state: s.state, ble: s.ble, build: s.build, reset: s.reset, up: s.up + 's', usedKB: 596, totalKB: 704 };
     return this.info;
   }
   async ask(cmd) {
@@ -373,7 +375,9 @@ class Demo {
     switch (verb) {
       case 'FACE': if (arg) { s.face = s.mode = arg; } out = [`GEEDO OK FACE ${s.face} ${s.mode}`]; break;
       case 'MOOD': if (arg) s.mood = +arg; out = [`GEEDO OK MOOD ${s.mood}`]; break;
-      case 'PET': s.mood = Math.min(100, s.mood + 5); out = ['GEEDO OK PET']; break;
+      case 'PET': s.mood = Math.min(100, s.mood + 5); s.state = 'awake'; out = ['GEEDO OK PET']; break;
+      case 'SLEEP': s.state = 'asleep'; out = ['GEEDO OK SLEEP napping']; break;
+      case 'WAKE': s.state = 'awake'; out = ['GEEDO OK WAKE']; break;
       case 'SOUND': if (arg) s.sound = arg; out = [`GEEDO OK SOUND ${s.sound}`]; break;
       case 'TZ': if (arg) s.tz = arg; out = [`GEEDO OK TZ ${s.tz}`]; break;
       case 'SKIPS': out = [...s.skips].map(([id, nm]) => `GEEDO SKIP ${id} "${nm}"`).concat(['GEEDO END SKIPS']); break;
@@ -419,6 +423,8 @@ async function refresh() {
   for (const b of $('face-seg').querySelectorAll('button')) { b.setAttribute('aria-pressed', String(b.dataset.face === info.face)); b.disabled = fw() < 31; }
   $('face-say').textContent = fw() < 37 ? 'Choosing a face for the whole library needs firmware v37.' : '';
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
+  for (const id of ['sleep', 'wake']) { $(id).disabled = fw() < 37; $(id).title = fw() < 37 ? 'needs firmware v37' : ''; }
+  spin.sleep(info.state === 'asleep');
 }
 async function act(el, job) {
   el.disabled = true;
@@ -607,6 +613,8 @@ $('pg-up').onclick = e => act(e.target, async () => {
 });
 
 // ---- off
+$('sleep').onclick = e => act(e.target, async () => { const out = await robot.ask('SLEEP', /^GEEDO (OK|ERR) SLEEP/); if (ok(out)) { spin.sleep(true); $('sleep-say').textContent = 'Night night. A tap on his button, a pet or Wake him brings him round.'; } else $('sleep-say').textContent = GeedoLink.why(last(out)); });
+$('wake').onclick = e => act(e.target, async () => { const out = await robot.ask('WAKE', /^GEEDO (OK|ERR) WAKE/); if (ok(out)) { spin.sleep(false); $('sleep-say').textContent = 'Up he gets.'; } else $('sleep-say').textContent = GeedoLink.why(last(out)); });
 $('off').onclick = e => { const b = e.target; if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Really? A tap wakes him'; return; } act(b, () => robot.ask('OFF', /^GEEDO (OK|ERR) OFF/)); };
 
 // ---- connecting: the cable, Bluetooth, or the pretend one
@@ -718,7 +726,7 @@ const spin = (() => {
   }
   // his screen: the OG eyes as the firmware draws them, or a Doodle scene from the Hub, with blinks and glances
   const octx = oled.getContext('2d'), oimg = octx.createImageData(128, 64);
-  let face = 'og', anim = null, animI = 0, animAt = 0, blinkAt = performance.now() + 2500, glance = [0, 0], glanceAt = 0, perkAt = -1e9, drawn = '';
+  let face = 'og', anim = null, animI = 0, animAt = 0, blinkAt = performance.now() + 2500, glance = [0, 0], glanceAt = 0, perkAt = -1e9, drawn = '', asleep = false;
   function rrect(d, x0, y0, x1, y1, r) {
     for (let y = Math.max(0, Math.ceil(y0)); y < Math.min(64, y1); y++) for (let x = Math.max(0, Math.ceil(x0)); x < Math.min(128, x1); x++) {
       const cx = x < x0 + r ? x0 + r : x > x1 - r ? x1 - r : x, cy = y < y0 + r ? y0 + r : y > y1 - r ? y1 - r : y;
@@ -727,6 +735,12 @@ const spin = (() => {
   }
   function paint(px) { const d = oimg.data; for (let i = 0, p = 0; i < 128 * 64; i++, p += 4) { const v = px[i]; d[p] = v ? 225 : 0; d[p + 1] = v ? 246 : 0; d[p + 2] = v ? 255 : 0; d[p + 3] = 255; } octx.putImageData(oimg, 0, 0); }
   function eyes(now) {
+    if (asleep) {                                        // lids down, a slow breath in the glow
+      const key = 'z' + Math.round(now / 400); if (key === drawn) return; drawn = key;
+      const d = oimg.data; for (let p = 0; p < d.length; p += 4) { d[p] = d[p + 1] = d[p + 2] = 0; d[p + 3] = 255; }
+      for (const cx of [32, 96]) rrect(d, cx - 23, 38, cx + 23, 43, 2);
+      octx.putImageData(oimg, 0, 0); return;
+    }
     let open = 1; const t = now - blinkAt;
     if (t > 0) { open = t < 80 ? 1 - t / 80 : t < 170 ? (t - 80) / 90 : 1; if (t > 170) blinkAt = now + 2200 + Math.random() * 4000; }
     if (now > glanceAt) { glance = Math.random() < 0.5 ? [0, 0] : [Math.round((Math.random() - 0.5) * 12), Math.round((Math.random() - 0.5) * 6)]; glanceAt = now + 900 + Math.random() * 3500; }
@@ -739,7 +753,7 @@ const spin = (() => {
   }
   function tick(now) {
     if (!oled.hidden && !document.hidden) {
-      if (anim) { const f = anim.frames[animI]; if (now - animAt >= 1000 / anim.fps * (f.dur || 1)) { animAt = now; animI = (animI + 1) % anim.frames.length; paint(anim.frames[animI].pixels); } }
+      if (anim && !asleep) { const f = anim.frames[animI]; if (now - animAt >= 1000 / anim.fps * (f.dur || 1)) { animAt = now; animI = (animI + 1) % anim.frames.length; paint(anim.frames[animI].pixels); } }
       else eyes(now);
     }
     requestAnimationFrame(tick);
@@ -755,8 +769,7 @@ const spin = (() => {
   function flashCard(id) { const c = $(id); if (!c || c.closest('[hidden]')) return; c.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' }); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); }
   function tap(k) {
     if (k === 'button') {
-      perkAt = performance.now(); drawn = '';
-      if (robot) { act(spotsBox.querySelector('[data-spot=button]'), () => robot.ask('PET', /^GEEDO (OK|ERR) PET/)); hint('Petted. Hold his real button a second to switch him off.'); flashCard('c-off'); }
+      if (robot) { const was = asleep; perkAt = performance.now(); setSleep(false); act(spotsBox.querySelector('[data-spot=button]'), () => robot.ask('PET', /^GEEDO (OK|ERR) PET/)); hint(was ? 'A tap wakes him. Up he gets.' : 'Petted. Hold his real button a second to switch him off.'); if (!was) flashCard('c-off'); }
       else hint('That was a pet. Find him and he feels it.');
       return;
     }
@@ -775,7 +788,8 @@ const spin = (() => {
     let i = 0; const next = () => { if (i < order.length) { load(order[i++]); idle(next); } }; idle(next);
     setTimeout(() => { if (!dragging && cur === 0 && ready(1) && ready(2)) { turn(2, 500); setTimeout(() => turn(-2, 600), 650); } }, 1800);
   })();
-  return { face: setFace, twirl: () => turn(meta ? meta.views : 0, 1400), perk: () => { perkAt = performance.now(); drawn = ''; } };
+  function setSleep(on) { asleep = !!on; drawn = ''; oled.classList.toggle('dim', asleep); }
+  return { face: setFace, twirl: () => turn(meta ? meta.views : 0, 1400), perk: () => { perkAt = performance.now(); drawn = ''; setSleep(false); }, sleep: setSleep };
 })();
 
 if (!GeedoLink.supported) { $('find').hidden = true; if (!GeedoBle.supported) state.textContent = 'this browser can open neither his cable nor Bluetooth - use Chrome or Edge, or try the page without him'; }

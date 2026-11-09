@@ -76,7 +76,13 @@ a{color:var(--cyan)}
 .spin .oled{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;image-rendering:pixelated;pointer-events:none;
             box-shadow:0 0 14px 2px rgba(130,225,255,.5);transition:box-shadow .6s,opacity .6s}
 .spin .oled.dim{box-shadow:0 0 6px 0 rgba(130,225,255,.2);opacity:.7}
-.spin .spot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;padding:0;border-radius:50%;border:2px solid #fff;cursor:pointer;
+/* in him, bottom to top: the views, the sharp close-up of the one he is showing, his live screen, the spots */
+.spin .hd{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0;transition:opacity .12s;pointer-events:none}
+.spin .hd.on{opacity:1;transition:opacity .5s ease}
+.spin .oled{z-index:2}
+.spin .spots{position:absolute;inset:0;z-index:3;pointer-events:none}
+.spin .spot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;padding:0;border-radius:50%;border:2px solid #fff;cursor:pointer;pointer-events:auto;
+            scale:calc(1 / var(--z,1));
             background:rgba(34,211,238,.4);box-shadow:0 0 0 3px rgba(34,211,238,.3),0 2px 8px rgba(0,0,0,.35);transition:transform .15s}
 .spin .spot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:ping 2.6s ease-out infinite}
 .spin .spot:hover,.spin .spot:focus-visible{transform:scale(1.18)}
@@ -154,11 +160,109 @@ pre.log{margin:14px 0 0;max-height:160px;overflow:auto;background:#000;color:#cf
 .step p{margin:4px 0 0}
 .screen{font-family:var(--mono);font-size:11px;background:#000;color:#22d3ee;border-radius:8px;padding:10px;white-space:pre;margin-top:10px;overflow-x:auto}
 footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
+details.said{margin-top:18px}
+details.said summary{color:var(--dim)}
+/* ---- the visual menu: his parts are the menu. Tap one, or a chip, and he lifts off the page onto a stage, turns
+   to show it and the camera moves in, while its settings slide in beside him (below him on a phone) */
+.parts{position:relative;z-index:1;display:flex;gap:8px;margin:16px -2px 0;padding:2px 28px 2px 2px;overflow-x:auto;scrollbar-width:none;
+       -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+@media (min-width:720px){.parts{flex-wrap:wrap;overflow:visible;padding-right:2px;-webkit-mask-image:none;mask-image:none}}
+.parts::-webkit-scrollbar,.sh-parts::-webkit-scrollbar{display:none}
+.chip{flex:none;font:inherit;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px;padding:8px 14px 8px 11px;border-radius:999px;cursor:pointer;
+      white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.26);color:#fff;transition:background .15s,color .15s,transform .08s}
+.chip:hover{background:rgba(255,255,255,.22)}
+.chip:active{transform:translateY(1px)}
+.chip svg,.sh-ic svg,.fback svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tile[data-part]{cursor:pointer;transition:background .15s}
+.tile[data-part]:hover{background:rgba(0,0,0,.32)}
+html.locked,html.locked body{overflow:hidden}
+.focus{position:fixed;inset:0;z-index:30;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,44%) minmax(0,1fr)}
+.focus .veil{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;
+  background:radial-gradient(46% 42% at 50% 24%,rgba(34,211,238,.34),rgba(34,211,238,0) 72%),
+             radial-gradient(110% 60% at 50% 0%,rgba(14,124,147,.5),rgba(14,124,147,0) 72%),
+             linear-gradient(180deg,#062530 0%,#03131a 70%,#020c11 100%)}
+.focus.on .veil{opacity:1}
+.stage{position:relative;z-index:1;min-width:0;min-height:0}
+.stage .spin{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.spin.focused{cursor:default}
+.spin.focused .spot{width:14px;height:14px;margin:-7px 0 0 -7px;background:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(34,211,238,.22),0 2px 6px rgba(0,0,0,.3)}
+.spin.focused .spot::after{animation:none;opacity:0}
+.spin.focused .spot.cur{background:transparent;border-color:transparent;box-shadow:none}
+.spin.focused .spot.cur:hover,.spin.focused .spot.cur:focus-visible{transform:none}
+/* the parts inside him, drawn over the case as if it were glass: his speaker hums, his radio calls out, his charge light glows */
+.spot .xr{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;opacity:0;transform:scale(.85);transition:opacity .15s,transform .15s}
+.spin.focused.still .spot.cur .xr{opacity:1;transform:none;transition:opacity .5s .15s,transform .5s cubic-bezier(.2,.9,.3,1.2) .15s}
+.spot .xr.lens{width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;
+  background:radial-gradient(circle at 50% 38%,rgba(9,44,56,.94),rgba(3,16,22,.95) 72%);border:1.5px solid rgba(103,232,249,.8);
+  box-shadow:0 0 0 6px rgba(34,211,238,.13),0 14px 34px rgba(0,0,0,.38),inset 0 0 24px rgba(34,211,238,.28)}
+.xr svg{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;overflow:visible;fill:none;stroke:#a5f3fc;stroke-width:1.7;
+        stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px rgba(34,211,238,.85))}
+.xr:not(.lens) svg{stroke:#0e94ad;stroke-width:2.4;filter:drop-shadow(0 0 5px rgba(34,211,238,.9))}
+@media (max-width:899px){.spot .xr.lens{width:92px;height:92px;margin:-46px 0 0 -46px}.xr.lens svg{transform:scale(.8)}}
+.xr .ring{transform-box:fill-box;transform-origin:center;animation:xwave 2.8s ease-out infinite}
+.xr .ring.b{animation-delay:1.4s}
+@keyframes xwave{0%{transform:scale(.9);opacity:.95}100%{transform:scale(1.75);opacity:0}}
+.xr .arc{opacity:.2;animation:xarc 2.4s ease-in-out infinite}
+.xr .arc.b{animation-delay:.3s}.xr .arc.c{animation-delay:.6s}
+@keyframes xarc{0%,100%{opacity:.18}40%{opacity:1}}
+.xr .glow{animation:xglow 3.2s ease-in-out infinite}
+@keyframes xglow{0%,100%{opacity:.5}50%{opacity:1}}
+.fback{position:absolute;z-index:4;left:14px;top:calc(12px + env(safe-area-inset-top,0px));font:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;
+       display:inline-flex;align-items:center;gap:6px;padding:8px 14px 8px 10px;border-radius:999px;background:rgba(3,19,26,.58);border:1px solid rgba(255,255,255,.2);
+       backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;transition:opacity .3s .15s}
+.focus.on .fback{opacity:1}
+.fhint{position:absolute;z-index:4;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;text-align:center;
+       color:rgba(255,255,255,.85);font-size:12.5px;line-height:1.35;pointer-events:none;padding:6px 13px;border-radius:999px;
+       background:rgba(3,19,26,.58);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.fhint.said{color:#fff;font-weight:600}
+.sheet{position:relative;z-index:5;display:flex;flex-direction:column;min-height:0;color:var(--fg);
+       background:linear-gradient(180deg,color-mix(in srgb,var(--cyan) 7%,var(--bg2)) 0,var(--bg2) 200px);
+       border-top:1px solid var(--line);border-radius:22px 22px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.4);
+       transform:translateY(105%);transition:transform .5s cubic-bezier(.2,.85,.25,1)}
+.sheet::before{content:"";position:absolute;left:50%;top:7px;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:var(--line2)}
+.focus.on .sheet{transform:none}
+.sh-head{display:flex;gap:14px;align-items:flex-start;padding:22px 20px 4px}
+.sh-head .g{flex:1;min-width:0}
+.sh-head .k{color:var(--cyan);font:500 11px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+.sh-head h2{margin:5px 0 0;font-size:21px;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
+.sh-head p{margin:6px 0 0;color:var(--fg2);font-size:14px}
+.sh-ic{width:42px;height:42px;border-radius:13px;background:var(--grad);color:var(--ink);display:grid;place-items:center;flex:none;box-shadow:0 6px 18px rgba(34,211,238,.25)}
+.sh-ic svg{width:22px;height:22px;stroke-width:1.9}
+.sh-x{border-radius:50%;flex:none}
+.sh-parts{position:relative;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 44px 14px 20px;border-bottom:1px solid var(--line);
+          -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent)}
+.sh-parts .chip{background:var(--card2);border-color:var(--line);color:var(--fg2);padding:7px 12px 7px 10px}
+.sh-parts .chip:hover{color:var(--fg);border-color:var(--line2);background:var(--card2)}
+.sh-parts .chip[aria-current=true]{background:var(--grad);color:var(--ink);border-color:transparent}
+.sh-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.sh-body .card{margin-top:14px}
+.sh-body .apply{bottom:12px}
+.lead,.meter{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.lead b{font-size:15px}
+.lead p{margin:6px 0 0;color:var(--fg2);font-size:14px}
+.lead .row,.meter .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.meter .k{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.meter .big{font:700 28px/1.15 var(--sans);margin-top:8px;letter-spacing:-.01em}
+.meter .s{color:var(--fg2);font-size:13px;margin-top:2px}
+.meter .bar{height:10px;border-radius:999px;background:var(--card2);border:1px solid var(--line);margin-top:12px;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--grad);border-radius:inherit}
+/* side by side: the sheet takes the left, where the page's words were, and he stays on the right, where he stood */
+@media (min-width:900px),(orientation:landscape) and (min-width:600px){
+  .focus{grid-template-columns:min(460px,46vw) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+  .stage{grid-column:2;grid-row:1}
+  .sheet{grid-column:1;grid-row:1;border-top:0;border-right:1px solid var(--line);border-radius:0;box-shadow:24px 0 60px rgba(0,0,0,.35);transform:translateX(-105%)}
+  .sheet::before,.fback{display:none}
+  .sh-head{padding:26px 24px 4px}.sh-parts{padding:14px 48px 16px 24px}.sh-body{padding-inline:24px}
+  .focus .veil{background:radial-gradient(40% 50% at 66% 46%,rgba(34,211,238,.32),rgba(34,211,238,0) 72%),
+             radial-gradient(80% 70% at 70% 100%,rgba(14,124,147,.42),rgba(14,124,147,0) 72%),
+             linear-gradient(200deg,#062530 0%,#03131a 60%,#020c11 100%)}
+}
 @media (min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(3,1fr)}}
 @media (min-width:720px){.hero .in{display:flex;gap:28px;align-items:center}.hero .bot{order:2;width:min(30vw,330px);margin:-12px 0 -14px}}
 @media (min-width:1040px){.grid{grid-template-columns:repeat(3,1fr)}.hero .in{gap:40px}.hero .bot{width:min(28vw,360px);margin:-16px 10px -20px 0}}
 @media (max-width:600px){.tiles{grid-template-columns:repeat(2,1fr)}.picks{columns:1}}
-@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.hero .bot,.spin .spot::after,.card.flash{animation:none}}
+@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.hero .bot,.spin .spot::after,.card.flash,.xr *{animation:none}
+  .focus .veil,.sheet,.fback,.spin .hd,.spin .hd.on,.spot .xr{transition:none}}
 </style>
 </head>
 <body>
@@ -195,18 +299,20 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
           <button class="btn w" id="demo">Try it without one</button>
           <span class="state" id="state"></span>
         </div>
+        <nav class="parts" id="parts" aria-label="His settings, part by part"></nav>
       </div>
     </div>
     <div class="tiles" id="tiles" hidden>
-      <div class="tile"><div class="k">Firmware</div><div class="v" id="t-fw">—</div><div class="s" id="t-fwnote"></div></div>
-      <div class="tile"><div class="k">On his shelf</div><div class="v" id="t-anims">—</div><div class="s" id="t-store"></div></div>
-      <div class="tile"><div class="k">Battery</div><div class="v" id="t-bat">—</div><div class="s" id="t-chg"></div></div>
-      <div class="tile"><div class="k">Face</div><div class="v" id="t-face">—</div><div class="s" id="t-link"></div></div>
+      <div class="tile" data-part="usb"><div class="k">Firmware</div><div class="v" id="t-fw">—</div><div class="s" id="t-fwnote"></div></div>
+      <div class="tile" data-part="oled"><div class="k">On his shelf</div><div class="v" id="t-anims">—</div><div class="s" id="t-store"></div></div>
+      <div class="tile" data-part="light"><div class="k">Battery</div><div class="v" id="t-bat">—</div><div class="s" id="t-chg"></div></div>
+      <div class="tile" data-part="oled"><div class="k">Face</div><div class="v" id="t-face">—</div><div class="s" id="t-link"></div></div>
     </div>
   </section>
 
   <div id="panel" hidden>
-    <div class="grid">
+    <!-- every setting, kept here out of sight: the visual menu moves the ones for a part into its sheet and puts them back after -->
+    <div class="grid" id="store" hidden>
 
       <article class="card" id="c-face">
         <div class="k">His face</div><h2>Two faces, drawn for every scene</h2>
@@ -240,7 +346,7 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
 
       <article class="card" id="c-wifi">
         <div class="k">WiFi</div><h2>The network he checks in on</h2>
-        <p id="wf-say">New scenes and updates come down it. Change it here, or set him up for the first time below.</p>
+        <p id="wf-say">New scenes and updates come down it. Change it here.</p>
         <div id="wf-pick" hidden style="margin-top:10px"><select class="field" id="wf-ssid"></select>
           <input class="field" id="wf-pass" type="password" autocomplete="off" placeholder="password (leave empty if open)" style="margin-top:8px"></div>
         <div class="row"><button class="btn sm" id="wf-scan">See what is nearby</button><button class="btn sm p" id="wf-join" hidden>Join it</button></div>
@@ -284,12 +390,12 @@ footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
       </article>
 
     </div>
-    <pre class="log" id="log" hidden></pre>
+    <details class="said"><summary>What he said</summary><pre class="log" id="log" hidden></pre></details>
   </div>
 
   <section class="card" style="margin-top:18px">
     <div class="k">First time</div><h2>Setting him up without a computer</h2>
-    <p>He only needs your WiFi once. If you have him plugged in or over Bluetooth, use the WiFi card above instead.</p>
+    <p>He only needs your WiFi once. If you have him plugged in or over Bluetooth, tap his radio, or WiFi, up top instead.</p>
     <div class="steps" style="margin-top:14px">
       <div class="step"><div class="n">STEP 01</div><b>Switch him on</b><p>His boot animation plays, and if he has never been set up he asks for it.</p>
         <div class="screen">Hi! Let's set me up:
@@ -304,6 +410,23 @@ no password needed!</div></div>
 
 </main>
 <footer>Geedo &middot; <a href="GUIDE.md">the owner's guide</a> &middot; <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a></footer>
+
+<div class="focus" id="focus" hidden>
+  <div class="veil"></div>
+  <div class="stage" id="stage">
+    <button class="fback" id="f-back" type="button"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
+    <div class="fhint" id="f-hint" aria-live="polite"></div>
+  </div>
+  <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-title">
+    <header class="sh-head">
+      <div class="sh-ic" id="sh-ic" aria-hidden="true"></div>
+      <div class="g"><div class="k" id="sh-k"></div><h2 id="sh-title"></h2><p id="sh-about"></p></div>
+      <button class="ic sh-x" id="sh-x" type="button" aria-label="Close">&#10005;</button>
+    </header>
+    <nav class="sh-parts" id="sh-parts" aria-label="His other parts"></nav>
+    <div class="sh-body" id="sh-body"></div>
+  </aside>
+</div>
 
 <script src="assets/geedo.js"></script>
 <script src="assets/geedolink.js"></script>
@@ -425,6 +548,7 @@ async function refresh() {
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
   for (const id of ['sleep', 'wake']) { $(id).disabled = fw() < 37; $(id).title = fw() < 37 ? 'needs firmware v37' : ''; }
   spin.sleep(info.state === 'asleep');
+  menu.update();
 }
 async function act(el, job) {
   el.disabled = true;
@@ -630,6 +754,7 @@ function gone() {
   for (const id of ['find', 'find-ble']) { $(id).textContent = $(id).dataset.label; $(id).disabled = false; }
   $('title').textContent = 'Your Geedo, your way.'; $('sub').hidden = false; spin.face('og');
   state.textContent = 'he went away - plug him in or find him again and he comes straight back';
+  menu.update();
 }
 async function greet(r, demo) {
   if (robot && robot.isDemo && !demo) { robot = null; $('panel').hidden = true; }
@@ -643,7 +768,7 @@ async function greet(r, demo) {
     $('panel').hidden = false; $('sub').hidden = true;
     $('title').textContent = demo ? 'A pretend Geedo' : 'Hello, ' + ('GEEDO-' + info.id);
     const how = r.device ? 'over Bluetooth' : 'by cable';
-    state.innerHTML = demo ? 'for trying the page <span class="tag">demo</span>' : `connected ${how} - everything below is him`;
+    state.innerHTML = demo ? 'for trying the page <span class="tag">demo</span>' : `connected ${how} - tap any part of him`;
     for (const id of ['find', 'find-ble']) { $(id).textContent = demo ? $(id).dataset.label : 'Connected ' + how; $(id).disabled = !demo; }
     if (r.onGone !== undefined) r.onGone = () => gone();
     if (!demo) spin.twirl();
@@ -654,22 +779,38 @@ async function greet(r, demo) {
     try { await r.close(); } catch (_) {}
     robot = null;
   }
+  menu.update();
 }
-// ---- him, in the round: rendered views ten degrees apart, his screen drawn live over the glass, a button on each part
+// ---- him, in the round: rendered views ten degrees apart, his screen drawn live over the glass, a button on each part.
+//      On the page he turns when dragged; on the stage (the visual menu) a camera moves in on whichever part is open.
 const spin = (() => {
-  const box = $('spin'), view = $('view'), oled = $('oled'), spotsBox = $('spots'), hintEl = $('spin-hint');
+  const box = $('spin'), view = $('view'), oled = $('oled'), spotsBox = $('spots'), stage = $('stage');
   const DIR = 'assets/app/spin/', calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const NAMES = { oled: 'His screen: face, mood, scenes', button: 'The button: tap to pet him', usb: 'USB-C underneath: charging, updates', buzzer: 'His speaker: sound', light: 'Charge light: battery', wifi: 'His radio: WiFi' };
-  const CARD = { oled: 'c-face', buzzer: 'c-sound', wifi: 'c-wifi', usb: 'c-updates', light: 'c-updates' };
-  let meta = null, cur = 0, want = 0, vel = 0, dragging = false, lastX = 0, lastT = 0, raf = 0, said = 0;
-  const els = [view];
+  const NAMES = { oled: 'His screen', button: 'His button', usb: 'USB-C, underneath', buzzer: 'His speaker', light: 'His charge light', wifi: 'His radio' };
+  // the parts inside his back, drawn over the case as if it were glass (a 120 px box with the part in the middle)
+  const XRAY = {
+    buzzer: '<circle cx="60" cy="60" r="19"/><circle cx="60" cy="60" r="5.5"/><circle class="ring" cx="60" cy="60" r="22"/><circle class="ring b" cx="60" cy="60" r="22"/>',
+    wifi: '<rect x="45" y="62" width="30" height="22" rx="2.5"/><rect x="54" y="69" width="12" height="10" rx="1.5"/>' +
+          '<path class="arc" d="M53.9 52.9A8 8 0 0 1 66.1 52.9"/><path class="arc b" d="M48.5 48.4A15 15 0 0 1 71.5 48.4"/><path class="arc c" d="M43.1 43.9A22 22 0 0 1 76.9 43.9"/>',
+    light: '<defs><radialGradient id="xr-glow"><stop offset="0" stop-color="#ecfeff"/><stop offset=".4" stop-color="#67e8f9" stop-opacity=".85"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient></defs>' +
+           '<circle class="glow" cx="60" cy="60" r="26" fill="url(#xr-glow)" stroke="none"/><rect x="54" y="56.5" width="12" height="7" rx="1.5"/>',
+    usb: '<rect x="42" y="64" width="36" height="13" rx="6.5"/><rect x="48" y="69" width="24" height="3" rx="1.5"/><path class="glow" d="M63 32 54 46h6.5L57 58l10-15h-6.5z"/>',
+    button: '<circle class="ring" cx="60" cy="60" r="18"/><circle class="ring b" cx="60" cy="60" r="18"/>',
+  };
+  const LENS = { buzzer: 1, wifi: 1, light: 1, usb: 1 };
+  let meta = null, cur = 0, want = 0, vel = 0, dragging = false, lastX = 0, lastT = 0, raf = 0, pull = 0, still = true, tapped = null;
+  let pinned = null, pinView = 0, onStage = false;
+  const els = [view]; box.classList.add('still');
   for (const [k, label] of Object.entries(NAMES)) {
     const b = document.createElement('button'); b.className = 'spot'; b.type = 'button'; b.dataset.spot = k; b.hidden = true; b.setAttribute('aria-label', label);
-    b.innerHTML = `<span class="tip">${label}</span>`; b.addEventListener('pointerdown', e => e.stopPropagation()); b.onclick = () => tap(k); spotsBox.append(b);
+    b.innerHTML = `<span class="tip">${label}</span>` + (XRAY[k] ? `<span class="xr${LENS[k] ? ' lens' : ''}"><svg viewBox="0 0 120 120" aria-hidden="true">${XRAY[k]}</svg></span>` : '');
+    b.addEventListener('pointerdown', e => e.stopPropagation()); b.onclick = () => tapped && tapped(k); spotsBox.append(b);
   }
+  const hd = new Image(); hd.className = 'hd'; hd.alt = ''; hd.decoding = 'async'; hd.draggable = false; box.insertBefore(hd, oled);
+  let hdView = -1;
   function load(k) {
     if (els[k]) return; const im = new Image(); im.className = 'f'; im.decoding = 'async'; im.draggable = false; im.alt = '';
-    im.src = DIR + 'f' + String(k).padStart(2, '0') + '.webp'; els[k] = im; box.insertBefore(im, oled);
+    im.src = DIR + 'f' + String(k).padStart(2, '0') + '.webp'; els[k] = im; box.insertBefore(im, hd);
     im.decode().then(() => { if (want !== cur) show(want); }).catch(() => {});
   }
   const ready = k => els[k] && (els[k] === view || (els[k].complete && els[k].naturalWidth > 0));
@@ -679,7 +820,13 @@ const spin = (() => {
     for (let d = 0; d < n && best === null; d++) for (const c of [k + d, k - d]) { const m = ((c % n) + n) % n; if (ready(m)) { best = m; break; } }
     if (best === null || best === cur) return;
     for (let i = 0; i < n; i++) if (els[i]) els[i].style.visibility = i === best ? 'visible' : 'hidden';
-    cur = best; place();
+    cur = best; hd.classList.remove('on'); place(); if (still) sharp();
+  }
+  function sharp() {                                     // on a part and still: the close-up rendered from this very view fades in over it
+    if (!meta || !meta.hd || !still || pinned === null || !meta.hd.includes(cur)) { hd.classList.remove('on'); return; }
+    const v = cur;
+    if (hdView !== v) { hd.classList.remove('on'); hdView = v; hd.src = DIR + 'hd' + String(v).padStart(2, '0') + '.webp'; }
+    hd.decode().then(() => { if (cur === v && still && pinned !== null) hd.classList.add('on'); }).catch(() => {});
   }
   function place() {
     if (!meta) return;
@@ -691,10 +838,10 @@ const spin = (() => {
     if (f.screen) { oled.hidden = false; oled.style.transform = homography(128, 64, f.screen.map(([x, y]) => [x * s, y * s])); }
     else oled.hidden = true;
   }
-  function homography(w, h, q) {                       // the canvas's corners onto the glass's, as a matrix3d
+  function homography(w, h, q) {                         // the canvas's corners onto the glass's, as a matrix3d
     const src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], B = [];
     for (let i = 0; i < 4; i++) { const [x, y] = src[i], [u, v] = q[i]; A.push([x, y, 1, 0, 0, 0, -x * u, -y * u]); B.push(u); A.push([0, 0, 0, x, y, 1, -x * v, -y * v]); B.push(v); }
-    for (let c = 0; c < 8; c++) {                       // gaussian elimination, partial pivoting
+    for (let c = 0; c < 8; c++) {                         // gaussian elimination, partial pivoting
       let piv = c; for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[piv][c])) piv = r;
       [A[c], A[piv]] = [A[piv], A[c]]; [B[c], B[piv]] = [B[piv], B[c]];
       for (let r = 0; r < 8; r++) { if (r === c) continue; const f = A[r][c] / A[c][c]; if (!f) continue; for (let j = c; j < 8; j++) A[r][j] -= f * A[c][j]; B[r] -= f * B[c]; }
@@ -702,27 +849,110 @@ const spin = (() => {
     const [a, b, c, d, e, f, g, hh] = B.map((v, i) => v / A[i][i]);
     return `matrix3d(${a},${d},0,${g},${b},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
   }
-  // turning him: a drag, then a glide
+  // turning him: a drag, then a glide. On a part, a drag only peeks round him, and springs back.
   box.addEventListener('pointerdown', e => {
-    if (!meta || e.button) return; dragging = true; box.classList.add('drag'); box.setPointerCapture(e.pointerId);
-    lastX = e.clientX; lastT = performance.now(); vel = 0; cancelAnimationFrame(raf); want = cur;
+    if (!meta || e.button) return; dragging = true; unsettle(); box.classList.add('drag'); box.setPointerCapture(e.pointerId);
+    lastX = e.clientX; lastT = performance.now(); vel = 0; pull = 0; cancelAnimationFrame(raf); want = cur;
   });
   box.addEventListener('pointermove', e => {
     if (!dragging) return; const now = performance.now(), dx = e.clientX - lastX, per = box.clientWidth * 1.6 / meta.views;
-    want += dx / per; vel = 0.6 * vel + 0.4 * (dx / per) * 16 / Math.max(1, now - lastT); lastX = e.clientX; lastT = now; show(want);
+    if (pinned !== null) { pull += dx / per; want = pinView + 2.5 * Math.tanh(pull / 2.5); }
+    else { want += dx / per; vel = 0.6 * vel + 0.4 * (dx / per) * 16 / Math.max(1, now - lastT); }
+    lastX = e.clientX; lastT = now; show(want);
   });
-  const end = () => { if (!dragging) return; dragging = false; box.classList.remove('drag'); glide(); };
+  const end = () => { if (!dragging) return; dragging = false; box.classList.remove('drag'); if (pinned !== null) turnTo(pinView, 420); else glide(); };
   box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+  function settle() { still = true; box.classList.add('still'); sharp(); }
+  function unsettle() { still = false; box.classList.remove('still'); hd.classList.remove('on'); }
   function glide() {
     cancelAnimationFrame(raf);
-    const step = () => { vel *= 0.92; want += vel; if (Math.abs(vel) < 0.03) { want = Math.round(want); show(want); return; } show(want); raf = requestAnimationFrame(step); };
+    const step = () => { vel *= 0.92; want += vel; if (Math.abs(vel) < 0.03) { want = Math.round(want); show(want); settle(); return; } show(want); raf = requestAnimationFrame(step); };
     raf = requestAnimationFrame(step);
   }
-  function turn(views, ms) {                             // a smooth turn on his own, used for the twirl and the wiggle
-    if (calm || !meta) return; cancelAnimationFrame(raf);
+  const easeOut = u => 1 - Math.pow(1 - u, 3), easeInOut = u => u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+  function turn(views, ms, ease = easeOut) {             // a smooth turn on his own: the twirl, the wiggle, turning to show a part
+    if (!meta) return; cancelAnimationFrame(raf); unsettle();
     const from = cur, t0 = performance.now();
-    const step = now => { const u = Math.min(1, (now - t0) / ms), ease = 1 - Math.pow(1 - u, 3); want = from + views * ease; show(want); if (u < 1) raf = requestAnimationFrame(step); else { want = Math.round(want); show(want); } };
+    const step = now => { const u = Math.min(1, (now - t0) / ms); want = from + views * ease(u); show(want);
+      if (u < 1) raf = requestAnimationFrame(step); else { want = Math.round(want); show(want); settle(); } };
     raf = requestAnimationFrame(step);
+  }
+  const way = (a, b) => { const n = meta.views, d = ((b - a) % n + n) % n; return d > n / 2 ? d - n : d; };
+  function turnTo(v, ms) {                               // the short way round to view v; returns how long that takes
+    if (!meta) return 0; load(v); const d = way(cur, v);
+    if (!d || calm) { cancelAnimationFrame(raf); want = v; show(v); settle(); return 0; }
+    const t = ms || Math.min(1100, Math.max(380, Math.abs(d) * 50)); turn(d, t, easeInOut); return t;
+  }
+  // the stage: he leaves the page for it, and a camera - a move and a zoom, from his top-left - goes in on a part
+  const slot = document.createElement('div'); slot.className = 'slot';
+  const ZOOM = { oled: 1.55, button: 1.8, usb: 1.75, buzzer: 1.5, wifi: 1.5, light: 1.5 };   // how close the camera goes on each part
+  let lay = null, cam = { x: 0, y: 0, z: 1 }, camRaf = 0, flyDone = null;
+  function bestView(k) {                                 // where he shows part k best, of the views that have a sharp close-up if any do
+    const pool = meta.hd && meta.hd.length ? meta.hd : meta.frames.map((_, i) => i), vis = v => (meta.frames[v].spots[k] || [0, 0, -9])[2];
+    return pool.reduce((b, v) => vis(v) > vis(b) ? v : b, pool[0]);
+  }
+  function measure() {                                   // his box on the stage, fitted, before the camera
+    const r = stage.getBoundingClientRect(); let h = r.height * 0.8, w = h * meta.w / meta.h;
+    if (w > r.width * 0.84) { w = r.width * 0.84; h = w * meta.h / meta.w; }
+    return { r, w, h, left: (r.width - w) / 2, top: (r.height - h) / 2 };
+  }
+  function lodge() { box.style.width = lay.w + 'px'; box.style.left = lay.left + 'px'; box.style.top = lay.top + 'px'; }
+  function aim(k) {                                      // the camera that puts part k in the middle of the stage, close up
+    if (!k) return { x: 0, y: 0, z: 1 };
+    const L = lay, s = L.w / meta.w, f = meta.frames[bestView(k)], p = f.spots[k], z = (ZOOM[k] || 1.6) * (L.r.height < 420 ? 1.25 : 1);
+    let cx = p[0], cy = p[1];
+    if (k === 'oled' && f.screen) { cx = f.screen.reduce((a, q) => a + q[0], 0) / 4; cy = f.screen.reduce((a, q) => a + q[1], 0) / 4; }
+    return { x: L.r.width / 2 - L.left - z * cx * s, y: L.r.height / 2 - L.top - z * cy * s, z };
+  }
+  function setCam(c) { cam = c; box.style.transform = `translate(${c.x.toFixed(1)}px,${c.y.toFixed(1)}px) scale(${c.z.toFixed(4)})`; box.style.setProperty('--z', c.z.toFixed(4)); }
+  function fly(to, ms, dip = 0) {                        // the camera, eased: the zoom geometric so it feels even, dipping out a little on a long way round
+    cancelAnimationFrame(camRaf); if (flyDone) { flyDone(false); flyDone = null; }
+    return new Promise(done => {
+      if (calm || !ms) { setCam(to); done(true); return; }
+      const L = lay, fx = L.r.width / 2, fy = L.r.height / 2, at = c => ({ x: (fx - L.left - c.x) / c.z, y: (fy - L.top - c.y) / c.z, z: c.z });
+      const A = at(cam), B = at(to), t0 = performance.now(); flyDone = done;
+      const step = now => {
+        const u = Math.min(1, (now - t0) / ms), e = easeInOut(u), z = A.z * Math.pow(B.z / A.z, e) * (1 - dip * Math.sin(Math.PI * e));
+        const px = A.x + (B.x - A.x) * e, py = A.y + (B.y - A.y) * e;
+        setCam({ x: fx - L.left - z * px, y: fy - L.top - z * py, z });
+        if (u < 1) camRaf = requestAnimationFrame(step); else { setCam(to); flyDone = null; done(true); }
+      };
+      camRaf = requestAnimationFrame(step);
+    });
+  }
+  function restage() {                                   // the stage changed size: fit him again and re-aim, no flight
+    const r = stage.getBoundingClientRect();
+    if (!onStage || flyDone || (lay && Math.abs(r.width - lay.r.width) < 1 && Math.abs(r.height - lay.r.height) < 1)) return;
+    lay = measure(); lodge(); setCam(aim(pinned));
+  }
+  new ResizeObserver(restage).observe(stage);
+  async function focus(k) {                              // k: the part to go in on, or null for all of him
+    if (!meta) { await metaP; if (!meta) return false; }
+    const first = !onStage;
+    pinned = k || null; box.classList.toggle('focused', !!pinned);
+    for (const b of spotsBox.children) b.classList.toggle('cur', b.dataset.spot === pinned);
+    if (first) {                                         // off the page and onto the stage, starting from exactly where he stood
+      const r0 = box.getBoundingClientRect();
+      slot.style.aspectRatio = `${meta.w} / ${meta.h}`; box.replaceWith(slot); stage.prepend(box); onStage = true;
+      lay = measure(); lodge();
+      setCam({ x: r0.left - lay.r.left - lay.left, y: r0.top - lay.r.top - lay.top, z: r0.width / lay.w });
+    }
+    let t = 0, far = false;
+    if (pinned) { pinView = bestView(pinned); far = !first && Math.abs(way(cur, pinView)) > 6; t = turnTo(pinView); }
+    else sharp();
+    const ok = await fly(aim(pinned), Math.max(first ? 820 : 620, t + 120), far ? 0.4 : 0);
+    if (ok) restage();
+    return ok;
+  }
+  async function unfocus() {                             // back onto the page, to where he stood, facing the way he started
+    if (!onStage) return true;
+    pinned = null; box.classList.remove('focused'); hd.classList.remove('on');
+    for (const b of spotsBox.children) b.classList.remove('cur');
+    const r1 = slot.getBoundingClientRect(); lay = measure();
+    const t = turnTo(0, 760);
+    const ok = await fly({ x: r1.left - lay.r.left - lay.left, y: r1.top - lay.r.top - lay.top, z: r1.width / lay.w }, Math.max(560, t));
+    slot.replaceWith(box); box.removeAttribute('style'); onStage = false; cam = { x: 0, y: 0, z: 1 }; place();
+    return ok;
   }
   // his screen: the OG eyes as the firmware draws them, or a Doodle scene from the Hub, with blinks and glances
   const octx = oled.getContext('2d'), oimg = octx.createImageData(128, 64);
@@ -764,32 +994,158 @@ const spin = (() => {
     if (face === 'og') { anim = null; drawn = ''; return; }
     try { const a = await window.Geedo.loadBin('packs/doodle/bin/doodle_nod.bin'); if (face === 'doodle') { anim = a; animI = 0; animAt = 0; paint(a.frames[0].pixels); } } catch (e) { anim = null; }
   }
-  // what a tap on a part does
-  function hint(text, ms = 3200) { hintEl.textContent = text; hintEl.classList.add('said'); clearTimeout(said); said = setTimeout(() => { hintEl.textContent = 'drag to turn him · tap a part'; hintEl.classList.remove('said'); }, ms); }
-  function flashCard(id) { const c = $(id); if (!c || c.closest('[hidden]')) return; c.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' }); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); }
-  function tap(k) {
-    if (k === 'button') {
-      if (robot) { const was = asleep; perkAt = performance.now(); setSleep(false); act(spotsBox.querySelector('[data-spot=button]'), () => robot.ask('PET', /^GEEDO (OK|ERR) PET/)); hint(was ? 'A tap wakes him. Up he gets.' : 'Petted. Hold his real button a second to switch him off.'); if (!was) flashCard('c-off'); }
-      else hint('That was a pet. Find him and he feels it.');
-      return;
-    }
-    if (!robot) { hint('Find him first: then his parts open their settings.'); return; }
-    if (k === 'light' || k === 'usb') { const bat = $('t-bat').textContent; hint(k === 'light' ? `Battery ${bat}${$('t-chg').textContent ? ', ' + $('t-chg').textContent : ''}.` : 'Charge him here. Updates come over his WiFi.'); }
-    else if (k === 'oled') hint('His face, his mood and his scenes.');
-    else if (k === 'buzzer') hint('Beeps, songs, and when he goes quiet.');
-    else if (k === 'wifi') hint('The network he checks in on.');
-    flashCard(CARD[k]);
-  }
-  (async () => {
-    try { meta = await (await fetch(DIR + 'spin.json', { cache: 'force-cache' })).json(); } catch (e) { return; }
+  function setSleep(on) { asleep = !!on; drawn = ''; oled.classList.toggle('dim', asleep); }
+  const metaP = (async () => {
+    try { meta = await (await fetch(DIR + 'spin.json?v=2', { cache: 'force-cache' })).json(); } catch (e) { return; }
     place(); new ResizeObserver(place).observe(box);
     const order = []; for (let d = 1; d <= meta.views / 2; d++) { order.push(d % meta.views); if (d < meta.views / 2) order.push(meta.views - d); }
     const idle = window.requestIdleCallback ? f => requestIdleCallback(f, { timeout: 800 }) : f => setTimeout(f, 120);
     let i = 0; const next = () => { if (i < order.length) { load(order[i++]); idle(next); } }; idle(next);
-    setTimeout(() => { if (!dragging && cur === 0 && ready(1) && ready(2)) { turn(2, 500); setTimeout(() => turn(-2, 600), 650); } }, 1800);
+    setTimeout(() => { if (!calm && !dragging && !onStage && cur === 0 && ready(1) && ready(2)) { turn(2, 500); setTimeout(() => { if (!onStage) turn(-2, 600); }, 650); } }, 1800);
   })();
-  function setSleep(on) { asleep = !!on; drawn = ''; oled.classList.toggle('dim', asleep); }
-  return { face: setFace, twirl: () => turn(meta ? meta.views : 0, 1400), perk: () => { perkAt = performance.now(); drawn = ''; setSleep(false); }, sleep: setSleep };
+  return {
+    face: setFace, sleep: setSleep, focus, unfocus,
+    twirl: () => { if (!calm && meta && !onStage) turn(meta.views, 1400); },
+    perk: () => { perkAt = performance.now(); drawn = ''; setSleep(false); },
+    onTap: f => { tapped = f; },
+  };
+})();
+
+// ---- the visual menu: his parts are the menu. Tap one, a chip or a tile, and he turns to show it and the camera
+//      moves in, while everything for that part slides in beside him. Back, Esc, the cross or the phone's back closes it.
+const menu = (() => {
+  const focusEl = $('focus'), body = $('sh-body'), store = $('store'), ORDER = [...store.children];
+  const page = ['.top', 'main', 'footer'].map(s => document.querySelector(s));
+  const ICON = {
+    oled: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2.5"/><path d="M9 10v3M15 10v3"/></svg>',
+    button: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>',
+    buzzer: '<svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/></svg>',
+    wifi: '<svg viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.8 16a4.8 4.8 0 0 1 6.4 0"/><circle cx="12" cy="19.3" r=".9"/></svg>',
+    light: '<svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="17" height="10" rx="2.5"/><path d="M22 10.5v3M6 10v4M9.5 10v4"/></svg>',
+    usb: '<svg viewBox="0 0 24 24"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M5 20h14"/></svg>',
+    all: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>',
+  };
+  const PARTS = {
+    oled:   { chip: 'Face', k: 'His screen', t: 'Face, mood and scenes', cards: ['c-face', 'c-mood', 'c-kinds', 'c-packs'],
+              about: 'His eyes or a Doodle, how he feels, and every scene he plays, on 128 by 64 glowing pixels.', does: 'switch his face, set his mood and choose his scenes' },
+    button: { chip: 'Sleep', k: 'His button', t: 'Pets, naps and lights out', cards: ['c-off'],
+              about: 'A tap pets him. From here you can send him to sleep, wake him, or switch him off.', does: 'send him to sleep, wake him or switch him off' },
+    buzzer: { chip: 'Sound', k: 'His speaker', t: 'Sound and his clock', cards: ['c-sound'],
+              about: 'His beeps and songs, and the clock that tells him when it is night.', does: 'quieten him and set his clock' },
+    wifi:   { chip: 'WiFi', k: 'His radio', t: 'WiFi and his own page', cards: ['c-wifi', 'c-page'],
+              about: 'The network he checks in on for new scenes, and the page he serves on it.', does: 'change his WiFi and open his own page' },
+    light:  { chip: 'Battery', k: 'His charge light', t: 'Battery and a check-up', cards: ['c-check'],
+              about: 'It glows while he charges and goes out when he is full.', does: 'see how full he is and give him a check-up' },
+    usb:    { chip: 'Updates', k: 'USB-C, underneath', t: 'Charging and updates', cards: ['c-updates'],
+              about: 'Charge him here, or plug him into a PC. New firmware comes down his WiFi.', does: 'update him' },
+    all:    { chip: 'Everything', k: 'All of him', t: 'Every setting', cards: null,
+              about: 'The lot, in one list. Drag him round, or tap a part to go straight to it.', does: 'change all of it' },
+  };
+  const LIST = ['oled', 'button', 'buzzer', 'wifi', 'light', 'usb', 'all'];
+  let open = null, pushed = false, closing = false, back = null, filledWith, hintT = 0;
+  function chips(row) {
+    for (const k of LIST) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.part = k;
+      b.innerHTML = ICON[k] + `<span>${PARTS[k].chip}</span>`; b.onclick = () => show(k, b); row.append(b);
+    }
+  }
+  chips($('parts')); chips($('sh-parts'));
+  for (const t of document.querySelectorAll('.tile[data-part]')) {
+    t.tabIndex = 0; t.setAttribute('role', 'button');
+    t.onclick = () => show(t.dataset.part, t);
+    t.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(t.dataset.part, t); } };
+  }
+  spin.onTap(k => { if (open === k && k === 'button') pet(); else show(k); });
+  $('sh-x').onclick = () => close(); $('f-back').onclick = () => close();
+  addEventListener('keydown', e => { if (e.key === 'Escape' && open !== null) close(); });
+  addEventListener('popstate', () => { if (open !== null && pushed) { pushed = false; shut(); } });
+  try { if (history.state && history.state.geedoPart) history.replaceState(null, ''); } catch (e) {}
+  async function show(k, from) {
+    if (!PARTS[k] || closing) return;
+    const first = open === null;
+    if (first) {
+      back = from || document.activeElement;
+      document.documentElement.classList.add('locked'); for (const el of page) el.inert = true;
+      focusEl.hidden = false; void focusEl.offsetWidth; focusEl.classList.add('on');
+      try { history.pushState({ geedoPart: true }, ''); pushed = true; } catch (e) {}
+    }
+    open = k; fill(k); hint();
+    const flight = spin.focus(k === 'all' ? null : k);
+    if (first) $('sh-x').focus({ preventScroll: true });
+    await flight;
+  }
+  function close() {
+    if (open === null || closing) return;
+    if (!pushed) { shut(); return; }
+    history.back();                                      // the popstate closes it; if none comes, close it anyway
+    setTimeout(() => { if (open !== null && !closing) { pushed = false; shut(); } }, 450);
+  }
+  async function shut() {
+    if (open === null || closing) return;
+    closing = true; focusEl.classList.remove('on'); document.documentElement.classList.remove('locked');
+    await spin.unfocus();
+    for (const c of ORDER) store.append(c);
+    open = null; closing = false; focusEl.hidden = true; for (const el of page) el.inert = false; clearTimeout(hintT);
+    if (back && back.isConnected && back.focus) back.focus({ preventScroll: true });
+  }
+  function fill(k) {
+    const P = PARTS[k], row = $('sh-parts');
+    for (const c of ORDER) store.append(c);
+    body.textContent = ''; body.scrollTop = 0; filledWith = robot;
+    $('sh-ic').innerHTML = ICON[k]; $('sh-k').textContent = P.k; $('sh-title').textContent = P.t; $('sh-about').textContent = P.about;
+    for (const c of row.children) c.setAttribute('aria-current', String(c.dataset.part === k));
+    const on = row.querySelector('[aria-current=true]');
+    if (on) row.scrollTo({ left: on.offsetLeft - (row.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' });
+    if (!robot) { body.append(findHim(k)); return; }
+    const ex = extra(k); if (ex) body.append(ex);
+    for (const c of (P.cards ? P.cards.map(id => $(id)) : ORDER)) body.append(c);
+  }
+  function findHim(k) {                                  // no Geedo yet: what this part is for, and the ways to find him
+    const d = document.createElement('div'); d.className = 'lead';
+    const none = $('find').hidden && $('find-ble').hidden;
+    d.innerHTML = `<b>Find him first</b><p>${none ? 'This browser can open neither his cable nor Bluetooth: use Chrome or Edge. Or try the pretend one, ' : 'Plug him in, or find him over Bluetooth, '}and this is where you ${PARTS[k].does}.</p><div class="row"></div>`;
+    for (const [id, label, cls] of [['find', 'Plug him in', 'btn sm p'], ['find-ble', 'Find him over Bluetooth', 'btn sm p'], ['demo', 'Try it without one', 'btn sm']]) {
+      if ($(id).hidden) continue;
+      const b = document.createElement('button'); b.type = 'button'; b.className = cls; b.textContent = label; b.onclick = () => $(id).click();
+      d.querySelector('.row').append(b);
+    }
+    return d;
+  }
+  function extra(k) {                                    // what his part can tell you straight off, above its settings
+    const d = document.createElement('div'); d.className = 'meter x-extra';
+    if (k === 'light') {
+      const mv = parseInt(info.bat, 10), pct = mv ? Math.round(Math.max(0.04, Math.min(1, (mv - 3400) / 800)) * 100) : 0;
+      const words = info.chg === 'yes' ? 'Charging: his light is on.' : !mv ? 'He did not say.' : mv > 3900 ? 'Plenty left.' : mv > 3650 ? 'Getting low.' : 'Charge him soon.';
+      d.innerHTML = `<div class="k">Battery</div><div class="big">${mv ? (mv / 1000).toFixed(2) + ' V' : '—'}</div><div class="s">${words}</div>` +
+                    `<div class="bar" role="img" aria-label="Battery, about ${pct}%"><i style="width:${pct}%"></i></div>`;
+      return d;
+    }
+    if (k === 'button') {
+      const zz = info.state === 'asleep';
+      d.innerHTML = `<div class="k">Right now</div><div class="big">${zz ? 'Asleep' : 'Awake'}</div><div class="s">${zz ? 'A pet, or a tap on his button, wakes him.' : 'A pet cheers him up, and he remembers it.'}</div>` +
+                    '<div class="row"><button class="btn sm p" type="button">Pet him</button><span style="font-size:13px;color:var(--fg2)">or tap the button on him</span></div>';
+      d.querySelector('button').onclick = e => pet(e.currentTarget);
+      return d;
+    }
+    return null;
+  }
+  function pet(el) {
+    if (!robot) { hint('That was a pet. Find him and he feels it.'); return; }
+    const was = info.state === 'asleep'; spin.perk();
+    act(el || document.querySelector('.spot[data-spot=button]'), () => robot.ask('PET', /^GEEDO (OK|ERR) PET/));
+    hint(was ? 'A tap wakes him. Up he gets.' : 'Petted. He remembers it.');
+  }
+  function hint(text, ms = 3200) {
+    const el = $('f-hint'); clearTimeout(hintT);
+    el.textContent = text || (open === 'button' ? 'tap his button to pet him' : open === 'all' ? 'drag to turn him · tap a part' : 'drag to peek round him · tap another part');
+    el.classList.toggle('said', !!text); if (text) hintT = setTimeout(() => hint(), ms);
+  }
+  function update() {                                    // he answered something: found or lost him changes the sheet over, else its numbers
+    if (open === null || closing) return;
+    if (robot !== filledWith) { fill(open); return; }
+    const old = body.querySelector('.x-extra'), ex = extra(open); if (old && ex) old.replaceWith(ex);
+  }
+  return { show, close, update };
 })();
 
 if (!GeedoLink.supported) { $('find').hidden = true; if (!GeedoBle.supported) state.textContent = 'this browser can open neither his cable nor Bluetooth - use Chrome or Edge, or try the page without him'; }
@@ -807,7 +1163,7 @@ $('demo').onclick = async () => {
 const known = GeedoLink.supported ? await GeedoLink.known() : [];
 if (location.hash === '#demo') await greet(new Demo(), true);
 else if (known.length) await greet(known[0], false);
-else if (GeedoLink.supported || GeedoBle.supported) state.textContent = 'Find him, then everything below is his.';
+else if (GeedoLink.supported || GeedoBle.supported) state.textContent = 'Find him, then tap any part of him.';
 })();
 </script>
 </body>

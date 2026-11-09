@@ -372,6 +372,15 @@
       "hash": "41eec26d",
       "sha256": "41eec26d329401b752e72e827d65c35cfd9b8afd7366bb33a702532c4705eae7",
       "frames": 34
+    },
+    {
+      "id": "doodle_activities_sleeping",
+      "name": "Sleeping",
+      "file": "bin/doodle_activities_sleeping.bin",
+      "size": 3690,
+      "hash": "2b8cabaa",
+      "sha256": "2b8cabaa6ec58b992d42008c47fa3960303b10d604ade34e94a840fdbe2343fc",
+      "frames": 40
     }
   ],
   "published_at": "2026-09-20",

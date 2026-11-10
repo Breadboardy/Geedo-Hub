@@ -1,6 +1,10 @@
 {
-  "version": 26,
-  "name": "13.7.0",
-  "url": "firmware/geedo_v26.bin",
-  "notes": "Auto-built 2026-07-29"
+  "version": 38,
+  "name": "v38",
+  "url": "firmware/geedo_v38.bin",
+  "url_c3": "firmware/geedo_c3_v38.bin",
+  "sig": "MEQCIEjLDAL6ubWR6eluXEoezNHlcd1Fmk0z/nT6u77S7VMqAiAMKsSaQ54A5BtAKAgEs0YEtn1gLsWa2EFe4oNTvLb4KA==",
+  "sig_c3": "MEUCIBBrEe88dDrI/4bNr+t8kx1AxaGHDIbT/FghoBEFARMsAiEAsgHe3ZT8umWIixUNsibaiB+reqdIullcGwbkhnX20AU=",
+  "rollout": 100,
+  "notes": "TEST-SIGNED for the robots flashed with the test keys; built 2026-11-10 from f555d80"
 }

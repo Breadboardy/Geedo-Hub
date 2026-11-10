@@ -145,6 +145,10 @@ a{color:var(--cyan)}
 .picks{display:none;margin:4px 0 0;columns:2;column-gap:24px}
 .picks label{display:flex;gap:8px;align-items:center;font-size:13px;padding:4px 0;break-inside:avoid;color:var(--fg2)}
 .picks input{accent-color:var(--cyan);margin:0}
+.picks .pv{margin-left:auto;flex:none;width:28px;height:24px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--cyan);cursor:pointer;
+           font-size:10px;line-height:1;display:inline-grid;place-items:center;padding:0}
+.picks .pv:hover{border-color:var(--cyan)}
+.picks .pv.on{background:var(--grad);color:var(--ink);border-color:transparent}
 details[open] .picks{display:block}
 summary{cursor:pointer;color:var(--cyan);font-size:13px;list-style:none;margin-top:4px}
 summary::-webkit-details-marker{display:none}
@@ -332,8 +336,20 @@ html.locked,html.locked body{overflow:hidden}
       <article class="card" id="c-sound">
         <div class="opt"><div class="g"><div class="k">Sound</div><b>Beeps and songs</b><span>He goes quiet on his own at night. This keeps him quiet all day.</span></div>
           <button class="sw" id="sound" role="switch" aria-checked="true" aria-label="Sound"></button></div>
+        <div class="opt"><div class="g"><div class="k">Bedtime</div><b>When his night starts and ends</b><span>At night he is quiet and sleepy, and for two hours before it he winds down.</span>
+          <div class="row" style="margin-top:8px;gap:8px;flex-wrap:nowrap"><select class="field" id="bt-bed" aria-label="Bedtime" style="width:auto;flex:1"></select>
+            <span style="color:var(--fg2);font-size:13px">until</span><select class="field" id="bt-wake" aria-label="Wake-up time" style="width:auto;flex:1"></select></div>
+          <span id="bed-say"></span></div></div>
         <div class="opt"><div class="g"><div class="k">Where he lives</div><b>His time zone</b><span>So mornings are mornings and nights are quiet.</span>
           <select class="field" id="tz" aria-label="Time zone" style="margin-top:8px"></select><span id="tz-say"></span></div></div>
+      </article>
+
+      <article class="card" id="c-name">
+        <div class="k">His name</div><h2>What you call him</h2>
+        <p>Up to 12 letters, numbers or spaces. His own page wears it, and this app says hello with it.</p>
+        <div class="row"><input class="field" id="nm" maxlength="12" placeholder="a name" autocomplete="off" style="max-width:220px" aria-label="His name">
+          <button class="btn sm p" id="nm-go">Save</button><button class="btn sm ghost" id="nm-clear">Forget it</button></div>
+        <p id="nm-say"></p>
       </article>
 
       <article class="card wide" id="c-kinds">
@@ -441,6 +457,9 @@ no password needed!</div></div>
 const GeedoLink = window.GeedoLink, GeedoBle = window.GeedoBle;
 const $ = id => document.getElementById(id);
 const state = $('state'), log = $('log');
+// An iPhone or iPad: no browser there has Web Serial, and Safari has no Bluetooth either
+const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IOS_SAY = 'On an iPhone, Safari cannot use Bluetooth, so this page cannot reach him from here. Use a computer or an Android phone, or try Bluefy, a free browser on the App Store that can (not tried with Geedo yet). Setting up his WiFi, below, works from any phone.';
 let robot = null, info = {}, hubList = null, skipped = new Set(), pending = new Map();
 
 // ---- theme: follows the device until the moon is pressed, then remembered
@@ -477,8 +496,8 @@ const ok = out => last(out).startsWith('GEEDO OK');
 class Demo {
   constructor() {
     this.isDemo = true;
-    this.s = { id: 'DEMO01', fw: 37, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
-               mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [] };
+    this.s = { id: 'DEMO01', fw: 38, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
+               mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [], bed: 22, wake: 7, name: '' };
     this.info = null;
   }
   onLine() { return this; }
@@ -503,6 +522,8 @@ class Demo {
       case 'WAKE': s.state = 'awake'; out = ['GEEDO OK WAKE']; break;
       case 'SOUND': if (arg) s.sound = arg; out = [`GEEDO OK SOUND ${s.sound}`]; break;
       case 'TZ': if (arg) s.tz = arg; out = [`GEEDO OK TZ ${s.tz}`]; break;
+      case 'BEDTIME': { if (arg) { const [b, w] = arg.split(' ').map(Number); s.bed = b % 24; s.wake = w; } out = [`GEEDO OK BEDTIME ${s.bed} ${s.wake}`]; break; }
+      case 'NAME': if (arg) s.name = arg === '-' ? '' : arg; out = [`GEEDO OK NAME ${s.name || '-'}`]; break;
       case 'SKIPS': out = [...s.skips].map(([id, nm]) => `GEEDO SKIP ${id} "${nm}"`).concat(['GEEDO END SKIPS']); break;
       case 'SKIP': { const m = arg.match(/^(\S+)\s*(.*)$/); s.skips.set(m[1], m[2].replace(/^"|"$/g, '')); out = [`GEEDO OK SKIP ${m[1]}`]; break; }
       case 'UNSKIP': s.skips.delete(arg); out = [`GEEDO OK UNSKIP ${arg}`]; break;
@@ -597,7 +618,19 @@ function drawKinds() {
     for (const a of items) {
       const l = document.createElement('label'), c = document.createElement('input');
       c.type = 'checkbox'; c.checked = want(a.id); c.disabled = old; c.onchange = () => { setWant(a, c.checked); drawKinds(); };
-      l.append(c, document.createTextNode(a.name)); picks.append(l);
+      l.append(c, document.createTextNode(a.name));
+      if (a.file) {                                        // watch it first: it plays on his screen, up on the stage
+        const pv = document.createElement('button'); pv.type = 'button'; pv.className = 'pv'; pv.innerHTML = '&#9654;';
+        pv.title = 'Watch it on him'; pv.setAttribute('aria-label', 'Watch ' + a.name);
+        pv.onclick = async e => {
+          e.preventDefault();
+          for (const o of box.querySelectorAll('.pv.on')) o.classList.remove('on');
+          pv.classList.add('on'); menu.say(a.name + ', on his screen');
+          await spin.play(a.file); pv.classList.remove('on');
+        };
+        l.append(pv);
+      }
+      picks.append(l);
     }
     box.append(row);
   }
@@ -640,6 +673,51 @@ const ZONES = [['pacific', 'Pacific (Los Angeles, Vancouver)'], ['mountain', 'Mo
 for (const [v, label] of ZONES) { const o = document.createElement('option'); o.value = v; o.textContent = label; $('tz').append(o); }
 $('tz').onchange = e => act(e.target, async () => { const out = await robot.ask('TZ ' + e.target.value, /^GEEDO (OK|ERR) TZ/); $('tz-say').textContent = ok(out) ? 'Saved. His clock follows at his next check-in.' : GeedoLink.why(last(out)); });
 async function readTz() { try { const out = await robot.ask('TZ', /^GEEDO (OK|ERR) TZ/); const m = last(out).match(/^GEEDO OK TZ (\S+)/); if (m && ZONES.some(z => z[0] === m[1])) $('tz').value = m[1]; } catch (e) {} }
+
+// ---- his bedtime (v38): night from the first to the second, the two hours before it winding down
+const hh = h => String(h).padStart(2, '0') + ':00';
+for (const h of [18, 19, 20, 21, 22, 23, 0]) { const o = document.createElement('option'); o.value = h; o.textContent = h ? hh(h) : '00:00 (midnight)'; $('bt-bed').append(o); }
+for (let h = 5; h <= 11; h++) { const o = document.createElement('option'); o.value = h; o.textContent = hh(h); $('bt-wake').append(o); }
+$('bt-bed').value = '22'; $('bt-wake').value = '7';
+function setBed(el) {
+  act(el, async () => {
+    const out = await robot.ask(`BEDTIME ${$('bt-bed').value} ${$('bt-wake').value}`, /^GEEDO (OK|ERR) BEDTIME/);
+    $('bed-say').textContent = ok(out) ? `Saved: in bed at ${hh(+$('bt-bed').value)}, up at ${hh(+$('bt-wake').value)}.` : GeedoLink.why(last(out));
+  });
+}
+$('bt-bed').onchange = e => setBed(e.target); $('bt-wake').onchange = e => setBed(e.target);
+async function readBedtime() {
+  const old = fw() < 38;
+  for (const id of ['bt-bed', 'bt-wake']) { $(id).disabled = old; $(id).title = old ? 'needs firmware v38' : ''; }
+  $('bed-say').textContent = old ? 'Choosing his bedtime needs firmware v38. Until then it is 22:00 to 07:00.' : '';
+  if (old) return;
+  try { const m = last(await robot.ask('BEDTIME', /^GEEDO (OK|ERR) BEDTIME/)).match(/^GEEDO OK BEDTIME (\d+) (\d+)/); if (m) { $('bt-bed').value = m[1]; $('bt-wake').value = m[2]; } } catch (e) {}
+}
+
+// ---- his name (v38)
+let myName = '';
+const NAME_OK = /^[A-Za-z0-9][A-Za-z0-9 '\-]{0,11}$/;
+function greeting() {
+  $('title').textContent = myName ? 'Hello, ' + myName : robot && robot.isDemo ? 'A pretend Geedo' : 'Hello, GEEDO-' + (info.id || '??????');
+}
+async function nameTo(el, want) {
+  act(el, async () => {
+    const out = await robot.ask('NAME ' + (want || '-'), /^GEEDO (OK|ERR) NAME/);
+    if (ok(out)) { myName = last(out).slice('GEEDO OK NAME '.length).trim().replace(/^-$/, ''); $('nm').value = myName; greeting(); }
+    $('nm-say').textContent = ok(out) ? (myName ? `He is ${myName} now.` : 'Forgotten. He is GEEDO-' + info.id + ' again.') : GeedoLink.why(last(out));
+  });
+}
+$('nm-go').onclick = e => { const v = $('nm').value.trim(); if (!NAME_OK.test(v)) { $('nm-say').textContent = 'Letters, numbers, spaces, dashes or apostrophes, up to 12, starting with a letter or number.'; return; } nameTo(e.target, v); };
+$('nm').onkeydown = e => { if (e.key === 'Enter') $('nm-go').click(); };
+$('nm-clear').onclick = e => nameTo(e.target, '');
+async function readName() {
+  const old = fw() < 38;
+  for (const id of ['nm', 'nm-go', 'nm-clear']) { $(id).disabled = old; $(id).title = old ? 'needs firmware v38' : ''; }
+  $('nm-say').textContent = old ? 'Naming him needs firmware v38.' : '';
+  myName = '';
+  if (!old) { try { const out = await robot.ask('NAME', /^GEEDO (OK|ERR) NAME/); if (ok(out)) myName = last(out).slice('GEEDO OK NAME '.length).trim().replace(/^-$/, ''); } catch (e) {} }
+  $('nm').value = myName; greeting();
+}
 
 // ---- WiFi
 const bars = r => r > -55 ? '▂▄▆█' : r > -65 ? '▂▄▆_' : r > -75 ? '▂▄__' : '▂___';
@@ -752,7 +830,7 @@ for (const id of ['find', 'find-ble']) $(id).dataset.label = $(id).textContent;
 function gone() {
   robot = null; $('panel').hidden = true; $('tiles').hidden = true; $('hid').hidden = true;
   for (const id of ['find', 'find-ble']) { $(id).textContent = $(id).dataset.label; $(id).disabled = false; }
-  $('title').textContent = 'Your Geedo, your way.'; $('sub').hidden = false; spin.face('og');
+  myName = ''; $('title').textContent = 'Your Geedo, your way.'; $('sub').hidden = false; spin.face('og');
   state.textContent = 'he went away - plug him in or find him again and he comes straight back';
   menu.update();
 }
@@ -766,14 +844,14 @@ async function greet(r, demo) {
     await robot.open();
     await refresh();
     $('panel').hidden = false; $('sub').hidden = true;
-    $('title').textContent = demo ? 'A pretend Geedo' : 'Hello, ' + ('GEEDO-' + info.id);
+    myName = ''; greeting();
     const how = r.device ? 'over Bluetooth' : 'by cable';
     state.innerHTML = demo ? 'for trying the page <span class="tag">demo</span>' : `connected ${how} - tap any part of him`;
     for (const id of ['find', 'find-ble']) { $(id).textContent = demo ? $(id).dataset.label : 'Connected ' + how; $(id).disabled = !demo; }
     if (r.onGone !== undefined) r.onGone = () => gone();
     if (!demo) spin.twirl();
     drawWaiting();
-    await Promise.all([loadKinds(), readMood(), readTz(), listPacks(), checkUpdate()]);
+    await Promise.all([loadKinds(), readMood(), readTz(), readBedtime(), readName(), listPacks(), checkUpdate()]);
   } catch (e) {
     state.textContent = why(e);
     try { await r.close(); } catch (_) {}
@@ -981,14 +1059,38 @@ const spin = (() => {
     for (const cx of [32 + glance[0], 96 + glance[0]]) rrect(d, cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2, r);
     octx.putImageData(oimg, 0, 0);
   }
+  // a scene from the Hub, previewed: played on his screen a couple of times
+  // (there and back again if it ping-pongs, as he plays it), then his own face
+  let preview = null;
   function tick(now) {
     if (!oled.hidden && !document.hidden) {
-      if (anim && !asleep) { const f = anim.frames[animI]; if (now - animAt >= 1000 / anim.fps * (f.dur || 1)) { animAt = now; animI = (animI + 1) % anim.frames.length; paint(anim.frames[animI].pixels); } }
+      if (preview) {
+        const P = preview, f = P.anim.frames[P.order[P.i]];
+        if (now - animAt >= 1000 / P.anim.fps * (f.dur || 1)) {
+          animAt = now;
+          if (++P.i >= P.order.length) { P.i = 0; if (--P.loops <= 0) { endPreview(); requestAnimationFrame(tick); return; } }
+          paint(P.anim.frames[P.order[P.i]].pixels);
+        }
+      } else if (anim && !asleep) { const f = anim.frames[animI]; if (now - animAt >= 1000 / anim.fps * (f.dur || 1)) { animAt = now; animI = (animI + 1) % anim.frames.length; paint(anim.frames[animI].pixels); } }
       else eyes(now);
     }
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+  function endPreview() {
+    const P = preview; preview = null; animI = 0; animAt = 0; drawn = '';
+    if (anim && !asleep) paint(anim.frames[0].pixels);
+    if (P) P.done();
+  }
+  async function play(file, loops = 2) {
+    let a; try { a = await window.Geedo.loadBin(file); } catch (e) { return; }
+    if (!a || !a.frames || !a.frames.length) return;
+    if (meta && !meta.frames[cur].screen) turnTo(bestView('oled'));     // his back to you? he turns round to show it
+    const n = a.frames.length, order = [...Array(n).keys()];
+    if (a.pingpong && n > 2) for (let i = n - 2; i > 0; i--) order.push(i);
+    if (preview) endPreview();
+    return new Promise(done => { preview = { anim: a, order, i: 0, loops, done }; animAt = performance.now(); paint(a.frames[0].pixels); });
+  }
   async function setFace(which) {
     face = which === 'doodle' ? 'doodle' : 'og';
     if (face === 'og') { anim = null; drawn = ''; return; }
@@ -1004,7 +1106,7 @@ const spin = (() => {
     setTimeout(() => { if (!calm && !dragging && !onStage && cur === 0 && ready(1) && ready(2)) { turn(2, 500); setTimeout(() => { if (!onStage) turn(-2, 600); }, 650); } }, 1800);
   })();
   return {
-    face: setFace, sleep: setSleep, focus, unfocus,
+    face: setFace, sleep: setSleep, focus, unfocus, play,
     twirl: () => { if (!calm && meta && !onStage) turn(meta.views, 1400); },
     perk: () => { perkAt = performance.now(); drawn = ''; setSleep(false); },
     onTap: f => { tapped = f; },
@@ -1026,7 +1128,7 @@ const menu = (() => {
     all: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>',
   };
   const PARTS = {
-    oled:   { chip: 'Face', k: 'His screen', t: 'Face, mood and scenes', cards: ['c-face', 'c-mood', 'c-kinds', 'c-packs'],
+    oled:   { chip: 'Face', k: 'His screen', t: 'Face, mood and scenes', cards: ['c-face', 'c-name', 'c-mood', 'c-kinds', 'c-packs'],
               about: 'His eyes or a Doodle, how he feels, and every scene he plays, on 128 by 64 glowing pixels.', does: 'switch his face, set his mood and choose his scenes' },
     button: { chip: 'Sleep', k: 'His button', t: 'Pets, naps and lights out', cards: ['c-off'],
               about: 'A tap pets him. From here you can send him to sleep, wake him, or switch him off.', does: 'send him to sleep, wake him or switch him off' },
@@ -1103,7 +1205,9 @@ const menu = (() => {
   function findHim(k) {                                  // no Geedo yet: what this part is for, and the ways to find him
     const d = document.createElement('div'); d.className = 'lead';
     const none = $('find').hidden && $('find-ble').hidden;
-    d.innerHTML = `<b>Find him first</b><p>${none ? 'This browser can open neither his cable nor Bluetooth: use Chrome or Edge. Or try the pretend one, ' : 'Plug him in, or find him over Bluetooth, '}and this is where you ${PARTS[k].does}.</p><div class="row"></div>`;
+    const why = IOS ? 'On an iPhone, Safari cannot use Bluetooth: use a computer or an Android phone, or try the free Bluefy browser (not tried with Geedo yet). Or try the pretend one, '
+                    : 'This browser can open neither his cable nor Bluetooth: use Chrome or Edge. Or try the pretend one, ';
+    d.innerHTML = `<b>Find him first</b><p>${none ? why : 'Plug him in, or find him over Bluetooth, '}and this is where you ${PARTS[k].does}.</p><div class="row"></div>`;
     for (const [id, label, cls] of [['find', 'Plug him in', 'btn sm p'], ['find-ble', 'Find him over Bluetooth', 'btn sm p'], ['demo', 'Try it without one', 'btn sm']]) {
       if ($(id).hidden) continue;
       const b = document.createElement('button'); b.type = 'button'; b.className = cls; b.textContent = label; b.onclick = () => $(id).click();
@@ -1145,10 +1249,10 @@ const menu = (() => {
     if (robot !== filledWith) { fill(open); return; }
     const old = body.querySelector('.x-extra'), ex = extra(open); if (old && ex) old.replaceWith(ex);
   }
-  return { show, close, update };
+  return { show, close, update, say: text => { if (open !== null) hint(text); } };
 })();
 
-if (!GeedoLink.supported) { $('find').hidden = true; if (!GeedoBle.supported) state.textContent = 'this browser can open neither his cable nor Bluetooth - use Chrome or Edge, or try the page without him'; }
+if (!GeedoLink.supported) { $('find').hidden = true; if (!GeedoBle.supported) state.textContent = IOS ? IOS_SAY : 'this browser can open neither his cable nor Bluetooth - use Chrome or Edge, or try the page without him'; }
 else GeedoLink.watch(l => greet(l, false), port => { if (robot && robot.port === port) gone(); });
 if (GeedoBle.supported) {
   $('find-ble').hidden = false;

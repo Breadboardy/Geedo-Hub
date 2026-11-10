@@ -273,3 +273,74 @@ footer a:hover{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
+
+/* ---------------------------------------------------------------- community
+   (The community pages' own styles name the toy-box palette; here those
+   names are this look's colours.) */
+:root{--paper:var(--surface);--paper-2:var(--bg);--paper-3:var(--line);--ink:var(--text);--blue:var(--accent);
+      --blue-deep:var(--accent);--blue-soft:var(--mute);--yellow:var(--kraft-soft);--yellow-deep:var(--kraft);
+      --good-soft:#e3f2e8;--r-panel:18px;--r-card:14px}
+/*
+   The pages behind the Studio's Publish button - a page per animation, the
+   makers, how a drawing gets here - in this look: white panels on paper,
+   teal for what you press, kraft for a sticker that says something is new. */
+.sub{color:var(--mute);margin:4px 0 20px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(18px,3vw,40px);align-items:center}
+.actions{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+.hero-shot{position:relative;justify-self:center;width:min(100%,520px)}
+.screen.tilt{transform:rotate(1.5deg)}
+.screen.sm{border-radius:10px;border-width:1px;box-shadow:0 2px 6px rgba(20,22,26,.18)}
+.screen.blank{aspect-ratio:2/1}
+.screen.blank::before{content:'';position:absolute;inset:0;margin:auto;width:26px;height:26px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:spin .8s linear infinite}
+.sticker{position:absolute;right:-8px;top:-14px;z-index:2;background:var(--kraft);color:#fff;font:700 11.5px/1.2 var(--mono);
+  letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px;transform:rotate(6deg);
+  box-shadow:0 6px 14px -6px rgba(32,30,24,.45)}
+.sticker.left{right:auto;left:-8px;transform:rotate(-6deg)}
+.tag{display:inline-block;background:var(--kraft-soft);color:var(--kraft-deep);padding:1px 9px;border-radius:99px;
+  font-weight:700;font-size:11.5px;letter-spacing:.02em;white-space:nowrap;vertical-align:middle}
+.tag.blue{background:color-mix(in srgb,var(--accent) 13%,#fff);color:var(--accent)}
+.tag.ink{background:var(--text);color:#fff}
+.tag.soft{background:var(--line);color:var(--text)}
+.btn.yellow,.btn.blue{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 20px -8px rgba(14,124,147,.5)}
+.btn.yellow:hover,.btn.blue:hover{filter:brightness(1.07)}
+.btn.ink{background:var(--text);border-color:var(--text);color:#fff}
+.btn.ghost{background:transparent}
+.btn.sm{font-size:13.5px;padding:9px 15px;border-radius:10px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,3vw,32px);margin-top:32px;box-shadow:var(--shadow-card)}
+.panel-head{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.panel-head .sub{margin:4px 0 0}
+.panel-head a.more{font-weight:600;color:var(--accent);white-space:nowrap}
+.panel-head a.more:hover{text-decoration:underline}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:32px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-card)}
+.box.y{background:var(--kraft-soft);border-color:#e6d8bd}
+.box.b{background:var(--accent);border-color:var(--accent);color:#fff}
+.box.soft{background:var(--bg)}
+.box h3{font-size:19px;margin:0 0 8px}
+.box p{color:var(--mute);line-height:1.6}
+.box.b p{color:rgba(255,255,255,.86)}
+.box .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--text);color:#fff;font-weight:700;font-size:15px;margin-bottom:12px}
+.box.b .n{background:#fff;color:var(--accent)}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.feed .card,a.card{position:relative;display:block;color:var(--text)}
+.card .name{font-weight:700;font-size:15px;margin:10px 2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .by{font-size:12.5px;color:var(--mute);margin:3px 2px 0;display:flex;justify-content:space-between;gap:8px;align-items:center;min-width:0}
+.card .by>span:first-child{white-space:nowrap}
+.card .by b{color:var(--text);font-weight:700;margin-right:3px}
+.card .by .when{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.makers{display:flex;gap:10px;flex-wrap:wrap}
+.maker{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:5px 14px 5px 5px;
+  display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;transition:transform .12s}
+a.maker:hover{transform:translateY(-2px)}
+.maker .count{color:var(--mute);font-weight:600;font-size:13px}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 14px;min-width:90px}
+.card .sticker{font-size:10.5px;padding:4px 9px;top:-9px;right:-6px}
+.maker i,.avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:inline-grid;place-items:center;
+  font-style:normal;font-size:13px;font-weight:700;flex:none;text-transform:uppercase}
+.avatar.lg{width:64px;height:64px;font-size:28px}
+.avatar.xl{width:96px;height:96px;font-size:44px;border:4px solid #fff;box-shadow:var(--shadow-card)}
+.stat .v{font-weight:700;font-size:22px;line-height:1.1;display:block}
+@media (max-width:860px){.hero-shot{width:min(100%,440px);justify-self:start}}
+@media (max-width:680px){.feed{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.panel{border-radius:16px}}

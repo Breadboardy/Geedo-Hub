@@ -1,0 +1,42 @@
+name: Publish an animation
+description: Send an animation you drew in Geedo Studio to the Hub. A person looks at every one before it goes out to the robots.
+title: "Publish: "
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for drawing him something! Here is what happens next: the bot checks the file and posts a preview here, then a person looks at it. If it is a yes, it gets the **approved** label and every Geedo in the world is doing it within the minute. If it is a no, you get told why.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: What the animation is called on the Hub.
+      placeholder: Moonwalk
+    validations:
+      required: true
+  - type: input
+    id: maker
+    attributes:
+      label: Maker name
+      description: The name shown next to it. Leave it empty to use your GitHub name.
+      placeholder: pixelpete
+  - type: textarea
+    id: file
+    attributes:
+      label: The file
+      description: In Studio press **Publish** and save the `.geedo.json` file. Then drag that file into this box.
+      placeholder: Drop the .geedo.json here
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: The rules
+      options:
+        - label: I drew this myself. It is not a character from a game, a film or a show.
+          required: true
+        - label: It is kind. Nothing rude, mean or scary - kids are watching these screens.
+          required: true
+        - label: I know a person looks at it first and might say no.
+          required: true

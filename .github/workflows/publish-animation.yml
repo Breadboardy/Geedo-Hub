@@ -1,73 +1,150 @@
-name: Publish animation from issue
+name: Community animations
+
+# A submission is an issue opened from the "Publish an animation" form; the
+# form gives it the `submission` label. Two jobs:
+#
+#   check    on open (and on edit): download the file, run the robot's
+#            checks, draw a preview, and comment. Nothing is published.
+#   publish  when a person adds the `approved` label - and only a person
+#            with triage rights on this repo can add a label. The animation
+#            is packed, listed with the maker's name and the date, signed,
+#            and pushed. Every Geedo picks it up at its next check.
+#
+# So nothing reaches a robot without a human having looked at the preview
+# and pressed one button. That is the whole point of the two jobs.
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [opened, edited, labeled]
 
 permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: community-animations
+  cancel-in-progress: false
+
 jobs:
-  publish:
+  check:
     if: |
-      (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'publish-animation')) ||
-      (github.event.action == 'labeled' && github.event.label.name == 'publish-animation')
+      (github.event.action == 'opened' ||
+       (github.event.action == 'edited' && github.event.changes.body != null)) &&
+      contains(github.event.issue.labels.*.name, 'submission')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Process issue + pack animation
-        id: process
+      - name: Check the file the way the robot would
+        id: check
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           REPO_OWNER: ${{ github.repository_owner }}
-        run: python3 .github/scripts/process_publish_issue.py
+        run: python3 .github/scripts/process_publish_issue.py check
+
+      # The preview lives on an orphan branch, never on main: main is the
+      # Hub every robot reads, and nothing goes there before it is approved.
+      - name: Keep the preview on the previews branch
+        if: steps.check.outputs.preview == 'true'
+        id: preview
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          n='${{ github.event.issue.number }}'
+          git config --global user.name  "geedo-bot"
+          git config --global user.email "geedo-bot@users.noreply.github.com"
+          url="https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git"
+          if git clone --quiet --depth 1 --branch previews "$url" previews 2>/dev/null; then
+            cd previews
+          else
+            mkdir previews && cd previews && git init -q -b previews && git remote add origin "$url"
+            printf 'Preview pictures of community submissions, one per issue. Not part of the Hub.\n' > README.md
+          fi
+          cp ../preview.gif "$n.gif"
+          git add -A
+          git commit -q -m "preview for #$n" || true
+          git push -q origin previews
+          echo "url=https://raw.githubusercontent.com/${{ github.repository }}/previews/$n.gif?r=${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+
+      - name: Comment
+        uses: actions/github-script@v7
+        env:
+          OK: ${{ steps.check.outputs.ok }}
+          REPORT: ${{ steps.check.outputs.report }}
+          PREVIEW: ${{ steps.preview.outputs.url }}
+        with:
+          script: |
+            const ok = process.env.OK === 'true';
+            let body = process.env.REPORT || 'The check produced no report.';
+            if (ok && process.env.PREVIEW)
+              body += `\n\n![preview](${process.env.PREVIEW})`;
+            body += ok
+              ? `\n\n---\n*A person looks at every animation before it goes on the Hub. ` +
+                `To publish this one, add the **approved** label. Not this one? Close the issue and say why.*`
+              : `\n\n---\n*Fix the file and edit this issue to attach the new one - the check runs again by itself.*`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number, body
+            });
+
+  publish:
+    if: |
+      github.event.action == 'labeled' &&
+      github.event.label.name == 'approved' &&
+      contains(github.event.issue.labels.*.name, 'submission')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pack it and list it
+        id: publish
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        run: python3 .github/scripts/process_publish_issue.py publish
 
       # Robots refuse a list the Hub did not sign, and a download whose bytes
       # do not hash to what the signed list says - so the manifest is signed
       # here, with the content key, before it is pushed.
       - name: Fill in hashes and sign the manifest
-        if: steps.process.outputs.success == 'true'
+        if: steps.publish.outputs.ok == 'true'
         env:
           GEEDO_CONTENT_KEY: ${{ secrets.GEEDO_CONTENT_KEY }}
         run: python3 .github/scripts/sign_manifests.py
 
-      - name: Commit + push
-        if: steps.process.outputs.success == 'true'
+      - name: Commit and push
+        if: steps.publish.outputs.ok == 'true'
         run: |
           git config user.name  "geedo-bot"
           git config user.email "geedo-bot@users.noreply.github.com"
           git add animations/
           if git diff --cached --quiet; then
-            echo "no changes"
+            echo "nothing changed"
           else
-            git commit -m "publish: ${{ steps.process.outputs.anim_id }} (#${{ github.event.issue.number }})"
+            git commit -m "community: ${{ steps.publish.outputs.anim_id }} (#${{ github.event.issue.number }})"
             git push
           fi
 
-      - name: Comment success + close
-        if: steps.process.outputs.success == 'true'
+      - name: Say so and close
+        if: steps.publish.outputs.ok == 'true'
         uses: actions/github-script@v7
+        env:
+          ANIM: ${{ steps.publish.outputs.anim_id }}
         with:
           script: |
-            const id  = '${{ steps.process.outputs.anim_id }}';
-            const sz  = '${{ steps.process.outputs.size }}';
-            const fc  = '${{ steps.process.outputs.frames }}';
-            const hsh = '${{ steps.process.outputs.hash }}';
+            const id = process.env.ANIM;
             await github.rest.issues.createComment({
               owner: context.repo.owner, repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `✅ Published **${id}**\n\n- frames: ${fc}\n- size: ${sz} bytes\n- hash: \`${hsh}\`\n\nGeedos worldwide will sync this within ~60 seconds. 🎉\n\n[View on hub](https://breadboardy.github.io/Geedo-Hub/#animations)`
+              body: `**Published.** Every Geedo picks it up at its next check, within the minute.\n\n` +
+                    `It has its own page now: https://breadboardy.github.io/Geedo-Hub/animation.html?id=${encodeURIComponent(id)}`
             });
             await github.rest.issues.update({
               owner: context.repo.owner, repo: context.repo.repo,
@@ -75,14 +152,22 @@ jobs:
               state: 'closed', state_reason: 'completed'
             });
 
-      - name: Comment failure
-        if: steps.process.outputs.success != 'true'
+      - name: Say what went wrong
+        if: steps.publish.outputs.ok != 'true'
         uses: actions/github-script@v7
+        env:
+          REPORT: ${{ steps.publish.outputs.report }}
         with:
           script: |
-            const err = `${{ steps.process.outputs.error }}` || 'unknown error';
             await github.rest.issues.createComment({
               owner: context.repo.owner, repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `❌ Publish failed: ${err}\n\nMake sure you dragged the **\`.geedo.json\`** file from Studio into the issue, then re-add the \`publish-animation\` label to retry.`
+              body: (process.env.REPORT || 'Publishing failed with no report.') +
+                    `\n\n*The **approved** label was taken off again. Fix what it says, then add the label back to retry.*`
             });
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, name: 'approved'
+              });
+            } catch (e) {}

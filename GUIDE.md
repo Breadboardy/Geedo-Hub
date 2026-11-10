@@ -123,7 +123,9 @@ survives a power cut. Something new arrives inside a box: he shakes it, the
 wrapping comes off, and he shows you what was in it.
 
 Browse what's available at the **Geedo Hub**, or make your own in the Studio
-and publish it — every Geedo picks it up within a few minutes.
+and publish it. A person looks at every animation before it goes out; once
+it's approved, every Geedo picks it up within a few minutes, with your name on
+it.
 
 Animations he has already downloaded keep playing even with the WiFi off, so
 he still works in the car, on a trip, or when the internet is down.
@@ -142,13 +144,14 @@ up for ten minutes after your last click there.
 
 ### Your own drawings
 
-Draw something in the **Studio** and press **Send to Geedo** with him plugged
+Draw something in the **Studio** and press **Try on Geedo** with him plugged
 in: it goes down the cable, he checks it the way he checks everything (a
 drawing that flashes too much is turned away), and he unboxes it. No cable
-to hand? **Download the .bin** from the same window and drop it on his page.
+to hand? **Save the .bin** from the same window and drop it on his page.
 
 Your own drawings stay on him for good, whatever the Hub does — the same as a
-pack. Take one off from his page.
+pack. Take one off from his page. When one is ready for every Geedo,
+**publish it** from the same window.
 
 ---
 

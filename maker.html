@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Maker — Geedo</title>
+<meta name="description" content="One maker on the Geedo Hub and everything they drew for him.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  .who{display:flex;gap:22px;align-items:center;padding:28px 0 6px;flex-wrap:wrap}
+  .who .sub{color:var(--blue-soft);margin:6px 0 0;font-size:17px}
+  .crumbs{color:var(--blue-soft);font-weight:700;font-size:14px;padding-top:22px}
+  .crumbs a:hover{color:#fff;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.4vw,28px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="settings.html">My Geedo</a>
+      <a class="link" href="unlock.html">Redeem</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <p class="crumbs"><a href="makers.html">Makers</a> <span id="crumb"></span></p>
+  <header class="who">
+    <span class="avatar xl" id="avatar">?</span>
+    <div>
+      <h1 class="h1" id="name">…</h1>
+      <p class="sub" id="sub"></p>
+    </div>
+  </header>
+
+  <section class="panel" id="work">
+    <div class="feed" id="feed"><div class="empty"><span class="spin"></span> Loading the Hub…</div></div>
+  </section>
+
+  <div id="missing" class="panel" hidden>
+    <h2 class="h2">Nobody by that name yet.</h2>
+    <p class="sub" style="margin-top:8px">Nothing on the Hub is signed with it. Maybe it is about to be.</p>
+    <div class="row"><a class="btn blue" href="makers.html">Everyone who has drawn</a><a class="btn" href="make.html">Draw him something</a></div>
+  </div>
+</main>
+
+<footer class="wrap" style="max-width:none">
+  <div class="wrap spread">
+    <div style="max-width:34ch">
+      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+      <p class="small mute" style="margin:12px 0 0">
+        A little robot with a face. New animations ship to every Geedo, free,
+        forever.
+      </p>
+    </div>
+    <div class="foot-cols">
+      <div class="stack" style="--s:9px">
+        <span class="micro">Explore</span>
+        <a class="small mute" href="browse.html">Animations</a>
+        <a class="small mute" href="packs.html">Packs</a>
+        <a class="small mute" href="makers.html">Makers</a>
+        <a class="small mute" href="studio/index.html">Studio</a>
+        <a class="small mute" href="make.html">Draw one</a>
+      </div>
+      <div class="stack" style="--s:9px">
+        <span class="micro">Owners</span>
+        <a class="small mute" href="settings.html">Set up your Geedo</a>
+        <a class="small mute" href="unlock.html">Redeem a code</a>
+        <a class="small mute" href="GUIDE.md">Owner's guide</a>
+      </div>
+      <div class="stack" style="--s:9px">
+        <span class="micro">Community</span>
+        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script>
+(async () => {
+  const G = window.Geedo;
+  const $ = id => document.getElementById(id);
+  const name = (G.param('name') || '').trim();
+  let all;
+  try { all = await G.all(); }
+  catch (e) { $('name').textContent = 'Could not reach the Hub.'; return; }
+
+  // The system screens (booting, updating, failing) are his, not a maker's
+  // drawings, so they are left off here as on the makers list.
+  const mine = all.anims.filter(a => a.by === name && !G.isSystem(a));
+  if (!name || !mine.length) {
+    $('work').hidden = true;
+    $('name').textContent = name || 'Who?';
+    $('crumb').textContent = '';
+    $('missing').hidden = false;
+    return;
+  }
+  document.title = `${name} — Geedo`;
+  $('avatar').textContent = G.initial(name);
+  $('name').textContent = name;
+  $('crumb').textContent = '› ' + name;
+  const latest = mine.reduce((m, a) => (a.published_at || '') > m ? a.published_at : m, '');
+  const packs = new Set(mine.filter(a => a.pack).map(a => a.pack));
+  if (name === G.OFFICIAL) $('name').insertAdjacentHTML('beforeend', ' <span class="tag blue" style="font-size:14px;vertical-align:middle;position:relative;top:-8px">official</span>');
+  $('sub').textContent = (name === G.OFFICIAL ? 'His own animations, drawn by the Geedo team · ' : '') + `${mine.length} animation${mine.length === 1 ? '' : 's'}`
+    + (packs.size ? ` · ${packs.size} pack${packs.size === 1 ? '' : 's'}` : '')
+    + (latest ? ` · latest ${G.ago(latest)}` : '');
+  $('feed').replaceChildren(...G.newest(mine).map(a => G.card(a)));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "id": "weapons",
+  "name": "Weapons Pack",
+  "rarity": "uncommon",
+  "published_at": "2026-09-16",
+  "author": "Geedo",
+  "animations": [
+    {
+      "id": "weapons_sword",
+      "name": "Sword",
+      "file": "bin/weapons_sword.bin",
+      "size": 7130,
+      "hash": "e7898cb2",
+      "frames": 40,
+      "sha256": "e7898cb2ea621676307b20b51aad1b2e5610790ecd5fde4d16df6234e8591473",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_shield",
+      "name": "Shield",
+      "file": "bin/weapons_shield.bin",
+      "size": 3802,
+      "hash": "3363d297",
+      "frames": 24,
+      "sha256": "3363d2978e5995d544fc364475d095603d57aabbff65a3360ce468cffc3c5c01",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_bow",
+      "name": "Bow and arrow",
+      "file": "bin/weapons_bow.bin",
+      "size": 9695,
+      "hash": "bf5b11f6",
+      "frames": 46,
+      "sha256": "bf5b11f62983bfde71030e3f692cee860356341035d9e7368ea4b9873dc43676",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_catapult",
+      "name": "Catapult",
+      "file": "bin/weapons_catapult.bin",
+      "size": 8955,
+      "hash": "288f827f",
+      "frames": 42,
+      "sha256": "288f827f68e4b50cd16e3f243224456444dcdb50c351a1423fb036a9c5c75344",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_axe",
+      "name": "Throwing axe",
+      "file": "bin/weapons_axe.bin",
+      "size": 8141,
+      "hash": "dde8dc9b",
+      "frames": 38,
+      "sha256": "dde8dc9b032e39071ff339a303cef61d947eb8ad92d6851f6701a65dcfa16937",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_helmet",
+      "name": "Helmet",
+      "file": "bin/weapons_helmet.bin",
+      "size": 2925,
+      "hash": "2ff0beac",
+      "frames": 24,
+      "sha256": "2ff0beac0e38daa1041caacfafeb640bce259b0f6843b1f72a4f08e7c83cf50c",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_blaster",
+      "name": "Ray gun",
+      "file": "bin/weapons_blaster.bin",
+      "size": 6531,
+      "hash": "1ebe2400",
+      "frames": 38,
+      "sha256": "1ebe240024dcc57969beef24566d6c2aa350a23a684c07e6627227536de3c182",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_cannon",
+      "name": "Cannon",
+      "file": "bin/weapons_cannon.bin",
+      "size": 9641,
+      "hash": "3e55b70f",
+      "frames": 42,
+      "sha256": "3e55b70ff8c3951eb064a8bfceeef400a7b6292ee558478072d9d27d8f2f2aa9",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_laser_sword",
+      "name": "Laser sword",
+      "file": "bin/weapons_laser_sword.bin",
+      "size": 4478,
+      "hash": "5520675e",
+      "frames": 24,
+      "sha256": "5520675e8f6ae68a55042f7cd50f53db39a4b2b079490b6c151cad9446589a38",
+      "published_at": "2026-09-16"
+    },
+    {
+      "id": "weapons_boomerang",
+      "name": "Boomerang",
+      "file": "bin/weapons_boomerang.bin",
+      "size": 5581,
+      "hash": "9c285a2f",
+      "frames": 42,
+      "sha256": "9c285a2f61dc72c22237794f1ac2ea42eb7b533dca015b8808c5f20a200e9fd8",
+      "published_at": "2026-09-16"
+    }
+  ]
+}

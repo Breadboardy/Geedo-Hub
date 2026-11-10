@@ -5,18 +5,24 @@
     {
       "id": "hello_geedo",
       "name": "Hello Geedo",
-      "author": "breadboard",
+      "author": "Geedo",
       "visibility": "public",
-      "tags": ["greeting", "intro"],
+      "tags": [
+        "greeting",
+        "intro"
+      ],
       "frames": 2,
       "file": "examples/hello_geedo.geedo.json"
     },
     {
       "id": "blink_eyes",
       "name": "Blink Eyes",
-      "author": "breadboard",
+      "author": "Geedo",
       "visibility": "public",
-      "tags": ["eyes", "idle"],
+      "tags": [
+        "eyes",
+        "idle"
+      ],
       "frames": 3,
       "file": "examples/blink_eyes.geedo.json"
     }

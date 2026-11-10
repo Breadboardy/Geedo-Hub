@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Makers — Geedo</title>
+<meta name="description" content="The people drawing animations for Geedo, and what each of them made.">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .person{display:block;background:var(--paper);color:var(--ink);border-radius:24px;padding:18px;transition:transform .15s}
+  .person:hover{transform:translateY(-3px)}
+  .person .head{display:flex;gap:14px;align-items:center}
+  .person h3{font-size:22px;letter-spacing:-.02em}
+  .person .sub{margin:2px 0 0;font-size:14px}
+  .person .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .person .mini .screen{padding:3px;border-radius:9px}
+  .person .mini canvas{border-radius:6px}
+  .person.first{background:var(--yellow)}
+  .person h3 .tag{font-size:11px;vertical-align:middle;position:relative;top:-2px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row" style="gap:clamp(14px,2.4vw,28px)">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="settings.html">My Geedo</a>
+      <a class="link" href="unlock.html">Redeem</a>
+      <a class="link" href="studio/index.html">Studio</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <header style="padding:28px 0 6px">
+    <h1 class="h1">The people drawing his day.</h1>
+    <p class="lead" style="margin-top:14px;color:var(--blue-soft)">
+      Every animation on the Hub was drawn by somebody. This is everybody, with
+      what they made. Your name goes here the moment your first one is approved.
+    </p>
+    <div class="row" style="margin-top:22px">
+      <a class="btn yellow" href="make.html">Draw him something</a>
+    </div>
+  </header>
+
+  <section style="margin-top:28px">
+    <div class="people" id="people"><div class="empty onblue"><span class="spin"></span> Loading the Hub…</div></div>
+  </section>
+</main>
+
+<footer class="wrap" style="max-width:none">
+  <div class="wrap spread">
+    <div style="max-width:34ch">
+      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
+      <p class="small mute" style="margin:12px 0 0">
+        A little robot with a face. New animations ship to every Geedo, free,
+        forever.
+      </p>
+    </div>
+    <div class="foot-cols">
+      <div class="stack" style="--s:9px">
+        <span class="micro">Explore</span>
+        <a class="small mute" href="browse.html">Animations</a>
+        <a class="small mute" href="packs.html">Packs</a>
+        <a class="small mute" href="makers.html">Makers</a>
+        <a class="small mute" href="studio/index.html">Studio</a>
+        <a class="small mute" href="make.html">Draw one</a>
+      </div>
+      <div class="stack" style="--s:9px">
+        <span class="micro">Owners</span>
+        <a class="small mute" href="settings.html">Set up your Geedo</a>
+        <a class="small mute" href="unlock.html">Redeem a code</a>
+        <a class="small mute" href="GUIDE.md">Owner's guide</a>
+      </div>
+      <div class="stack" style="--s:9px">
+        <span class="micro">Community</span>
+        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script>
+(async () => {
+  const G = window.Geedo;
+  const host = document.getElementById('people');
+  let all;
+  try { all = await G.all(); }
+  catch (e) { host.innerHTML = '<div class="empty">Could not reach the Hub.</div>'; return; }
+
+  host.replaceChildren();
+  const makers = G.makers(all.anims.filter(a => !G.isSystem(a)));
+  for (const m of makers) {
+    const el = document.createElement('a');
+    el.className = 'person' + (m.official ? ' official' : '');
+    el.href = G.makerHref(m.name);
+    el.innerHTML = `
+      <div class="head"><span class="avatar lg"></span>
+        <div><h3></h3><p class="sub"></p></div></div>
+      <div class="mini"></div>`;
+    el.querySelector('.avatar').textContent = G.initial(m.name);
+    el.querySelector('h3').textContent = m.name;
+    if (m.official) el.querySelector('h3').insertAdjacentHTML('beforeend', ' <span class="tag blue">official</span>');
+    el.querySelector('.sub').textContent =
+      (m.official ? 'His own animations · ' : '') +
+      `${m.count} animation${m.count === 1 ? '' : 's'}` + (m.latest ? ` · latest ${G.ago(m.latest)}` : '');
+    host.append(el);
+    const mini = el.querySelector('.mini');
+    for (const a of G.newest(m.anims).slice(0, 3)) {
+      const ph = document.createElement('div');
+      ph.className = 'screen sm blank';
+      mini.append(ph);
+      G.loadBin(a.src).then(anim => {
+        const s = new G.Screen(anim, { scale: 1, className: 'sm' });
+        s.el.querySelector('canvas').style.width = '100%';
+        ph.replaceWith(s.el);
+      }).catch(() => ph.remove());
+    }
+  }
+  // Nobody outside the team yet: say so, and leave the first slot open.
+  if (!makers.some(m => !m.official)) {
+    const first = document.createElement('a');
+    first.className = 'person first';
+    first.href = 'make.html';
+    first.innerHTML = `
+      <div class="head"><span class="avatar lg" style="background:var(--ink)">?</span>
+        <div><h3>Your name here</h3><p class="sub">Nobody outside the Geedo team has published yet.</p></div></div>
+      <p style="margin-top:14px;font-weight:600">Draw him something and be the first. It goes up with your name on it the moment it is approved.</p>
+      <span class="btn ink sm" style="margin-top:14px">Draw him something</span>`;
+    host.append(first);
+  }
+})();
+</script>
+</body>
+</html>

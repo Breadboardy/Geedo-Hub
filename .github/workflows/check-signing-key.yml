@@ -1,0 +1,67 @@
+name: Check the signing key
+
+# Run by hand: Actions -> Check the signing key -> Run workflow.
+#
+# The publish job signs the Hub's lists with the GEEDO_CONTENT_KEY secret,
+# and a robot only takes a list signed by the key it was flashed with. This
+# proves the secret can sign the way the publish job does, and says WHICH
+# key it is, by a fingerprint of its public half (public, so safe to print).
+# It signs a throwaway copy: nothing is committed and nothing is pushed.
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Which key it is, and whether it signs
+        env:
+          GEEDO_CONTENT_KEY: ${{ secrets.GEEDO_CONTENT_KEY }}
+          # What the robots on the desk were flashed with: the sketch's
+          # CONTENT_PUBLIC_KEY. Change it here when that changes.
+          ROBOTS_PUB: |
+            -----BEGIN PUBLIC KEY-----
+            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE3irwy9R2tPJLe3WpCUTYKpX8B3KB
+            b2Dori3GTbVPGs4FtSEfOdat5b53S+TysrsM/t1v7kMZtkUCBYrNsTEJbg==
+            -----END PUBLIC KEY-----
+        run: |
+          set -u
+          d=$(mktemp -d); trap 'rm -rf "$d"' EXIT; umask 077
+          fp() { openssl pkey -pubin -in "$1" -outform DER | sha256sum | cut -c1-16; }
+          printf '%s' "$ROBOTS_PUB" > "$d/robots.pem"
+          echo "The robots trust the key with fingerprint $(fp "$d/robots.pem")."
+
+          if [ -z "$(printf '%s' "$GEEDO_CONTENT_KEY" | tr -d '[:space:]')" ]; then
+            echo "::error::GEEDO_CONTENT_KEY is not set, or is empty, in this repository's secrets."
+            exit 1
+          fi
+          printf '%s\n' "$GEEDO_CONTENT_KEY" > "$d/key.pem"
+          if ! openssl ec -in "$d/key.pem" -pubout -out "$d/pub.pem" 2>/dev/null; then
+            echo "::error::GEEDO_CONTENT_KEY is not an EC private key in PEM form. It should be the whole file, starting with -----BEGIN EC PRIVATE KEY----- (or -----BEGIN PRIVATE KEY-----)."
+            exit 1
+          fi
+          if ! openssl ec -in "$d/key.pem" -noout -text 2>/dev/null | grep -q 'prime256v1'; then
+            echo "::error::GEEDO_CONTENT_KEY is an EC key, but not on P-256, the curve the robots check."
+            exit 1
+          fi
+          mine=$(fp "$d/pub.pem")
+          echo "The secret's public half has fingerprint $mine."
+
+          mkdir "$d/hub" && cp -r animations "$d/hub/"
+          echo "--- signing a throwaway copy of every list, the way the publish job does"
+          python3 .github/scripts/sign_manifests.py "$d/hub" || { echo "::error::Signing failed."; exit 1; }
+          echo "--- checking those signatures with the secret's public half"
+          GEEDO_CONTENT_PUB="$d/pub.pem" python3 .github/scripts/sign_manifests.py --check "$d/hub" \
+            || { echo "::error::The signatures did not verify."; exit 1; }
+          echo "--- and with the key the robots trust"
+          if GEEDO_CONTENT_PUB="$d/robots.pem" python3 .github/scripts/sign_manifests.py --check "$d/hub" > /dev/null 2>&1; then
+            echo "RESULT: the secret works, and it is the key the robots trust. Approving a submission publishes it to them."
+          else
+            echo "::warning::The secret signs, but it is NOT the key the robots trust (theirs $(fp "$d/robots.pem"), the secret $mine). Every robot refuses a list signed with it until it is flashed with firmware carrying the secret's public key. Do not approve a submission before then."
+            echo "RESULT: the secret works, but it is a different key from the one the robots trust."
+          fi

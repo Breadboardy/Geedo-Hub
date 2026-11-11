@@ -108,6 +108,13 @@ a{color:var(--cyan)}
 .btn.ghost{background:transparent}
 .btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
 .state{font-size:13px;color:rgba(255,255,255,.85)}
+/* a gentle word when his WiFi or the Hub has gone quiet (v39): on the hero's gradient in either theme */
+.nudge{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-top:14px;max-width:560px;
+       padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.22);border-left:3px solid var(--warn);
+       background:rgba(6,20,28,.38);color:#fff;font:inherit;font-size:14px;line-height:1.45;text-align:left;cursor:pointer}
+.nudge:hover,.nudge:focus-visible{background:rgba(6,20,28,.55)}
+.nudge b{font-weight:600}
+.nudge .go{white-space:nowrap;text-decoration:underline;text-underline-offset:3px;color:rgba(255,255,255,.9)}
 .tag{display:inline-block;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 10px;font-size:12px;margin-left:6px}
 /* tiles in the hero */
 .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
@@ -303,6 +310,7 @@ html.locked,html.locked body{overflow:hidden}
           <button class="btn w" id="demo">Try it without one</button>
           <span class="state" id="state"></span>
         </div>
+        <button class="nudge" id="nudge" hidden></button>
         <nav class="parts" id="parts" aria-label="His settings, part by part"></nav>
       </div>
     </div>
@@ -496,8 +504,11 @@ const ok = out => last(out).startsWith('GEEDO OK');
 class Demo {
   constructor() {
     this.isDemo = true;
-    this.s = { id: 'DEMO01', fw: 38, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
-               mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [], bed: 22, wake: 7, name: '' };
+    const now = Math.floor(Date.now() / 1000), trouble = location.hash === '#demo-wifi';
+    this.s = { id: 'DEMO01', fw: 39, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
+               mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [], bed: 22, wake: 7, name: '',
+               wifi: trouble ? 'not-found' : 'resting', net: 'Aardvark', synced: String(trouble ? now - 3 * 86400 - 600 : now - 600),
+               ota: trouble ? 'failed:40:W40960' : 'none' };
     this.info = null;
   }
   onLine() { return this; }
@@ -506,7 +517,8 @@ class Demo {
   async hello() {
     const s = this.s;
     this.info = { id: s.id, fw: String(s.fw), anims: String(s.anims - s.skips.size), packs: s.packs, bat: s.bat, chg: s.chg, face: s.face, mode: s.mode,
-                  sound: s.sound, state: s.state, ble: s.ble, build: s.build, reset: s.reset, up: s.up + 's', usedKB: 596, totalKB: 704 };
+                  sound: s.sound, state: s.state, ble: s.ble, build: s.build, reset: s.reset, up: s.up + 's', usedKB: 596, totalKB: 704,
+                  wifi: s.wifi, net: encodeURIComponent(s.net), synced: s.synced, ota: s.ota };
     return this.info;
   }
   async ask(cmd) {
@@ -529,13 +541,17 @@ class Demo {
       case 'UNSKIP': s.skips.delete(arg); out = [`GEEDO OK UNSKIP ${arg}`]; break;
       case 'SYNC': out = ['GEEDO OK SYNC starting']; break;
       case 'SCAN': out = ['GEEDO NET -48 locked "Aardvark"', 'GEEDO NET -71 locked "BT-7HK2P"', 'GEEDO NET -80 open "cafe"', 'GEEDO END SCAN']; break;
-      case 'JOIN': out = ['GEEDO OK JOIN 192.168.1.42']; break;
+      case 'JOIN': { const m = arg.match(/^"([^"]*)"\s*(.*)$/) || [, arg, ''];
+        s.net = m[1];
+        if (m[2] === 'wrong') { s.wifi = 'wrong-password'; out = ['GEEDO ERR JOIN could-not-connect wrong-password']; break; }
+        s.wifi = 'joined:-48'; s.synced = String(Math.floor(Date.now() / 1000)); out = ['GEEDO OK JOIN 192.168.1.42']; break; }
       case 'PACKS': out = s.packList.map(p => `GEEDO PACK ${p.id} ${p.n} ${p.bytes} "${p.name}"`).concat(['GEEDO END PACKS']); break;
       case 'CODE': s.packList.push({ id: 'ab12cd34', n: 8, bytes: 81044, name: 'Doodle: 3D' }); s.packs = `${s.packList.length}/4`; out = ['GEEDO OK CODE Doodle: 3D']; break;
       case 'FORGET': s.packList = s.packList.filter(p => p.id !== arg); s.packs = `${s.packList.length}/4`; out = [`GEEDO OK FORGET ${arg}`]; break;
       case 'PKNEW': case 'PKADD': out = [`GEEDO OK ${verb}`]; break;
       case 'PKEND': s.packList.push({ id: 'cd34ef56', n: 8, bytes: 81044, name: 'Pack' }); s.packs = `${s.packList.length}/4`; out = ['GEEDO OK PKEND 1']; break;
-      case 'UPDATE': out = [`GEEDO OK UPDATE nothing-newer, running ${s.fw}`]; break;
+      case 'UPDATE': out = /^(not-found|wrong-password|failed|none)$/.test(s.wifi) ? [`GEEDO ERR UPDATE could-not-join ${s.wifi}`]
+        : [`GEEDO UPDATE checking running ${s.fw}`, `GEEDO OK UPDATE nothing-newer running ${s.fw} hub ${s.fw}`]; break;
       case 'CHECK': out = ['GEEDO CHECK screen ok, drawing', 'GEEDO CHECK flash ok, 66 animations, 108 KB free', 'GEEDO CHECK battery 4120 mV, ok',
                            'GEEDO CHECK button up - tap it to prove it', 'GEEDO CHECK radio resting, driver off', 'GEEDO END CHECK ok']; break;
       case 'RADIO': out = ['GEEDO OK RADIO on 192.168.1.42']; break;
@@ -569,7 +585,48 @@ async function refresh() {
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
   for (const id of ['sleep', 'wake']) { $(id).disabled = fw() < 37; $(id).title = fw() < 37 ? 'needs firmware v37' : ''; }
   spin.sleep(info.state === 'asleep');
+  wifiCard(); wifiNudge();
   menu.update();
+}
+
+// ---- a gentle word when his WiFi, or the Hub, has gone quiet (firmware v39
+// says why a join failed and when he last reached the Hub; older firmware
+// says neither, and gets no word)
+const netName = () => { const n = decodeURIComponent(info.net || '-'); return n === '-' ? '' : n; };
+const end = t => /[.?!]$/.test(t) ? t : t + '.';                   // a full stop, unless it asks
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+function wifiNudge() {
+  const n = $('nudge'), w = info.wifi || '', name = netName();
+  const at = /^\d+$/.test(info.synced || '') ? +info.synced : 0;
+  const days = at ? Math.floor((Date.now() / 1000 - at) / 86400) : 0;
+  const working = w === 'resting' || w.startsWith('joined');
+  let head = '', more = '';
+  if (/^(not-found|wrong-password|failed)$/.test(w)) {
+    head = name ? `He can’t get on “${name}”.` : 'He can’t get on his WiFi.'; more = end(cap(GeedoWire.wifiWords(w)));
+  } else if (w === 'none') {
+    head = 'He has no WiFi saved.'; more = 'New scenes and updates come down it.';
+  } else if (days >= 2) {
+    head = `He hasn’t reached the Hub for ${days} days.`;
+    more = working ? 'His WiFi works, so it is the Hub he is missing - an update may sort it.' : 'Check his WiFi.';
+  }
+  n.hidden = !head;
+  n.textContent = '';
+  if (!head) return;
+  const t = document.createElement('span'), b = document.createElement('b'), go = document.createElement('span');
+  b.textContent = head; t.append(b, ' ' + more);
+  go.className = 'go'; go.textContent = 'Check his WiFi →';
+  n.append(t, go);
+  // the WiFi card says it too, where the fix is
+  $('wf-say').textContent = `${head} ${more} To give him a network: See what is nearby, pick it, type its password.`;
+}
+$('nudge').onclick = () => menu.show('wifi');
+function wifiCard() {
+  const w = info.wifi || '', name = netName();
+  if (!w || /^(not-found|wrong-password|failed|none)$/.test(w)) return;   // wifiNudge has it
+  const m = w.match(/^joined:(-?\d+)/);
+  const where = name ? `on “${name}”` : 'on his WiFi';
+  $('wf-say').textContent = m ? `He is ${where} now, signal ${bars(+m[1])} (${m[1]} dBm). New scenes and updates come down it.`
+                              : `He checks in ${where} every few minutes; the radio rests in between. Change it here.`;
 }
 async function act(el, job) {
   el.disabled = true;
@@ -735,7 +792,10 @@ $('wf-join').onclick = e => act(e.target, async () => {
   $('wf-say').textContent = `Joining ${ssid}…`;
   const out = await robot.ask(`JOIN "${ssid}" ${pass}`, /^GEEDO (OK|ERR) JOIN/, 30000, `JOIN "${ssid}" ${pass ? '********' : ''}`);
   $('wf-pass').value = '';
-  $('wf-say').textContent = ok(out) ? `Joined ${ssid}. He fetches his scenes at his next check-in.` : (pass ? 'Could not join - check the password.' : 'Could not join - that network probably needs a password.');
+  const reason = (last(out).match(/could-not-connect (\S+)/) || [])[1], words = GeedoWire.wifiWords(reason);
+  $('wf-say').textContent = ok(out) ? `Joined ${ssid}. He fetches his scenes at his next check-in.`
+    : words ? end(`Could not join ${ssid}: ${words}`)
+    : (pass ? 'Could not join - check the password.' : 'Could not join - that network probably needs a password.');
 });
 
 // ---- packs: what he holds, a code, and a pack opened on the Redeem page waiting to go on
@@ -777,11 +837,45 @@ $('pk-redeem').onclick = e => act(e.target, async () => {
   const code = $('pk-code').value.trim(); if (!code) return;
   $('pk-say').textContent = 'Asking the Hub… he needs his WiFi for this.';
   const out = await robot.ask('CODE ' + code, /^GEEDO (OK|ERR) CODE/, 60000);
-  $('pk-say').textContent = ok(out) ? 'On him. Watch his face.' : GeedoLink.why(last(out));
+  const noWifi = (last(out).match(/no-wifi (\S+)/) || [])[1];
+  $('pk-say').textContent = ok(out) ? 'On him. Watch his face.'
+    : noWifi ? end(`A code needs his WiFi, and ${GeedoWire.wifiWords(noWifi) || 'he could not join it'}`) : GeedoLink.why(last(out));
   if (ok(out)) { $('pk-code').value = ''; await listPacks(); }
 });
 
 // ---- updates
+// A failed update's support code (W40960) and UPDATE's last line (v39), in words.
+const STAGE = { D: 'the Hub refused the download', S: 'the Hub sent an empty file', F: 'there was no room on him to stage it',
+                W: 'the WiFi dropped in the middle of the download', V: 'the file was not signed with his key, so he threw it away',
+                C: 'writing it to his flash failed' };
+function stageWords(code) {
+  const st = (code || '')[0], n = (code || '').slice(1);
+  let w = STAGE[st] || 'something went wrong';
+  if (st === 'W' && /^\d+$/.test(n)) w += ` after ${Math.round(n / 1024)} KB - try him nearer the router`;
+  if (st === 'D') w += ` (HTTP ${n}) - try again in a few minutes`;
+  return w;
+}
+function updateWords(line) {
+  const w = line.replace(/,/g, '').split(/\s+/), what = w[3] || '', a = i => w[4 + i] || '?';
+  switch (what) {
+    case 'nothing-newer': return w.length > 7 ? `He is up to date: v${a(1)}, and the Hub has v${a(3)}.` : `He is up to date (v${a(1)}).`;
+    case 'waiting': return `v${a(5)} is going to the first ${a(1)}% of robots first; his turn comes when it reaches him.`;
+    case 'installed': return `v${a(0)} is on him - he is restarting into it now.`;
+    case 'failed': return `The update to v${a(0)} failed: ${stageWords(a(1))}. (code ${a(1)})`;
+    case 'not-ready': return `The Hub lists v${a(0)} but its file is not there yet - try again in a few minutes.`;
+    case 'no-hub': return `He could not reach the Hub (HTTP ${a(0)}).`;
+    case 'could-not-join': return end(`He could not get on WiFi: ${GeedoWire.wifiWords(a(0)) || 'the join failed'}`);
+    case 'unsigned': return `The Hub’s v${a(0)} is not signed, so he refused it.`;
+    default: return GeedoLink.why(line);
+  }
+}
+function otaWords() {
+  const [what, v, code] = (info.ota || 'none').split(':'), n = parseInt(v, 10);
+  if (what === 'failed' && n > fw()) return ` His last try at v${n} failed: ${stageWords(code)}. (code ${code})`;
+  if (what === 'installed' && n === fw()) return ' It came over the air.';
+  if (what === 'installed' && n > fw()) return ` v${n} went on, but he is back on v${fw()}.`;
+  return '';
+}
 async function checkUpdate() {
   const out = $('up-say'), go = $('up-go');
   try {
@@ -789,8 +883,26 @@ async function checkUpdate() {
     if (fw() >= m.version) { out.innerHTML = `He is on <b>v${fw()}</b>, the newest the Hub has.`; go.hidden = true; }
     else { out.innerHTML = `He is on <b>v${fw()}</b> and the Hub has <b>v${m.version}</b>.` + (fw() >= 37 ? '' : ' He takes it himself at a check-in; from v37 on, this button does it now.'); go.hidden = fw() < 37; }
   } catch (e) { out.textContent = `He is on v${fw()}. Could not reach the Hub's firmware list.`; go.hidden = true; }
+  out.append(otaWords());
 }
-$('up-go').onclick = e => act(e.target, async () => { $('up-say').textContent = 'Asking him to update. He takes the screen, downloads, restarts. Do not unplug.'; await robot.ask('UPDATE', /^GEEDO (OK|ERR) UPDATE/, 20000); });
+$('up-go').onclick = e => act(e.target, async () => {
+  const sayIt = $('up-say');
+  if (fw() < 39) {        // before v39 he only ever said "checking"
+    sayIt.textContent = 'Asking him to update. He takes the screen, downloads, restarts. Do not unplug.';
+    await robot.ask('UPDATE', /^GEEDO (OK|ERR) UPDATE/, 20000);
+    return;
+  }
+  sayIt.textContent = 'Asking the Hub…';
+  const watch = line => { const m = line.match(/^GEEDO UPDATE downloading (\d+) (\d+)/);
+    if (m) sayIt.textContent = `Downloading v${m[1]} (${Math.round(m[2] / 1024)} KB) - a minute or two. Leave him plugged in.`; };
+  const ls = robot.listeners;
+  if (ls) ls.push(watch);
+  let out;
+  try { out = await robot.ask('UPDATE', /^GEEDO (OK|ERR) UPDATE/, 300000); }
+  catch (err) { sayIt.textContent = 'He went quiet - most likely restarting into new firmware. When he is back, his firmware tile shows the version.'; return; }
+  finally { if (ls) ls.splice(ls.indexOf(watch), 1); }
+  sayIt.textContent = updateWords(last(out));
+});
 
 // ---- check-up
 $('ck-run').onclick = e => act(e.target, async () => {
@@ -824,6 +936,7 @@ function why(e) {
   const m = (e && e.message) || String(e);
   if (/already open/i.test(m)) return 'This page already has him. Reload it if the panel is stuck.';
   if (/Failed to open|Access denied|NetworkError/i.test(m)) return "Can't open him: something else is using the cable. Close any serial monitor or other tab, then try again.";
+  if (/did not answer/i.test(m)) return 'He is on the cable but not answering - he may be in the middle of a check-in. Try again in a few seconds; if he stays quiet, unplug him and plug him back in.';
   return m;
 }
 for (const id of ['find', 'find-ble']) $(id).dataset.label = $(id).textContent;
@@ -1265,7 +1378,7 @@ $('demo').onclick = async () => {
   await greet(new Demo(), true);
 };
 const known = GeedoLink.supported ? await GeedoLink.known() : [];
-if (location.hash === '#demo') await greet(new Demo(), true);
+if (location.hash === '#demo' || location.hash === '#demo-wifi') await greet(new Demo(), true);   // #demo-wifi: one whose WiFi is in trouble
 else if (known.length) await greet(known[0], false);
 else if (GeedoLink.supported || GeedoBle.supported) state.textContent = 'Find him, then tap any part of him.';
 })();

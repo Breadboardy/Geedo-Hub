@@ -61,7 +61,9 @@ class GeedoWire {
     this.say(line, mine);
     if (!this.pending || !mine) return;
     this.pending.lines.push(line);
-    if (this.pending.until.test(line)) {
+    // "Busy joining his WiFi" (v39) ends an ask whatever it was waiting
+    // for: ask() hears it and asks again in a moment.
+    if (this.pending.until.test(line) || GeedoWire.BUSY.test(line)) {
       clearTimeout(this.pending.timer);
       const { done, lines } = this.pending;
       this.pending = null;
@@ -69,7 +71,20 @@ class GeedoWire {
     }
   }
 
-  ask(cmd, until, ms = 8000, shown) {
+  /** One command; resolves to his reply lines, up to the one `until`
+   *  matches. While he is joining his WiFi (firmware v39) he answers what
+   *  he can and tells the radio commands to wait; those are asked again
+   *  every 3 s, six times at most, which outlasts any join (12 s). */
+  async ask(cmd, until, ms = 8000, shown) {
+    for (let tries = 0; ; tries++) {
+      const lines = await this._ask1(cmd, until, ms, shown);
+      if (!GeedoWire.BUSY.test(lines[lines.length - 1] || '') || tries >= 6) return lines;
+      if (tries === 0) this.say('(he is joining his WiFi - asking again in a moment)', false);
+      await new Promise(r => setTimeout(r, 3000));
+    }
+  }
+
+  _ask1(cmd, until, ms, shown) {
     return new Promise((done, fail) => {
       if (!this.ready) return fail(new Error('not connected'));
       this.pending = { lines: [], until, done, timer: setTimeout(() => {
@@ -82,7 +97,16 @@ class GeedoWire {
 
   /** INFO, parsed. Also cached on the link as `.info`. */
   async hello() {
-    const out = await this.ask('INFO', /^GEEDO INFO /, 8000);
+    let out;
+    try { out = await this.ask('INFO', /^GEEDO INFO /, 8000); }
+    catch (e) {
+      // A check-in holds him for a few seconds (TLS on his chip blocks), and
+      // firmware before v39 heard nothing at all while joining WiFi - so one
+      // silence is asked again before it counts as "not answering".
+      if (!this.ready) throw e;
+      this.say('(he is busy - asking once more)', false);
+      out = await this.ask('INFO', /^GEEDO INFO /, 15000);
+    }
     const kv = {};
     out[out.length - 1].slice('GEEDO INFO '.length).trim()
       .split(/\s+/).forEach(p => {
@@ -101,6 +125,17 @@ class GeedoWire {
     let bin = '';
     for (const b of bytes) bin += String.fromCharCode(b);
     return btoa(bin);
+  }
+
+  /** Why a WiFi join failed, from the reason he gives (firmware v39):
+   *  INFO's wifi=, or the last word of a refused JOIN, RADIO, CODE or UPDATE. */
+  static wifiWords(reason) {
+    return {
+      'not-found': 'he cannot see his network - is the router on, and is he in range?',
+      'wrong-password': 'his network will not let him in - has the password changed?',
+      'failed': 'the connection keeps failing - try him nearer the router',
+      'none': 'he has no WiFi network saved',
+    }[reason] || '';
   }
 
   /** His refusal in words: "GEEDO ERR UPEND no-room" -> "no room". */
@@ -150,10 +185,13 @@ class GeedoWire {
   async radioOn() {
     const out = await this.ask('RADIO on', /^GEEDO (OK|ERR) RADIO/, 20000);
     const line = out[out.length - 1];
-    if (line.startsWith('GEEDO ERR')) throw new Error(GeedoWire.why(line));
+    const reason = (line.match(/could-not-join (\S+)/) || [])[1];
+    if (line.startsWith('GEEDO ERR')) throw new Error(GeedoWire.wifiWords(reason) || GeedoWire.why(line));
     return line.split(/\s+/)[4];
   }
 }
+
+GeedoWire.BUSY = /^GEEDO ERR \S+ busy-joining-wifi/;
 
 /* ---- the cable: Web Serial ------------------------------------------------ */
 class GeedoLink extends GeedoWire {

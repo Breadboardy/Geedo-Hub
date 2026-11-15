@@ -504,11 +504,13 @@ const ok = out => last(out).startsWith('GEEDO OK');
 class Demo {
   constructor() {
     this.isDemo = true;
-    const now = Math.floor(Date.now() / 1000), trouble = location.hash === '#demo-wifi';
-    this.s = { id: 'DEMO01', fw: 39, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
+    const now = Math.floor(Date.now() / 1000), trouble = location.hash === '#demo-wifi', hot = location.hash === '#demo-hot';
+    this.s = { id: 'DEMO01', fw: 41, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
                mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [], bed: 22, wake: 7, name: '',
                wifi: trouble ? 'not-found' : 'resting', net: 'Aardvark', synced: String(trouble ? now - 3 * 86400 - 600 : now - 600),
-               ota: trouble ? 'failed:40:W40960' : 'none' };
+               ota: trouble ? 'failed:40:W40960' : 'none',
+               temp: hot ? '69' : '41', heat: hot ? 'nap' : 'ok', heapmin: '52000', usb: 'data',
+               pins: hot ? 'button-mid' : 'ok', batdip: '-' };
     this.info = null;
   }
   onLine() { return this; }
@@ -518,7 +520,8 @@ class Demo {
     const s = this.s;
     this.info = { id: s.id, fw: String(s.fw), anims: String(s.anims - s.skips.size), packs: s.packs, bat: s.bat, chg: s.chg, face: s.face, mode: s.mode,
                   sound: s.sound, state: s.state, ble: s.ble, build: s.build, reset: s.reset, up: s.up + 's', usedKB: 596, totalKB: 704,
-                  wifi: s.wifi, net: encodeURIComponent(s.net), synced: s.synced, ota: s.ota };
+                  wifi: s.wifi, net: encodeURIComponent(s.net), synced: s.synced, ota: s.ota,
+                  temp: s.temp, heat: s.heat, heapmin: s.heapmin, usb: s.usb, pins: s.pins, batdip: s.batdip };
     return this.info;
   }
   async ask(cmd) {
@@ -553,7 +556,11 @@ class Demo {
       case 'UPDATE': out = /^(not-found|wrong-password|failed|none)$/.test(s.wifi) ? [`GEEDO ERR UPDATE could-not-join ${s.wifi}`]
         : [`GEEDO UPDATE checking running ${s.fw}`, `GEEDO OK UPDATE nothing-newer running ${s.fw} hub ${s.fw}`]; break;
       case 'CHECK': out = ['GEEDO CHECK screen ok, drawing', 'GEEDO CHECK flash ok, 66 animations, 108 KB free', 'GEEDO CHECK battery 4120 mV, ok',
-                           'GEEDO CHECK button up - tap it to prove it', 'GEEDO CHECK radio resting, driver off', 'GEEDO END CHECK ok']; break;
+                           'GEEDO CHECK button up - tap it to prove it', 'GEEDO CHECK radio resting, driver off',
+                           `GEEDO CHECK temperature ${s.temp} C now, ${s.temp} C at the hottest since start, ${s.heat}`,
+                           `GEEDO CHECK pins battery 4120 mV, charger 2900/2880 mV (reads high), strap 2843 mV, button ${s.pins === 'ok' ? 2860 : 1450} mV - ${s.pins}`,
+                           'GEEDO CHECK usb data', 'GEEDO CHECK restarts last 3: 2 power-on, 1 restart',
+                           `GEEDO END CHECK ${s.heat === 'ok' && s.pins === 'ok' ? 'ok' : 'look'}`]; break;
       case 'RADIO': out = ['GEEDO OK RADIO on 192.168.1.42']; break;
       case 'OFF': out = ['GEEDO OK OFF']; break;
       default: out = ['GEEDO ERR ' + verb + ' unknown'];
@@ -571,7 +578,8 @@ async function refresh() {
   $('hid').hidden = false; $('hid').textContent = 'GEEDO-' + (info.id || '??????');
   $('tiles').hidden = false;
   $('t-fw').textContent = 'v' + (info.fw || '?');
-  $('t-fwnote').textContent = info.reset ? `last started: ${info.reset}` : '';
+  $('t-fwnote').textContent = (info.reset ? `last started: ${info.reset}` : '') +
+                              (/^-?\d+$/.test(info.temp || '') ? ` · ${info.temp} °C inside` : '');
   $('t-anims').textContent = info.anims || '0';
   $('t-store').textContent = info.totalKB ? `${info.usedKB} of ${info.totalKB} KB used` : '';
   const mv = parseInt(info.bat, 10);
@@ -595,6 +603,20 @@ async function refresh() {
 const netName = () => { const n = decodeURIComponent(info.net || '-'); return n === '-' ? '' : n; };
 const end = t => /[.?!]$/.test(t) ? t : t + '.';                   // a full stop, unless it asks
 const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+// What his health watch (firmware v41) found that an owner should hear:
+// heat, and a pin that reads wrong. [head, more, the part that has the fix].
+function healthNudge() {
+  const t = info.temp, pins = (info.pins || '').split(',');
+  if (info.heat === 'near-off') return [`He is nearly too hot to stay on (${t} °C inside).`, 'Move him somewhere cooler, out of the sun - he switches himself off at 76 °C.', 'light'];
+  if (info.heat === 'nap') return [`He got too hot (${t} °C inside), so he is napping to cool down.`, 'He wakes by himself once he is cool. A cooler spot helps.', 'light'];
+  if (pins.includes('bat-high')) return ['His battery reads too full.', 'Unplug his cable - the charger, or the part that measures the battery, is not right.', 'light'];
+  if (pins.includes('stat-fools')) return ['His charger signal is unclear.', 'He may think he is charging when he is not, and miss a low battery. Plug him in to charge to be safe.', 'light'];
+  if (pins.includes('button-mid')) return ['His button reads half-pressed.', 'It may be damp or dirty - dry it, and give it a few clicks.', 'button'];
+  if (pins.includes('strap-low')) return ['A part on his board reads wrong.', 'He may not start again after a reset. A check-up says more.', 'light'];
+  if (info.heat === 'warm') return [`He is getting warm (${t} °C inside).`, 'A cooler spot, please.', 'light'];
+  return null;
+}
+let nudgeGoes = 'wifi';
 function wifiNudge() {
   const n = $('nudge'), w = info.wifi || '', name = netName();
   const at = /^\d+$/.test(info.synced || '') ? +info.synced : 0;
@@ -609,17 +631,23 @@ function wifiNudge() {
     head = `He hasn’t reached the Hub for ${days} days.`;
     more = working ? 'His WiFi works, so it is the Hub he is missing - an update may sort it.' : 'Check his WiFi.';
   }
+  // the WiFi card says it too, where the fix is
+  if (head) $('wf-say').textContent = `${head} ${more} To give him a network: See what is nearby, pick it, type its password.`;
+  // His health goes first on the hero (v41): too hot, or a pin reading wrong,
+  // outranks a WiFi that can wait.
+  const h = healthNudge();
+  let go = 'Check his WiFi →';
+  nudgeGoes = 'wifi';
+  if (h) { [head, more, nudgeGoes] = h; go = nudgeGoes === 'button' ? 'His button →' : 'Check-up →'; }
   n.hidden = !head;
   n.textContent = '';
   if (!head) return;
-  const t = document.createElement('span'), b = document.createElement('b'), go = document.createElement('span');
+  const t = document.createElement('span'), b = document.createElement('b'), g = document.createElement('span');
   b.textContent = head; t.append(b, ' ' + more);
-  go.className = 'go'; go.textContent = 'Check his WiFi →';
-  n.append(t, go);
-  // the WiFi card says it too, where the fix is
-  $('wf-say').textContent = `${head} ${more} To give him a network: See what is nearby, pick it, type its password.`;
+  g.className = 'go'; g.textContent = go;
+  n.append(t, g);
 }
-$('nudge').onclick = () => menu.show('wifi');
+$('nudge').onclick = () => menu.show(nudgeGoes);
 function wifiCard() {
   const w = info.wifi || '', name = netName();
   if (!w || /^(not-found|wrong-password|failed|none)$/.test(w)) return;   // wifiNudge has it
@@ -911,7 +939,11 @@ $('ck-run').onclick = e => act(e.target, async () => {
   const out = await robot.ask('CHECK', /^GEEDO END CHECK/, 10000);
   box.innerHTML = '';
   for (const l of out.filter(l => l.startsWith('GEEDO CHECK '))) {
-    const body = l.slice('GEEDO CHECK '.length), bad = /MISSING|FLAT|NO SENSE|NO BUTTON/.test(body);
+    const body = l.slice('GEEDO CHECK '.length);
+    const bad = /MISSING|FLAT|NO SENSE|NO BUTTON|RAN LOW/.test(body)
+             || /^temperature .*, (warm|nap|near-off)$/.test(body)
+             || (/^pins .* - (.+)$/.test(body) && !/ - (ok|wait|stat-mid)$/.test(body))
+             || (/^sag (\d+) mV/.test(body) && +body.split(' ')[1] > 350);
     const d = document.createElement('div'); d.className = bad ? 'bad' : ''; d.textContent = (bad ? '✕ ' : '· ') + body; box.append(d);
   }
 });
@@ -1378,7 +1410,7 @@ $('demo').onclick = async () => {
   await greet(new Demo(), true);
 };
 const known = GeedoLink.supported ? await GeedoLink.known() : [];
-if (location.hash === '#demo' || location.hash === '#demo-wifi') await greet(new Demo(), true);   // #demo-wifi: one whose WiFi is in trouble
+if (/^#demo(-wifi|-hot)?$/.test(location.hash)) await greet(new Demo(), true);   // #demo-wifi: his WiFi in trouble; #demo-hot: too hot, a damp button
 else if (known.length) await greet(known[0], false);
 else if (GeedoLink.supported || GeedoBle.supported) state.textContent = 'Find him, then tap any part of him.';
 })();

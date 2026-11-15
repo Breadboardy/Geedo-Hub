@@ -333,6 +333,22 @@ html.locked,html.locked body{overflow:hidden}
         <p id="face-say"></p>
       </article>
 
+      <article class="card" id="c-screen">
+        <div class="k">His screen</div><h2>Brightness and StandBy</h2>
+        <p>How bright his face is while he is up. Asleep he dims right down, as always. <span id="br-say"></span></p>
+        <div style="margin-top:12px"><input class="range" type="range" id="bright" min="0" max="100" step="5" value="80" aria-label="Brightness"></div>
+        <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">StandBy</div><b>A clock while he charges</b><span>Plugged in and napping, he shows the time instead of his pillow - big, dim, and moved a little every minute so it never burns in. He needs to have been on his WiFi to know the time.</span></div>
+          <button class="sw" id="standby" role="switch" aria-checked="false" aria-label="StandBy"></button></div>
+      </article>
+
+      <article class="card" id="c-focus">
+        <div class="k">Focus</div><h2>Study, party or sleep</h2>
+        <p>Study: calm eyes, no sound, no surprises - a present waits until you are done. Party: something every few seconds. Sleep: a nap now, until it ends or you tap him.</p>
+        <div class="row"><div class="seg" id="fc-seg"><button data-fc="off">Off</button><button data-fc="study">Study</button><button data-fc="party">Party</button><button data-fc="sleep">Sleep</button></div>
+          <select class="field" id="fc-mins" aria-label="For how long" style="width:auto"><option value="0">until I stop it</option><option value="25">25 minutes</option><option value="45">45 minutes</option><option value="60">an hour</option><option value="90">90 minutes</option></select></div>
+        <p id="fc-say"></p>
+      </article>
+
       <article class="card" id="c-mood">
         <div class="k">How he feels</div><h2>Where his day starts</h2>
         <p>His mood drifts through the day and petting lifts it. <span id="mood-say"></span></p>
@@ -344,12 +360,21 @@ html.locked,html.locked body{overflow:hidden}
       <article class="card" id="c-sound">
         <div class="opt"><div class="g"><div class="k">Sound</div><b>Beeps and songs</b><span>He goes quiet on his own at night. This keeps him quiet all day.</span></div>
           <button class="sw" id="sound" role="switch" aria-checked="true" aria-label="Sound"></button></div>
+        <div class="opt"><div class="g"><div class="k">Volume</div><b>How loud he chirps</b><span>Loud is still gentle: nothing he says is meant to make anyone jump.</span>
+          <div class="row" style="margin-top:8px"><div class="seg" id="vol-seg"><button data-vol="quiet">Quiet</button><button data-vol="medium">Medium</button><button data-vol="loud">Loud</button></div></div></div></div>
         <div class="opt"><div class="g"><div class="k">Bedtime</div><b>When his night starts and ends</b><span>At night he is quiet and sleepy, and for two hours before it he winds down.</span>
           <div class="row" style="margin-top:8px;gap:8px;flex-wrap:nowrap"><select class="field" id="bt-bed" aria-label="Bedtime" style="width:auto;flex:1"></select>
             <span style="color:var(--fg2);font-size:13px">until</span><select class="field" id="bt-wake" aria-label="Wake-up time" style="width:auto;flex:1"></select></div>
           <span id="bed-say"></span></div></div>
         <div class="opt"><div class="g"><div class="k">Where he lives</div><b>His time zone</b><span>So mornings are mornings and nights are quiet.</span>
           <select class="field" id="tz" aria-label="Time zone" style="margin-top:8px"></select><span id="tz-say"></span></div></div>
+      </article>
+
+      <article class="card" id="c-findme">
+        <div class="k">Find my Geedo</div><h2>Where did he go?</h2>
+        <p>He chirps and waves for twelve seconds - even with his sound off - so you can follow the sound. A tap on his button stops him.</p>
+        <div class="row"><button class="btn sm" id="find-me">Play a sound</button></div>
+        <p id="fm-say"></p>
       </article>
 
       <article class="card" id="c-name">
@@ -396,6 +421,11 @@ html.locked,html.locked body{overflow:hidden}
         <p>Screen, flash, battery, button, radio. Nothing to open, no meter.</p>
         <div id="ck-out" class="mono" style="margin-top:8px"></div>
         <div class="row"><button class="btn sm" id="ck-run">Ask him how he is</button></div>
+      </article>
+
+      <article class="card" id="c-power">
+        <div class="opt" style="border-top:0;padding-top:0"><div class="g"><div class="k">Low Power Mode</div><b>Make his battery last</b><span id="lp-say">Check-ins every 30 minutes instead of 5, a dimmer face, and naps sooner. He turns it on by himself when his battery runs low, and off again once he is charging.</span></div>
+          <button class="sw" id="lowpower" role="switch" aria-checked="false" aria-label="Low Power Mode"></button></div>
       </article>
 
       <article class="card" id="c-page">
@@ -505,12 +535,13 @@ class Demo {
   constructor() {
     this.isDemo = true;
     const now = Math.floor(Date.now() / 1000), trouble = location.hash === '#demo-wifi', hot = location.hash === '#demo-hot';
-    this.s = { id: 'DEMO01', fw: 41, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
+    this.s = { id: 'DEMO01', fw: 42, anims: 66, packs: '0/4', bat: '4120mV', chg: 'no', face: 'og', mode: 'og', sound: 'on', state: 'awake', tz: 'uk',
                mood: 70, build: 'normal', reset: 'power-on', up: 900, ble: 'advertising', skips: new Map(), packList: [], bed: 22, wake: 7, name: '',
                wifi: trouble ? 'not-found' : 'resting', net: 'Aardvark', synced: String(trouble ? now - 3 * 86400 - 600 : now - 600),
                ota: trouble ? 'failed:40:W40960' : 'none',
                temp: hot ? '69' : '41', heat: hot ? 'nap' : 'ok', heapmin: '52000', usb: 'data',
-               pins: hot ? 'button-mid' : 'ok', batdip: '-' };
+               pins: hot ? 'button-mid' : 'ok', batdip: '-',
+               bright: 81, vol: 'medium', focus: 'off', focusMins: 0, standby: 'off', lowpower: 'off' };
     this.info = null;
   }
   onLine() { return this; }
@@ -521,7 +552,9 @@ class Demo {
     this.info = { id: s.id, fw: String(s.fw), anims: String(s.anims - s.skips.size), packs: s.packs, bat: s.bat, chg: s.chg, face: s.face, mode: s.mode,
                   sound: s.sound, state: s.state, ble: s.ble, build: s.build, reset: s.reset, up: s.up + 's', usedKB: 596, totalKB: 704,
                   wifi: s.wifi, net: encodeURIComponent(s.net), synced: s.synced, ota: s.ota,
-                  temp: s.temp, heat: s.heat, heapmin: s.heapmin, usb: s.usb, pins: s.pins, batdip: s.batdip };
+                  temp: s.temp, heat: s.heat, heapmin: s.heapmin, usb: s.usb, pins: s.pins, batdip: s.batdip,
+                  bright: String(s.bright), vol: s.vol, focus: s.focus + (s.focus !== 'off' && s.focusMins ? ':' + s.focusMins : ''),
+                  standby: s.standby, lowpower: s.lowpower };
     return this.info;
   }
   async ask(cmd) {
@@ -536,6 +569,13 @@ class Demo {
       case 'SLEEP': s.state = 'asleep'; out = ['GEEDO OK SLEEP napping']; break;
       case 'WAKE': s.state = 'awake'; out = ['GEEDO OK WAKE']; break;
       case 'SOUND': if (arg) s.sound = arg; out = [`GEEDO OK SOUND ${s.sound}`]; break;
+      case 'BRIGHT': if (arg) s.bright = Math.max(0, Math.min(100, +arg)); out = [`GEEDO OK BRIGHT ${s.bright}`]; break;
+      case 'VOLUME': if (arg) s.vol = arg; out = [`GEEDO OK VOLUME ${s.vol}`]; break;
+      case 'FOCUS': if (arg) { [s.focus, s.focusMins] = [rest[0], +(rest[1] || 0)]; if (s.focus === 'sleep') s.state = 'asleep'; else if (s.state === 'asleep' && s.focus !== 'study') s.state = 'awake'; }
+                    out = [`GEEDO OK FOCUS ${s.focus} ${s.focusMins}`]; break;
+      case 'STANDBY': if (arg) s.standby = arg; out = [`GEEDO OK STANDBY ${s.standby}`]; break;
+      case 'LOWPOWER': if (arg) s.lowpower = arg; out = [`GEEDO OK LOWPOWER ${s.lowpower}`]; break;
+      case 'FIND': out = ['GEEDO OK FIND']; break;
       case 'TZ': if (arg) s.tz = arg; out = [`GEEDO OK TZ ${s.tz}`]; break;
       case 'BEDTIME': { if (arg) { const [b, w] = arg.split(' ').map(Number); s.bed = b % 24; s.wake = w; } out = [`GEEDO OK BEDTIME ${s.bed} ${s.wake}`]; break; }
       case 'NAME': if (arg) s.name = arg === '-' ? '' : arg; out = [`GEEDO OK NAME ${s.name || '-'}`]; break;
@@ -593,6 +633,19 @@ async function refresh() {
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
   for (const id of ['sleep', 'wake']) { $(id).disabled = fw() < 37; $(id).title = fw() < 37 ? 'needs firmware v37' : ''; }
   spin.sleep(info.state === 'asleep');
+  const v42 = fw() >= 42, need = v42 ? '' : 'needs firmware v42';
+  if (info.bright) $('bright').value = info.bright;
+  $('bright').disabled = !v42; $('bright').title = need;
+  $('br-say').textContent = !v42 ? 'Brightness needs firmware v42.' : info.lowpower && info.lowpower !== 'off' && +info.bright > 30 ? 'Held at 30% while Low Power Mode is on.' : '';
+  const sb = $('standby'); sb.setAttribute('aria-checked', String(info.standby === 'on')); sb.disabled = !v42; sb.title = need;
+  for (const b of $('vol-seg').querySelectorAll('button')) { b.setAttribute('aria-pressed', String(b.dataset.vol === (info.vol || 'medium'))); b.disabled = !v42; }
+  const [fcMode, fcLeft] = (info.focus || 'off').split(':');
+  for (const b of $('fc-seg').querySelectorAll('button')) { b.setAttribute('aria-pressed', String(b.dataset.fc === fcMode)); b.disabled = !v42; }
+  $('fc-mins').disabled = !v42;
+  $('fc-say').textContent = !v42 ? 'Focus needs firmware v42.' : fcMode === 'off' ? '' : `${cap(fcMode)} is on${fcLeft ? ` - ${fcLeft} minutes left` : ' until you stop it'}.`;
+  $('find-me').disabled = !v42; $('find-me').title = need;
+  const lp = $('lowpower'); lp.setAttribute('aria-checked', info.lowpower === 'auto' ? 'mixed' : String(info.lowpower === 'on')); lp.disabled = !v42; lp.title = need;
+  if (info.lowpower === 'auto') $('lp-say').textContent = 'On by itself, for his low battery - it goes off once he is charging. Tap to turn it off now.';
   wifiCard(); wifiNudge();
   menu.update();
 }
@@ -750,6 +803,28 @@ async function readMood() { try { const out = await robot.ask('MOOD', /^GEEDO (O
 
 // ---- sound
 $('sound').onclick = e => { const sw = e.target, to = sw.getAttribute('aria-checked') !== 'true'; act(sw, () => robot.ask('SOUND ' + (to ? 'on' : 'off'), /^GEEDO (OK|ERR) SOUND/)); };
+
+// ---- the Apple-style batch (firmware v42): brightness, StandBy, volume, Focus, Find, Low Power Mode
+let brightTimer = 0;
+$('bright').oninput = e => { clearTimeout(brightTimer); brightTimer = setTimeout(() => act(e.target, async () => {
+  const out = await robot.ask('BRIGHT ' + e.target.value, /^GEEDO (OK|ERR) BRIGHT/);
+  if (!ok(out)) $('br-say').textContent = GeedoLink.why(last(out));
+}), 300); };
+$('standby').onclick = e => { const sw = e.target, to = sw.getAttribute('aria-checked') !== 'true'; act(sw, () => robot.ask('STANDBY ' + (to ? 'on' : 'off'), /^GEEDO (OK|ERR) STANDBY/)); };
+$('vol-seg').onclick = e => {
+  const b = e.target.closest('button'); if (!b || b.getAttribute('aria-pressed') === 'true') return;
+  act(b, () => robot.ask('VOLUME ' + b.dataset.vol, /^GEEDO (OK|ERR) VOLUME/));
+};
+$('fc-seg').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const mins = b.dataset.fc === 'off' ? 0 : +$('fc-mins').value;
+  act(b, async () => { const out = await robot.ask(`FOCUS ${b.dataset.fc}${mins ? ' ' + mins : ''}`, /^GEEDO (OK|ERR) FOCUS/); if (!ok(out)) $('fc-say').textContent = GeedoLink.why(last(out)); });
+};
+$('find-me').onclick = e => act(e.target, async () => {
+  const out = await robot.ask('FIND', /^GEEDO (OK|ERR) FIND/);
+  $('fm-say').textContent = ok(out) ? 'Listen: he is chirping now, for twelve seconds.' : GeedoLink.why(last(out));
+});
+$('lowpower').onclick = e => { const sw = e.target, to = sw.getAttribute('aria-checked') === 'false'; act(sw, () => robot.ask('LOWPOWER ' + (to ? 'on' : 'off'), /^GEEDO (OK|ERR) LOWPOWER/)); };
 
 // ---- where he lives
 const ZONES = [['pacific', 'Pacific (Los Angeles, Vancouver)'], ['mountain', 'Mountain (Denver)'], ['arizona', 'Arizona'], ['central', 'Central (Chicago, Mexico City)'],
@@ -1273,15 +1348,15 @@ const menu = (() => {
     all: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>',
   };
   const PARTS = {
-    oled:   { chip: 'Face', k: 'His screen', t: 'Face, mood and scenes', cards: ['c-face', 'c-name', 'c-mood', 'c-kinds', 'c-packs'],
+    oled:   { chip: 'Face', k: 'His screen', t: 'Face, mood and scenes', cards: ['c-face', 'c-screen', 'c-focus', 'c-name', 'c-mood', 'c-kinds', 'c-packs'],
               about: 'His eyes or a Doodle, how he feels, and every scene he plays, on 128 by 64 glowing pixels.', does: 'switch his face, set his mood and choose his scenes' },
-    button: { chip: 'Sleep', k: 'His button', t: 'Pets, naps and lights out', cards: ['c-off'],
+    button: { chip: 'Sleep', k: 'His button', t: 'Pets, naps and lights out', cards: ['c-off', 'c-focus'],
               about: 'A tap pets him. From here you can send him to sleep, wake him, or switch him off.', does: 'send him to sleep, wake him or switch him off' },
-    buzzer: { chip: 'Sound', k: 'His speaker', t: 'Sound and his clock', cards: ['c-sound'],
+    buzzer: { chip: 'Sound', k: 'His speaker', t: 'Sound and his clock', cards: ['c-sound', 'c-findme'],
               about: 'His beeps and songs, and the clock that tells him when it is night.', does: 'quieten him and set his clock' },
     wifi:   { chip: 'WiFi', k: 'His radio', t: 'WiFi and his own page', cards: ['c-wifi', 'c-page'],
               about: 'The network he checks in on for new scenes, and the page he serves on it.', does: 'change his WiFi and open his own page' },
-    light:  { chip: 'Battery', k: 'His charge light', t: 'Battery and a check-up', cards: ['c-check'],
+    light:  { chip: 'Battery', k: 'His charge light', t: 'Battery and a check-up', cards: ['c-power', 'c-check'],
               about: 'It glows while he charges and goes out when he is full.', does: 'see how full he is and give him a check-up' },
     usb:    { chip: 'Updates', k: 'USB-C, underneath', t: 'Charging and updates', cards: ['c-updates'],
               about: 'Charge him here, or plug him into a PC. New firmware comes down his WiFi.', does: 'update him' },

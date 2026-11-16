@@ -39,14 +39,10 @@
 </nav>
 
 <main class="wrap">
-  <header style="padding:28px 0 6px">
+  <header style="padding:clamp(36px,5vw,64px) 0 6px">
     <h1 class="h1">The people drawing his day.</h1>
-    <p class="lead" style="margin-top:14px;color:var(--blue-soft)">
-      Every animation on the Hub was drawn by somebody. This is everybody, with
-      what they made. Your name goes here the moment your first one is approved.
-    </p>
-    <div class="row" style="margin-top:22px">
-      <a class="btn yellow" href="make.html">Draw him something</a>
+    <div class="row" style="margin-top:26px">
+      <a class="btn primary" href="make.html">Draw him something</a>
     </div>
   </header>
 
@@ -55,36 +51,20 @@
   </section>
 </main>
 
-<footer class="wrap" style="max-width:none">
-  <div class="wrap spread">
-    <div style="max-width:34ch">
-      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-      <p class="small mute" style="margin:12px 0 0">
-        A little robot with a face. New animations ship to every Geedo, free,
-        forever.
-      </p>
-    </div>
-    <div class="foot-cols">
-      <div class="stack" style="--s:9px">
-        <span class="micro">Explore</span>
-        <a class="small mute" href="browse.html">Animations</a>
-        <a class="small mute" href="packs.html">Packs</a>
-        <a class="small mute" href="makers.html">Makers</a>
-        <a class="small mute" href="studio/index.html">Studio</a>
-        <a class="small mute" href="make.html">Draw one</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Owners</span>
-        <a class="small mute" href="settings.html">Set up your Geedo</a>
-        <a class="small mute" href="unlock.html">Redeem a code</a>
-        <a class="small mute" href="GUIDE.md">Owner's guide</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Community</span>
-        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
 </footer>
 
@@ -110,9 +90,7 @@
     el.querySelector('.avatar').textContent = G.initial(m.name);
     el.querySelector('h3').textContent = m.name;
     if (m.official) el.querySelector('h3').insertAdjacentHTML('beforeend', ' <span class="tag blue">official</span>');
-    el.querySelector('.sub').textContent =
-      (m.official ? 'His own animations · ' : '') +
-      `${m.count} animation${m.count === 1 ? '' : 's'}` + (m.latest ? ` · latest ${G.ago(m.latest)}` : '');
+    el.querySelector('.sub').textContent = `${m.count} animation${m.count === 1 ? '' : 's'}`;
     host.append(el);
     const mini = el.querySelector('.mini');
     for (const a of G.newest(m.anims).slice(0, 3)) {
@@ -133,9 +111,8 @@
     first.href = 'make.html';
     first.innerHTML = `
       <div class="head"><span class="avatar lg" style="background:var(--ink)">?</span>
-        <div><h3>Your name here</h3><p class="sub">Nobody outside the Geedo team has published yet.</p></div></div>
-      <p style="margin-top:14px;font-weight:600">Draw him something and be the first. It goes up with your name on it the moment it is approved.</p>
-      <span class="btn ink sm" style="margin-top:14px">Draw him something</span>`;
+        <div><h3>Your name here</h3></div></div>
+      <span class="btn primary sm" style="margin-top:18px">Draw him something</span>`;
     host.append(first);
   }
 })();

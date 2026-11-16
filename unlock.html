@@ -10,11 +10,12 @@
 <style>
   .box{max-width:560px;margin:0 auto;border:var(--pen);border-radius:var(--wobble-box);box-shadow:var(--pencil-lift);
        background:var(--bg-lift);padding:clamp(24px,4vw,38px)}
-  .result{display:none;margin-top:26px;padding-top:26px;border-top:1.5px dashed var(--line-bright)}
+  .result{display:none;margin-top:26px;padding-top:26px;border-top:1px solid var(--line)}
   .result.show{display:block}
   #aList{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:16px 0}
-  #aList .btn{padding:6px 13px 4px;font-size:14px;box-shadow:2px 3px 0 var(--ink)}
-  .helper{font-size:12px;color:var(--dim);line-height:1.6}
+  #aList .btn{padding:6px 14px;font-size:13.5px}
+  #aBy{margin:8px 0 18px;font-size:14px;color:var(--mute)}
+  .helper{font-size:13px;color:var(--mute);line-height:1.6}
 </style>
 </head>
 <body>
@@ -36,23 +37,12 @@
 
 <main class="wrap" style="padding-block:clamp(36px,5vw,64px)">
 
-  <div style="max-width:60ch;margin:0 auto;text-align:center">
-    <p class="micro" style="margin:0 0 14px">Redeem</p>
-    <h1 class="h1">Got a code?</h1>
-    <p class="lead" style="margin:12px auto 0">
-      From a giveaway, a pack you bought, or a friend. Type it in and the pack
-      opens right here.
-    </p>
-  </div>
+  <h1 class="h1" style="text-align:center">Got a code?</h1>
 
   <div class="box" style="margin-top:36px;text-align:center">
-    <input type="text" id="code" class="field code-field" placeholder="XXXX-XXXX"
+    <input type="text" id="code" class="field code-field" placeholder="GD-XXXX-XXXX"
            maxlength="13" autocomplete="off" autocapitalize="characters"
-           spellcheck="false" autofocus aria-label="Pack code">
-    <p class="helper" style="margin:12px 0 0">
-      Codes look like <b class="accent">GD-X7K9-PQ4M</b>. Dashes optional —
-      older 6-letter codes still work.
-    </p>
+           spellcheck="false" autofocus aria-label="Pack code, like GD-X7K9-PQ4M">
     <div style="margin-top:20px">
       <button class="btn primary" id="go" onclick="tryUnlock()">Unlock</button>
     </div>
@@ -60,7 +50,7 @@
 
     <div class="result" id="result">
       <h2 class="h2" id="aName"></h2>
-      <p class="micro" id="aBy" style="margin:8px 0 18px"></p>
+      <p id="aBy"></p>
       <div class="screen lg" style="max-width:384px;margin:0 auto">
         <canvas id="aCanvas" width="128" height="64" style="width:100%"></canvas>
       </div>
@@ -77,45 +67,33 @@
     </div>
   </div>
 
-  <div style="max-width:60ch;margin:36px auto 0">
-    <div class="note small">
-      <b>Your code is never stored on the Hub.</b> Not the code, not a hash of
-      it. Every pack sits there as a locked box and the code you type is the
-      key — which is why a wrong one simply doesn't open anything, and why the
-      check takes a moment.
-    </div>
-    <p class="helper" style="margin-top:18px;text-align:center">
-      Want to make your own private code? <a class="accent" href="studio/index.html">Open Studio</a>,
-      hit Publish to Hub, and choose “Private Code”.
-    </p>
-  </div>
+  <p class="helper" style="margin:20px auto 0;text-align:center">Your code is never stored on the Hub.</p>
 
   <section style="padding-bottom:0">
     <div class="box" style="text-align:center">
       <h2 class="h2">Got a Geedo?</h2>
-      <p class="lead" style="margin:12px auto 0;font-size:15px">
-        Come and hang out with the other owners — swap animations, show off your
-        desk, and get pinged when a giveaway starts.
-      </p>
       <div style="margin-top:20px">
         <a class="btn primary" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
       </div>
-      <p class="helper" style="margin-top:14px">discord.gg/Tp6urXEMQd</p>
     </div>
   </section>
 
 </main>
 
-<footer class="wrap">
-  <div class="spread">
-    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-    <div class="row" style="gap:22px">
-      <a class="small mute" href="browse.html">Animations</a>
-      <a class="small mute" href="packs.html">Packs</a>
-      <a class="small mute" href="makers.html">Makers</a>
-      <a class="small mute" href="settings.html">My Geedo</a>
-      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-    </div>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
 </footer>
 

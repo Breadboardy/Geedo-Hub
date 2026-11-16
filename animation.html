@@ -37,7 +37,7 @@
   </div>
 </nav>
 
-<main class="wrap">
+<main class="wrap" style="padding-bottom:clamp(48px,6vw,88px)">
   <p class="crumbs"><a href="browse.html">Animations</a> <span id="crumb"></span></p>
 
   <div class="show" id="show">
@@ -50,7 +50,7 @@
       <div class="meta" id="meta"></div>
       <div class="stats" id="stats"></div>
       <div class="actions">
-        <a class="btn yellow" id="dl" download hidden>Download .bin</a>
+        <a class="btn primary" id="dl" download hidden>Download .bin</a>
         <a class="btn" id="remix" hidden>Open in Studio</a>
       </div>
       <p class="small" id="remixof" style="margin-top:14px;color:var(--blue-soft)" hidden></p>
@@ -59,20 +59,8 @@
 
   <div id="missing" class="panel" hidden>
     <h2 class="h2">No animation by that name.</h2>
-    <p class="sub" style="margin-top:8px">It may have been taken down, or the link is not quite right.</p>
-    <a class="btn blue" href="browse.html">See everything he does</a>
+    <a class="btn primary" style="margin-top:20px" href="browse.html">See everything he does</a>
   </div>
-
-  <section class="panel" id="how">
-    <h2 class="h2">How it gets to your Geedo</h2>
-    <p class="sub" id="how-text">It is already there. Every Geedo checks the Hub once a minute and keeps everything on the list in his own memory, so there is nothing to install and nothing to plug in.</p>
-    <div class="two" style="align-items:start">
-      <div class="box soft"><h3 style="font-size:20px">The file</h3>
-        <p>The download is the exact file the robot plays, in his own format (<code>GDA</code>): one bit a pixel, frame by frame. Handy if you build your own screen, or want to remix it in the Studio.</p></div>
-      <div class="box soft"><h3 style="font-size:20px">Remix it</h3>
-        <p>Open in Studio loads these frames into the editor. Change it, give it a new name, publish it, and it goes up with a line saying what it started from.</p></div>
-    </div>
-  </section>
 
   <section class="panel" id="more" hidden>
     <div class="panel-head">
@@ -83,41 +71,25 @@
   </section>
 
   <section class="panel" id="remixes" hidden>
-    <div class="panel-head"><div><h2 class="h2">Remixes of this one</h2><p class="sub">Other people took it and ran.</p></div></div>
+    <div class="panel-head"><h2 class="h2">Remixes of this one</h2></div>
     <div class="feed" id="remix-feed"></div>
   </section>
 </main>
 
-<footer class="wrap" style="max-width:none">
-  <div class="wrap spread">
-    <div style="max-width:34ch">
-      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-      <p class="small mute" style="margin:12px 0 0">
-        A little robot with a face. New animations ship to every Geedo, free,
-        forever.
-      </p>
-    </div>
-    <div class="foot-cols">
-      <div class="stack" style="--s:9px">
-        <span class="micro">Explore</span>
-        <a class="small mute" href="browse.html">Animations</a>
-        <a class="small mute" href="packs.html">Packs</a>
-        <a class="small mute" href="makers.html">Makers</a>
-        <a class="small mute" href="studio/index.html">Studio</a>
-        <a class="small mute" href="make.html">Draw one</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Owners</span>
-        <a class="small mute" href="settings.html">Set up your Geedo</a>
-        <a class="small mute" href="unlock.html">Redeem a code</a>
-        <a class="small mute" href="GUIDE.md">Owner's guide</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Community</span>
-        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
 </footer>
 
@@ -135,7 +107,7 @@
   const a = all.anims.find(x => x.id === id && (pack ? x.pack === pack : !x.pack))
          || all.anims.find(x => x.id === id);
   if (!a) {
-    $('show').hidden = true; $('how').hidden = true;
+    $('show').hidden = true;
     $('missing').hidden = false;
     return;
   }
@@ -205,14 +177,12 @@
   if (a.remix_of) {
     const parent = all.anims.find(x => x.id === a.remix_of);
     const p = $('remixof');
-    p.innerHTML = 'A remix of <a style="color:#fff;font-weight:800;text-decoration:underline"></a>.';
+    p.innerHTML = 'A remix of <a style="color:var(--text);font-weight:600;text-decoration:underline;text-underline-offset:3px"></a>.';
     const link = p.querySelector('a');
     link.textContent = parent ? G.pretty(parent.name) : a.remix_of;
     link.href = parent ? parent.href : '#';
     p.hidden = false;
   }
-  if (a.pack) $('how-text').textContent =
-    `It is in the ${G.pretty(a.packName)}. Free packs go to every Geedo like everything else: he finds the pack at his next check, downloads it, and keeps it.`;
 
   // More by the same maker (or from the same pack), and any remixes.
   const more = all.anims.filter(x => x !== a && !G.isSystem(x) && (a.pack ? x.pack === a.pack : x.by === a.by));

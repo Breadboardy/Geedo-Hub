@@ -10,12 +10,11 @@
 <style>
   .pack{border:var(--pen);border-radius:var(--wobble-box);background:var(--bg-lift);box-shadow:var(--pencil)}
   .pack:nth-child(2n){border-radius:var(--wobble-box-2)}
-  .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:20px 22px}
-  .pack-screens{display:flex;gap:10px;overflow-x:auto;padding:0 22px 20px}
-  .pack-screens>*{flex:none}
-  .rarity{font-family:var(--pixel);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
-  .r-common{color:var(--dim)} .r-uncommon{color:var(--good)}
-  .r-rare{color:var(--accent)} .r-legendary{color:var(--warn)}
+  .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:20px 22px}
+  .pack-head h3 span{color:var(--dim);font-weight:500;margin-left:.35em}
+  .pack-screens{display:flex;gap:12px;overflow-x:auto;padding:0 22px 20px;scrollbar-width:thin}
+  .pack-screens>*{flex:none;margin:0}
+  .pack-screens figcaption{margin-top:9px;font-size:13.5px;font-weight:500;color:var(--mute)}
   .ladder{width:100%;border-collapse:collapse;font-size:13px}
   .ladder th,.ladder td{text-align:left;padding:13px 14px;border-bottom:1.5px dashed var(--line-bright);vertical-align:top}
   .ladder th{color:var(--dim);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
@@ -27,13 +26,12 @@
   .product{background:var(--bg-lift);border:var(--pen);border-radius:var(--wobble-box);
            padding:22px;box-shadow:var(--pencil);display:flex;flex-direction:column;gap:6px}
   .product:nth-child(2n){border-radius:var(--wobble-box-2)}
-  .product .boxart{width:min(240px,70vw);margin:6px auto 14px;
-                   filter:drop-shadow(0 10px 14px rgba(90,70,40,.16))}
+  .product .boxart{width:min(190px,60vw);margin:10px auto 18px;filter:drop-shadow(0 12px 14px rgba(0,0,0,.1))}
   .product h3{font-size:21px}
-  .product .tag2{color:var(--mute);font-size:13.5px;line-height:1.55;flex:1}
-  .product .rowb{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:14px}
+  .product .rowb{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:12px}
   .product .rowb>*{white-space:nowrap}
-  .product.soon .boxart{filter:grayscale(.85) opacity(.55) drop-shadow(0 10px 14px rgba(90,70,40,.1))}
+  .product.soon .boxart{filter:opacity(.38)}
+  .hero-box{width:min(300px,70vw)}
 </style>
 </head>
 <body>
@@ -58,86 +56,67 @@
   <div class="two" style="align-items:center">
     <div>
       <h1 class="h1">Animation packs</h1>
-      <p class="lead" style="margin-top:12px">
-        A pack is a set of animations for your Geedo. Free packs go to every
-        Geedo automatically. Right now every pack needs a code from a card or a giveaway.
-      </p>
-      <div class="row" style="margin-top:22px">
+      <div class="row" style="margin-top:26px">
         <a class="btn primary" href="unlock.html">Redeem a code</a>
         <a class="btn" href="settings.html">How packs reach Geedo</a>
       </div>
     </div>
-    <div class="boxart" id="boxart">
-      <img src="assets/box.png" alt="The Geedo animations box"
-           width="245" height="186" style="width:100%;height:auto">
+    <div class="boxart hero-box" id="boxart">
+      <img src="assets/box.svg" alt="A Geedo animation pack: a box with his screen on the front"
+           width="240" height="224" style="width:100%;height:auto">
+      <div class="box-screen" id="box-live" aria-hidden="true"></div>
     </div>
   </div>
 
   <section>
-    <div class="sec-head"><span class="micro">The packs</span><span class="fill rule"></span>
-      <span class="micro" id="n-packs"></span></div>
     <div class="shop">
 
       <article class="product" id="p-ocean">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+        <div class="boxart"><img src="assets/box.svg" alt="" width="240" height="224"
              style="width:100%;height:auto"></div>
         <h3>Ocean Pack</h3>
-        <p class="tag2">10 ocean animations: sailing, snorkelling, a sunset, a
-           jellyfish, a submarine, a treasure chest and more.</p>
         <div class="rowb">
-          <span class="chip on">With code · not on the shelf</span>
+          <span class="chip on">With code</span>
           <a class="btn plain" href="#inside">Look inside →</a>
         </div>
       </article>
 
       <article class="product" id="p-doodle">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+        <div class="boxart"><img src="assets/box.svg" alt="" width="240" height="224"
              style="width:100%;height:auto"></div>
         <h3>Doodle Pack</h3>
-        <p class="tag2">A whole second face, and him doing things with it:
-           drawing a star, a coffee, a slice of pizza, gaming, music, blowing
-           out a candle, watering a plant, a balloon, a book, an ice cream,
-           bubbles, a magnifying glass, juggling, a barbell, scrolling, a
-           chilli - fourteen silly ones, from the derp to the thousand-yard
-           stare - and twelve moods. 42 animations, all drawn by hand.</p>
         <div class="rowb">
-          <span class="chip on">With code · not on the shelf</span>
+          <span class="chip on">With code</span>
           <a class="btn plain" href="#inside">Look inside →</a>
         </div>
       </article>
 
       <article class="product" id="p-weather">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+        <div class="boxart"><img src="assets/box.svg" alt="" width="240" height="224"
              style="width:100%;height:auto"></div>
         <h3>Weather Pack</h3>
-        <p class="tag2">5 skies with Geedo under them: sunshine, rain, snow, a
-           storm and a gale.</p>
         <div class="rowb">
-          <span class="chip on">With code · not on the shelf</span>
+          <span class="chip on">With code</span>
           <a class="btn plain" href="#inside">Look inside →</a>
         </div>
       </article>
 
       <article class="product" id="p-stick2">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+        <div class="boxart"><img src="assets/box.svg" alt="" width="240" height="224"
              style="width:100%;height:auto"></div>
         <h3>Stickman Pack Vol. 2</h3>
-        <p class="tag2">6 stickman animations: backflips, fishing, skating and
-           more.</p>
         <div class="rowb">
-          <span class="chip on">With code · giveaways</span>
+          <span class="chip on">With code</span>
           <a class="btn plain" href="unlock.html">Redeem →</a>
         </div>
       </article>
 
       <article class="product soon" id="p-space">
-        <div class="boxart"><img src="assets/box.png" alt="" width="245" height="186"
+        <div class="boxart"><img src="assets/box.svg" alt="" width="240" height="224"
              style="width:100%;height:auto"></div>
         <h3>Space Pack</h3>
-        <p class="tag2">Being drawn right now.</p>
         <div class="rowb">
           <span class="chip">Coming soon</span>
-          <span class="micro">announced in Discord</span>
         </div>
       </article>
 
@@ -145,53 +124,28 @@
   </section>
 
   <section id="inside">
-    <div class="sec-head"><span class="micro">Look inside</span><span class="fill rule"></span></div>
+    <h2 class="h1" style="margin-bottom:clamp(22px,3vw,36px)">Look inside</h2>
     <div class="stack" style="--s:22px" id="packs">
       <div class="empty"><span class="spin" style="display:inline-block"></span> Checking the Hub…</div>
     </div>
   </section>
 
-  <section>
-    <div class="sec-head"><span class="micro">How a pack gets to your robot</span><span class="fill rule"></span></div>
-    <div class="two">
-      <div class="steps" style="border-block:1px solid var(--line)">
-        <div class="step"><div>
-          <h3 class="h3">Public packs</h3>
-          <p>These are on for everyone. Your Geedo finds them at his next
-             check and downloads them himself.</p>
-        </div></div>
-        <div class="step"><div>
-          <h3 class="h3">Code packs</h3>
-          <p>You get a code like <b>GD-K7X9-PQ4M</b> from a card or a
-             giveaway. Type it in on the Redeem page and the pack is yours.</p>
-        </div></div>
-      </div>
-      <div>
-        <h2 class="h2">Codes are safe.</h2>
-        <p class="lead" style="margin-top:14px;font-size:15px">
-          Your code is never saved anywhere on the website. Each code pack is
-          locked with real encryption, and the code you type is the only key
-          that opens it.
-        </p>
-        <p class="small mute" style="margin-top:16px">
-          That's also why the Redeem page pauses for a second when you type a
-          code: the lock is built to be slow on purpose, so nobody can guess
-          codes by trying millions of them.
-        </p>
-      </div>
-    </div>
-  </section>
-
 </main>
 
-<footer class="wrap">
-  <div class="spread">
-    <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-    <div class="row" style="gap:22px">
-      <a class="small mute" href="browse.html">Animations</a>
-      <a class="small mute" href="unlock.html">Redeem a code</a>
-      <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-    </div>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
 </footer>
 
@@ -212,21 +166,18 @@
   // and marked, rather than hidden until there is room.
   const ready = (m.packs_ready || []).filter(id => !live.includes(id));
   const ids = [...live, ...ready];
-  document.getElementById('n-packs').textContent = live.length
-    ? `${live.length} free pack${live.length === 1 ? '' : 's'}` + (ready.length ? `, ${ready.length} with a code` : '')
-    : (ready.length ? `${ready.length} pack${ready.length === 1 ? '' : 's'}, every one needs a code` : '');
+
+  // The box at the top: he wakes up on its front.
+  const waking = (m.animations || []).find(a => a.id === 'activities_waking_up');
+  if (waking) loadBin(waking.file).then(anim =>
+    document.getElementById('box-live').replaceChildren(new Screen(anim, { scale: 1 }).el)).catch(() => {});
 
   if (!ids.length) {
     // An honest empty state beats inventing packs that do not exist. It says
     // what a pack is and where the first one will come from.
     host.innerHTML = `
       <div class="pack" style="padding:28px 22px">
-        <h3 class="h2" style="margin-bottom:10px">No public packs are switched on right now.</h3>
-        <p class="lead" style="font-size:15px;margin:0">
-          Packs get announced in the Discord first, and giveaway codes are drawn
-          there. If you're holding a code already, it still works — the Unlock
-          page doesn't need a pack to be public.
-        </p>
+        <h3 class="h2">No packs are switched on right now.</h3>
         <div class="row" style="margin-top:20px">
           <a class="btn primary" href="unlock.html">Redeem a code</a>
           <a class="btn" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
@@ -257,19 +208,13 @@
     }
 
     const anims = pm.animations || [];
-    const rarity = ready.includes(id) ? 'needs a code' : (pm.rarity || 'common').toLowerCase();
+    const coded = ready.includes(id);
     const el = document.createElement('article');
     el.className = 'pack';
     el.innerHTML = `
       <div class="pack-head">
-        <div>
-          <h3 class="h2">${pretty(pm.name || id)}</h3>
-          <p class="small mute" style="margin:6px 0 0">${pm.note || ''}</p>
-        </div>
-        <div style="text-align:right;white-space:nowrap">
-          <span class="rarity r-${rarity}">${rarity}</span>
-          <p class="micro" style="margin:6px 0 0">${anims.length} animation${anims.length===1?'':'s'}</p>
-        </div>
+        <h3 class="h2">${pretty(pm.name || id)}<span>${anims.length}</span></h3>
+        <span class="chip${coded ? '' : ' on'}">${coded ? 'With code' : 'Free'}</span>
       </div>
       <div class="pack-screens"></div>`;
     host.append(el);
@@ -279,11 +224,8 @@
       try {
         const anim = await loadBin(`packs/${id}/${a.file}`.replace(/^packs\//, 'packs/'));
         const fig = document.createElement('figure');
-        fig.style.margin = '0';
         fig.append(new Screen(anim, { scale: 2 }).el);
         const cap = document.createElement('figcaption');
-        cap.className = 'micro';
-        cap.style.marginTop = '8px';
         cap.textContent = pretty(a.name || a.id);
         fig.append(cap);
         shelf.append(fig);

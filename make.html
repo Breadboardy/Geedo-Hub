@@ -8,15 +8,20 @@
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-  .rulecard{background:var(--bg-lift);border:var(--pen);border-radius:var(--wobble-box);padding:20px;box-shadow:var(--pencil)}
-  .rulecard .big{font-size:34px;line-height:1;margin-bottom:10px}
-  .rulecard h3{font-size:19px;margin-bottom:6px}
-  .rulecard p{color:var(--mute);font-size:14.5px}
-  .spec{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:15px;align-items:baseline}
-  .spec dt{font-weight:800;white-space:nowrap}
-  .spec dd{margin:0;color:var(--mute)}
-  .hero .screen{max-width:420px}
+  .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(24px,4vw,56px);align-items:center;
+        padding-block:clamp(36px,5vw,72px) 0}
+  .hero .screen{border-radius:16px}
+  /* a section here is a title and a few lines, a rule over each */
+  .lines{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,3vw,40px);list-style:none;margin:0;padding:0;counter-reset:n}
+  .lines li{border-top:1px solid var(--ink);padding-top:16px;font-size:clamp(17px,1.5vw,20px);font-weight:600;letter-spacing:-.022em;line-height:1.25}
+  ol.lines li::before{counter-increment:n;content:counter(n);display:block;color:var(--dim);font-weight:500;margin-bottom:8px}
+  main>section>.h1{margin-bottom:clamp(22px,3vw,36px)}
+  .strip{margin-top:0}
+  .strip .box{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:22px;padding:clamp(22px,3vw,32px);border-radius:22px}
+  .strip .box h3{font-size:clamp(22px,2.2vw,28px);letter-spacing:-.03em;margin:0}
+  .head-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px 32px;flex-wrap:wrap;margin-bottom:clamp(22px,3vw,36px)}
+  @media (max-width:860px){.lines{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:480px){.lines{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -40,123 +45,74 @@
 
   <header class="hero">
     <div>
-      <h1 class="display">Draw him<br><em>something.</em></h1>
-      <p class="lead">
-        His face is 128 by 64 pixels, black and white, and anyone can draw for
-        it. Here is how a drawing gets from your screen to every Geedo in the
-        world, and the few rules on the way.
-      </p>
+      <h1 class="display">Draw him<br>something.</h1>
       <div class="actions">
-        <a class="btn yellow" href="studio/index.html">Open the Studio</a>
+        <a class="btn primary" href="studio/index.html">Open the Studio</a>
         <a class="btn" href="browse.html">See what others made</a>
       </div>
     </div>
     <div class="hero-shot">
-      <span class="sticker left">YOURS NEXT?</span>
-      <div class="screen tilt blank" id="hero-screen"></div>
+      <div class="screen blank" id="hero-screen"></div>
     </div>
   </header>
 
-  <section class="panel">
-    <h2 class="h2">How it works</h2>
-    <p class="sub">Four steps. Only the first one is hard.</p>
-    <div class="steps">
-      <div class="step"><div>
-        <h3>Draw it in the Studio</h3>
-        <p>A pixel editor in your browser: pencil, shapes, bucket, text, frames with onion skin, and you can drop a photo in and turn it into pixels. Press <b>Play</b> to see it move. <b>Save</b> keeps a <code>.geedo.json</code> file on your computer so you can come back to it.</p>
-      </div></div>
-      <div class="step"><div>
-        <h3>Press Publish</h3>
-        <p>Studio saves your file and opens the submission form on GitHub. Give it a name, drop the file in, tick the three rules, send. No GitHub account? See the bottom of this page.</p>
-      </div></div>
-      <div class="step"><div>
-        <h3>A person looks at it</h3>
-        <p>The bot posts a preview and the numbers on your submission within a minute. Then we look at it, always, usually within a day. Kids watch these screens, so nothing goes out that nobody has seen. If it is a no, you are told why, and you can fix it and send it again.</p>
-      </div></div>
-      <div class="step"><div>
-        <h3>Watch him do it</h3>
-        <p>Approved means it is on the Hub with your name on it and its own page. Every Geedo checks the Hub once a minute and downloads anything new, so yours is doing it within the minute.</p>
-      </div></div>
+  <section>
+    <h2 class="h1">How it works</h2>
+    <ol class="lines">
+      <li>Draw it in the Studio.</li>
+      <li>Press Publish.</li>
+      <li>A person looks at it.</li>
+      <li>Every Geedo plays it.</li>
+    </ol>
+  </section>
+
+  <section id="rules">
+    <h2 class="h1">The rules</h2>
+    <ul class="lines">
+      <li>It is your own drawing.</li>
+      <li>It is kind: nothing rude, mean or scary.</li>
+      <li>No more than three big flashes a second.</li>
+      <li>Up to 96 frames, under 32&nbsp;KB.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="strip">
+      <div class="box y">
+        <h3>Remix anything.</h3>
+        <a class="btn primary" href="browse.html">Pick one to remix</a>
+      </div>
+      <div class="box b dark">
+        <h3>No GitHub account?</h3>
+        <a class="btn primary" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
+      </div>
     </div>
   </section>
 
-  <section class="panel" id="rules">
-    <h2 class="h2">The rules</h2>
-    <p class="sub">Three you tick, one the bot measures.</p>
-    <div class="rules">
-      <div class="rulecard"><div class="big">✏️</div><h3>Your own drawing</h3>
-        <p>Not a character from a game, a film or a show, and not somebody else's pixel art. Geedo's own face is fair game: remix anything on the Hub.</p></div>
-      <div class="rulecard"><div class="big">💛</div><h3>Kind</h3>
-        <p>Nothing rude, mean or scary. A Geedo lives on somebody's desk, and a lot of those somebodies are kids.</p></div>
-      <div class="rulecard"><div class="big">🕶️</div><h3>Not flashy</h3>
-        <p>No more than three big flashes in any second. Fast flashing can hurt people. The bot measures it, and Geedo himself refuses to play anything over the line.</p></div>
-      <div class="rulecard"><div class="big">📦</div><h3>Small</h3>
-        <p>Up to 96 frames and under 32 KB once packed. His memory is tiny and every Geedo keeps every animation, so short and bold beats long and busy. A frame that repeats an earlier one is nearly free, so a held pose or a movement done over and over costs almost nothing.</p></div>
-    </div>
-  </section>
-
-  <div class="strip" style="margin-top:18px">
-    <div class="box">
-      <h3>Good to know</h3>
-      <dl class="spec" style="margin:14px 0 0">
-        <dt>Screen</dt><dd>128 × 64 pixels, on or off. No grey, no colour.</dd>
-        <dt>Speed</dt><dd>1 to 30 frames a second, and any frame can hold for longer.</dd>
-        <dt>Plays</dt><dd>Looping, ping-pong, or once through.</dd>
-        <dt>Files</dt><dd><code>.geedo.json</code> is your Studio project. <code>.bin</code> is what the robot plays; the Studio can save that too.</dd>
-      </dl>
-    </div>
-    <div class="box y">
-      <h3>Remix anything</h3>
-      <p>Every animation page has <b>Open in Studio</b>. It loads those frames into the editor, and when you publish your version it goes up with a line saying what it started from, and a link back.</p>
-      <a class="btn ink" style="margin-top:16px" href="browse.html">Pick one to remix</a>
-    </div>
-    <div class="box b">
-      <h3>No GitHub account?</h3>
-      <p>Post your <code style="background:rgba(255,255,255,.2);color:#fff">.geedo.json</code> in <b>#animations</b> on the Discord. It gets submitted for you and you are told when it is live. Same rules, same look by a person.</p>
-      <a class="btn" style="margin-top:16px" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
-    </div>
-  </div>
-
-  <section class="panel">
-    <div class="panel-head">
-      <div><h2 class="h2">Freshly drawn</h2><p class="sub">The newest things people made for him.</p></div>
-      <a class="more" href="browse.html">All animations →</a>
+  <section>
+    <div class="head-row">
+      <h2 class="h1">Freshly drawn</h2>
+      <a class="btn" href="browse.html">All animations</a>
     </div>
     <div class="feed" id="feed"></div>
   </section>
 
 </main>
 
-<footer class="wrap" style="max-width:none">
-  <div class="wrap spread">
-    <div style="max-width:34ch">
-      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-      <p class="small mute" style="margin:12px 0 0">
-        A little robot with a face. New animations ship to every Geedo, free,
-        forever.
-      </p>
-    </div>
-    <div class="foot-cols">
-      <div class="stack" style="--s:9px">
-        <span class="micro">Explore</span>
-        <a class="small mute" href="browse.html">Animations</a>
-        <a class="small mute" href="packs.html">Packs</a>
-        <a class="small mute" href="makers.html">Makers</a>
-        <a class="small mute" href="studio/index.html">Studio</a>
-        <a class="small mute" href="make.html">Draw one</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Owners</span>
-        <a class="small mute" href="settings.html">Set up your Geedo</a>
-        <a class="small mute" href="unlock.html">Redeem a code</a>
-        <a class="small mute" href="GUIDE.md">Owner's guide</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Community</span>
-        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
 </footer>
 
@@ -169,7 +125,7 @@
   const shown = G.newest(all.anims.filter(a => !G.isSystem(a)));
   const hero = shown.find(a => /painting|homework|chill_work|reading/.test(a.id)) || shown[0];
   if (hero) try {
-    const s = G.bigScreen(await G.loadBin(hero.src), 3, 'tilt');
+    const s = G.bigScreen(await G.loadBin(hero.src), 3);
     s.el.querySelector('canvas').style.width = '100%';
     document.getElementById('hero-screen').replaceWith(s.el);
   } catch (e) {}

@@ -31,7 +31,7 @@
   </div>
 </nav>
 
-<main class="wrap">
+<main class="wrap" style="padding-bottom:clamp(48px,6vw,88px)">
   <p class="crumbs"><a href="makers.html">Makers</a> <span id="crumb"></span></p>
   <header class="who">
     <span class="avatar xl" id="avatar">?</span>
@@ -47,41 +47,24 @@
 
   <div id="missing" class="panel" hidden>
     <h2 class="h2">Nobody by that name yet.</h2>
-    <p class="sub" style="margin-top:8px">Nothing on the Hub is signed with it. Maybe it is about to be.</p>
-    <div class="row"><a class="btn blue" href="makers.html">Everyone who has drawn</a><a class="btn" href="make.html">Draw him something</a></div>
+    <div class="row" style="margin-top:20px"><a class="btn primary" href="makers.html">Everyone who has drawn</a><a class="btn" href="make.html">Draw him something</a></div>
   </div>
 </main>
 
-<footer class="wrap" style="max-width:none">
-  <div class="wrap spread">
-    <div style="max-width:34ch">
-      <a class="logo" href="index.html" style="font-size:15px"><span class="led"></span>GEEDO</a>
-      <p class="small mute" style="margin:12px 0 0">
-        A little robot with a face. New animations ship to every Geedo, free,
-        forever.
-      </p>
-    </div>
-    <div class="foot-cols">
-      <div class="stack" style="--s:9px">
-        <span class="micro">Explore</span>
-        <a class="small mute" href="browse.html">Animations</a>
-        <a class="small mute" href="packs.html">Packs</a>
-        <a class="small mute" href="makers.html">Makers</a>
-        <a class="small mute" href="studio/index.html">Studio</a>
-        <a class="small mute" href="make.html">Draw one</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Owners</span>
-        <a class="small mute" href="settings.html">Set up your Geedo</a>
-        <a class="small mute" href="unlock.html">Redeem a code</a>
-        <a class="small mute" href="GUIDE.md">Owner's guide</a>
-      </div>
-      <div class="stack" style="--s:9px">
-        <span class="micro">Community</span>
-        <a class="small mute" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
-        <a class="small mute" href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </div>
 </footer>
 
@@ -109,12 +92,10 @@
   $('avatar').textContent = G.initial(name);
   $('name').textContent = name;
   $('crumb').textContent = '› ' + name;
-  const latest = mine.reduce((m, a) => (a.published_at || '') > m ? a.published_at : m, '');
   const packs = new Set(mine.filter(a => a.pack).map(a => a.pack));
   if (name === G.OFFICIAL) $('name').insertAdjacentHTML('beforeend', ' <span class="tag blue" style="font-size:14px;vertical-align:middle;position:relative;top:-8px">official</span>');
-  $('sub').textContent = (name === G.OFFICIAL ? 'His own animations, drawn by the Geedo team · ' : '') + `${mine.length} animation${mine.length === 1 ? '' : 's'}`
-    + (packs.size ? ` · ${packs.size} pack${packs.size === 1 ? '' : 's'}` : '')
-    + (latest ? ` · latest ${G.ago(latest)}` : '');
+  $('sub').textContent = `${mine.length} animation${mine.length === 1 ? '' : 's'}`
+    + (packs.size ? ` · ${packs.size} pack${packs.size === 1 ? '' : 's'}` : '');
   $('feed').replaceChildren(...G.newest(mine).map(a => G.card(a)));
 })();
 </script>

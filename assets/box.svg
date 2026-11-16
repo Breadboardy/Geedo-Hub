@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 224" width="240" height="224" fill="none" stroke="#0a0a0a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+  <!-- the pack box, drawn square-on in black and white: lid, front, side -->
+  <path d="M120 10 218 59 120 108 22 59Z" fill="#fff"/>
+  <path d="M22 59 120 108V212L22 163Z" fill="#f2f2f2"/>
+  <path d="M120 108 218 59V163L120 212Z" fill="#dcdcdc"/>
+  <!-- the tape across the lid, and its end down the front -->
+  <path d="M64.1 80.1 162.1 31.1 175.9 37.9 77.9 86.9Z" fill="#ececec" stroke-width="1.6"/>
+  <path d="M64.1 80.1 77.9 86.9V108.9L64.1 102.1Z" fill="#e4e4e4" stroke-width="1.6"/>
+  <!-- his screen on the front, with his eyes -->
+  <g transform="matrix(1 .5 0 1 22 59)" stroke="none">
+    <rect x="17" y="40" width="64" height="32" rx="2.5" fill="#000"/>
+    <rect x="27" y="47" width="13" height="18" rx="4" fill="#fff"/>
+    <rect x="58" y="47" width="13" height="18" rx="4" fill="#fff"/>
+  </g>
+  <!-- this way up, on the side -->
+  <g transform="matrix(1 -.5 0 1 120 108)" stroke-width="2">
+    <path d="M60 80V60M54 66 60 60 66 66M76 80V60M70 66 76 60 82 66M52 86H84"/>
+  </g>
+</svg>

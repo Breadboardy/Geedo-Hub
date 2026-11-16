@@ -355,6 +355,86 @@ document.readyState === 'loading'
   ? document.addEventListener('DOMContentLoaded', nav)
   : nav();
 
+/* ---- motion ----------------------------------------------------------------
+   A page arrives rather than sits there. As each part scrolls into view it
+   fades up into place; headlines rise line by line out of a mask; panels
+   grow into place; and things that come in together come in one after the
+   other, left to right, top to bottom.
+
+   Nothing is hidden unless this runs. The stylesheet only hides what carries
+   data-reveal, and only under html.motion, and both are set here - so with
+   no script, an old browser, or "reduce motion" asked for, the page is
+   simply there. A part is shown once and then let go of: the attribute comes
+   off when it has landed, so nothing here outlives its entrance.
+
+   What moves is chosen here, by what a thing is on the page, so the pages
+   themselves say nothing about it.                                         */
+function motion(){
+  if (!('IntersectionObserver' in window) || !document.querySelector('link[href*="geedo.css"]')) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ZOOM  = '.pair > *, .strip > *, .hero-box, .hero-shot';                    // panels: they grow into place
+  const UP    = 'main h1[id], main h2[id], .head > .btn, .head-row > .btn, .bar, .actions, main .two .row, main > header .row, ' +
+                '.closing .price, .closing .row, .crumbs, .who, .show > *, main .box, main > p.helper, .panel';
+  const LINES = 'main h1:not([id]), main h2:not([id]), .closing h2';               // headlines: line by line
+  const FADE  = '.foot';
+  const EACH  = '.gallery, .how, .lines, .feats, .shop, #packs, .feed, .people, .grid, .specs, .faq';   // lists: each thing in them
+
+  const root = document.documentElement, pending = new Set();
+  root.classList.add('motion');
+
+  function split(h){                                     // a headline's lines, each in a mask it can rise out of
+    if (h.querySelector('.rv-line')) return;
+    const lines = [[]];
+    for (const n of [...h.childNodes]) { if (n.nodeName === 'BR') lines.push([]); else lines[lines.length - 1].push(n); }
+    h.textContent = '';
+    lines.forEach((nodes, i) => {
+      const outer = document.createElement('span'), inner = document.createElement('span');
+      outer.className = 'rv-line'; inner.className = 'rv-in'; inner.style.setProperty('--i', i);
+      inner.append(...nodes); outer.append(inner); h.append(outer);
+    });
+  }
+  function done(el){                                     // landed: it is an ordinary part of the page again
+    io.unobserve(el); pending.delete(el);
+    el.removeAttribute('data-reveal'); el.classList.remove('in'); el.style.removeProperty('--d');
+  }
+  function show(el, delay){
+    if (!pending.has(el)) return;
+    io.unobserve(el); pending.delete(el);
+    el.style.setProperty('--d', delay + 'ms'); el.classList.add('in');
+    setTimeout(() => done(el), delay + 1900);
+  }
+  const io = new IntersectionObserver(entries => {
+    const rect = e => e.boundingClientRect;
+    entries.filter(e => e.isIntersecting)
+           .sort((a, b) => (rect(a).top - rect(b).top) || (rect(a).left - rect(b).left))
+           .forEach((e, i) => show(e.target, Math.min(i, 8) * 85));
+    // already scrolled past (a reload half way down, a link to a part of the page): it is just there
+    for (const e of entries) if (!e.isIntersecting && rect(e).height && rect(e).bottom < 0) done(e.target);
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 });
+
+  function tag(el, kind){
+    if (el.nodeType !== 1 || el.hasAttribute('data-reveal') || el.closest('dialog')) return;
+    el.setAttribute('data-reveal', kind);
+    if (kind === 'lines') split(el);
+    pending.add(el); io.observe(el);
+  }
+  // the outermost first, and nothing inside something that already moves: it travels with that
+  const alone = (sel, kind) => document.querySelectorAll(sel).forEach(el => { if (!el.parentElement.closest('[data-reveal]')) tag(el, kind); });
+  alone(ZOOM, 'zoom'); alone(UP, 'up'); alone(LINES, 'lines'); alone(FADE, 'fade');
+  // lists fill in after the page has loaded, so they are watched: whatever joins one arrives the same way
+  document.querySelectorAll(EACH).forEach(list => {
+    for (const kid of list.children) tag(kid, 'up');
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) tag(n, 'up'); }).observe(list, { childList: true });
+  });
+  // the foot of the page can sit below the line a part must cross to be shown: at the bottom, show what is left
+  const foot = () => {
+    if (pending.size && innerHeight + scrollY >= root.scrollHeight - 4)
+      [...pending].filter(el => el.getBoundingClientRect().height).forEach((el, i) => show(el, Math.min(i, 8) * 85));
+  };
+  addEventListener('scroll', foot, { passive: true }); addEventListener('resize', foot); addEventListener('load', foot);
+}
+try { motion(); } catch (e) { document.documentElement.classList.remove('motion'); }
+
 window.Geedo = { W, H, unpack, unpackGda1, Screen, loadBin, manifest, firmware, pretty, HUB,
                  all, isSystem, newest, ago, datestr, isNew, kb, param, makers, makerHref, initial, card, bigScreen,
                  OFFICIAL, official };

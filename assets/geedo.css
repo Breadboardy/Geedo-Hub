@@ -295,6 +295,48 @@ footer .logo{color:#fff;font-size:15px}
   *{animation:none!important;transition:none!important}
 }
 
+/* ---------------------------------------------------------------- motion
+   How a page arrives (assets/geedo.js chooses what; this is how). A part
+   waiting to be shown carries data-reveal and is clear and a little low;
+   .in lets it rise and settle. One long, soft curve for everything, fast
+   out of the gate and a slow landing. Only what a compositor moves for
+   free - opacity and transform - so a phone keeps up.
+
+   All of it sits under html.motion, which the script sets, and none of it
+   runs for somebody who asked for less motion (the rule above). */
+:root{--cine:cubic-bezier(.16,1,.3,1)}
+.rv-line,.rv-in{display:block}
+html.motion [data-reveal]{
+  opacity:0;transform:translate3d(0,44px,0);
+  transition:opacity 1.1s var(--cine) var(--d,0ms),transform 1.3s var(--cine) var(--d,0ms);
+}
+html.motion [data-reveal="zoom"]{transform:translate3d(0,60px,0) scale(.93);transition-duration:1.2s,1.5s}
+html.motion [data-reveal="fade"]{transform:none}
+html.motion [data-reveal].in{opacity:1;transform:none}
+/* a headline stays put; its lines rise out of a mask, one after the other.
+   (The mask reaches a little below the line, for the tails of g and y.) */
+html.motion [data-reveal="lines"]{opacity:1;transform:none;transition:none}
+html.motion [data-reveal="lines"] .rv-line{overflow:hidden;padding-bottom:.18em;margin-bottom:-.18em}
+html.motion [data-reveal="lines"] .rv-in{
+  transform:translate3d(0,118%,0);
+  transition:transform 1.3s var(--cine) calc(var(--d,0ms) + var(--i,0) * 120ms);
+}
+html.motion [data-reveal="lines"].in .rv-in{transform:none}
+/* the top of a page is in view before any script could decide to show it,
+   so it plays by itself: these are for the heroes to use */
+@keyframes rv-rise{from{transform:translate3d(0,118%,0)}to{transform:none}}
+@keyframes rv-up{from{opacity:0;transform:translate3d(0,36px,0)}to{opacity:1;transform:none}}
+@keyframes rv-arrive{from{opacity:0;transform:translate3d(0,64px,0) scale(1.07)}to{opacity:1;transform:none}}
+/* from one page to the next: the old one fades away and the new one fades
+   in, where the browser can carry a picture of a page across a link */
+@media (prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+  ::view-transition-old(root){animation:vt-out .26s ease both}
+  ::view-transition-new(root){animation:vt-in .5s ease .08s both}
+}
+@keyframes vt-out{to{opacity:0}}
+@keyframes vt-in{from{opacity:0}}
+
 /* ---------------------------------------------------------------- on black
    The hero, a band, the footer: the same parts with the colours swapped. */
 .dark{background:#000;color:#fff}

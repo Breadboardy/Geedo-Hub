@@ -146,6 +146,7 @@ section{padding-block:clamp(48px,6vw,96px)}
   content:'';position:absolute;left:0;right:0;bottom:-20px;height:1.5px;background:var(--text);
 }
 .nav .grow{flex:1}
+.nav-links{gap:clamp(14px,2.4vw,28px)}
 .nav-toggle{display:none;background:0;border:0;color:var(--text);font:inherit;font-size:20px;cursor:pointer;padding:6px}
 
 /* ---------------------------------------------------------------- screen
@@ -280,10 +281,11 @@ footer .logo{color:#fff;font-size:15px}
 @media (max-width:680px){
   .nav-links{
     display:none;position:absolute;top:60px;left:0;right:0;
-    flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--line);
+    flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:0;
+    background:#fff;border-bottom:1px solid var(--line);
   }
   .nav-links.open{display:flex}
-  .nav-links a.link{padding:14px var(--gut);border-top:1px solid var(--line)}
+  .nav-links a.link{padding:15px var(--gut);border-top:1px solid var(--line);font-size:16px}
   .nav a.link[aria-current]::after{display:none}
   .nav-toggle{display:block}
   .cols-2,.cols-4{grid-template-columns:1fr}
@@ -316,6 +318,34 @@ footer .logo{color:#fff;font-size:15px}
   .nav.dark .nav-links{background:#000;border-bottom-color:#1c1c1c}
   .nav.dark .nav-links a.link{border-top-color:#1c1c1c}
 }
+
+/* ---------------------------------------------------------------- the shop
+   The way to buy him is on every page: a pill at the end of the bar, and a
+   black band over the footer where a page closes on it. What the buttons
+   say, where they go and the price are set in one place, assets/product.js. */
+.nav .buy{padding:7px 17px;font-size:13.5px}
+.nav.dark .buy{background:#fff;border-color:#fff;color:#000}
+.nav.dark .buy:hover{background:#e4e4e4;border-color:#e4e4e4}
+.closing{background:#000;color:#fff;text-align:center;padding-block:clamp(64px,9vw,128px);border-bottom:1px solid #1c1c1c}
+.closing .price{margin:clamp(14px,2vw,22px) 0 0;font-size:clamp(17px,1.5vw,20px);font-weight:600;color:#a1a1a1}
+.on-sale .closing .price{color:#fff;font-size:clamp(24px,2.4vw,32px);letter-spacing:-.03em}
+.closing .row{justify-content:center;margin-top:22px}
+
+/* two panels side by side: a title, something to look at, a button */
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,1.6vw,20px)}
+.panel2{border-radius:28px;padding:clamp(24px,3.4vw,44px);background:var(--bg-soft);
+        display:flex;flex-direction:column;gap:clamp(20px,2.6vw,32px);justify-content:space-between}
+.panel2.dark{background:#000}
+.panel2 h3{font-size:clamp(26px,3vw,40px);letter-spacing:-.04em;line-height:1.04}
+.panel2 .boxart{width:min(230px,62%);margin:0 auto}
+.panel2 .row{gap:10px}
+/* his screen the way the Studio shows it: under an editor's grid */
+.editor .screen{border-radius:14px;position:relative}
+.editor .screen canvas{width:100%!important}
+.editor .screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:
+    linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px) 0 0/6.25% 100%,
+    linear-gradient(0deg,rgba(255,255,255,.1) 1px,transparent 1px) 0 0/100% 12.5%}
+@media (max-width:900px){.pair{grid-template-columns:1fr}}
 
 /* ---------------------------------------------------------------- community
    (The community pages' own styles name the toy-box palette; here those

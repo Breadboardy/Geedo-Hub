@@ -6,6 +6,15 @@
 <title>Geedo — a little robot with a face</title>
 <meta name="description" content="A desk robot with a 128x64 face. He joins your WiFi, fetches new animations from the Hub on his own, and pulls faces at you.">
 <meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Geedo">
+<meta property="og:title" content="Geedo — a little robot with a face">
+<meta property="og:description" content="He lives on your desk and has a life of his own.">
+<meta property="og:url" content="https://breadboardy.github.io/Geedo-Hub/">
+<meta property="og:image" content="https://breadboardy.github.io/Geedo-Hub/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
@@ -33,32 +42,18 @@
   .shot:hover .screen{transform:translateY(-3px);box-shadow:0 18px 30px -18px rgba(0,0,0,.5)}
   .shot b{display:block;margin-top:12px;font-size:15px;font-weight:600;letter-spacing:-.012em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  /* how it works: three lines, a rule over each */
-  .how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,4vw,56px);list-style:none;margin:0;padding:0}
+  /* what he is like: six lines, a rule over each */
+  .how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,40px) clamp(18px,4vw,56px);list-style:none;margin:0;padding:0}
   .how li{border-top:1px solid var(--ink);padding-top:18px;font-size:clamp(19px,1.9vw,24px);font-weight:600;letter-spacing:-.025em;line-height:1.2}
-
-  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,5vw,72px);align-items:center}
-  .stage{background:var(--bg-soft);border-radius:28px;padding:clamp(28px,5vw,56px);display:grid;place-items:center;min-height:clamp(260px,34vw,420px)}
-  .stage .boxart{width:min(300px,78%)}
-
-  /* the studio: a black panel, his screen under an editor's grid */
-  .band{background:#000;color:#fff;border-radius:28px;padding:clamp(28px,5vw,64px);
-        display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center}
-  .editor{position:relative}
-  .editor .screen{border-radius:14px}
-  .editor .screen canvas{width:100%!important}
-  .editor .screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:
-      linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px) 0 0/6.25% 100%,
-      linear-gradient(0deg,rgba(255,255,255,.1) 1px,transparent 1px) 0 0/100% 12.5%}
 
   @media (max-width:480px){
     .hero-cta{gap:10px}
     .hero-cta .btn{padding:11px 17px;font-size:14.5px}
+    .how{grid-template-columns:1fr}
   }
   @media (max-width:860px){
     .gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .how{grid-template-columns:1fr}
-    .band{grid-template-columns:1fr}
+    .how{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
 </style>
 </head>
@@ -68,13 +63,14 @@
   <div class="nav-in">
     <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
     <div class="grow"></div>
-    <div class="nav-links row" style="gap:clamp(14px,2.4vw,28px)">
+    <div class="nav-links row">
       <a class="link" href="browse.html">Animations</a>
       <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="studio/index.html">Studio</a>
       <a class="link" href="settings.html">My Geedo</a>
       <a class="link" href="unlock.html">Redeem</a>
-      <a class="link" href="studio/index.html">Studio</a>
     </div>
+    <a class="btn primary buy" href="buy.html">Buy</a>
     <button class="nav-toggle" aria-label="Menu">≡</button>
   </div>
 </nav>
@@ -83,8 +79,8 @@
   <div class="wrap">
     <h1 class="display">A little robot<br>with a face.</h1>
     <div class="hero-cta">
-      <a class="btn primary" href="browse.html">See what he does</a>
-      <a class="btn" href="packs.html">Animation packs</a>
+      <a class="btn primary" href="buy.html">Buy Geedo</a>
+      <a class="btn" href="browse.html">See what he does</a>
     </div>
   </div>
 
@@ -109,51 +105,59 @@
 <section class="wrap">
   <div class="head">
     <h2 class="h1">Set him up once.<br>He does the rest.</h2>
+    <a class="btn" href="buy.html">More about him</a>
   </div>
-  <ol class="how">
+  <ul class="how">
     <li>He joins your WiFi once.</li>
     <li>New animations arrive on their own.</li>
-    <li>You can draw your own.</li>
-  </ol>
+    <li>He updates himself.</li>
+    <li>Tap him and he perks up.</li>
+    <li>He naps while you are away.</li>
+    <li>He charges over USB-C.</li>
+  </ul>
 </section>
 
 <section class="wrap">
-  <div class="split">
-    <div>
-      <h2 class="h1">Free packs,<br>and secret ones.</h2>
-      <div class="hero-cta" style="justify-content:flex-start">
-        <a class="btn primary" href="unlock.html">Redeem a code</a>
-        <a class="btn" href="packs.html">See the packs</a>
-      </div>
-    </div>
-    <div class="stage">
-      <div class="boxart" id="boxart">
-        <img src="assets/box.svg" alt="A Geedo animation pack: a box with his screen on the front" width="240" height="224" style="width:100%;height:auto">
-        <div class="box-screen" id="box-live" aria-hidden="true"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="wrap">
-  <div class="band dark">
-    <div>
-      <h2 class="h1">Draw him<br>a new face.</h2>
-      <div class="hero-cta" style="justify-content:flex-start">
+  <div class="pair">
+    <div class="panel2 dark">
+      <h3>Draw him<br>a new face.</h3>
+      <div class="editor" id="editor"><div class="screen blank"></div></div>
+      <div class="row">
         <a class="btn primary" href="studio/index.html">Open Studio</a>
         <a class="btn" href="make.html">How to draw one</a>
       </div>
     </div>
-    <div class="editor" id="editor"><div class="screen blank"></div></div>
+    <div class="panel2">
+      <h3>Free packs,<br>and secret ones.</h3>
+      <div class="boxart" id="boxart">
+        <img src="assets/box.svg" alt="A Geedo animation pack: a box with his screen on the front" width="240" height="224" style="width:100%;height:auto">
+        <div class="box-screen" id="box-live" aria-hidden="true"></div>
+      </div>
+      <div class="row">
+        <a class="btn primary" href="unlock.html">Redeem a code</a>
+        <a class="btn" href="packs.html">See the packs</a>
+      </div>
+    </div>
   </div>
 </section>
 
 </main>
 
+<section class="closing dark">
+  <div class="wrap">
+    <h2 class="display">Bring him home.</h2>
+    <p class="price" data-geedo-price>Price to be announced</p>
+    <div class="row">
+      <a class="btn primary" href="buy.html">Buy Geedo</a>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap foot">
     <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
     <nav class="foot-links" aria-label="Site">
+      <a href="buy.html">Buy</a>
       <a href="browse.html">Animations</a>
       <a href="packs.html">Packs</a>
       <a href="makers.html">Makers</a>
@@ -168,6 +172,7 @@
 </footer>
 
 <script src="assets/geedo.js"></script>
+<script src="assets/product.js"></script>
 <script>
 (async () => {
   const { Screen, loadBin, manifest, pretty } = window.Geedo;
@@ -211,15 +216,15 @@
     try { glass.replaceChildren(new Screen(await loadBin(hero.file), { scale: 1 }).el); } catch (e) {}
   }
 
-  // What he does: eight of them, each a link to its own page.
+  // What he does: four of them, each a link to its own page.
   const gallery = document.getElementById('gallery');
-  const picks = ['coffee', 'dj', 'stargazing', 'cat', 'reading', 'music', 'campfire', 'dog']
+  const picks = ['coffee', 'dj', 'stargazing', 'cat']
     .map(n => byId('activities_' + n)).filter(Boolean);
   for (const a of shown) {
-    if (picks.length >= 8) break;
+    if (picks.length >= 4) break;
     if (!picks.includes(a) && a.category !== 'eating' && a !== hero) picks.push(a);
   }
-  const loaded = await Promise.all(picks.slice(0, 8).map(a => loadBin(a.file).then(anim => ({ a, anim }), () => null)));
+  const loaded = await Promise.all(picks.slice(0, 4).map(a => loadBin(a.file).then(anim => ({ a, anim }), () => null)));
   gallery.replaceChildren();
   for (const it of loaded) {
     if (!it) continue;

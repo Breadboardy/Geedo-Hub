@@ -4,6 +4,7 @@ This is what every Geedo talks to. It serves animations and firmware updates
 over the air, and it is where people share what they drew for him.
 
 - **The Hub** — https://breadboardy.github.io/Geedo-Hub/
+- **Buy Geedo** — https://breadboardy.github.io/Geedo-Hub/buy.html
 - **Draw one** — https://breadboardy.github.io/Geedo-Hub/make.html
 - **Studio** — https://breadboardy.github.io/Geedo-Hub/studio/
 - **Redeem a code** — https://breadboardy.github.io/Geedo-Hub/unlock.html

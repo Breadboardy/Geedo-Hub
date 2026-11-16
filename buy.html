@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buy Geedo — a little robot with a face</title>
+<meta name="description" content="Geedo is a little desk robot with a face. He joins your WiFi, gets new animations on his own, naps when you are away, and charges over USB-C.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Geedo">
+<meta property="og:title" content="Geedo — a little robot with a face">
+<meta property="og:description" content="He lives on your desk and has a life of his own.">
+<meta property="og:url" content="https://breadboardy.github.io/Geedo-Hub/buy.html">
+<meta property="og:image" content="https://breadboardy.github.io/Geedo-Hub/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/geedo.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  /* the top: him, turning, and the way to buy him */
+  .pdp{background:radial-gradient(52% 58% at 30% 56%,#1c1c1c 0%,#0b0b0b 46%,#000 78%);color:#fff;
+       margin-top:-61px;padding:calc(61px + clamp(20px,4vw,56px)) 0 clamp(28px,4vw,64px);overflow:hidden}
+  .pdp-in{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(16px,4vw,64px);align-items:center}
+  .turntable{position:relative;width:min(540px,100%);margin:0 auto;aspect-ratio:940/997;touch-action:pan-y;
+        user-select:none;-webkit-user-select:none;cursor:grab;outline:0}
+  .turntable.drag{cursor:grabbing}
+  .turntable:focus-visible{box-shadow:0 0 0 2px #fff;border-radius:24px}
+  .turntable img{position:absolute;inset:0;width:100%;height:100%;visibility:hidden;pointer-events:none;-webkit-user-drag:none}
+  .turntable img.on{visibility:visible}
+  /* his screen: a 128 x 64 canvas laid onto the corners of the glass in the view showing */
+  .glass{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;pointer-events:none}
+  .glass[hidden]{display:none}
+  .glass::before{content:'';position:absolute;left:-11.6px;right:-12px;top:-15.6px;bottom:-14px;background:#000;opacity:.88}
+  .glass .screen{position:relative;border:0;border-radius:0}
+  .turn{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 0;font-size:13.5px;color:#8a8a8a;
+        transition:opacity .5s;min-height:24px}
+  .turn svg{width:22px;height:22px}
+  .tt-wrap.turned .turn{opacity:0}
+
+  .buybox h1{font-size:clamp(56px,8vw,112px);letter-spacing:-.05em;line-height:.92}
+  .buybox .say{margin:clamp(12px,1.6vw,20px) 0 0;font-size:clamp(20px,2.1vw,28px);font-weight:600;letter-spacing:-.025em;color:#a1a1a1;line-height:1.2}
+  .buybox .price{margin:clamp(22px,3vw,36px) 0 0;font-size:clamp(17px,1.5vw,20px);font-weight:600;letter-spacing:-.01em;color:#a1a1a1}
+  .on-sale .buybox .price{color:inherit;font-size:clamp(26px,2.6vw,34px);letter-spacing:-.03em}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+  .soon{margin:16px 0 0;font-size:14px;color:#8a8a8a}
+
+  .head{margin-bottom:clamp(26px,3.4vw,44px)}
+
+  /* what he is like: his own screen, showing it */
+  .feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,20px)}
+  .feat{margin:0;background:var(--bg-soft);border-radius:24px;padding:clamp(14px,1.6vw,20px)}
+  .feat .screen{border:0;border-radius:12px;aspect-ratio:2/1}
+  .feat .screen canvas{width:100%!important}
+  .feat figcaption{padding:clamp(14px,1.6vw,20px) 4px 4px;font-size:clamp(18px,1.7vw,22px);font-weight:600;letter-spacing:-.025em;line-height:1.2}
+
+  /* what the app changes, as the things you would reach for */
+  .knobs{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+  .knobs li{border:1px solid var(--line-bright);background:#fff;border-radius:999px;padding:8px 16px;font-size:15px;font-weight:500}
+
+  /* the facts */
+  .specs{margin:0;border-top:1px solid var(--ink)}
+  .specs div{display:grid;grid-template-columns:minmax(110px,.32fr) 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .specs dt{color:var(--mute)}
+  .specs dd{margin:0;font-weight:500}
+
+  .faq{border-top:1px solid var(--ink)}
+  .faq details{border-bottom:1px solid var(--line)}
+  .faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;
+               padding:18px 0;font-size:clamp(17px,1.5vw,20px);font-weight:600;letter-spacing:-.02em}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:'';flex:none;width:11px;height:11px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+                      transform:rotate(45deg) translate(-3px,-3px);transition:transform .2s var(--ease)}
+  .faq details[open] summary::after{transform:rotate(-135deg) translate(-3px,-3px)}
+  .faq p{margin:0;padding:0 0 20px;color:var(--mute);max-width:62ch}
+  .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,5vw,72px);align-items:start}
+
+  @media (max-width:900px){
+    .pdp-in{grid-template-columns:1fr}
+    .buybox{text-align:center}
+    .hero-cta{justify-content:center}
+    .turntable{width:min(420px,84%)}
+    .feats{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .cols{grid-template-columns:1fr}
+  }
+  @media (max-width:520px){
+    .feats{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav dark">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="studio/index.html">Studio</a>
+      <a class="link" href="settings.html">My Geedo</a>
+      <a class="link" href="unlock.html">Redeem</a>
+    </div>
+    <a class="btn primary buy" href="buy.html" aria-current="page">Buy</a>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<header class="pdp dark">
+  <div class="wrap pdp-in">
+    <div class="tt-wrap" id="spin-wrap">
+      <div class="turntable" id="spin" tabindex="0" role="img" aria-label="Geedo, a small white robot with a black screen for a face. Drag, or use the arrow keys, to turn him round.">
+        <img class="on" src="assets/app/spin/f32.webp" width="940" height="997" alt="" draggable="false">
+        <div class="glass" id="glass" aria-hidden="true"></div>
+      </div>
+      <p class="turn" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c0-2.2 4-4 9-4s9 1.800 9 4-4 4-9 4"/><path d="M9 13l3 3-3 3"/></svg>
+        Drag to turn him
+      </p>
+    </div>
+    <div class="buybox">
+      <h1>Geedo</h1>
+      <p class="say">A little robot with a face.</p>
+      <p class="price" data-geedo-price>Price to be announced</p>
+      <div class="hero-cta">
+        <a class="btn primary" data-geedo-buy data-soon="Get notified" data-sale="Buy Geedo"
+           href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Get notified</a>
+        <a class="btn" href="browse.html">See what he does</a>
+      </div>
+      <p class="soon" data-geedo-soon>Not on sale yet. The Discord hears first.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap">
+  <h2 class="h1 head">A life of his own.</h2>
+  <div class="feats">
+    <figure class="feat"><div class="screen blank" data-anim="activities_coffee"></div><figcaption>Always up to something.</figcaption></figure>
+    <figure class="feat"><div class="screen blank" data-anim="activities_stargazing"></div><figcaption>New animations arrive on their own.</figcaption></figure>
+    <figure class="feat"><div class="screen blank" data-anim="animations_boot_connecting_to_wifi"></div><figcaption>Joins your WiFi once.</figcaption></figure>
+    <figure class="feat"><div class="screen blank" data-anim="animations_boot_update_animation"></div><figcaption>Updates himself.</figcaption></figure>
+    <figure class="feat"><div class="screen blank" data-anim="activities_napping"></div><figcaption>Naps while you are away.</figcaption></figure>
+    <figure class="feat"><div class="screen blank" data-anim="animations_boot_charging"></div><figcaption>Charges over USB-C.</figcaption></figure>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2 class="h1 head">Make him yours.</h2>
+  <div class="pair">
+    <div class="panel2 dark">
+      <h3>Draw him<br>a new face.</h3>
+      <div class="editor"><div class="screen blank" data-anim="activities_chill_glasses" data-scale="4"></div></div>
+      <div><a class="btn primary" href="studio/index.html">Open Studio</a></div>
+    </div>
+    <div class="panel2">
+      <h3>An app for<br>everything else.</h3>
+      <ul class="knobs">
+        <li>Brightness</li><li>Volume</li><li>Focus</li><li>Bedside clock</li><li>Bedtime</li><li>Find my Geedo</li><li>Low Power Mode</li>
+      </ul>
+      <div><a class="btn primary" href="settings.html">Open My Geedo</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="cols">
+    <div>
+      <h2 class="h1 head">Tech specs</h2>
+      <dl class="specs">
+        <div><dt>Screen</dt><dd>128 × 64 pixels, black and white</dd></div>
+        <div><dt>WiFi</dt><dd>2.4 GHz</dd></div>
+        <div><dt>Bluetooth</dt><dd>For the app on your phone</dd></div>
+        <div><dt>Power</dt><dd>Rechargeable battery, USB-C</dd></div>
+        <div><dt>Sound</dt><dd>Soft chirps, three volumes, or off</dd></div>
+        <div><dt>Button</dt><dd>One. Tap it to pet him.</dd></div>
+        <div><dt>Animations</dt><dd><span id="count">57</span> free on the Hub, more in packs</dd></div>
+      </dl>
+    </div>
+    <div>
+      <h2 class="h1 head">Questions</h2>
+      <div class="faq">
+        <details data-geedo-soon><summary>How much does he cost?</summary>
+          <p>The price is not set yet. It will be on this page the moment it is.</p></details>
+        <details data-geedo-soon><summary>When can I buy one?</summary>
+          <p>Not yet. Join the Discord and you will hear first.</p></details>
+        <details><summary>What do I need?</summary>
+          <p>Home WiFi on 2.4 GHz, a USB-C cable to charge him, and a phone, once, to tell him your WiFi.
+             Networks with a login page, like a school's or a hotel's, will not work.</p></details>
+        <details><summary>Are the animations free?</summary>
+          <p>Everything on the Hub is free and arrives by itself. Packs are extra sets that open with a code.</p></details>
+        <details><summary>Does he work without WiFi?</summary>
+          <p>Yes. He keeps what he has downloaded and plays it anywhere.</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<section class="closing dark">
+  <div class="wrap">
+    <h2 class="display">Bring him home.</h2>
+    <p class="price" data-geedo-price>Price to be announced</p>
+    <div class="row">
+      <a class="btn primary" data-geedo-buy data-soon="Get notified" data-sale="Buy Geedo"
+         href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Get notified</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="buy.html">Buy</a>
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="assets/geedo.js"></script>
+<script src="assets/product.js"></script>
+<script>
+(() => {
+  const { Screen, loadBin, manifest } = window.Geedo;
+  const $ = id => document.getElementById(id);
+
+  // ---- the turntable -------------------------------------------------------
+  // Thirty-six views of him, ten degrees apart (the set the app spins), one
+  // showing at a time. A drag turns him and he glides to a stop. Where a view
+  // shows his glass, spin.json has its four corners and his screen is laid
+  // onto them, so the animation stays on his face as he turns.
+  const DIR = 'assets/app/spin/', FRONT = 32;
+  const spin = $('spin'), glass = $('glass'), wrap = $('spin-wrap');
+  const imgs = []; imgs[FRONT] = spin.querySelector('img');
+  let meta = null, N = 36, cur = FRONT, want = FRONT, dragging = false, lastX = 0, lastT = 0, vel = 0, raf = 0, begun = false;
+
+  function homography(w, h, q) {
+    const src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], B = [];
+    for (let i = 0; i < 4; i++) { const [x, y] = src[i], [u, v] = q[i]; A.push([x, y, 1, 0, 0, 0, -x * u, -y * u]); B.push(u); A.push([0, 0, 0, x, y, 1, -x * v, -y * v]); B.push(v); }
+    for (let c = 0; c < 8; c++) {
+      let piv = c; for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[piv][c])) piv = r;
+      [A[c], A[piv]] = [A[piv], A[c]]; [B[c], B[piv]] = [B[piv], B[c]];
+      for (let r = 0; r < 8; r++) { if (r === c) continue; const f = A[r][c] / A[c][c]; if (!f) continue; for (let j = c; j < 8; j++) A[r][j] -= f * A[c][j]; B[r] -= f * B[c]; }
+    }
+    const [a, b, c, d, e, f, g, hh] = B.map((v, i) => v / A[i][i]);
+    return `matrix3d(${a},${d},0,${g},${b},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
+  }
+  const ready = k => imgs[k] && imgs[k].complete && imgs[k].naturalWidth > 0;
+  function place() {
+    if (!meta) return;
+    const q = meta.frames[cur] && meta.frames[cur].screen, s = spin.clientWidth / meta.w;
+    if (!q || !s) { glass.hidden = true; return; }
+    glass.hidden = false;
+    glass.style.transform = homography(128, 64, q.map(([x, y]) => [x * s, y * s]));
+  }
+  function show(k) {                                     // the view nearest k that has arrived
+    k = ((Math.round(k) % N) + N) % N;
+    let best = null;
+    for (let d = 0; d <= N / 2 && best === null; d++) for (const c of [k + d, k - d]) { const m = ((c % N) + N) % N; if (ready(m)) { best = m; break; } }
+    if (best === null || best === cur) return;
+    imgs[cur].classList.remove('on'); imgs[best].classList.add('on'); cur = best; place();
+  }
+  function fetchViews() {                                // nearest the front first, so the first drag has somewhere to go
+    if (begun) return; begun = true;
+    const order = []; for (let d = 1; d <= N / 2; d++) for (const k of [(FRONT + d) % N, (FRONT - d + N) % N]) if (!order.includes(k) && k !== FRONT) order.push(k);
+    let i = 0, left = order.length;
+    const one = () => {
+      if (i >= order.length) return;
+      const k = order[i++], im = new Image();
+      im.alt = ''; im.decoding = 'sync'; im.draggable = false;
+      const next = () => { if (--left === 0) hello(); else one(); };
+      im.onload = () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(next);
+      im.onerror = next;
+      im.src = DIR + 'f' + String(k).padStart(2, '0') + '.webp';
+      imgs[k] = im; spin.insertBefore(im, glass);
+    };
+    for (let n = 0; n < 4; n++) one();
+  }
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function turn(views, ms) {                             // a turn on his own
+    cancelAnimationFrame(raf);
+    const from = want, t0 = performance.now(), ease = u => u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+    const step = now => { const u = Math.min(1, (now - t0) / ms); want = from + views * ease(u); show(want); if (u < 1) raf = requestAnimationFrame(step); else want = Math.round(want); };
+    raf = requestAnimationFrame(step);
+  }
+  let greeted = false;
+  function hello() {                                     // every view is in: once round, to show that he turns
+    if (greeted || calm || dragging || wrap.classList.contains('turned')) return;
+    const r = spin.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    greeted = true; turn(-N, 2600);
+  }
+  function glide() {
+    cancelAnimationFrame(raf);
+    const step = () => { vel *= 0.92; want += vel; show(want); if (Math.abs(vel) < 0.03) { want = Math.round(want); show(want); return; } raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+  }
+  spin.addEventListener('pointerdown', e => {
+    if (e.button) return;
+    fetchViews(); dragging = true; wrap.classList.add('turned'); spin.classList.add('drag');
+    try { spin.setPointerCapture(e.pointerId); } catch (x) {}
+    cancelAnimationFrame(raf); want = cur; lastX = e.clientX; lastT = performance.now(); vel = 0;
+  });
+  spin.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const now = performance.now(), dx = e.clientX - lastX, per = spin.clientWidth * 1.6 / N;
+    want += dx / per; vel = 0.6 * vel + 0.4 * (dx / per) * 16 / Math.max(1, now - lastT);
+    lastX = e.clientX; lastT = now; show(want);
+  });
+  const end = () => { if (!dragging) return; dragging = false; spin.classList.remove('drag'); glide(); };
+  spin.addEventListener('pointerup', end); spin.addEventListener('pointercancel', end);
+  spin.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault(); fetchViews(); wrap.classList.add('turned'); cancelAnimationFrame(raf);
+    want = Math.round(want) + (e.key === 'ArrowRight' ? 1 : -1); show(want);
+  });
+  if (window.ResizeObserver) new ResizeObserver(place).observe(spin); else addEventListener('resize', place);
+  fetch(DIR + 'spin.json').then(r => r.json()).then(j => {
+    meta = j; N = j.views || 36; place();
+    // the other views are a megabyte between them: after the page, and not at all on a connection that asked to save data
+    const go = () => { if (!(navigator.connection && navigator.connection.saveData)) setTimeout(fetchViews, 300); };
+    if (document.readyState === 'complete') go(); else addEventListener('load', go);
+  }).catch(() => {});
+
+  // ---- his screens ---------------------------------------------------------
+  manifest().then(async m => {
+    const anims = m.animations || [], byId = id => anims.find(a => a.id === id);
+    const isSystem = a => /hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
+    const n = anims.filter(a => !isSystem(a)).length;
+    if (n) $('count').textContent = n;
+
+    const wave = byId('activities_helloo') || byId('activities_waking_up');
+    if (wave) loadBin(wave.file).then(anim => glass.replaceChildren(new Screen(anim, { scale: 1 }).el)).catch(() => {});
+
+    for (const slot of document.querySelectorAll('[data-anim]')) {
+      const a = byId(slot.dataset.anim);
+      if (!a) { slot.closest('.feat') && slot.closest('.feat').remove(); continue; }
+      loadBin(a.file).then(anim => slot.replaceWith(new Screen(anim, { scale: +slot.dataset.scale || 2 }).el))
+                     .catch(() => { slot.classList.remove('blank'); });
+    }
+  }).catch(() => {});
+})();
+</script>
+</body>
+</html>

@@ -8,7 +8,8 @@
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  .pack{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-lift)}
+  .pack{border:var(--pen);border-radius:var(--wobble-box);background:var(--bg-lift);box-shadow:var(--pencil)}
+  .pack:nth-child(2n){border-radius:var(--wobble-box-2)}
   .pack-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:20px 22px}
   .pack-screens{display:flex;gap:10px;overflow-x:auto;padding:0 22px 20px}
   .pack-screens>*{flex:none}
@@ -16,20 +17,22 @@
   .r-common{color:var(--dim)} .r-uncommon{color:var(--good)}
   .r-rare{color:var(--accent)} .r-legendary{color:var(--warn)}
   .ladder{width:100%;border-collapse:collapse;font-size:13px}
-  .ladder th,.ladder td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  .ladder th,.ladder td{text-align:left;padding:13px 14px;border-bottom:1.5px dashed var(--line-bright);vertical-align:top}
   .ladder th{color:var(--dim);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
   .ladder td:first-child{color:var(--text);white-space:nowrap}
   .ladder .free{color:var(--good)}
   .ladder .dear{color:var(--bad)}
   .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,52px)}
   .shop{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-  .product{background:var(--bg-lift);border:1px solid var(--line);border-radius:16px;
-           padding:22px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:6px}
+  .product{background:var(--bg-lift);border:var(--pen);border-radius:var(--wobble-box);
+           padding:22px;box-shadow:var(--pencil);display:flex;flex-direction:column;gap:6px}
+  .product:nth-child(2n){border-radius:var(--wobble-box-2)}
   .product .boxart{width:min(240px,70vw);margin:6px auto 14px;
                    filter:drop-shadow(0 10px 14px rgba(90,70,40,.16))}
-  .product h3{font-size:17px}
+  .product h3{font-size:21px}
   .product .tag2{color:var(--mute);font-size:13.5px;line-height:1.55;flex:1}
-  .product .rowb{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  .product .rowb{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:14px}
+  .product .rowb>*{white-space:nowrap}
   .product.soon .boxart{filter:grayscale(.85) opacity(.55) drop-shadow(0 10px 14px rgba(90,70,40,.1))}
 </style>
 </head>

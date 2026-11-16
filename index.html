@@ -4,22 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Geedo — a little robot with a face</title>
-<meta name="description" content="A desk robot with a 128x64 face. He joins your WiFi, downloads new animations from the Hub on his own, and pulls faces at you.">
+<meta name="description" content="A desk robot with a 128x64 face. He joins your WiFi, fetches new animations from the Hub on his own, and pulls faces at you.">
 <link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-  .hero{padding-block:clamp(44px,6vw,84px) clamp(28px,3.4vw,46px)}
-  .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) auto;gap:clamp(30px,5vw,72px);align-items:center}
-  .hero .display span{color:var(--accent)}
-  .hero-stats{display:flex;gap:clamp(20px,4vw,48px);flex-wrap:wrap;margin-top:34px;
-    padding-top:26px;border-top:1px solid var(--line)}
-  .hero-stats .num{font-size:26px;display:block;line-height:1;color:var(--accent)}
-  .strip{display:flex;gap:16px;overflow-x:auto;padding-bottom:14px;scrollbar-width:thin}
-  .strip>*{flex:none}
-  .strip figcaption{margin-top:9px;font-size:12px;color:var(--mute);font-weight:500}
+  .hero{padding-block:clamp(36px,5vw,72px) clamp(24px,3vw,40px)}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,4vw,64px);align-items:center}
+  .hero .note-hand{display:inline-block;transform:rotate(-2deg);margin:0 0 10px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:16px;margin-top:30px;align-items:center}
+  .scribble-note{display:flex;align-items:flex-start;gap:6px;margin-top:22px;color:var(--mute);font-family:var(--note);font-weight:700;font-size:21px;line-height:1.15}
+  .scribble-note svg{flex:none;width:44px;height:30px;margin-top:-6px}
+
+  /* the drawing of him, with his real screen in it */
+  .doodle{position:relative;width:min(100%,460px);margin-inline:auto;aspect-ratio:420/520}
+  .doodle>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .doodle .live{position:absolute;left:38.81%;top:25.19%;width:39.05%}
+  .doodle .live .screen{border:0;border-radius:3px;box-shadow:none}
+
+  /* what he does: screens taped into the notebook */
+  .snaps{display:flex;gap:28px;overflow-x:auto;padding:18px 8px 26px;scrollbar-width:thin;scroll-snap-type:x proximity}
+  .snap{flex:none;margin:0;width:236px;background:var(--bg-lift);border:var(--pen);border-radius:var(--wobble-box);
+    padding:10px 10px 4px;box-shadow:var(--pencil);position:relative;transform:rotate(-1.2deg);scroll-snap-align:start}
+  .snap:nth-child(2n){transform:rotate(1deg);border-radius:var(--wobble-box-2)}
+  .snap:nth-child(3n){transform:rotate(-.3deg)}
+  .snap .screen{box-shadow:none;border-width:2px}
+  .snap figcaption{font-family:var(--note);font-weight:700;font-size:23px;text-align:center;margin-top:4px;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* how it works: three sheets, an arrow drawn between each */
+  .how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,3.4vw,46px)}
+  .how>div{position:relative;background:var(--bg-lift);border:var(--pen);border-radius:var(--wobble-box);padding:22px 24px 24px;box-shadow:var(--pencil)}
+  .how>div:nth-child(2){border-radius:var(--wobble-box-2);transform:rotate(.4deg)}
+  .how>div:nth-child(1){transform:rotate(-.5deg)}
+  .how>div+div::before{content:'';position:absolute;left:calc(-1 * clamp(22px,3.4vw,46px) - 6px);top:46px;width:calc(clamp(22px,3.4vw,46px) + 12px);height:26px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 26'%3E%3Cpath d='M3 15 C 18 6 34 6 52 13' fill='none' stroke='%231f2430' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M43 6 L 54 13 L 44 21' fill='none' stroke='%231f2430' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+  .how svg.ico{width:62px;height:62px;margin-bottom:8px}
+  .how h3{font-size:22px;margin-bottom:6px}
+  .how p{margin:0;color:var(--mute);font-size:15px}
+
   .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(26px,4vw,60px);align-items:center}
+  .boxwrap{position:relative;width:min(400px,86vw);margin:0 auto}
+  .boxwrap .sparkle{position:absolute;width:30px;height:30px}
   .foot-cols{display:flex;gap:clamp(24px,4vw,56px);align-items:flex-start;flex-wrap:wrap}
-  @media (max-width:880px){.hero-grid{grid-template-columns:1fr}.hero .screen{justify-self:start}}
+
+  @media (max-width:880px){
+    .hero-grid{grid-template-columns:1fr}
+    .doodle{width:min(100%,380px)}
+    .how{grid-template-columns:1fr}
+    .how>div+div::before{left:50%;top:-30px;width:34px;height:34px;transform:translateX(-50%) rotate(90deg)}
+  }
 </style>
 </head>
 <body>
@@ -42,20 +75,75 @@
 <header class="hero wrap">
   <div class="hero-grid">
     <div>
-      <p class="micro" style="margin:0 0 18px">The desk robot</p>
-      <h1 class="display">A little robot<br>with a <span>face</span>.</h1>
-      <p class="lead" style="margin-top:24px">
-        Geedo is a little robot that lives on your desk. He connects to your
-        WiFi and downloads new animations all by himself. You never have to
-        plug him into anything.
+      <p class="note-hand">meet Geedo -</p>
+      <h1 class="display">A little robot<br>with a <span class="mark">face</span>.</h1>
+      <p class="lead" style="margin-top:22px">
+        Geedo lives on your desk and has a life of his own. He joins your WiFi,
+        fetches new animations from the Hub by himself, and pulls faces at you
+        when you least expect it.
       </p>
-      <div class="row" style="margin-top:32px;gap:12px">
+      <div class="hero-cta">
         <a class="btn primary" href="browse.html">See what he does</a>
         <a class="btn" href="packs.html">Animation packs</a>
       </div>
+      <p class="scribble-note">
+        <svg viewBox="0 0 44 30" aria-hidden="true"><path d="M40 4 C 30 2 16 6 9 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4 13 L 8 22 L 17 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        no computer needed - it all comes over WiFi
+      </p>
     </div>
-    <figure style="margin:0" id="hero-fig">
-      <div class="screen lg" style="width:min(384px,80vw);aspect-ratio:2/1;"></div>
+
+    <figure class="doodle" id="hero-fig" style="margin:0" aria-label="A drawing of Geedo, with a real animation playing on his screen">
+      <svg viewBox="0 0 420 520" aria-hidden="true">
+        <defs>
+          <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+            <line x1="0" y1="0" x2="0" y2="7" stroke="#1f2430" stroke-width="1.3"/>
+          </pattern>
+          <pattern id="hatch-soft" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#1f2430" stroke-width="1" opacity=".45"/>
+          </pattern>
+        </defs>
+        <!-- his shadow, hatched in pencil -->
+        <ellipse cx="226" cy="470" rx="168" ry="19" fill="url(#hatch-soft)"/>
+        <path d="M62 474 C 120 490 330 492 392 468" fill="none" stroke="#1f2430" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+        <!-- the side you see, shaded, and the top -->
+        <path d="M131 122 C 117 112 104 104 94 99 C 92 200 93 320 92 402 C 104 412 117 421 131 428 Z" fill="url(#hatch-soft)"/>
+        <path d="M156 93 C 140 84 128 76 118 71 C 180 68 250 71 296 70 C 312 76 326 84 336 92 Z" fill="#fffdf8"/>
+        <!-- the box, drawn round twice the way a pen sketch is -->
+        <g fill="none" stroke="#1f2430" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M156 93 C 220 89 300 92 334 92 Q 361 93 360 119 C 362 220 358 340 360 426 Q 359 452 333 452 C 270 454 200 450 156 452 Q 130 451 131 426 C 129 330 132 200 130 119 Q 131 93 156 93 Z" fill="#fffdf8" stroke-width="2.8"/>
+          <path d="M158 95 C 222 92 298 94 331 95 Q 357 97 357 121 C 359 222 356 338 357 423 Q 356 448 331 449 C 268 451 202 448 158 449 Q 134 448 134 423 C 132 332 135 202 133 121 Q 134 96 158 95" stroke-width="1" opacity=".35"/>
+          <path d="M92 402 C 93 300 91 180 93 97 Q 92 70 118 70 C 180 68 250 71 296 70" stroke-width="2.4"/>
+          <path d="M156 93 C 142 84 130 77 118 71" stroke-width="2.2"/>
+          <path d="M334 92 C 320 84 308 76 296 70" stroke-width="2.2"/>
+          <path d="M131 428 C 118 420 105 411 92 402" stroke-width="2.2"/>
+          <!-- the panel low on his front, and his charge light -->
+          <path d="M270 331 C 290 329 312 330 328 331 C 330 350 329 372 330 391 C 312 393 290 392 270 392 C 268 372 269 350 270 331 Z" stroke-width="1.8" opacity=".8"/>
+        </g>
+        <circle cx="318" cy="343" r="3.6" fill="#0e7c93"/>
+        <!-- his screen: the glass, and his face until the live one arrives -->
+        <path d="M160 121 C 220 118 280 119 330 120 Q 337 121 337 128 C 338 160 337 192 337 216 Q 336 224 329 224 C 270 226 210 224 161 225 Q 153 224 153 217 C 152 188 153 156 152 129 Q 153 121 160 121 Z" fill="#000" stroke="#1f2430" stroke-width="2.6" stroke-linejoin="round"/>
+        <rect x="185" y="146" width="44" height="34" rx="9" fill="#fff"/>
+        <rect x="261" y="146" width="44" height="34" rx="9" fill="#fff"/>
+        <!-- doodles round him -->
+        <g fill="none" stroke="#1f2430" stroke-width="2.2" stroke-linecap="round">
+          <path d="M384 52 L 384 76 M372 64 L 396 64 M376 56 L 392 72 M392 56 L 376 72" opacity=".9"/>
+          <path d="M398 136 L 398 150 M391 143 L 405 143"/>
+          <path d="M44 150 L 44 162 M38 156 L 50 156"/>
+          <path d="M378 236 C 388 246 388 262 378 272"/>
+          <path d="M392 226 C 406 242 406 266 392 282"/>
+        </g>
+        <path d="M50 380 C 44 370 30 374 34 386 C 37 395 50 402 50 402 C 50 402 63 395 66 386 C 70 374 56 370 50 380 Z" fill="#ffe27a" stroke="#1f2430" stroke-width="2" stroke-linejoin="round"/>
+        <!-- the margin note, and its arrow to his screen -->
+        <g fill="#0e7c93" font-family="Caveat, 'Segoe Script', cursive" font-weight="700" font-size="25" transform="rotate(-6 70 40)">
+          <text x="8" y="30">new faces arrive</text>
+          <text x="16" y="56">by themselves!</text>
+        </g>
+        <g fill="none" stroke="#0e7c93" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M84 70 C 100 96 120 116 146 136"/>
+          <path d="M132 137 L 147 137 L 145 122"/>
+        </g>
+      </svg>
+      <div class="live" id="hero-live"></div>
     </figure>
   </div>
 </header>
@@ -64,62 +152,69 @@
 
 <section class="wrap">
   <div class="sec-head">
-    <span class="micro">What he does</span><span class="fill rule"></span>
+    <span class="micro">what he does</span><span class="fill rule"></span>
     <a class="micro" href="browse.html" style="color:var(--accent)">All animations →</a>
   </div>
-  <div class="strip" id="strip"><div class="empty">Loading the Hub…</div></div>
+  <div class="snaps" id="strip"><div class="empty">Loading the Hub…</div></div>
 </section>
 
 <section class="wrap">
-  <div class="sec-head"><span class="micro">How it works</span><span class="fill rule"></span></div>
-  <div class="steps">
-    <div class="step">
-      <div>
-        <h3 class="h3">He joins your WiFi once</h3>
-        <p>Switch him on, connect your phone to <b>GEEDO-Setup</b>, and pick your
-           network. He remembers it forever. Every start after that goes
-           straight to his face.</p>
-      </div>
+  <div class="sec-head"><span class="micro">how it works</span><span class="fill rule"></span></div>
+  <div class="how">
+    <div>
+      <svg class="ico" viewBox="0 0 62 62" aria-hidden="true"><g fill="none" stroke="#1f2430" stroke-width="2.6" stroke-linecap="round">
+        <path d="M8 26 C 22 12 40 12 54 26"/><path d="M16 35 C 25 26 37 26 46 35"/><path d="M24 44 C 28 40 34 40 38 44"/></g>
+        <circle cx="31" cy="52" r="3.6" fill="#0e7c93" stroke="#1f2430" stroke-width="1.6"/></svg>
+      <h3>He joins your WiFi once</h3>
+      <p>Switch him on, connect your phone to <b>GEEDO-Setup</b> and pick your
+         network. He remembers it, and every start after that goes straight
+         to his face.</p>
     </div>
-    <div class="step">
-      <div>
-        <h3 class="h3">New animations arrive on their own</h3>
-        <p>He checks the Hub every minute. Anything new reaches every Geedo in the
-           world within 60 seconds, and he saves it to his own memory so it
-           survives power cuts.</p>
-      </div>
+    <div>
+      <svg class="ico" viewBox="0 0 62 62" aria-hidden="true"><path d="M17 40 C 8 40 6 30 13 27 C 12 18 22 14 28 19 C 32 11 46 12 47 23 C 55 23 57 34 50 39" fill="#fffdf8" stroke="#1f2430" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="none" stroke="#0e7c93" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M32 30 L 32 54"/><path d="M24 46 L 32 54 L 40 46"/></g></svg>
+      <h3>New animations arrive on their own</h3>
+      <p>He checks the Hub every few minutes and keeps whatever is new in his
+         own memory, so it is still there after he has been switched off.</p>
     </div>
-    <div class="step">
-      <div>
-        <h3 class="h3">You can draw your own</h3>
-        <p>Geedo Studio is a pixel editor in your browser. Draw something, publish
-           it, and watch your robot start doing it.</p>
-      </div>
+    <div>
+      <svg class="ico" viewBox="0 0 62 62" aria-hidden="true"><g fill="none" stroke="#1f2430" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 48 L 18 36 L 44 10 C 47 7 52 12 49 15 L 23 41 Z" fill="#ffe27a"/><path d="M18 36 L 23 41"/><path d="M40 14 L 45 19"/>
+        <path d="M10 54 C 22 50 34 56 50 51" stroke="#0e7c93"/></g></svg>
+      <h3>You can draw your own</h3>
+      <p>Geedo Studio is a pixel editor in your browser. Draw something,
+         publish it, and watch your robot start doing it.</p>
     </div>
   </div>
 </section>
 
 <section class="wrap">
-  <div class="sec-head"><span class="micro">Animation packs</span><span class="fill rule"></span>
+  <div class="sec-head"><span class="micro">animation packs</span><span class="fill rule"></span>
     <a class="micro" href="packs.html" style="color:var(--accent)">Browse packs →</a></div>
   <div class="split">
     <div>
-      <h2 class="h2">Free packs and code packs.</h2>
+      <h2 class="h1">Free packs, and <span class="squiggle">secret</span> ones.</h2>
       <p class="lead" style="margin-top:14px">
         A pack is a set of animations that arrives on your Geedo together.
-        Some packs are free and every Geedo gets them. Some come with a code.
+        Some are free and every Geedo gets them. Some come with a code on a
+        card.
       </p>
-      <p class="small mute" style="margin-top:14px">
-        Codes are safe: they are never saved anywhere on the website.
+      <p class="scribble-note" style="font-size:20px">
+        <svg viewBox="0 0 44 30" aria-hidden="true"><path d="M40 4 C 30 2 16 6 9 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4 13 L 8 22 L 17 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        codes are never saved anywhere on this website
       </p>
-      <div class="row" style="margin-top:22px">
+      <div class="hero-cta" style="margin-top:22px">
         <a class="btn primary" href="unlock.html">Redeem a code</a>
         <a class="btn" href="packs.html">See the packs</a>
       </div>
     </div>
-    <div class="boxart" id="boxart">
-      <img src="assets/box.png" alt="The Geedo animations box"
-           width="245" height="186" style="width:100%;height:auto">
+    <div class="boxwrap">
+      <div class="boxart" id="boxart">
+        <img src="assets/box.png" alt="The Geedo animations box" width="245" height="186" style="width:100%;height:auto">
+      </div>
+      <svg class="sparkle" style="left:2%;top:4%" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 2 L 15 28 M2 15 L 28 15 M6 6 L 24 24 M24 6 L 6 24" stroke="#1f2430" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg class="sparkle" style="right:4%;top:-2%;width:22px;height:22px" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3 L 15 27 M3 15 L 27 15" stroke="#0e7c93" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <svg class="sparkle" style="right:0;bottom:14%;width:24px;height:24px" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3 L 15 27 M3 15 L 27 15 M7 7 L 23 23 M23 7 L 7 23" stroke="#1f2430" stroke-width="2" stroke-linecap="round"/></svg>
     </div>
   </div>
 </section>
@@ -166,20 +261,18 @@
 
   const m = await manifest().catch(() => ({ animations: [] }));
   const anims = m.animations || [];
+  const isSystem = a => /hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
 
-  const hero = anims.find(a => /waking_up/.test(a.id))
-            || anims.find(a => !/hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id));
+  // His screen in the drawing: a real animation, playing.
+  const hero = anims.find(a => /waking_up/.test(a.id)) || anims.find(a => !isSystem(a));
   if (hero) {
     try {
-      const s = new Screen(await loadBin(hero.file), { scale: 3, className: 'lg' });
-      s.el.style.width = 'min(384px,80vw)';
-      document.getElementById('hero-fig').replaceChildren(s.el);
+      const s = new Screen(await loadBin(hero.file), { scale: 3 });
+      document.getElementById('hero-live').replaceChildren(s.el);
     } catch (e) {}
   }
 
-  const isSystem = a => /hello_geedo|boot|update|error|charging|low_battery|failed|connecting|turning/.test(a.id);
-
-  // The shelf: a spread across categories. Food is left out for now.
+  // What he does: a spread across categories, each screen taped in.
   const strip = document.getElementById('strip');
   const byCat = new Map();
   for (const a of anims) {
@@ -198,16 +291,14 @@
     try {
       const anim = await loadBin(a.file);
       const fig = document.createElement('figure');
-      fig.style.margin = '0';
+      fig.className = 'snap' + (strip.children.length % 3 === 0 ? ' tape' : '');
       fig.append(new Screen(anim, { scale: 2 }).el,
-        Object.assign(document.createElement('figcaption'), { textContent: pretty(a.name) }));
+        Object.assign(document.createElement('figcaption'), { textContent: pretty(a.name).toLowerCase() }));
       strip.append(fig);
     } catch (e) {}
   }
   if (!strip.children.length)
     strip.innerHTML = '<div class="empty">Could not reach the Hub just now.</div>';
-
-
 })();
 </script>
 </body>

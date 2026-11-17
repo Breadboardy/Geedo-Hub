@@ -112,6 +112,17 @@
 
 <main>
 
+<section class="wrap" data-geedo-section hidden>
+  <div class="head">
+    <h2 class="h1">Here he is.</h2>
+    <a class="btn" href="buy.html">More about him</a>
+  </div>
+  <div class="real">
+    <div class="real-video" data-geedo-part="video" hidden></div>
+    <div class="real-photos" data-geedo-part="photos" hidden></div>
+  </div>
+</section>
+
 <section class="wrap">
   <div class="head">
     <h2 class="h1">Always up to something.</h2>
@@ -159,12 +170,26 @@
   </div>
 </section>
 
+<section class="wrap" data-geedo-section hidden>
+  <h2 class="h1 head">From people who have one.</h2>
+  <div class="quotes" data-geedo-part="reviews" hidden></div>
+</section>
+
 </main>
 
 <section class="closing dark">
   <div class="wrap">
     <h2 class="display">Bring him home.</h2>
     <p class="price" data-geedo-price>Price to be announced</p>
+    <form class="signup" data-geedo-part="email" hidden>
+      <label class="sr-only">Your email address</label>
+      <div class="signup-row">
+        <input type="email" required placeholder="Your email" autocomplete="email" inputmode="email">
+        <button class="btn primary" type="submit">Tell me first</button>
+      </div>
+      <p class="signup-note"></p>
+      <p class="signup-thanks" role="status"></p>
+    </form>
     <div class="row">
       <a class="btn primary" href="buy.html">Buy Geedo</a>
     </div>

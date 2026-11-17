@@ -372,12 +372,13 @@ document.readyState === 'loading'
 function motion(){
   if (!('IntersectionObserver' in window) || !document.querySelector('link[href*="geedo.css"]')) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const ZOOM  = '.pair > *, .strip > *, .hero-box, .hero-shot';                    // panels: they grow into place
+  const ZOOM  = '.pair > *, .strip > *, .hero-box, .hero-shot, .real-video';       // panels: they grow into place
   const UP    = 'main h1[id], main h2[id], .head > .btn, .head-row > .btn, .bar, .actions, main .two .row, main > header .row, ' +
-                '.closing .price, .closing .row, .crumbs, .who, .show > *, main .box, main > p.helper, .panel';
+                '.closing .price, .closing .row, .closing .signup, .crumbs, .who, .show > *, main .box, main > p.helper, .panel';
   const LINES = 'main h1:not([id]), main h2:not([id]), .closing h2';               // headlines: line by line
   const FADE  = '.foot';
-  const EACH  = '.gallery, .how, .lines, .feats, .shop, #packs, .feed, .people, .grid, .specs, .faq';   // lists: each thing in them
+  const EACH  = '.gallery, .how, .lines, .feats, .shop, #packs, .feed, .people, .grid, .specs, .faq, ' +
+                '.facts, .answers, .quotes, .real-photos';                         // lists: each thing in them
 
   const root = document.documentElement, pending = new Set();
   root.classList.add('motion');

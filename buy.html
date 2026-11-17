@@ -41,7 +41,7 @@
   .buybox h1{font-size:clamp(56px,8vw,112px);letter-spacing:-.05em;line-height:.92}
   .buybox .say{margin:clamp(12px,1.6vw,20px) 0 0;font-size:clamp(20px,2.1vw,28px);font-weight:600;letter-spacing:-.025em;color:#a1a1a1;line-height:1.2}
   .buybox .price{margin:clamp(22px,3vw,36px) 0 0;font-size:clamp(17px,1.5vw,20px);font-weight:600;letter-spacing:-.01em;color:#a1a1a1}
-  .on-sale .buybox .price{color:inherit;font-size:clamp(26px,2.6vw,34px);letter-spacing:-.03em}
+  .on-sale .buybox .price,.has-price .buybox .price{color:inherit;font-size:clamp(26px,2.6vw,34px);letter-spacing:-.03em}
   .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
   .soon{margin:16px 0 0;font-size:14px;color:#8a8a8a}
 
@@ -55,6 +55,7 @@
   .buybox>:nth-child(3){animation-delay:.55s}
   .buybox>:nth-child(4){animation-delay:.65s}
   .buybox>:nth-child(5){animation-delay:.75s}
+  .buybox>:nth-child(6){animation-delay:.85s}
 
   .head{margin-bottom:clamp(26px,3.4vw,44px)}
 
@@ -89,6 +90,8 @@
   @media (max-width:900px){
     .pdp-in{grid-template-columns:1fr}
     .buybox{text-align:center}
+    .buybox .signup{margin-inline:auto}
+    .buybox .signup-note{text-align:center;margin-left:0}
     .hero-cta{justify-content:center}
     .turntable{width:min(420px,84%)}
     .feats{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -133,8 +136,17 @@
       <h1><span class="rv-line"><span class="rv-in">Geedo</span></span></h1>
       <p class="say">A little robot with a face.</p>
       <p class="price" data-geedo-price>Price to be announced</p>
+      <form class="signup" data-geedo-part="email" hidden>
+        <label class="sr-only">Your email address</label>
+        <div class="signup-row">
+          <input type="email" required placeholder="Your email" autocomplete="email" inputmode="email">
+          <button class="btn primary" type="submit">Tell me first</button>
+        </div>
+        <p class="signup-note"></p>
+        <p class="signup-thanks" role="status"></p>
+      </form>
       <div class="hero-cta">
-        <a class="btn primary" data-geedo-buy data-soon="Get notified" data-sale="Buy Geedo"
+        <a class="btn primary" data-geedo-buy data-soon="Get notified" data-sale="Buy Geedo" data-with-email="Join the Discord"
            href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Get notified</a>
         <a class="btn" href="browse.html">See what he does</a>
       </div>
@@ -144,6 +156,14 @@
 </header>
 
 <main>
+
+<section class="wrap" data-geedo-section hidden>
+  <h2 class="h1 head">Here he is.</h2>
+  <div class="real">
+    <div class="real-video" data-geedo-part="video" hidden></div>
+    <div class="real-photos" data-geedo-part="photos" hidden></div>
+  </div>
+</section>
 
 <section class="wrap">
   <h2 class="h1 head">A life of his own.</h2>
@@ -176,6 +196,20 @@
 </section>
 
 <section class="wrap">
+  <h2 class="h1 head">He minds his own business.</h2>
+  <ul class="facts">
+    <li>No camera.</li>
+    <li>No microphone.</li>
+    <li>No account needed.</li>
+  </ul>
+  <div class="answers" hidden>
+    <div class="answer" hidden><h3>In the box</h3><ul data-geedo-part="box"></ul></div>
+    <div class="answer" hidden><h3>Shipping</h3><p data-geedo-part="shipping"></p></div>
+    <div class="answer" hidden><h3>If something goes wrong</h3><p data-geedo-part="promise"></p></div>
+  </div>
+</section>
+
+<section class="wrap">
   <div class="cols">
     <div>
       <h2 class="h1 head">Tech specs</h2>
@@ -192,10 +226,10 @@
     <div>
       <h2 class="h1 head">Questions</h2>
       <div class="faq">
-        <details data-geedo-soon><summary>How much does he cost?</summary>
+        <details data-geedo-noprice><summary>How much does he cost?</summary>
           <p>The price is not set yet. It will be on this page the moment it is.</p></details>
         <details data-geedo-soon><summary>When can I buy one?</summary>
-          <p>Not yet. Join the Discord and you will hear first.</p></details>
+          <p>Not yet. <span data-geedo-email-off>Join the Discord and you will hear first.</span><span data-geedo-email-on hidden>Leave your email at the top of this page and you will hear first.</span></p></details>
         <details><summary>What do I need?</summary>
           <p>Home WiFi on 2.4 GHz, a USB-C cable to charge him, and a phone, once, to tell him your WiFi.
              Networks with a login page, like a school's or a hotel's, will not work.</p></details>
@@ -208,14 +242,28 @@
   </div>
 </section>
 
+<section class="wrap" data-geedo-section hidden>
+  <h2 class="h1 head">From people who have one.</h2>
+  <div class="quotes" data-geedo-part="reviews" hidden></div>
+</section>
+
 </main>
 
 <section class="closing dark">
   <div class="wrap">
     <h2 class="display">Bring him home.</h2>
     <p class="price" data-geedo-price>Price to be announced</p>
+    <form class="signup" data-geedo-part="email" hidden>
+      <label class="sr-only">Your email address</label>
+      <div class="signup-row">
+        <input type="email" required placeholder="Your email" autocomplete="email" inputmode="email">
+        <button class="btn primary" type="submit">Tell me first</button>
+      </div>
+      <p class="signup-note"></p>
+      <p class="signup-thanks" role="status"></p>
+    </form>
     <div class="row">
-      <a class="btn primary" data-geedo-buy data-soon="Get notified" data-sale="Buy Geedo"
+      <a class="btn primary" data-geedo-buy data-soon="Get notified" data-sale="Buy Geedo" data-with-email="Join the Discord"
          href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Get notified</a>
     </div>
   </div>

@@ -9,6 +9,20 @@ over the air, and it is where people share what they drew for him.
 - **Studio** — https://breadboardy.github.io/Geedo-Hub/studio/
 - **Redeem a code** — https://breadboardy.github.io/Geedo-Hub/unlock.html
 
+## The shop
+
+Everything that sells him and is not settled yet - the price, where he is
+bought, the email box, real photos and a video, what is in his box, where
+he ships, what people who have one say - is in one file,
+[`assets/product.js`](assets/product.js). A line left empty is a part of
+the page that is simply not there: nothing made up is ever shown. To see
+where each part goes, with a labelled placeholder standing in for it, put
+`?preview` on the end of the address:
+[home](https://breadboardy.github.io/Geedo-Hub/?preview),
+[Buy](https://breadboardy.github.io/Geedo-Hub/buy.html?preview), and
+[Buy, once he is on sale](https://breadboardy.github.io/Geedo-Hub/buy.html?preview=sale).
+Real photos and the video go in `assets/real/`.
+
 ## How an animation gets on here
 
 1. Draw it in the Studio and press **Publish**. That saves a `.geedo.json`

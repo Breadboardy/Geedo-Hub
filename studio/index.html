@@ -3,141 +3,206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Geedo Studio</title>
+<title>Studio — Geedo</title>
+<meta name="description" content="Draw Geedo a new face: a pixel editor for his 128 by 64 screen, with frames, onion skin and a way to send it down his cable.">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="../assets/geedo.css">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Silkscreen&display=swap" rel="stylesheet">
 <style>
-  /* The Studio wears the Hub's toy-box look: blue ground, white panels with
-     big corners, black type, one yellow button. The stage is the one dark
-     place, so the screen reads as a screen. */
-  :root{
-    --blue:#2a5cff;--blue-deep:#1c45d9;--blue-soft:#e4ebff;--yellow:#ffd21f;
-    --ink:#111;--paper:#fff;--paper-2:#f2f4fb;--paper-3:#e6e9f5;
-    --mute:#555a66;--dim:#8a8f9c;--good:#168a4a;--good-soft:#dcf5e6;--bad:#c8321f;--bad-soft:#ffe1dc;--warn:#8a5a00;--warn-soft:#fff1bf;
-    --font:'Bricolage Grotesque','Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;
-    --mono:ui-monospace,Menlo,Consolas,monospace;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--blue);color:var(--ink);font-family:var(--font);font-weight:600;overflow:hidden;user-select:none;-webkit-font-smoothing:antialiased}
-  button,input,select{font-family:inherit;color:inherit}
-  button{background:var(--paper-2);border:2px solid transparent;color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:800;transition:background .12s,border-color .12s,transform .12s;white-space:nowrap}
-  button:hover{border-color:var(--ink)}
-  button:active{transform:translateY(1px)}
-  button.active{background:var(--blue);color:#fff;border-color:transparent}
-  button.yellow{background:var(--yellow)}
-  button.ghost{background:transparent}
-  button.ghost:hover{background:var(--paper-2);border-color:transparent}
-  button.danger:hover{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
-  button[disabled]{opacity:.4;cursor:not-allowed;transform:none;border-color:transparent}
-  input[type=number],input[type=text]{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 9px;font-size:13px;width:64px;font-weight:600}
-  input[type=number]:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,92,255,.2)}
-  input[type=range]{accent-color:var(--blue)}
-  select{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 8px;font-size:13px;font-weight:600}
-  a{color:var(--blue);font-weight:800}
-  .app{display:grid;grid-template-rows:58px 1fr 196px;height:100vh}
-  .topbar{display:flex;align-items:center;gap:12px;padding:0 14px;color:#fff}
-  .topbar button{background:#fff}
-  .topbar button.ghost{background:transparent;color:#fff}
-  .topbar button.ghost:hover{background:rgba(255,255,255,.16);border-color:transparent}
-  .topbar button.yellow{background:var(--yellow);color:var(--ink)}
-  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:21px;letter-spacing:-.02em;color:#fff;text-decoration:none}
-  .brand .face{width:32px;height:32px;border-radius:50%;background:#fff;padding:2px;display:block}
-  .brand small{font-size:11px;color:var(--blue-soft);letter-spacing:.14em;margin-left:2px;font-weight:800}
+  /* The Studio, in the site's black and white. The bar across the top, the
+     type, the buttons and the colours are the site's own (assets/geedo.css);
+     what is here is the editor: white panels divided by hairlines, black for
+     whatever is pressed or chosen, and his screen - the one black thing - on
+     a soft stage. It fills the window and does not scroll. */
+  html,body{height:100%}
+  body{overflow:hidden}
+  .app{flex:1;min-height:0;display:grid;grid-template-rows:48px minmax(0,1fr) 142px;font-size:13px;
+       user-select:none;-webkit-user-select:none}
+
+  /* buttons: the site's pill, a size down */
+  .app button,.modal button{
+    font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:-.005em;color:var(--text);
+    background:var(--bg);border:1px solid var(--line-bright);border-radius:999px;padding:7px 13px;cursor:pointer;white-space:nowrap;
+    transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease)}
+  .app button:hover,.modal button:hover{border-color:var(--ink)}
+  .app button:active,.modal button:active{transform:scale(.98)}
+  .app button.ghost,.modal button.ghost{border-color:transparent;background:transparent}
+  .app button.ghost:hover,.modal button.ghost:hover{background:var(--bg-soft);border-color:transparent}
+  .app button.primary,.modal button.primary,.app button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .app button.primary:hover,.modal button.primary:hover{background:#262626;border-color:#262626}
+  .app button.danger:hover{color:var(--bad);background:#fdf0ee}
+  .app button[disabled],.modal button[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+  .app button[disabled]:hover,.modal button[disabled]:hover{border-color:var(--line-bright)}
+  .app button.primary[disabled]:hover,.modal button.primary[disabled]:hover{background:var(--ink);border-color:var(--ink)}
+
+  /* things to type in and tick */
+  .app input[type=number],.app input[type=text],.modal input[type=text],.app select,.modal select{
+    font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text);background:var(--bg);
+    border:1px solid var(--line-bright);border-radius:10px;padding:6px 10px;min-width:0;transition:border-color .15s,box-shadow .15s}
+  .app input[type=number]{width:64px}
+  .app input:focus,.modal input[type=text]:focus,.app select:focus,.modal select:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(10,10,10,.08)}
+  .app input::placeholder,.modal input::placeholder{color:var(--dim)}
+  .app input[type=range],.app input[type=checkbox],.modal input[type=range],.modal input[type=checkbox]{accent-color:var(--ink)}
+  .app input[type=checkbox],.modal .row input[type=checkbox]{width:16px;height:16px;margin:0;flex:none}
+  .app input[type=range],.modal input[type=range]{min-width:0}
+
+  /* the file bar, under the site's own */
+  .topbar{display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+  .topbar .group{display:flex;gap:4px;align-items:center}
   .topbar .spacer{flex:1}
-  .topbar .group{display:flex;gap:6px;align-items:center}
-  .pill{display:inline-block;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;font-size:11px;letter-spacing:.08em;font-weight:800}
-  .main{display:grid;grid-template-columns:232px 1fr 252px;min-height:0;gap:10px;padding:0 10px}
-  .sidebar{background:var(--paper);border-radius:20px;padding:14px;overflow-y:auto}
-  .sec-title{font-size:11px;letter-spacing:.12em;color:var(--mute);text-transform:uppercase;margin:16px 0 8px;font-weight:800}
+  .pill{font-size:12.5px;font-weight:500;color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums;margin-right:6px}
+
+  /* three columns: tools, his screen, the project */
+  .main{display:grid;grid-template-columns:216px minmax(0,1fr) 240px;min-height:0}
+  .sidebar{background:var(--bg);padding:16px;overflow-y:auto;border-right:1px solid var(--line)}
+  .sidebar.right{border-right:0;border-left:1px solid var(--line)}
+  .sec-title{font-size:12.5px;font-weight:600;letter-spacing:-.005em;line-height:16px;color:var(--text);margin:18px 0 8px}
   .sec-title:first-child{margin-top:0}
-  .tools{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-  .tools button{padding:8px 0;font-size:10px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
-  .tools button .ico{font-size:16px;line-height:1;font-family:'Silkscreen',monospace}
-  .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}
-  .row label{color:var(--mute);flex:1;font-weight:700}
-  .row.compact{margin:4px 0}
-  .swatches{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-  .swatch{height:30px;border-radius:10px;border:3px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
-  .swatch.sel{border-color:var(--blue)}
-  .swatch.white{background:#fff;color:#111;box-shadow:inset 0 0 0 2px var(--paper-3)}
-  .swatch.black{background:#000;color:#fff}
-  .stage{display:flex;align-items:center;justify-content:center;background:#0b1440;border-radius:20px;position:relative;min-height:0;overflow:hidden}
-  .device{background:#000;border:6px solid #fff;border-radius:24px;padding:14px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);position:relative}
-  .canvas-wrap{position:relative;width:1024px;height:512px;background:#000;border-radius:10px;overflow:hidden}
-  #canvas,#onion,#preview{position:absolute;top:0;left:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+  .tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .tools button{padding:8px 0 6px;font-size:10.5px;font-weight:500;letter-spacing:0;border-radius:12px;
+                display:flex;flex-direction:column;align-items:center;gap:5px}
+  .tools button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .tools button svg .solid{fill:currentColor}
+  .app .row,.modal .row{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;margin:7px 0;font-size:13px}
+  .app .row label,.modal .row label{color:var(--mute);flex:1;font-weight:500;white-space:nowrap}
+  .app .row .val,.modal .row .val{color:var(--text);font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
+  .app .row button{flex:1;padding-inline:6px}
+  .app .row.compact{margin:4px 0;min-height:26px}
+  .ops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .ops button{padding-inline:6px}
+  .ops .nudge{grid-column:1/-1;display:flex;align-items:center;gap:6px}
+  .ops .nudge span{flex:1;color:var(--mute);font-weight:500}
+  .ops .nudge button{width:32px;height:30px;padding:0;flex:none}
+  .swatches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .swatch{height:32px;border-radius:10px;border:1px solid var(--line-bright);cursor:pointer;display:flex;align-items:center;justify-content:center;
+          font-size:12.5px;font-weight:600;transition:outline-color .15s}
+  .swatch.white{background:#fff;color:var(--ink)}
+  .swatch.black{background:#000;color:#fff;border-color:#000}
+  .swatch.sel{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* the stage: his screen, a whole number of times its size, in a black bezel
+     so not one pixel is lost to a rounded corner */
+  .stage{display:flex;align-items:center;justify-content:center;background:var(--bg-soft);position:relative;min-height:0;min-width:0;overflow:hidden}
+  .device{background:#000;border-radius:16px;padding:12px;box-shadow:0 30px 60px -30px rgba(0,0,0,.45);position:relative;flex:none}
+  .canvas-wrap{position:relative;width:896px;height:448px;background:#000;overflow:hidden}
+  #canvas,#onion,#preview{position:absolute;top:0;left:0;width:100%;height:100%;max-width:none;image-rendering:pixelated;image-rendering:crisp-edges}
+  #canvas{cursor:crosshair}
   #onion{opacity:.3;pointer-events:none}
   #preview{pointer-events:none;opacity:.7}
-  .stage-info{position:absolute;bottom:12px;left:14px;font-size:12px;color:#aab8ff;font-weight:700}
-  .stage-info b{color:#fff}
-  .zoom-ctrl{position:absolute;bottom:9px;right:12px;display:flex;gap:6px;align-items:center;font-size:12px;color:#fff;font-weight:800}
-  .zoom-ctrl button{background:#fff;padding:4px 10px}
-  .drop-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(42,92,255,.35);border:4px dashed var(--yellow);border-radius:10px;color:var(--yellow);font-size:22px;font-weight:800;pointer-events:none;z-index:50}
+  .stage-info{font-size:12px;color:var(--mute);font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .stage-info b{color:var(--text);font-weight:600}
+  .zoom-ctrl{display:flex;gap:4px;align-items:center;font-size:12px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;margin-right:8px}
+  .zoom-ctrl button{width:28px;height:28px;padding:0;display:grid;place-items:center;font-size:15px;line-height:1}
+  .zoom-ctrl span{min-width:30px;text-align:center}
+  .drop-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);
+             border:2px dashed #fff;color:#fff;font-size:18px;font-weight:600;letter-spacing:-.015em;pointer-events:none;z-index:50}
   .drop-hint.show{display:flex}
-  .timeline{background:var(--paper);border-radius:20px 20px 0 0;margin:10px 10px 0;display:grid;grid-template-rows:42px 1fr;min-height:0}
-  .tl-head{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:3px solid var(--paper-3)}
-  .tl-head .left,.tl-head .right{display:flex;gap:6px;align-items:center}
+
+  /* the frames, along the bottom */
+  .timeline{background:var(--bg);border-top:1px solid var(--line);display:grid;grid-template-rows:46px minmax(0,1fr);min-height:0;min-width:0}
+  .tl-head{display:flex;align-items:center;gap:8px 14px;padding:0 14px;border-bottom:1px solid var(--line);min-width:0}
+  .tl-head .left,.tl-head .right{display:flex;gap:4px;align-items:center}
   .tl-head .spacer{flex:1}
-  .frames{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;align-items:center}
-  .frame{flex:0 0 auto;width:128px;height:80px;background:#000;border:3px solid var(--paper-3);border-radius:12px;position:relative;cursor:pointer;transition:border-color .12s}
-  .frame:hover{border-color:var(--dim)}
-  .frame.sel{border-color:var(--blue)}
-  .frame canvas{width:100%;height:100%;image-rendering:pixelated;border-radius:8px}
-  .frame .num{position:absolute;top:3px;left:7px;font-size:10px;color:#fff;font-weight:800}
-  .frame .dur{position:absolute;bottom:3px;right:7px;font-size:10px;color:#aab8ff;font-weight:800}
-  .frame .x{position:absolute;top:0;right:0;width:20px;height:20px;display:none;align-items:center;justify-content:center;color:#fff;background:var(--bad);border-radius:0 8px 0 8px;font-size:12px;font-weight:800}
+  .frames{display:flex;gap:12px;padding:0 16px;overflow-x:auto;align-items:center}
+  .frame{flex:0 0 auto;width:130px;height:66px;background:#000;border:1px solid #000;border-radius:8px;position:relative;cursor:pointer;overflow:hidden;
+         outline:2px solid transparent;outline-offset:2px;transition:outline-color .15s}
+  .frame:hover{outline-color:var(--line-bright)}
+  .frame.sel{outline-color:var(--ink)}
+  .frame canvas{width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+  .frame .num,.frame .dur{position:absolute;font:500 10px/1 var(--mono);color:#fff;mix-blend-mode:difference;pointer-events:none}
+  .frame .num{top:5px;left:6px}
+  .frame .dur{bottom:5px;right:6px}
+  .frame .x{position:absolute;top:0;right:0;width:20px;height:20px;display:none;align-items:center;justify-content:center;color:#fff;
+            background:var(--bad);border-radius:0 0 0 8px;font-size:13px;font-weight:600;line-height:1}
   .frame:hover .x{display:flex}
-  .add-frame{flex:0 0 auto;width:60px;height:80px;background:transparent;border:3px dashed var(--paper-3);border-radius:12px;color:var(--dim);cursor:pointer;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .add-frame:hover{border-color:var(--blue);color:var(--blue)}
-  .modal-bg{position:fixed;inset:0;background:rgba(10,20,60,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+  .add-frame{flex:0 0 auto;width:56px;height:66px;background:transparent;border:1px dashed var(--line-bright);border-radius:8px;color:var(--dim);
+             cursor:pointer;font-size:22px;font-weight:400;display:flex;align-items:center;justify-content:center;transition:border-color .2s var(--ease),color .2s var(--ease)}
+  .add-frame:hover{border-color:var(--ink);color:var(--ink)}
+
+  /* a sheet over the editor */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
   .modal-bg.open{display:flex}
-  .modal{background:var(--paper);border-radius:28px;padding:26px;width:500px;max-width:100%;max-height:92vh;overflow:auto}
+  .modal{background:var(--bg);border-radius:28px;padding:clamp(22px,3vw,32px);width:520px;max-width:100%;max-height:92vh;overflow:auto;
+         box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
   .modal.wide{width:640px}
-  .modal h2{margin:0 0 6px;font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
-  .modal p{color:var(--mute);font-size:14px;line-height:1.5;margin:0 0 14px;font-weight:500}
-  .modal p b{color:var(--ink);font-weight:800}
-  .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
-  .modal .actions button{padding:11px 18px;font-size:14px}
-  .modal .step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--paper-2);border-radius:16px;padding:14px;margin-top:10px}
-  .modal .step .n{width:34px;height:34px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;font-weight:800}
-  .modal .step h3{margin:5px 0 4px;font-size:16px;letter-spacing:-.01em}
-  .modal .step p{margin:0;font-size:13px}
-  .modal .step button{margin-top:10px;padding:9px 14px}
-  .modal .step.done .n{background:var(--good);color:#fff}
-  .modal label.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:600;padding:5px 0;cursor:pointer;line-height:1.4}
-  .modal label.chk input{width:20px;height:20px;accent-color:var(--blue);flex:none;margin:0}
-  .modal .row input[type=text]{width:auto;flex:1}
-  .note{background:var(--paper-2);border-radius:14px;padding:11px 14px;font-size:13px;line-height:1.5;font-weight:500;margin:10px 0}
-  .note.ok{background:var(--good-soft);color:var(--good)}
-  .note.bad{background:var(--bad-soft);color:var(--bad)}
-  .note.warn{background:var(--warn-soft);color:var(--warn)}
-  .stamps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-  .stamp{background:var(--paper-2);border:2px solid transparent;border-radius:10px;padding:8px 4px;text-align:center;font-size:13px;cursor:pointer}
-  .stamp:hover{border-color:var(--blue)}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:800;opacity:0;transition:all .25s;z-index:200;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .modal h2{font-size:28px;letter-spacing:-.035em;line-height:1.05;margin:0 0 10px}
+  .modal p{color:var(--mute);font-size:14.5px;line-height:1.5;margin:0 0 12px}
+  .modal p b{color:var(--text);font-weight:600}
+  .modal a{color:var(--text);font-weight:500;text-decoration:underline;text-underline-offset:3px}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+  .modal-actions button{padding:10px 18px;font-size:14px}
+  .modal .step{display:grid;grid-template-columns:32px minmax(0,1fr);gap:14px;align-items:start;background:var(--bg-soft);border-radius:18px;padding:14px 16px;margin-top:8px}
+  .modal .step::before{content:none}
+  .modal .step .n{width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:500 13px/1 var(--mono)}
+  .modal .step h3{margin:6px 0 4px;font-size:16px;font-weight:600;letter-spacing:-.015em}
+  .modal .step p{margin:0;font-size:13.5px}
+  .modal .step button{margin-top:10px;padding:8px 15px}
+  .modal .step.done .n{background:var(--good)}
+  .modal label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:500;padding:4px 0;cursor:pointer;line-height:1.4}
+  .modal label.chk input{width:18px;height:18px;flex:none;margin:1px 0 0}
+  .modal .row{margin:8px 0;font-size:14px}
+  .modal .row label{flex:0 0 104px}
+  .modal .row input[type=text],.modal .row input[type=range],.modal .row select{flex:1;width:auto;font-size:14px}
+  .modal .row input[type=text],.modal .row select{padding:9px 12px}
+  .modal .row .val{flex:0 0 34px}
+  .modal .note{border:0;background:var(--bg-soft);color:var(--mute);border-radius:14px;padding:11px 15px;font-size:13.5px;line-height:1.5;margin:10px 0}
+  .modal .note.ok{background:var(--good-soft);color:var(--good)}
+  .modal .note.bad{background:#fdecea;color:var(--bad)}
+  .modal .note.warn{background:#fbf2d9;color:var(--warn)}
+  .img-prev{background:#000;border-radius:12px;box-shadow:0 0 0 1px var(--line-bright);width:min(100%,512px);height:auto;aspect-ratio:2/1;margin:0 auto 14px;image-rendering:pixelated;image-rendering:crisp-edges}
+
+  .stamps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .stamp{background:var(--bg-soft);border:1px solid transparent;border-radius:10px;padding:7px 4px;text-align:center;font-size:12.5px;line-height:1.3;
+         cursor:pointer;white-space:nowrap;overflow:hidden;transition:border-color .2s var(--ease)}
+  .stamp:hover{border-color:var(--ink)}
+  .keys{font-size:11.5px;color:var(--mute);line-height:2.1}
+  .kbd{font-family:var(--mono);background:var(--bg-soft);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:10.5px;color:var(--text)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;border-radius:999px;
+         padding:12px 20px;font-size:13.5px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;z-index:200;pointer-events:none;
+         box-shadow:0 10px 30px rgba(0,0,0,.35)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .kbd{font-family:var(--mono);background:var(--paper-2);border-radius:5px;padding:1px 5px;font-size:10px;color:var(--mute)}
-  .img-prev{background:#000;border:4px solid #fff;border-radius:12px;width:100%;height:160px;image-rendering:pixelated;display:block}
-  .tiny{display:none}
+
+  /* on a phone: the site's page, saying what the Studio needs */
+  .tiny,.tiny-foot{display:none}
   @media (max-width:900px){
-    html,body{overflow:auto}
+    html,body{height:auto}
+    body{overflow:auto}
     .app{display:none}
-    .tiny{display:block;color:#fff;padding:40px 24px;max-width:36ch;margin:0 auto;font-size:18px;line-height:1.5}
-    .tiny h1{font-size:34px;letter-spacing:-.03em;margin:0 0 12px}
-    .tiny a{display:inline-block;background:var(--yellow);color:var(--ink);padding:12px 20px;border-radius:999px;margin-top:20px;text-decoration:none}
+    .tiny{display:block;padding-block:clamp(56px,12vw,104px)}
+    .tiny .lead{margin:18px 0 28px}
+    .tiny-foot{display:block}
   }
 </style>
 </head>
 <body>
-<div class="tiny">
-  <h1>The Studio needs a bigger screen.</h1>
-  It is a pixel editor with a 128 by 64 canvas, three panels and a timeline, and it wants a laptop or a tablet turned sideways.
-  <a href="../index.html">Back to the Hub</a>
-</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="../index.html"><img class="mark" src="../assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row">
+      <a class="link" href="../browse.html">Animations</a>
+      <a class="link" href="../packs.html">Packs</a>
+      <a class="link" href="index.html">Studio</a>
+      <a class="link" href="../settings.html">My Geedo</a>
+      <a class="link" href="../unlock.html">Redeem</a>
+    </div>
+    <a class="btn primary buy" href="../buy.html">Buy</a>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
+
+<main class="tiny wrap">
+  <h1 class="h1">The Studio needs<br>a bigger screen.</h1>
+  <p class="lead">It is a pixel editor with a 128 by 64 canvas, three panels and a timeline, and it wants a laptop or a tablet turned sideways.</p>
+  <div class="row">
+    <a class="btn primary" href="../browse.html">See his animations</a>
+    <a class="btn" href="../make.html">How drawing for him works</a>
+  </div>
+</main>
+
 <div class="app">
   <div class="topbar">
-    <a class="brand" href="../index.html" title="Back to the Hub"><svg class="face" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="20" width="15" height="24" rx="5" fill="#111"/><rect x="36" y="20" width="15" height="24" rx="5" fill="#111"/></svg>Geedo <small>STUDIO</small></a>
     <div class="group">
       <button id="btnNew" class="ghost">New</button>
       <button id="btnOpen" class="ghost">Open</button>
@@ -145,11 +210,11 @@
       <button id="btnImport" class="ghost">Import image</button>
     </div>
     <div class="spacer"></div>
-    <span class="pill" id="statusPill">READY</span>
+    <span class="pill" id="statusPill">1 frame · 8 fps</span>
     <div class="group">
       <button id="btnExport" class="ghost">Export</button>
       <button id="btnSend">Try on Geedo</button>
-      <button id="btnPublish" class="yellow">Publish</button>
+      <button id="btnPublish" class="primary">Publish</button>
     </div>
   </div>
 
@@ -157,60 +222,54 @@
     <div class="sidebar">
       <div class="sec-title">Tools</div>
       <div class="tools">
-        <button data-tool="pencil" class="active"><span class="ico">✎</span>Pencil</button>
-        <button data-tool="eraser"><span class="ico">⌫</span>Eraser</button>
-        <button data-tool="line"><span class="ico">╱</span>Line</button>
-        <button data-tool="rect"><span class="ico">▭</span>Rect</button>
-        <button data-tool="frect"><span class="ico">▬</span>Fill R</button>
-        <button data-tool="circle"><span class="ico">○</span>Circ</button>
-        <button data-tool="fcircle"><span class="ico">●</span>Fill C</button>
-        <button data-tool="fill"><span class="ico">▣</span>Bucket</button>
+        <button data-tool="pencil" class="active"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.6L16.4 4.2a2 2 0 0 1 2.9 0l.5.5a2 2 0 0 1 0 2.9L8.6 18.8 4 20z"/><path d="M14.3 6.3l3.4 3.4"/></svg>Pencil</button>
+        <button data-tool="eraser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 4.9l5.5 5.5a1.6 1.6 0 0 1 0 2.3L12.9 19H8.2l-3.3-3.3a1.6 1.6 0 0 1 0-2.3l6.4-8.5a1.6 1.6 0 0 1 2.3 0z"/><path d="M8.3 9.6l6.2 6.2"/><path d="M12.9 19H20"/></svg>Eraser</button>
+        <button data-tool="line"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5"/></svg>Line</button>
+        <button data-tool="rect"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6.5" width="16" height="11" rx="1.2"/></svg>Rect</button>
+        <button data-tool="frect"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="solid" x="4" y="6.5" width="16" height="11" rx="1.2"/></svg>Fill R</button>
+        <button data-tool="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/></svg>Circ</button>
+        <button data-tool="fcircle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="solid" cx="12" cy="12" r="7.5"/></svg>Fill C</button>
+        <button data-tool="fill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3.8l8.2 8.2-6.3 6.3a2 2 0 0 1-2.8 0l-5-5a2 2 0 0 1 0-2.8l5.9-6.7z"/><path d="M4.3 11.8h14"/><path class="solid" d="M19.6 15.4s1.6 2.1 1.6 3.3a1.6 1.6 0 0 1-3.2 0c0-1.2 1.6-3.3 1.6-3.3z"/></svg>Bucket</button>
       </div>
 
       <div class="sec-title">Color</div>
       <div class="swatches">
-        <div class="swatch white sel" data-color="1">WHITE</div>
-        <div class="swatch black" data-color="0">BLACK</div>
+        <div class="swatch white sel" data-color="1">White</div>
+        <div class="swatch black" data-color="0">Black</div>
       </div>
 
       <div class="sec-title">Brush</div>
       <div class="row compact">
-        <label>Size</label>
-        <input type="range" id="brushSize" min="1" max="6" value="1" style="flex:1">
-        <span id="brushSizeVal" style="width:18px;text-align:right">1</span>
+        <label for="brushSize">Size</label>
+        <input type="range" id="brushSize" min="1" max="6" value="1" style="flex:1.6">
+        <span id="brushSizeVal" class="val" style="width:14px">1</span>
       </div>
 
       <div class="sec-title">Frame</div>
-      <div class="row compact">
-        <button id="btnUndo" style="flex:1">Undo</button>
-        <button id="btnRedo" style="flex:1">Redo</button>
-      </div>
-      <div class="row compact">
-        <button id="btnClear" style="flex:1">Clear</button>
-        <button id="btnInvert" style="flex:1">Invert</button>
-      </div>
-      <div class="row compact">
-        <button id="btnFlipH" style="flex:1">Flip H</button>
-        <button id="btnFlipV" style="flex:1">Flip V</button>
-      </div>
-      <div class="row compact">
-        <button id="btnShiftL" style="flex:1">← Shift</button>
-        <button id="btnShiftR" style="flex:1">Shift →</button>
-      </div>
-      <div class="row compact">
-        <button id="btnShiftU" style="flex:1">↑ Shift</button>
-        <button id="btnShiftD" style="flex:1">Shift ↓</button>
+      <div class="ops">
+        <button id="btnUndo">Undo</button>
+        <button id="btnRedo">Redo</button>
+        <button id="btnClear">Clear</button>
+        <button id="btnInvert">Invert</button>
+        <button id="btnFlipH">Flip H</button>
+        <button id="btnFlipV">Flip V</button>
+        <div class="nudge"><span>Shift</span>
+          <button id="btnShiftL" aria-label="Shift left" title="Shift left">←</button>
+          <button id="btnShiftU" aria-label="Shift up" title="Shift up">↑</button>
+          <button id="btnShiftD" aria-label="Shift down" title="Shift down">↓</button>
+          <button id="btnShiftR" aria-label="Shift right" title="Shift right">→</button>
+        </div>
       </div>
 
       <div class="sec-title">View</div>
       <div class="row compact">
-        <label>Grid</label><input type="checkbox" id="chkGrid">
+        <label for="chkGrid">Grid</label><input type="checkbox" id="chkGrid">
       </div>
       <div class="row compact">
-        <label>Onion skin</label><input type="checkbox" id="chkOnion" checked>
+        <label for="chkOnion">Onion skin</label><input type="checkbox" id="chkOnion" checked>
       </div>
       <div class="row compact">
-        <label>Onion α</label>
+        <label for="onionAlpha" style="flex:none">Onion strength</label>
         <input type="range" id="onionAlpha" min="5" max="80" value="30" style="flex:1">
       </div>
     </div>
@@ -221,31 +280,25 @@
           <canvas id="onion" width="128" height="64"></canvas>
           <canvas id="canvas" width="128" height="64"></canvas>
           <canvas id="preview" width="128" height="64"></canvas>
-          <div class="drop-hint" id="dropHint">DROP IMAGE TO IMPORT</div>
+          <div class="drop-hint" id="dropHint">Drop the image to import it</div>
         </div>
-      </div>
-      <div class="stage-info">128 × 64 SSD1306 &nbsp;·&nbsp; cursor <b id="curPos">0,0</b> &nbsp;·&nbsp; frame <b id="curFrame">1</b>/<b id="totFrame">1</b></div>
-      <div class="zoom-ctrl">
-        <button id="zoomOut" class="ghost">−</button>
-        <span id="zoomLvl">8×</span>
-        <button id="zoomIn" class="ghost">+</button>
       </div>
     </div>
 
     <div class="sidebar right">
       <div class="sec-title">Project</div>
       <div class="row compact">
-        <label>Name</label>
+        <label for="projName" style="flex:0 0 46px">Name</label>
         <input type="text" id="projName" value="my_anim" style="flex:1;width:auto">
       </div>
       <div class="row compact">
-        <label>FPS</label><input type="number" id="fps" min="1" max="30" value="8">
+        <label for="fps">FPS</label><input type="number" id="fps" min="1" max="30" value="8">
       </div>
       <div class="row compact">
-        <label>Loop</label><input type="checkbox" id="chkLoop" checked>
+        <label for="chkLoop">Loop</label><input type="checkbox" id="chkLoop" checked>
       </div>
       <div class="row compact">
-        <label>Ping-pong</label><input type="checkbox" id="chkPP">
+        <label for="chkPP">Ping-pong</label><input type="checkbox" id="chkPP">
       </div>
 
       <div class="sec-title">Stamps</div>
@@ -256,21 +309,21 @@
         <input type="text" id="txtInput" placeholder="Type..." style="flex:1;width:auto">
       </div>
       <div class="row compact">
-        <select id="txtSize" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+        <select id="txtSize" style="flex:1">
           <option value="1">small</option>
           <option value="2" selected>medium</option>
           <option value="3">large</option>
         </select>
       </div>
-      <button id="btnStampText" style="width:100%;margin-top:4px">Stamp text</button>
+      <div class="row compact"><button id="btnStampText">Stamp text</button></div>
 
       <div class="sec-title">Shortcuts</div>
-      <div style="font-size:10px;color:var(--mute);line-height:1.8">
+      <div class="keys">
         <span class="kbd">B</span> pencil &nbsp; <span class="kbd">E</span> eraser<br>
         <span class="kbd">L</span> line &nbsp; <span class="kbd">R</span> rect<br>
         <span class="kbd">G</span> bucket &nbsp; <span class="kbd">X</span> swap<br>
         <span class="kbd">Ctrl+Z</span> undo &nbsp; <span class="kbd">Space</span> play<br>
-        <span class="kbd">←/→</span> frame nav &nbsp; <span class="kbd">Ctrl+I</span> import
+        <span class="kbd">←/→</span> frame &nbsp; <span class="kbd">Ctrl+I</span> import
       </div>
     </div>
   </div>
@@ -278,11 +331,17 @@
   <div class="timeline">
     <div class="tl-head">
       <div class="left">
-        <button id="btnPlay" class="active">▶ Play</button>
-        <button id="btnPrev" class="ghost">◀</button>
-        <button id="btnNext" class="ghost">▶</button>
+        <button id="btnPlay" class="primary">▶ Play</button>
+        <button id="btnPrev" class="ghost" aria-label="Previous frame">◀</button>
+        <button id="btnNext" class="ghost" aria-label="Next frame">▶</button>
       </div>
+      <div class="stage-info">128 × 64 &nbsp;·&nbsp; cursor <b id="curPos">0,0</b> &nbsp;·&nbsp; frame <b id="curFrame">1</b>/<b id="totFrame">1</b></div>
       <div class="spacer"></div>
+      <div class="zoom-ctrl">
+        <button id="zoomOut" aria-label="Zoom out">−</button>
+        <span id="zoomLvl">7×</span>
+        <button id="zoomIn" aria-label="Zoom in">+</button>
+      </div>
       <div class="right">
         <button id="btnDup" class="ghost">Duplicate</button>
         <button id="btnDel" class="ghost danger">Delete</button>
@@ -292,43 +351,61 @@
   </div>
 </div>
 
+<footer class="tiny-foot">
+  <div class="wrap foot">
+    <a class="logo" href="../index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="../buy.html">Buy</a>
+      <a href="../browse.html">Animations</a>
+      <a href="../packs.html">Packs</a>
+      <a href="../makers.html">Makers</a>
+      <a href="index.html">Studio</a>
+      <a href="../settings.html">My Geedo</a>
+      <a href="../unlock.html">Redeem</a>
+      <a href="../GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
 <!-- Image import modal -->
 <div class="modal-bg" id="modalImg">
   <div class="modal wide">
-    <h2>IMPORT IMAGE</h2>
-    <p>Convert a picture to 1-bit pixel art for Geedo. Adjust threshold and dithering, then place on the canvas.</p>
+    <h2>Import an image</h2>
+    <p>Any picture, turned into black and white pixels for his screen. Set the threshold and the dithering, then place it on the frame.</p>
     <canvas id="imgPrev" class="img-prev" width="128" height="64"></canvas>
-    <div class="row"><label>Mode</label>
-      <select id="imgMode" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+    <div class="row"><label for="imgMode">Mode</label>
+      <select id="imgMode">
         <option value="threshold">Threshold (simple)</option>
         <option value="floyd" selected>Floyd-Steinberg dither</option>
         <option value="bayer">Bayer dither (retro)</option>
       </select>
     </div>
-    <div class="row"><label>Threshold</label>
-      <input type="range" id="imgThresh" min="0" max="255" value="128" style="flex:1">
-      <span id="imgThreshVal" style="width:24px;text-align:right">128</span>
+    <div class="row"><label for="imgThresh">Threshold</label>
+      <input type="range" id="imgThresh" min="0" max="255" value="128">
+      <span id="imgThreshVal" class="val">128</span>
     </div>
-    <div class="row"><label>Brightness</label>
-      <input type="range" id="imgBright" min="-100" max="100" value="0" style="flex:1">
-      <span id="imgBrightVal" style="width:24px;text-align:right">0</span>
+    <div class="row"><label for="imgBright">Brightness</label>
+      <input type="range" id="imgBright" min="-100" max="100" value="0">
+      <span id="imgBrightVal" class="val">0</span>
     </div>
-    <div class="row"><label>Contrast</label>
-      <input type="range" id="imgContrast" min="-100" max="100" value="0" style="flex:1">
-      <span id="imgContrastVal" style="width:24px;text-align:right">0</span>
+    <div class="row"><label for="imgContrast">Contrast</label>
+      <input type="range" id="imgContrast" min="-100" max="100" value="0">
+      <span id="imgContrastVal" class="val">0</span>
     </div>
-    <div class="row"><label>Invert</label><input type="checkbox" id="imgInvert"></div>
-    <div class="row"><label>Fit</label>
-      <select id="imgFit" style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:4px">
+    <div class="row"><label for="imgInvert">Invert</label><input type="checkbox" id="imgInvert"><span style="flex:1"></span></div>
+    <div class="row"><label for="imgFit">Fit</label>
+      <select id="imgFit">
         <option value="contain" selected>Contain (whole image, letterbox)</option>
         <option value="cover">Cover (fill, crop edges)</option>
         <option value="stretch">Stretch to 128×64</option>
       </select>
     </div>
-    <div class="actions">
+    <div class="modal-actions">
       <button onclick="closeModal('modalImg')" class="ghost">Cancel</button>
       <button onclick="applyImage(false)">Place (replace frame)</button>
-      <button onclick="applyImage(true)" class="active">Place (add to frame)</button>
+      <button onclick="applyImage(true)" class="primary">Place (add to frame)</button>
     </div>
   </div>
 </div>
@@ -337,13 +414,13 @@
   <div class="modal">
     <h2>Export</h2>
     <p>Two kinds of file. <b>Save</b> in the top bar keeps your project (a <code>.geedo.json</code>) for coming back to; these are for taking it elsewhere.</p>
-    <div class="step"><span class="n">⬇</span><div><h3>The robot's file</h3>
+    <div class="step"><span class="n">↓</span><div><h3>The robot's file</h3>
       <p>A <code>.bin</code> exactly as a Geedo plays it: <code>GDA2</code>, one bit a pixel, frames packed. The Hub and the robots read this format.</p>
       <button onclick="exportBin()">Save .bin</button></div></div>
-    <div class="step"><span class="n">⬇</span><div><h3>Arduino code</h3>
+    <div class="step"><span class="n">↓</span><div><h3>Arduino code</h3>
       <p>The frames as <code>PROGMEM</code> byte arrays for your own sketch and your own screen.</p>
       <button onclick="exportIno()">Save .ino</button></div></div>
-    <div class="actions"><button onclick="closeModal('modalExport')" class="ghost">Close</button></div>
+    <div class="modal-actions"><button onclick="closeModal('modalExport')" class="ghost">Close</button></div>
   </div>
 </div>
 
@@ -353,11 +430,11 @@
     <p>Plug him in with his cable and press <b>Send</b>: the animation goes down the wire, he checks it the way he checks everything, and he unboxes it. It stays on him for good, whatever the Hub says, and comes off from his own page. Chrome or Edge on a computer &mdash; a phone cannot open the cable.</p>
     <p>No cable? <b>Save the .bin</b> and drop it on his own page (Connect &rarr; His page). And when it is ready for every Geedo, <b>publish it</b>: a person looks at it, and then it is on all of them, yours included, with your name on it.</p>
     <p id="sendSay" style="min-height:1.4em"></p>
-    <div class="actions">
+    <div class="modal-actions">
       <button onclick="closeModal('modalSend')" class="ghost">Close</button>
       <button onclick="exportBin()" class="ghost">Save the .bin</button>
-      <button id="sendGo" onclick="doSend()">Send</button>
-      <button onclick="closeModal('modalSend');openPublish()" class="yellow">Publish it</button>
+      <button id="sendGo" onclick="doSend()" class="primary">Send</button>
+      <button onclick="closeModal('modalSend');openPublish()">Publish it</button>
     </div>
   </div>
 </div>
@@ -366,20 +443,20 @@
   <div class="modal">
     <h2>Publish to the Hub</h2>
     <p>A person looks at every animation before it goes out to the robots, so publishing is two steps: save the file, then hand it in. It takes a minute, and you are told either way.</p>
-    <div class="row"><label>Name</label><input type="text" id="pubName" maxlength="40" placeholder="what it's called on the Hub"></div>
-    <div class="row"><label>Maker name</label><input type="text" id="pubMaker" maxlength="32" placeholder="the name shown next to it"></div>
+    <div class="row"><label for="pubName">Name</label><input type="text" id="pubName" maxlength="40" placeholder="what it's called on the Hub"></div>
+    <div class="row"><label for="pubMaker">Maker name</label><input type="text" id="pubMaker" maxlength="32" placeholder="the name shown next to it"></div>
     <div id="pubCheck" class="note"></div>
     <label class="chk"><input type="checkbox" class="rule"> I drew this myself. It's not a character from a game, a film or a show.</label>
     <label class="chk"><input type="checkbox" class="rule"> It's kind. Nothing rude, mean or scary; kids watch these screens.</label>
     <label class="chk"><input type="checkbox" class="rule"> I know a person looks at it first and might say no.</label>
     <div class="step" id="pubStep1"><span class="n">1</span><div><h3>Save the file</h3>
       <p>Your animation as a <code>.geedo.json</code> file, ready to hand in.</p>
-      <button id="pubSaveBtn" onclick="pubSave()">Save the file</button></div></div>
+      <button id="pubSaveBtn" onclick="pubSave()" class="primary">Save the file</button></div></div>
     <div class="step" id="pubStep2"><span class="n">2</span><div><h3>Hand it in on GitHub</h3>
       <p>Opens the submission form with the name filled in. Drop the file you just saved into the box and press <b>Submit</b>. The bot posts a preview within a minute; a person answers usually within a day.</p>
-      <button id="pubGoBtn" onclick="pubGo()" disabled>Open the form</button></div></div>
+      <button id="pubGoBtn" onclick="pubGo()" class="primary" disabled>Open the form</button></div></div>
     <p style="margin-top:14px">No GitHub account? Post the file in <b>#animations</b> on the <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a> and it gets handed in for you. <a href="../make.html#rules" target="_blank">The rules</a>.</p>
-    <div class="actions"><button onclick="closeModal('modalPub')" class="ghost">Close</button></div>
+    <div class="modal-actions"><button onclick="closeModal('modalPub')" class="ghost">Close</button></div>
   </div>
 </div>
 
@@ -413,7 +490,7 @@ function renderCanvas(){
   ctx.putImageData(img,0,0);
   if(showGrid)drawGrid();
 }
-function drawGrid(){ctx.save();ctx.globalAlpha=0.15;ctx.fillStyle='#22d3ee';for(let x=8;x<W;x+=8)ctx.fillRect(x,0,1,H);for(let y=8;y<H;y+=8)ctx.fillRect(0,y,W,1);ctx.restore()}
+function drawGrid(){ctx.save();ctx.globalAlpha=0.18;ctx.fillStyle='#fff';for(let x=8;x<W;x+=8)ctx.fillRect(x,0,1,H);for(let y=8;y<H;y+=8)ctx.fillRect(0,y,W,1);ctx.restore()}
 function renderOnion(){
   octx.clearRect(0,0,W,H);
   if(!showOnion||frames.length<2)return;
@@ -830,7 +907,7 @@ async function openFromHub(){
 
 let toastTimer=null;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2000)}
-function updateStatus(){document.getElementById('statusPill').textContent=`${frames.length} FRAMES · ${document.getElementById('fps').value} FPS`}
+function updateStatus(){const n=frames.length;document.getElementById('statusPill').textContent=`${n} frame${n===1?'':'s'} · ${document.getElementById('fps').value} fps`}
 
 // wiring
 document.querySelectorAll('[data-tool]').forEach(b=>{b.onclick=()=>{document.querySelectorAll('[data-tool]').forEach(x=>x.classList.remove('active'));b.classList.add('active');tool=b.dataset.tool}});
@@ -851,11 +928,22 @@ document.getElementById('btnNew').onclick=newProject;document.getElementById('bt
 document.getElementById('btnExport').onclick=()=>openModal('modalExport');document.getElementById('btnSend').onclick=()=>openModal('modalSend');document.getElementById('btnPublish').onclick=openPublish;
 document.getElementById('btnImport').onclick=openImport;
 document.getElementById('fps').onchange=updateStatus;
-document.getElementById('zoomIn').onclick=()=>setZoom(ZOOM+1);document.getElementById('zoomOut').onclick=()=>setZoom(ZOOM-1);
+document.getElementById('zoomIn').onclick=()=>{zoomChosen=true;setZoom(ZOOM+1)};document.getElementById('zoomOut').onclick=()=>{zoomChosen=true;setZoom(ZOOM-1)};
 ['imgMode','imgFit','imgInvert'].forEach(id=>document.getElementById(id).onchange=regenerateImg);
 ['imgThresh','imgBright','imgContrast'].forEach(id=>{const el=document.getElementById(id);const vEl=document.getElementById(id+'Val');el.oninput=()=>{vEl.textContent=el.value;regenerateImg()}});
 
 function setZoom(z){ZOOM=Math.max(2,Math.min(14,z));document.getElementById('canvasWrap').style.width=(W*ZOOM)+'px';document.getElementById('canvasWrap').style.height=(H*ZOOM)+'px';document.getElementById('zoomLvl').textContent=ZOOM+'×'}
+/* The biggest whole-number size at which his whole screen fits the stage, with
+   its bezel and some air round it. Chosen when the
+   Studio opens and again as the window changes - until the zoom buttons are
+   used, after which the size is the artist's. */
+let zoomChosen=false;
+function fitZoom(){
+  const s=document.getElementById('stage').getBoundingClientRect();
+  if(!s.width||!s.height)return 7;
+  return Math.max(2,Math.min(12,Math.floor(Math.min((s.width-56)/W,(s.height-56)/H))));
+}
+window.addEventListener('resize',()=>{if(!zoomChosen)setZoom(fitZoom())});
 
 window.addEventListener('keydown',(e)=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
@@ -871,7 +959,7 @@ window.addEventListener('keydown',(e)=>{
   if(e.key==='x'){const other=document.querySelector('.swatch:not(.sel)');if(other)other.click()}
 });
 
-buildFrameList();buildStamps();setZoom(8);setupDropZone();renderAll();openFromHub();
+buildFrameList();buildStamps();setZoom(fitZoom());setupDropZone();renderAll();openFromHub();
 </script>
 </body>
 </html>

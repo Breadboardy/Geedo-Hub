@@ -368,7 +368,9 @@ document.readyState === 'loading'
    off when it has landed, so nothing here outlives its entrance.
 
    What moves is chosen here, by what a thing is on the page, so the pages
-   themselves say nothing about it.                                         */
+   themselves say nothing about it - except to say "not this": nothing inside
+   an element marked data-still is touched. The app's settings are, because
+   they are moved in and out of a sheet that has an entrance of its own.   */
 function motion(){
   if (!('IntersectionObserver' in window) || !document.querySelector('link[href*="geedo.css"]')) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -414,7 +416,7 @@ function motion(){
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 });
 
   function tag(el, kind){
-    if (el.nodeType !== 1 || el.hasAttribute('data-reveal') || el.closest('dialog')) return;
+    if (el.nodeType !== 1 || el.hasAttribute('data-reveal') || el.closest('dialog, [data-still]')) return;
     el.setAttribute('data-reveal', kind);
     if (kind === 'lines') split(el);
     pending.add(el); io.observe(el);

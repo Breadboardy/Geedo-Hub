@@ -2,213 +2,194 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>My Geedo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Geedo — Geedo</title>
 <meta name="description" content="Your Geedo, your way: his face, what he does, how he feels, where he lives. By cable on a PC, over Bluetooth from a phone.">
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="assets/geedo.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="manifest" href="assets/app/manifest.webmanifest">
-<meta name="theme-color" content="#0b0e14">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap">
 <style>
-/* The app. Dark first - it is his screen's world: ink, and the cyan of his
-   eyes - with a light face for daylight. One layout: a single column that
-   becomes a grid when the screen can hold one. */
-:root{
-  --bg:#0b0e14; --bg2:#10151e; --card:#141a25; --card2:#1a2130; --line:#243043; --line2:#2f3d55;
-  --fg:#e9eef6; --fg2:#a9b4c6; --dim:#6b778a;
-  --teal:#0e7c93; --cyan:#22d3ee; --cyan2:#67e8f9; --ink:#06252c;
-  --grad:linear-gradient(135deg,#0e7c93 0%,#22d3ee 100%);
-  --grad2:linear-gradient(135deg,#0b3a45 0%,#0e7c93 45%,#22d3ee 100%);
-  --glow:radial-gradient(60% 80% at 20% 0%,rgba(34,211,238,.22),transparent 60%);
-  --good:#4ade80; --bad:#fb7185; --warn:#fbbf24;
-  --sans:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace; --pixel:'Silkscreen',var(--mono);
-  --r:16px; --shadow:0 10px 30px rgba(0,0,0,.35);
-  color-scheme:dark;
-}
-@media (prefers-color-scheme:light){
-  :root:not([data-theme="dark"]){
-    --bg:#f4f6f9; --bg2:#ffffff; --card:#ffffff; --card2:#f1f5f9; --line:#dde3ec; --line2:#c9d3e0;
-    --fg:#111827; --fg2:#475569; --dim:#7a8699; --ink:#06252c;
-    --glow:radial-gradient(60% 80% at 20% 0%,rgba(14,124,147,.16),transparent 60%);
-    --shadow:0 10px 30px rgba(15,23,42,.08); color-scheme:light;
-  }
-}
-:root[data-theme="light"]{
-  --bg:#f4f6f9; --bg2:#ffffff; --card:#ffffff; --card2:#f1f5f9; --line:#dde3ec; --line2:#c9d3e0;
-  --fg:#111827; --fg2:#475569; --dim:#7a8699; --ink:#06252c;
-  --glow:radial-gradient(60% 80% at 20% 0%,rgba(14,124,147,.16),transparent 60%);
-  --shadow:0 10px 30px rgba(15,23,42,.08); color-scheme:light;
-}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--bg);color:var(--fg);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;
-     padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px)}
-a{color:var(--cyan)}
+/* The app, in the site's black and white. The bar, the type, the buttons,
+   the colours and the footer are the site's own (assets/geedo.css). The top
+   is black with him on it, the way the home and Buy pages open; everything
+   under it is white, with hairlines. What is here is the app's own: him in
+   the round with a button on each part, the sheet of settings that slides
+   in beside him, and the controls on it. */
 [hidden]{display:none!important}
-.wrap{max-width:1180px;margin:0 auto;padding-inline:16px}
-/* top bar */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 80%,transparent);
-     border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:14px;height:56px}
-.brand{display:flex;align-items:center;gap:10px;color:var(--fg);text-decoration:none;font-family:var(--pixel);font-weight:700;letter-spacing:.08em}
-.brand img{width:36px;height:18px;border-radius:4px}
-.grow{flex:1}
-.top a.link{color:var(--fg2);text-decoration:none;font-size:13px;font-weight:500}
-.top a.link:hover{color:var(--fg)}
-.ic{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;
-    display:inline-flex;align-items:center;justify-content:center;font-size:16px}
-.ic:hover{border-color:var(--line2)}
-/* hero */
-.hero{position:relative;overflow:hidden;border-radius:24px;margin-top:18px;padding:clamp(20px,3vw,32px);
-      background:var(--grad2);color:#fff;box-shadow:var(--shadow)}
-.hero::after{content:"";position:absolute;inset:auto -20% -60% auto;width:70%;aspect-ratio:1;border-radius:50%;
-             background:radial-gradient(circle,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
-/* his hero shot: rendered from his real case, cut out, shadow and reflection in the picture's alpha */
-.hero .bot{position:relative;flex:none;width:min(62vw,250px);margin:-6px auto 6px;animation:float 7s ease-in-out infinite}
-.hero .bot::before{content:"";position:absolute;inset:18% -22% 10%;border-radius:50%;z-index:0;
-                   background:radial-gradient(closest-side,rgba(34,211,238,.42),rgba(34,211,238,0));filter:blur(14px)}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-/* the turntable: one view showing at a time, his screen drawn live over the glass, a button on each of his parts */
-.spin{position:relative;z-index:1;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
-.spin.drag{cursor:grabbing}
-.spin img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none}
-.spin img.f{position:absolute;inset:0;visibility:hidden}
-.spin .oled{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;image-rendering:pixelated;pointer-events:none;
-            box-shadow:0 0 14px 2px rgba(130,225,255,.5);transition:box-shadow .6s,opacity .6s}
-.spin .oled.dim{box-shadow:0 0 6px 0 rgba(130,225,255,.2);opacity:.7}
-/* in him, bottom to top: the views, the sharp close-up of the one he is showing, his live screen, the spots */
-.spin .hd{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0;transition:opacity .12s;pointer-events:none}
-.spin .hd.on{opacity:1;transition:opacity .5s ease}
-.spin .oled{z-index:2}
-.spin .spots{position:absolute;inset:0;z-index:3;pointer-events:none}
-.spin .spot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;padding:0;border-radius:50%;border:2px solid #fff;cursor:pointer;pointer-events:auto;
-            scale:calc(1 / var(--z,1));
-            background:rgba(34,211,238,.4);box-shadow:0 0 0 3px rgba(34,211,238,.3),0 2px 8px rgba(0,0,0,.35);transition:transform .15s}
-.spin .spot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:ping 2.6s ease-out infinite}
-.spin .spot:hover,.spin .spot:focus-visible{transform:scale(1.18)}
-.spin .spot .tip{position:absolute;left:50%;top:-36px;transform:translateX(-50%);white-space:nowrap;background:rgba(0,0,0,.78);color:#fff;
-                 font:500 12px/1 var(--sans);padding:7px 9px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .15s}
-.spin .spot:hover .tip,.spin .spot:focus-visible .tip{opacity:1}
-@keyframes ping{0%{transform:scale(.75);opacity:.9}100%{transform:scale(1.6);opacity:0}}
-.hero .hint{position:relative;z-index:1;text-align:center;font-size:12px;color:rgba(255,255,255,.72);margin-top:2px;min-height:18px;transition:color .2s}
+
+/* ---- the top: him, and the way to find him */
+.hero{background:radial-gradient(50% 62% at 74% 50%,#1c1c1c 0%,#0b0b0b 46%,#000 78%);color:#fff;
+      margin-top:-61px;padding:calc(61px + clamp(24px,4vw,56px)) 0 clamp(32px,4.4vw,64px);overflow:hidden}
+.hero .in{display:flex;flex-direction:column;gap:clamp(4px,2vw,20px)}
+.hero .bot{position:relative;flex:none;width:min(62vw,250px);margin:0 auto}
+.hero .say{flex:1;min-width:0}
+.hero h1{font-size:clamp(40px,5.6vw,76px);letter-spacing:-.045em;line-height:.98;text-wrap:balance}
+.hero .id{font-family:var(--pixel);font-size:clamp(15px,1.6vw,19px);letter-spacing:.08em;color:#a1a1a1;margin-top:14px}
+.hero #sub{margin:clamp(16px,2vw,26px) 0 0;max-width:46ch;font-size:clamp(16.5px,1.5vw,19px);line-height:1.5;letter-spacing:-.01em;color:rgba(255,255,255,.72)}
+.hero .row{margin-top:clamp(20px,2.4vw,30px)}
+.state{font-size:14px;color:#a1a1a1}
+.hero .tag{background:#1c1c1c;color:#d2d2d2;margin-left:6px}
+.hero .hint{position:relative;z-index:1;text-align:center;font-size:13.5px;color:#8a8a8a;margin-top:2px;min-height:20px;transition:color .2s}
 .hero .hint.said{color:#fff;font-weight:600}
-.card.flash{animation:flash 1.4s}
-@keyframes flash{0%,100%{box-shadow:none}25%,60%{box-shadow:0 0 0 3px var(--cyan),0 0 30px rgba(34,211,238,.35)}}
-.hero h1{margin:0;font-size:clamp(22px,3.2vw,32px);letter-spacing:-.01em;text-wrap:balance}
-.hero p{margin:6px 0 0;color:rgba(255,255,255,.86);max-width:52ch}
-.hero .id{font-family:var(--pixel);font-size:clamp(16px,2.4vw,22px);letter-spacing:.06em;margin-top:2px}
-.hero .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
-.btn{font:inherit;font-weight:600;border:1px solid var(--line2);background:var(--card);color:var(--fg);border-radius:12px;
-     padding:11px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .08s}
-.btn:active{transform:translateY(1px)}
-.btn:disabled{opacity:.55;cursor:default}
-.btn.p{background:var(--grad);color:var(--ink);border-color:transparent;box-shadow:0 6px 18px rgba(34,211,238,.25)}
-.btn.w{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.3);backdrop-filter:blur(8px)}
-.btn.w.p{background:#fff;color:var(--ink);border-color:#fff}
-.btn.ghost{background:transparent}
-.btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
-.state{font-size:13px;color:rgba(255,255,255,.85)}
-/* a gentle word when his WiFi or the Hub has gone quiet (v39): on the hero's gradient in either theme */
-.nudge{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-top:14px;max-width:560px;
-       padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.22);border-left:3px solid var(--warn);
-       background:rgba(6,20,28,.38);color:#fff;font:inherit;font-size:14px;line-height:1.45;text-align:left;cursor:pointer}
-.nudge:hover,.nudge:focus-visible{background:rgba(6,20,28,.55)}
+.get{margin:14px 0 0}
+.get button{font:inherit;font-size:14px;color:#a1a1a1;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.get button:hover{color:#fff}
+/* how the top arrives: he comes forward out of the dark, and the words follow */
+.hero .bot{animation:rv-arrive 2s var(--cine) .1s both}
+.hero .say>*{animation:rv-up 1.1s var(--cine) .3s both}
+/* a word when something needs seeing to: his WiFi, his health */
+.nudge{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-top:18px;max-width:560px;padding:12px 16px;border-radius:14px;
+       border:1px solid #3d3d3d;border-left:3px solid #f0b429;background:#0d0d0d;color:#fff;font:inherit;font-size:14.5px;line-height:1.45;text-align:left;cursor:pointer;
+       transition:border-color .2s var(--ease)}
+.nudge:hover,.nudge:focus-visible{border-color:#fff #fff #fff #f0b429}
 .nudge b{font-weight:600}
-.nudge .go{white-space:nowrap;text-decoration:underline;text-underline-offset:3px;color:rgba(255,255,255,.9)}
-.tag{display:inline-block;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 10px;font-size:12px;margin-left:6px}
-/* tiles in the hero */
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
-.tile{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px;min-width:0}
-.tile .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);font-family:var(--mono)}
-.tile .v{font-family:var(--pixel);font-size:clamp(16px,2vw,22px);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tile .s{font-size:12px;color:rgba(255,255,255,.75);margin-top:2px}
-/* cards */
-.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0;position:relative}
-.card.wide{grid-column:1/-1}
-.card h2{margin:0;font-size:15px;font-weight:700}
-.card .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-family:var(--mono);margin-bottom:6px}
-.card p{margin:6px 0 0;color:var(--fg2);font-size:14px}
-.card .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
-.opt{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
-.opt:first-of-type{border-top:0;padding-top:4px}
-.opt .g{flex:1;min-width:0}
-.opt b{display:block;font-size:14px}
-.opt span{color:var(--fg2);font-size:13px}
-.sw{position:relative;width:48px;height:28px;border-radius:999px;background:var(--line2);border:0;cursor:pointer;flex:none;transition:background .15s}
-.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:left .15s}
-.sw[aria-checked=true]{background:var(--grad)}
-.sw[aria-checked=true]::after{left:23px}
-.sw[aria-checked=mixed]{background:var(--teal)}
-.sw[aria-checked=mixed]::after{left:13px}
-.sw:disabled{opacity:.45;cursor:default}
-.seg{display:inline-flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--card2)}
-.seg button{font:inherit;font-weight:600;border:0;background:transparent;color:var(--fg2);padding:10px 16px;cursor:pointer}
-.seg button[aria-pressed=true]{background:var(--grad);color:var(--ink)}
-.seg button:disabled{opacity:.5;cursor:default}
-.range{width:100%;accent-color:var(--cyan)}
-.field{font:inherit;color:var(--fg);background:var(--card2);border:1px solid var(--line2);border-radius:12px;padding:10px 12px;width:100%}
-.field:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)}
-.picks{display:none;margin:4px 0 0;columns:2;column-gap:24px}
-.picks label{display:flex;gap:8px;align-items:center;font-size:13px;padding:4px 0;break-inside:avoid;color:var(--fg2)}
-.picks input{accent-color:var(--cyan);margin:0}
-.picks .pv{margin-left:auto;flex:none;width:28px;height:24px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--cyan);cursor:pointer;
-           font-size:10px;line-height:1;display:inline-grid;place-items:center;padding:0}
-.picks .pv:hover{border-color:var(--cyan)}
-.picks .pv.on{background:var(--grad);color:var(--ink);border-color:transparent}
-details[open] .picks{display:block}
-summary{cursor:pointer;color:var(--cyan);font-size:13px;list-style:none;margin-top:4px}
-summary::-webkit-details-marker{display:none}
-.apply{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;margin-top:14px;
-       background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);z-index:3}
-.mono{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--fg2)}
-.bad{color:var(--bad)}.good{color:var(--good)}
-pre.log{margin:14px 0 0;max-height:160px;overflow:auto;background:#000;color:#cfd8e3;border:1px solid var(--line);border-radius:12px;padding:12px;font:11px/1.6 var(--mono)}
-.steps{display:grid;gap:12px;grid-template-columns:1fr}
-.step{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px}
-.step .n{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--cyan)}
-.step > b{display:block;margin-top:4px}
-.step p{margin:4px 0 0}
-.screen{font-family:var(--mono);font-size:11px;background:#000;color:#22d3ee;border-radius:8px;padding:10px;white-space:pre;margin-top:10px;overflow-x:auto}
-footer{color:var(--dim);font-size:12px;text-align:center;padding:30px 0 20px}
-details.said{margin-top:18px}
-details.said summary{color:var(--dim)}
-/* ---- the visual menu: his parts are the menu. Tap one, or a chip, and he lifts off the page onto a stage, turns
-   to show it and the camera moves in, while its settings slide in beside him (below him on a phone) */
-.parts{position:relative;z-index:1;display:flex;gap:8px;margin:16px -2px 0;padding:2px 28px 2px 2px;overflow-x:auto;scrollbar-width:none;
+.nudge .go{white-space:nowrap;text-decoration:underline;text-underline-offset:3px;color:#d2d2d2}
+
+/* ---- him, in the round: one view showing at a time, his screen drawn live over the glass, a button on each of his parts */
+.him{position:relative;z-index:1;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.him.drag{cursor:grabbing}
+.him img{display:block;width:100%;max-width:none;height:auto;pointer-events:none;-webkit-user-drag:none}
+.him img.f{position:absolute;inset:0;visibility:hidden}
+.him .oled{position:absolute;left:0;top:0;width:128px;height:64px;max-width:none;transform-origin:0 0;image-rendering:pixelated;pointer-events:none;
+           box-shadow:0 0 14px 2px rgba(232,246,255,.32);transition:box-shadow .6s,opacity .6s}
+.him .oled.dim{box-shadow:0 0 6px 0 rgba(232,246,255,.14);opacity:.7}
+/* in him, bottom to top: the views, the sharp close-up of the one he is showing, his live screen, the spots */
+.him .hd{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0;transition:opacity .12s;pointer-events:none}
+.him .hd.on{opacity:1;transition:opacity .5s ease}
+.him .oled{z-index:2}
+.him .spots{position:absolute;inset:0;z-index:3;pointer-events:none}
+/* a spot: a dark dot in a white ring, so it shows on his white case and on his black screen alike */
+.him .spot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;padding:0;border-radius:50%;border:2px solid #fff;cursor:pointer;pointer-events:auto;
+           scale:calc(1 / var(--z,1));background:rgba(10,10,10,.62);box-shadow:0 0 0 1.5px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.35);transition:transform .15s}
+.him .spot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85);box-shadow:0 0 0 1px rgba(0,0,0,.3);animation:ping 2.6s ease-out infinite}
+.him .spot:hover,.him .spot:focus-visible{transform:scale(1.18)}
+.him .spot .tip{position:absolute;left:50%;top:-36px;transform:translateX(-50%);white-space:nowrap;background:rgba(0,0,0,.86);color:#fff;border:1px solid #3d3d3d;
+                font:500 12px/1 var(--sans);padding:7px 10px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .15s}
+.him .spot:hover .tip,.him .spot:focus-visible .tip{opacity:1}
+@keyframes ping{0%{transform:scale(.75);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+
+/* ---- what he says about himself, once he is found: four readings, a hairline between */
+.hero .tiles{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(24px,3vw,40px);background:#262626;border-color:#262626;
+             animation:rv-up 1.1s var(--cine) both}
+.hero .tile{background:#000;padding:18px 20px;min-width:0}
+.tile .k{font-size:13px;font-weight:500;color:#8a8a8a}
+.tile .v{font-family:var(--pixel);font-size:clamp(17px,2vw,24px);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .s{font-size:13px;color:#a1a1a1;margin-top:3px}
+.tile[data-part]{cursor:pointer;transition:background .2s var(--ease)}
+.tile[data-part]:hover,.tile[data-part]:focus-visible{background:#141414;outline:0}
+
+/* ---- his parts, as a row of chips: on the top, and across the sheet */
+.parts{position:relative;z-index:1;display:flex;gap:8px;margin:clamp(20px,2.4vw,28px) -2px 0;padding:2px 28px 2px 2px;overflow-x:auto;scrollbar-width:none;
        -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
 @media (min-width:720px){.parts{flex-wrap:wrap;overflow:visible;padding-right:2px;-webkit-mask-image:none;mask-image:none}}
 .parts::-webkit-scrollbar,.sh-parts::-webkit-scrollbar{display:none}
-.chip{flex:none;font:inherit;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px;padding:8px 14px 8px 11px;border-radius:999px;cursor:pointer;
-      white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.26);color:#fff;transition:background .15s,color .15s,transform .08s}
-.chip:hover{background:rgba(255,255,255,.22)}
-.chip:active{transform:translateY(1px)}
+.chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 15px 8px 12px;font-size:14px;font-weight:500;white-space:nowrap;color:var(--text);
+      cursor:pointer;transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease)}
+.chip:active{transform:scale(.98)}
 .chip svg,.sh-ic svg,.fback svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.tile[data-part]{cursor:pointer;transition:background .15s}
-.tile[data-part]:hover{background:rgba(0,0,0,.32)}
+.hero .chip{background:transparent;border-color:#3d3d3d;color:#fff}
+.hero .chip:hover{border-color:#fff;color:#fff}
+
+/* ---- buttons: the site's, under the names this page gives them */
+.btn.p{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.p:hover{background:#262626;border-color:#262626}
+.dark .btn.p{background:#fff;border-color:#fff;color:#000}
+.dark .btn.p:hover{background:#e4e4e4;border-color:#e4e4e4}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:active{transform:none}
+.ic{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-bright);background:var(--bg);color:var(--text);cursor:pointer;flex:none;
+    display:inline-flex;align-items:center;justify-content:center;font-size:14px;transition:border-color .2s var(--ease)}
+.ic:hover{border-color:var(--ink)}
+
+/* ---- a setting: a card with a hairline round it */
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}
+.card{padding:clamp(18px,2vw,24px);min-width:0;position:relative;border-radius:22px}
+.card:hover{border-color:var(--line);box-shadow:none}
+.card.wide{grid-column:1/-1}
+.card h2{font-size:clamp(20px,2vw,24px);font-weight:700;letter-spacing:-.03em;line-height:1.12;text-wrap:balance}
+.card .k,.meter .k,.sh-head .k{font-size:13px;font-weight:500;color:var(--mute);margin-bottom:6px}
+.card p{margin:8px 0 0;color:var(--mute);font-size:14.5px;line-height:1.55}
+.card p b{color:var(--text);font-weight:600}
+.card .row{margin-top:14px;gap:10px}
+.card.flash{animation:flash 1.4s}
+@keyframes flash{0%,100%{box-shadow:0 0 0 0 var(--ink)}25%,60%{box-shadow:0 0 0 2px var(--ink)}}
+.opt{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.opt:first-of-type{border-top:0;padding-top:4px}
+.opt .g{flex:1;min-width:0;font-size:13.5px;line-height:1.5}
+.opt b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.opt span{color:var(--mute)}
+/* a switch: grey is off, black is on, and half way is "some of them" */
+.sw{position:relative;width:48px;height:28px;border-radius:999px;background:var(--line-bright);border:0;cursor:pointer;flex:none;transition:background .15s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .15s}
+.sw[aria-checked=true]{background:var(--ink)}
+.sw[aria-checked=true]::after{left:23px}
+.sw[aria-checked=mixed]{background:var(--dim)}
+.sw[aria-checked=mixed]::after{left:13px}
+.sw:disabled{opacity:.45;cursor:default}
+.sw:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* one of a few: a pill, the chosen one black */
+.seg{display:inline-flex;max-width:100%;border:1px solid var(--line-bright);border-radius:999px;padding:3px;gap:2px;background:var(--bg)}
+.seg button{font:inherit;font-size:14px;font-weight:600;letter-spacing:-.005em;border:0;border-radius:999px;background:transparent;color:var(--mute);
+            padding:8px 15px;cursor:pointer;white-space:nowrap;transition:background .2s var(--ease),color .2s var(--ease)}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+.seg button:disabled{opacity:.5;cursor:default}
+.range{width:100%;accent-color:var(--ink)}
+.card .field,.findfirst .field{padding:10px 13px}
+select.field{cursor:pointer}
+.picks{display:none;margin:6px 0 0;columns:2;column-gap:24px}
+.picks label{display:flex;gap:8px;align-items:center;font-size:13.5px;padding:4px 0;break-inside:avoid;color:var(--mute)}
+.picks input{accent-color:var(--ink);margin:0;width:15px;height:15px;flex:none}
+.picks .pv{margin-left:auto;flex:none;width:28px;height:24px;border-radius:999px;border:1px solid var(--line-bright);background:var(--bg);color:var(--text);cursor:pointer;
+           font-size:9px;line-height:1;display:inline-grid;place-items:center;padding:0;transition:border-color .2s var(--ease)}
+.picks .pv:hover{border-color:var(--ink)}
+.picks .pv.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+details[open] .picks{display:block}
+summary{cursor:pointer;color:var(--text);font-size:13.5px;font-weight:500;list-style:none;margin-top:6px;
+        text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-bright)}
+summary:hover{text-decoration-color:var(--ink)}
+summary::-webkit-details-marker{display:none}
+.apply{position:sticky;bottom:12px;display:flex;gap:12px;align-items:center;margin-top:14px;
+       background:var(--bg);border:1px solid var(--line-bright);border-radius:18px;padding:12px 14px;box-shadow:var(--pencil-lift);z-index:3}
+.grow{flex:1}
+.mono{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--mute)}
+.bad{color:var(--bad)}.good{color:var(--good)}
+pre.log{margin:14px 0 0;max-height:160px;overflow:auto;background:#000;color:#bdbdbd;border-radius:14px;padding:14px;font:11.5px/1.6 var(--mono)}
+details.said{margin:0 0 clamp(36px,5vw,64px)}
+details.said summary{color:var(--mute);font-weight:400}
+
+/* ---- setting him up, for the first time */
+.setup .head{margin-bottom:12px}
+.setup .sub{max-width:60ch;margin:0 0 clamp(24px,3vw,36px);font-size:clamp(16px,1.4vw,18px);line-height:1.55}
+.setup .step p b{color:var(--text);font-weight:600}
+/* what his screen says while he waits to be set up */
+.says{font-family:var(--mono);font-size:12px;line-height:1.55;background:#000;color:#fff;border-radius:12px;padding:14px 16px;white-space:pre;
+      margin-top:14px;overflow-x:auto;max-width:300px}
+
+/* ---- the visual menu: his parts are the menu. Tap one, or a chip, and he lifts off the page onto a stage, turns
+   to show it and the camera moves in, while its settings slide in beside him (below him on a phone) */
 html.locked,html.locked body{overflow:hidden}
-.focus{position:fixed;inset:0;z-index:30;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,44%) minmax(0,1fr)}
+.focus{position:fixed;inset:0;z-index:80;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,44%) minmax(0,1fr)}
 .focus .veil{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;
-  background:radial-gradient(46% 42% at 50% 24%,rgba(34,211,238,.34),rgba(34,211,238,0) 72%),
-             radial-gradient(110% 60% at 50% 0%,rgba(14,124,147,.5),rgba(14,124,147,0) 72%),
-             linear-gradient(180deg,#062530 0%,#03131a 70%,#020c11 100%)}
+  background:radial-gradient(64% 46% at 50% 25%,#202020 0%,#0b0b0b 52%,#000 82%)}
 .focus.on .veil{opacity:1}
 .stage{position:relative;z-index:1;min-width:0;min-height:0}
-.stage .spin{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
-.spin.focused{cursor:default}
-.spin.focused .spot{width:14px;height:14px;margin:-7px 0 0 -7px;background:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(34,211,238,.22),0 2px 6px rgba(0,0,0,.3)}
-.spin.focused .spot::after{animation:none;opacity:0}
-.spin.focused .spot.cur{z-index:1;background:transparent;border-color:transparent;box-shadow:none}
-.spin.focused .spot.cur:hover,.spin.focused .spot.cur:focus-visible{transform:none}
+.stage .him{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.him.focused{cursor:default}
+.him.focused .spot{width:14px;height:14px;margin:-7px 0 0 -7px;background:rgba(10,10,10,.5);box-shadow:0 0 0 1.5px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+.him.focused .spot::after{animation:none;opacity:0}
+.him.focused .spot.cur{z-index:1;background:transparent;border-color:transparent;box-shadow:none}
+.him.focused .spot.cur:hover,.him.focused .spot.cur:focus-visible{transform:none}
 /* the parts inside him, drawn over the case as if it were glass: his speaker hums, his radio calls out, his charge light glows */
 .spot .xr{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;opacity:0;transform:scale(.85);transition:opacity .15s,transform .15s}
-.spin.focused.still .spot.cur .xr{opacity:1;transform:none;transition:opacity .5s .15s,transform .5s cubic-bezier(.2,.9,.3,1.2) .15s}
+.him.focused.still .spot.cur .xr{opacity:1;transform:none;transition:opacity .5s .15s,transform .5s cubic-bezier(.2,.9,.3,1.2) .15s}
 .spot .xr.lens{width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;
-  background:radial-gradient(circle at 50% 38%,rgba(9,44,56,.94),rgba(3,16,22,.95) 72%);border:1.5px solid rgba(103,232,249,.8);
-  box-shadow:0 0 0 6px rgba(34,211,238,.13),0 14px 34px rgba(0,0,0,.38),inset 0 0 24px rgba(34,211,238,.28)}
-.xr svg{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;overflow:visible;fill:none;stroke:#a5f3fc;stroke-width:1.7;
-        stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px rgba(34,211,238,.85))}
-.xr:not(.lens) svg{stroke:#0e94ad;stroke-width:2.4;filter:drop-shadow(0 0 5px rgba(34,211,238,.9))}
+  background:radial-gradient(circle at 50% 38%,rgba(38,38,38,.95),rgba(0,0,0,.96) 72%);border:1.5px solid rgba(255,255,255,.88);
+  box-shadow:0 0 0 6px rgba(255,255,255,.1),0 14px 34px rgba(0,0,0,.4),inset 0 0 24px rgba(255,255,255,.1)}
+.xr svg{position:absolute;left:50%;top:50%;width:120px;height:120px;max-width:none;margin:-60px 0 0 -60px;overflow:visible;fill:none;stroke:#fff;stroke-width:1.7;
+        stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px rgba(255,255,255,.5))}
+.xr:not(.lens) svg{stroke:#0a0a0a;stroke-width:2.2;filter:drop-shadow(0 0 4px rgba(255,255,255,.95))}
 @media (max-width:899px){.spot .xr.lens{width:92px;height:92px;margin:-46px 0 0 -46px}.xr.lens svg{transform:scale(.8)}}
 .xr .ring{transform-box:fill-box;transform-origin:center;animation:xwave 2.8s ease-out infinite}
 .xr .ring.b{animation-delay:1.4s}
@@ -218,100 +199,104 @@ html.locked,html.locked body{overflow:hidden}
 @keyframes xarc{0%,100%{opacity:.18}40%{opacity:1}}
 .xr .glow{animation:xglow 3.2s ease-in-out infinite}
 @keyframes xglow{0%,100%{opacity:.5}50%{opacity:1}}
-.fback{position:absolute;z-index:4;left:14px;top:calc(12px + env(safe-area-inset-top,0px));font:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;
-       display:inline-flex;align-items:center;gap:6px;padding:8px 14px 8px 10px;border-radius:999px;background:rgba(3,19,26,.58);border:1px solid rgba(255,255,255,.2);
-       backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;transition:opacity .3s .15s}
+.fback{position:absolute;z-index:4;left:14px;top:12px;font:inherit;font-size:13.5px;font-weight:600;color:#fff;cursor:pointer;
+       display:inline-flex;align-items:center;gap:6px;padding:8px 15px 8px 10px;border-radius:999px;background:rgba(0,0,0,.62);border:1px solid #3d3d3d;
+       backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;transition:opacity .3s .15s,border-color .2s var(--ease)}
+.fback:hover{border-color:#fff}
 .focus.on .fback{opacity:1}
 .fhint{position:absolute;z-index:4;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;text-align:center;
-       color:rgba(255,255,255,.85);font-size:12.5px;line-height:1.35;pointer-events:none;padding:6px 13px;border-radius:999px;
-       background:rgba(3,19,26,.58);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+       color:#a1a1a1;font-size:13px;line-height:1.35;pointer-events:none;padding:7px 14px;border-radius:999px;
+       background:rgba(0,0,0,.62);border:1px solid #262626;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .fhint.said{color:#fff;font-weight:600}
-.sheet{position:relative;z-index:5;display:flex;flex-direction:column;min-height:0;color:var(--fg);
-       background:linear-gradient(180deg,color-mix(in srgb,var(--cyan) 7%,var(--bg2)) 0,var(--bg2) 200px);
-       border-top:1px solid var(--line);border-radius:22px 22px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.4);
+.sheet{position:relative;z-index:5;display:flex;flex-direction:column;min-height:0;color:var(--text);background:var(--bg);
+       border-radius:28px 28px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.4);
        transform:translateY(105%);transition:transform .5s cubic-bezier(.2,.85,.25,1)}
-.sheet::before{content:"";position:absolute;left:50%;top:7px;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:var(--line2)}
+.sheet::before{content:"";position:absolute;left:50%;top:8px;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:var(--line-bright)}
 .focus.on .sheet{transform:none}
-.sh-head{display:flex;gap:14px;align-items:flex-start;padding:22px 20px 4px}
+.sh-head{display:flex;gap:14px;align-items:flex-start;padding:26px 20px 4px}
 .sh-head .g{flex:1;min-width:0}
-.sh-head .k{color:var(--cyan);font:500 11px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
-.sh-head h2{margin:5px 0 0;font-size:21px;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
-.sh-head p{margin:6px 0 0;color:var(--fg2);font-size:14px}
-.sh-ic{width:42px;height:42px;border-radius:13px;background:var(--grad);color:var(--ink);display:grid;place-items:center;flex:none;box-shadow:0 6px 18px rgba(34,211,238,.25)}
-.sh-ic svg{width:22px;height:22px;stroke-width:1.9}
-.sh-x{border-radius:50%;flex:none}
-.sh-parts{position:relative;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 44px 14px 20px;border-bottom:1px solid var(--line);
+.sh-head .k{margin:1px 0 0}
+.sh-head h2{margin:4px 0 0;font-size:clamp(24px,2.4vw,30px);letter-spacing:-.035em;line-height:1.08;text-wrap:balance}
+.sh-head p{margin:8px 0 0;color:var(--mute);font-size:14.5px;line-height:1.5}
+.sh-ic{width:44px;height:44px;border-radius:14px;background:var(--ink);color:#fff;display:grid;place-items:center;flex:none}
+.sh-ic svg{width:22px;height:22px}
+.sh-parts{position:relative;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:14px 44px 16px 20px;border-bottom:1px solid var(--line);
           -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent)}
-.sh-parts .chip{background:var(--card2);border-color:var(--line);color:var(--fg2);padding:7px 12px 7px 10px}
-.sh-parts .chip:hover{color:var(--fg);border-color:var(--line2);background:var(--card2)}
-.sh-parts .chip[aria-current=true]{background:var(--grad);color:var(--ink);border-color:transparent}
-.sh-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.sh-parts .chip{padding:7px 13px 7px 10px;font-size:13.5px;color:var(--mute)}
+.sh-parts .chip:hover{color:var(--text)}
+.sh-parts .chip[aria-current=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.sh-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 20px 24px}
 .sh-body .card{margin-top:14px}
-.sh-body .apply{bottom:12px}
-.lead,.meter{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
-.lead b{font-size:15px}
-.lead p{margin:6px 0 0;color:var(--fg2);font-size:14px}
-.lead .row,.meter .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
-.meter .k{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
-.meter .big{font:700 28px/1.15 var(--sans);margin-top:8px;letter-spacing:-.01em}
-.meter .s{color:var(--fg2);font-size:13px;margin-top:2px}
-.meter .bar{height:10px;border-radius:999px;background:var(--card2);border:1px solid var(--line);margin-top:12px;overflow:hidden}
-.meter .bar i{display:block;height:100%;background:var(--grad);border-radius:inherit}
+.findfirst,.meter{margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,2vw,24px)}
+.findfirst b{font-size:clamp(20px,2vw,24px);font-weight:700;letter-spacing:-.03em;line-height:1.12}
+.findfirst p{margin:8px 0 0;color:var(--mute);font-size:14.5px;line-height:1.55}
+.findfirst .row,.meter .row{gap:10px;margin-top:16px}
+.meter .big{font:700 clamp(28px,3vw,36px)/1.1 var(--sans);letter-spacing:-.035em;margin-top:4px}
+.meter .s{color:var(--mute);font-size:14px;margin-top:4px}
+.meter .bar{height:8px;border-radius:999px;background:var(--bg-soft);margin-top:14px;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--ink);border-radius:inherit}
 /* side by side: the sheet takes the left, where the page's words were, and he stays on the right, where he stood */
 @media (min-width:900px),(orientation:landscape) and (min-width:600px){
-  .focus{grid-template-columns:min(460px,46vw) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+  .focus{grid-template-columns:min(480px,46vw) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
   .stage{grid-column:2;grid-row:1}
-  .sheet{grid-column:1;grid-row:1;border-top:0;border-right:1px solid var(--line);border-radius:0;box-shadow:24px 0 60px rgba(0,0,0,.35);transform:translateX(-105%)}
+  .sheet{grid-column:1;grid-row:1;border-radius:0;box-shadow:24px 0 60px rgba(0,0,0,.35);transform:translateX(-105%)}
   .sheet::before,.fback{display:none}
-  .sh-head{padding:26px 24px 4px}.sh-parts{padding:14px 48px 16px 24px}.sh-body{padding-inline:24px}
-  .focus .veil{background:radial-gradient(40% 50% at 66% 46%,rgba(34,211,238,.32),rgba(34,211,238,0) 72%),
-             radial-gradient(80% 70% at 70% 100%,rgba(14,124,147,.42),rgba(14,124,147,0) 72%),
-             linear-gradient(200deg,#062530 0%,#03131a 60%,#020c11 100%)}
+  .sh-head{padding:28px 26px 4px}.sh-parts{padding:16px 48px 18px 26px}.sh-body{padding-inline:26px}
+  .focus .veil{background:radial-gradient(46% 54% at 52% 48%,#202020 0%,#0b0b0b 52%,#000 82%)}
 }
-@media (min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(3,1fr)}}
-@media (min-width:720px){.hero .in{display:flex;gap:28px;align-items:center}.hero .bot{order:2;width:min(30vw,330px);margin:-12px 0 -14px}}
-@media (min-width:1040px){.grid{grid-template-columns:repeat(3,1fr)}.hero .in{gap:40px}.hero .bot{width:min(28vw,360px);margin:-16px 10px -20px 0}}
-@media (max-width:600px){.tiles{grid-template-columns:repeat(2,1fr)}.picks{columns:1}}
-@media (prefers-reduced-motion:reduce){.sw,.sw::after,.btn{transition:none}.hero .bot,.spin .spot::after,.card.flash,.xr *{animation:none}
-  .focus .veil,.sheet,.fback,.spin .hd,.spin .hd.on,.spot .xr{transition:none}}
+@media (min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:820px){
+  .hero .in{flex-direction:row;align-items:center;gap:clamp(24px,4vw,64px)}
+  .hero .bot{order:2;width:min(34vw,420px);margin:0}
+}
+@media (min-width:1040px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:819px){.hero{background:radial-gradient(70% 34% at 50% 24%,#1c1c1c 0%,#0b0b0b 52%,#000 84%)}}
+@media (max-width:700px){.hero .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.picks{columns:1}}
+@media (prefers-reduced-motion:reduce){.focus .veil,.sheet,.fback,.him .hd,.him .hd.on,.spot .xr{transition:none}}
 </style>
 </head>
 <body>
 
-<div class="top"><div class="wrap">
-  <a class="brand" href="index.html"><img src="assets/logo.png" alt="">GEEDO</a>
-  <div class="grow"></div>
-  <a class="link" href="browse.html">Animations</a>
-  <a class="link" href="packs.html">Packs</a>
-  <a class="link" href="studio/index.html">Studio</a>
-  <button class="ic" id="install" hidden title="Install as an app" aria-label="Install as an app">&#8615;</button>
-  <button class="ic" id="theme" title="Light or dark" aria-label="Light or dark">&#9790;</button>
-</div></div>
+<nav class="nav dark">
+  <div class="nav-in">
+    <a class="logo" href="index.html"><img class="mark" src="assets/logo.png" alt="">GEEDO</a>
+    <div class="grow"></div>
+    <div class="nav-links row">
+      <a class="link" href="browse.html">Animations</a>
+      <a class="link" href="packs.html">Packs</a>
+      <a class="link" href="studio/index.html">Studio</a>
+      <a class="link" href="settings.html">My Geedo</a>
+      <a class="link" href="unlock.html">Redeem</a>
+    </div>
+    <a class="btn primary buy" href="buy.html">Buy</a>
+    <button class="nav-toggle" aria-label="Menu">≡</button>
+  </div>
+</nav>
 
-<main class="wrap">
-
-  <section class="hero">
+<header class="hero dark">
+  <div class="wrap">
     <div class="in">
       <div class="bot">
-        <div class="spin" id="spin" aria-label="Geedo. Drag to turn him; his parts are buttons.">
+        <div class="him" id="spin" aria-label="Geedo. Drag to turn him; his parts are buttons.">
           <img class="view" id="view" src="assets/app/spin/f00.webp" alt="" width="940" height="997" decoding="async" fetchpriority="high" draggable="false">
           <canvas class="oled" id="oled" width="128" height="64" hidden aria-hidden="true"></canvas>
           <div class="spots" id="spots"></div>
         </div>
-        <div class="hint" id="spin-hint">drag to turn him &middot; tap a part</div>
+        <div class="hint" id="spin-hint">Drag to turn him &middot; tap a part</div>
       </div>
-      <div style="min-width:0;flex:1">
+      <div class="say">
         <h1 id="title">Your Geedo, your way.</h1>
         <div class="id" id="hid" hidden></div>
         <p id="sub">His face, what he gets up to, how he feels, where he lives. Plug him in on a PC, or find him over Bluetooth from a phone. No files, no code, nothing to upload.</p>
         <div class="row">
-          <button class="btn w p" id="find">Plug him in</button>
-          <button class="btn w p" id="find-ble" hidden>Find him over Bluetooth</button>
-          <button class="btn w" id="demo">Try it without one</button>
+          <button class="btn p" id="find">Plug him in</button>
+          <button class="btn p" id="find-ble" hidden>Find him over Bluetooth</button>
+          <button class="btn" id="demo">Try it without one</button>
           <span class="state" id="state"></span>
         </div>
         <button class="nudge" id="nudge" hidden></button>
         <nav class="parts" id="parts" aria-label="His settings, part by part"></nav>
+        <p class="get" id="get" hidden><button id="install" type="button">Install this page as an app</button></p>
       </div>
     </div>
     <div class="tiles" id="tiles" hidden>
@@ -320,9 +305,27 @@ html.locked,html.locked body{overflow:hidden}
       <div class="tile" data-part="light"><div class="k">Battery</div><div class="v" id="t-bat">—</div><div class="s" id="t-chg"></div></div>
       <div class="tile" data-part="oled"><div class="k">Face</div><div class="v" id="t-face">—</div><div class="s" id="t-link"></div></div>
     </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="setup">
+    <h2 class="h1 head">Setting him up<br>without a computer.</h2>
+    <p class="sub mute">He only needs your WiFi once. If you have him plugged in or over Bluetooth, tap his radio, or WiFi, up top instead.</p>
+    <div class="steps">
+      <div class="step"><div><h3>Switch him on</h3><p>His boot animation plays, and if he has never been set up he asks for it.</p>
+        <div class="says">Hi! Let's set me up:
+1. phone WiFi list
+2. join this one:
+   [ GEEDO-Setup ]
+no password needed!</div></div></div>
+      <div class="step"><div><h3>Join GEEDO-Setup on your phone</h3><p>No password. A page opens by itself: pick your home network, type its password, save. If nothing pops up, browse to <b>192.168.4.1</b>.</p></div></div>
+      <div class="step"><div><h3>That's it</h3><p>He connects, fetches his scenes and comes alive. Changed your WiFi? Hold his button five seconds and he starts over.</p></div></div>
+    </div>
   </section>
 
-  <div id="panel" hidden>
+  <div id="panel" hidden data-still>
     <!-- every setting, kept here out of sight: the visual menu moves the ones for a part into its sheet and puts them back after -->
     <div class="grid" id="store" hidden>
 
@@ -364,7 +367,7 @@ html.locked,html.locked body{overflow:hidden}
           <div class="row" style="margin-top:8px"><div class="seg" id="vol-seg"><button data-vol="quiet">Quiet</button><button data-vol="medium">Medium</button><button data-vol="loud">Loud</button></div></div></div></div>
         <div class="opt"><div class="g"><div class="k">Bedtime</div><b>When his night starts and ends</b><span>At night he is quiet and sleepy, and for two hours before it he winds down.</span>
           <div class="row" style="margin-top:8px;gap:8px;flex-wrap:nowrap"><select class="field" id="bt-bed" aria-label="Bedtime" style="width:auto;flex:1"></select>
-            <span style="color:var(--fg2);font-size:13px">until</span><select class="field" id="bt-wake" aria-label="Wake-up time" style="width:auto;flex:1"></select></div>
+            <span style="color:var(--mute);font-size:13px">until</span><select class="field" id="bt-wake" aria-label="Wake-up time" style="width:auto;flex:1"></select></div>
           <span id="bed-say"></span></div></div>
         <div class="opt"><div class="g"><div class="k">Where he lives</div><b>His time zone</b><span>So mornings are mornings and nights are quiet.</span>
           <select class="field" id="tz" aria-label="Time zone" style="margin-top:8px"></select><span id="tz-say"></span></div></div>
@@ -438,7 +441,7 @@ html.locked,html.locked body{overflow:hidden}
         <div class="k">Sleep and off</div><h2>A nap, or lights out</h2>
         <p>Asleep, he dims, shuts his eyes and stirs now and then; a tap wakes him, and on battery he switches himself off after three hours. Off, he waits for a tap or a cable, and lasts for months.</p>
         <div class="row"><button class="btn sm" id="sleep">Send him to sleep</button><button class="btn sm" id="wake">Wake him</button><button class="btn sm ghost" id="off">Switch off</button></div>
-        <span id="sleep-say" style="font-size:13px;color:var(--fg2)"></span>
+        <span id="sleep-say" style="font-size:13.5px;color:var(--mute)"></span>
         <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">His button</div><b>Tap to pet him, hold to switch him off</b>
           <span>A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.</span></div></div>
       </article>
@@ -447,25 +450,27 @@ html.locked,html.locked body{overflow:hidden}
     <details class="said"><summary>What he said</summary><pre class="log" id="log" hidden></pre></details>
   </div>
 
-  <section class="card" style="margin-top:18px">
-    <div class="k">First time</div><h2>Setting him up without a computer</h2>
-    <p>He only needs your WiFi once. If you have him plugged in or over Bluetooth, tap his radio, or WiFi, up top instead.</p>
-    <div class="steps" style="margin-top:14px">
-      <div class="step"><div class="n">STEP 01</div><b>Switch him on</b><p>His boot animation plays, and if he has never been set up he asks for it.</p>
-        <div class="screen">Hi! Let's set me up:
-1. phone WiFi list
-2. join this one:
-   [ GEEDO-Setup ]
-no password needed!</div></div>
-      <div class="step"><div class="n">STEP 02</div><b>Join GEEDO-Setup on your phone</b><p>No password. A page opens by itself: pick your home network, type its password, save. If nothing pops up, browse to <b>192.168.4.1</b>.</p></div>
-      <div class="step"><div class="n">STEP 03</div><b>That's it</b><p>He connects, fetches his scenes and comes alive. Changed your WiFi? Hold his button five seconds and he starts over.</p></div>
-    </div>
-  </section>
-
 </main>
-<footer>Geedo &middot; <a href="GUIDE.md">the owner's guide</a> &middot; <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a></footer>
 
-<div class="focus" id="focus" hidden>
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="index.html"><span class="led"></span>GEEDO</a>
+    <nav class="foot-links" aria-label="Site">
+      <a href="buy.html">Buy</a>
+      <a href="browse.html">Animations</a>
+      <a href="packs.html">Packs</a>
+      <a href="makers.html">Makers</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="settings.html">My Geedo</a>
+      <a href="unlock.html">Redeem</a>
+      <a href="GUIDE.md">Guide</a>
+      <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Breadboardy/Geedo-Hub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="focus" id="focus" hidden data-still>
   <div class="veil"></div>
   <div class="stage" id="stage">
     <button class="fback" id="f-back" type="button"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
@@ -500,30 +505,17 @@ const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform 
 const IOS_SAY = 'On an iPhone, Safari cannot use Bluetooth, so this page cannot reach him from here. Use a computer or an Android phone, or try Bluefy, a free browser on the App Store that can (not tried with Geedo yet). Setting up his WiFi, below, works from any phone.';
 let robot = null, info = {}, hubList = null, skipped = new Set(), pending = new Map();
 
-// ---- theme: follows the device until the moon is pressed, then remembered
-const THEMES = ['', 'dark', 'light'];
-function applyTheme(t) {
-  if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
-  $('theme').textContent = t === 'light' ? '☀' : t === 'dark' ? '☾' : '◑';
-  document.querySelector('meta[name=theme-color]').content = (t === 'light' || (!t && matchMedia('(prefers-color-scheme: light)').matches)) ? '#f4f6f9' : '#0b0e14';
-}
-let theme = '';
-try { theme = localStorage.getItem('geedoTheme') || ''; } catch (e) {}
-if (/theme=(dark|light)/.test(location.search)) theme = RegExp.$1;
-applyTheme(theme);
-$('theme').onclick = () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length]; applyTheme(theme); try { localStorage.setItem('geedoTheme', theme); } catch (e) {} };
-
 // ---- install: the browser offers it, the button takes it
 let installEvt = null;
-addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; $('install').hidden = false; });
-$('install').onclick = async () => { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $('install').hidden = true; };
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; $('get').hidden = false; });
+$('install').onclick = async () => { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $('get').hidden = true; };
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
 function say(line, kind) {
   log.hidden = false;
   const d = document.createElement('div');
   d.textContent = line;
-  d.style.color = kind === 'sent' ? '#b08d57' : kind ? '#22d3ee' : '#71717a';
+  d.style.color = kind === 'sent' ? '#8f8f8f' : kind ? '#ffffff' : '#6b6b6b';
   log.append(d); log.scrollTop = log.scrollHeight;
 }
 const fw = () => parseInt(info.fw, 10) || 0;
@@ -1090,7 +1082,7 @@ const spin = (() => {
     buzzer: '<circle cx="60" cy="60" r="19"/><circle cx="60" cy="60" r="5.5"/><circle class="ring" cx="60" cy="60" r="22"/><circle class="ring b" cx="60" cy="60" r="22"/>',
     wifi: '<rect x="45" y="62" width="30" height="22" rx="2.5"/><rect x="54" y="69" width="12" height="10" rx="1.5"/>' +
           '<path class="arc" d="M53.9 52.9A8 8 0 0 1 66.1 52.9"/><path class="arc b" d="M48.5 48.4A15 15 0 0 1 71.5 48.4"/><path class="arc c" d="M43.1 43.9A22 22 0 0 1 76.9 43.9"/>',
-    light: '<defs><radialGradient id="xr-glow"><stop offset="0" stop-color="#ecfeff"/><stop offset=".4" stop-color="#67e8f9" stop-opacity=".85"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient></defs>' +
+    light: '<defs><radialGradient id="xr-glow"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>' +
            '<circle class="glow" cx="60" cy="60" r="26" fill="url(#xr-glow)" stroke="none"/><rect x="54" y="56.5" width="12" height="7" rx="1.5"/>',
     usb: '<rect x="42" y="64" width="36" height="13" rx="6.5"/><rect x="48" y="69" width="24" height="3" rx="1.5"/><path class="glow" d="M63 32 54 46h6.5L57 58l10-15h-6.5z"/>',
     button: '<circle class="ring" cx="60" cy="60" r="18"/><circle class="ring b" cx="60" cy="60" r="18"/>',
@@ -1258,10 +1250,10 @@ const spin = (() => {
   function rrect(d, x0, y0, x1, y1, r) {
     for (let y = Math.max(0, Math.ceil(y0)); y < Math.min(64, y1); y++) for (let x = Math.max(0, Math.ceil(x0)); x < Math.min(128, x1); x++) {
       const cx = x < x0 + r ? x0 + r : x > x1 - r ? x1 - r : x, cy = y < y0 + r ? y0 + r : y > y1 - r ? y1 - r : y;
-      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) { const p = (y * 128 + x) * 4; d[p] = 225; d[p + 1] = 246; d[p + 2] = 255; }
+      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) { const p = (y * 128 + x) * 4; d[p] = d[p + 1] = d[p + 2] = 255; }
     }
   }
-  function paint(px) { const d = oimg.data; for (let i = 0, p = 0; i < 128 * 64; i++, p += 4) { const v = px[i]; d[p] = v ? 225 : 0; d[p + 1] = v ? 246 : 0; d[p + 2] = v ? 255 : 0; d[p + 3] = 255; } octx.putImageData(oimg, 0, 0); }
+  function paint(px) { const d = oimg.data; for (let i = 0, p = 0; i < 128 * 64; i++, p += 4) { const v = px[i] ? 255 : 0; d[p] = d[p + 1] = d[p + 2] = v; d[p + 3] = 255; } octx.putImageData(oimg, 0, 0); }
   function eyes(now) {
     if (asleep) {                                        // lids down, a slow breath in the glow
       const key = 'z' + Math.round(now / 400); if (key === drawn) return; drawn = key;
@@ -1337,7 +1329,7 @@ const spin = (() => {
 //      moves in, while everything for that part slides in beside him. Back, Esc, the cross or the phone's back closes it.
 const menu = (() => {
   const focusEl = $('focus'), body = $('sh-body'), store = $('store'), ORDER = [...store.children];
-  const page = ['.top', 'main', 'footer'].map(s => document.querySelector(s));
+  const page = ['.nav', '.hero', 'main', 'footer'].map(s => document.querySelector(s)).filter(Boolean);
   const ICON = {
     oled: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2.5"/><path d="M9 10v3M15 10v3"/></svg>',
     button: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>',
@@ -1423,7 +1415,7 @@ const menu = (() => {
     for (const c of (P.cards ? P.cards.map(id => $(id)) : ORDER)) body.append(c);
   }
   function findHim(k) {                                  // no Geedo yet: what this part is for, and the ways to find him
-    const d = document.createElement('div'); d.className = 'lead';
+    const d = document.createElement('div'); d.className = 'findfirst';
     const none = $('find').hidden && $('find-ble').hidden;
     const why = IOS ? 'On an iPhone, Safari cannot use Bluetooth: use a computer or an Android phone, or try the free Bluefy browser (not tried with Geedo yet). Or try the pretend one, '
                     : 'This browser can open neither his cable nor Bluetooth: use Chrome or Edge. Or try the pretend one, ';
@@ -1447,7 +1439,7 @@ const menu = (() => {
     if (k === 'button') {
       const zz = info.state === 'asleep';
       d.innerHTML = `<div class="k">Right now</div><div class="big">${zz ? 'Asleep' : 'Awake'}</div><div class="s">${zz ? 'A pet, or a tap on his button, wakes him.' : 'A pet cheers him up, and he remembers it.'}</div>` +
-                    '<div class="row"><button class="btn sm p" type="button">Pet him</button><span style="font-size:13px;color:var(--fg2)">or tap the button on him</span></div>';
+                    '<div class="row"><button class="btn sm p" type="button">Pet him</button><span style="font-size:13.5px;color:var(--mute)">or tap the button on him</span></div>';
       d.querySelector('button').onclick = e => pet(e.currentTarget);
       return d;
     }

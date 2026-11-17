@@ -390,8 +390,8 @@ html.motion [data-reveal="lines"].in .rv-in{transform:none}
 @media (max-width:900px){.pair{grid-template-columns:1fr}}
 
 /* The parts of the shop that wait for the real thing (assets/product.js):
-   each starts hidden in the page and is shown by that file once it has
-   something true to show - or, with ?preview on the address, as a striped
+   each starts hidden in the page and is shown by that file - as the real
+   thing once it has something true to show, and until then as a striped
    stand-in that says what goes there. */
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
@@ -440,18 +440,24 @@ html.motion [data-reveal="lines"].in .rv-in{transform:none}
 .quote figcaption{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:14.5px;color:var(--mute)}
 .quote figcaption b{color:var(--text);font-weight:600}
 
-/* a stand-in, in a preview only: striped, dashed, and labelled as what it is */
+/* a stand-in: striped, dashed, and labelled as what it is */
 .stand-in{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;
           padding:24px;border:1.5px dashed #9a9a9a;border-radius:24px;color:var(--mute);font-size:15px;line-height:1.4;
           background:repeating-linear-gradient(135deg,transparent 0 14px,rgba(128,128,128,.11) 14px 28px)}
 .stand-in.wide{aspect-ratio:16/9;border-radius:28px}
 .stand-in.tall{aspect-ratio:4/5}
 .stand-in-what{max-width:30ch}
-.stand-in-tag,.answer.is-stand-in::before,.quote.is-stand-in::before{
+.stand-in-tag,.answer.is-stand-in::before,.quote.is-stand-in::before,.signup.is-stand-in::before{
   content:'Placeholder';align-self:flex-start;display:inline-block;font:600 10.5px/1 var(--mono);letter-spacing:.09em;
   text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:5px 9px;color:var(--mute)}
 .stand-in .stand-in-tag{align-self:center}
 .answer.is-stand-in::before{margin-bottom:14px}
+.signup.is-stand-in::before{margin:0 0 14px 4px}
+.closing .signup.is-stand-in{text-align:center}
+.closing .signup.is-stand-in::before{margin-left:0}
+.dark .signup.is-stand-in::before{color:#a1a1a1}
+.signup input:disabled{cursor:not-allowed}
+.signup input:disabled::placeholder{color:var(--dim)}
 .answer.is-stand-in,.quote.is-stand-in{outline:1.5px dashed #9a9a9a;outline-offset:-1.5px;
   background:repeating-linear-gradient(135deg,var(--bg-soft) 0 14px,#ececec 14px 28px)}
 .signup.is-stand-in .signup-row,a.is-stand-in,.price.is-stand-in{outline:1.5px dashed #9a9a9a;outline-offset:4px}

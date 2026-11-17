@@ -5,14 +5,19 @@
    his box, where he ships, what happens if one breaks, and what people who
    have one say. Fill a line in and every page follows by itself.
 
-   NOTHING HERE IS SHOWN UNTIL IT IS REAL. An empty line means that part of
-   the page is simply not there: no made-up price, no invented review, no
-   email box that sends an address nowhere. To see where each part will go,
-   with a labelled placeholder standing in for it, open a page with
-   ?preview on the end:
+   WHILE A LINE IS EMPTY, ITS PART OF THE PAGE IS A PLACEHOLDER: a striped
+   box with a "Placeholder" label that says what goes there. It is on the
+   live pages for everybody, and it is replaced by the real thing the moment
+   its line is filled in. A placeholder never pretends: there is no made-up
+   price (the pages say "Price to be announced"), no invented review, and
+   the email box cannot be typed in until it has somewhere to send to.
+   Set placeholders to false below and an empty part is simply not there.
 
-     index.html?preview        buy.html?preview        the parts, not on sale yet
-     buy.html?preview=sale     ...and as it will look once he can be bought
+   To look ahead, open a page with ?preview on the end:
+
+     buy.html?preview          the email box as it will work beside the buttons
+     buy.html?preview=sale     ...and the page once he can be bought, with a
+                               stand-in price and buy button
 
    The pages read right with this file missing: the words in the HTML are
    the not-on-sale-yet ones, and every part below starts hidden.
@@ -31,6 +36,10 @@
      data-geedo-section          a section that is there when a part in it is */
 window.GeedoProduct = {
 
+  // ---- placeholders -------------------------------------------------------
+  placeholders: true,   // true: a part that is still empty below shows as a striped,
+                        // labelled placeholder. false: it is left off the page.
+
   // ---- the price, and the way to pay --------------------------------------
   price: '',        // what he costs, written the way it should read: '$49', '£39'.
                     // Empty, and the pages say "Price to be announced".
@@ -46,7 +55,7 @@ window.GeedoProduct = {
   // an adult's: their rules ask for 18+). The service gives you the address
   // its form posts to, and the name it wants the email field to have.
   email: {
-    action: '',     // 'https://...' - empty, and there is no box
+    action: '',     // 'https://...' - empty, and the box is a placeholder nobody can type in
     field: 'email', // almost always 'email'; the service's own form says
     note: 'Only news about Geedo. Unsubscribe any time.',   // must be true of the service you pick
   },
@@ -56,7 +65,7 @@ window.GeedoProduct = {
   // sound needed (it plays muted, on a loop): tap him, he perks up. And
   // three or four photos: in a hand for his size, on a desk, his face close.
   video: {
-    src: '',        // 'assets/real/geedo.mp4' - empty, and there is no video
+    src: '',        // 'assets/real/geedo.mp4'
     poster: '',     // 'assets/real/geedo.jpg': one still from it, shown while it loads
   },
   photos: [
@@ -80,10 +89,11 @@ window.GeedoProduct = {
 (function () {
   const P = window.GeedoProduct || {};
   const mode = new URLSearchParams(location.search).get('preview');     // null, '' or 'sale'
-  const preview = mode !== null;
+  const preview = mode !== null;                          // the owner looking ahead
+  const standIns = preview || P.placeholders !== false;   // an empty part shows its placeholder
 
-  // What stands in for each empty line in a preview. Every word of it says
-  // that it is a placeholder: none of it could be taken for a fact.
+  // What stands in for each empty line. Every word of it says that it is a
+  // placeholder: none of it could be taken for a fact.
   const STAND_IN = {
     price: '$00', buyUrl: '#the-page-where-he-is-bought',
     email: { action: '', field: 'email', note: 'A line about what the emails are, and that they can be stopped.' },
@@ -109,10 +119,10 @@ window.GeedoProduct = {
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
   // a stand-in: a striped box that says what goes there
   const standIn = (cls, text) => { const n = el('div', 'stand-in ' + (cls || '')); n.append(el('span', 'stand-in-tag', 'Placeholder'), el('span', 'stand-in-what', text)); return n; };
-  // shown if it is real, or - in a preview - as its stand-in. Returns true when the stand-in is what is showing.
+  // shown if it is real, or else as its stand-in. Returns true when the stand-in is what is showing.
   function part(node, real) {
-    node.hidden = !(real || preview);
-    const fake = !real && preview;
+    node.hidden = !(real || standIns);
+    const fake = !real && standIns;
     node.classList.toggle('is-stand-in', fake);
     return fake;
   }
@@ -139,20 +149,30 @@ window.GeedoProduct = {
   // The email box. A plain form, posted by the browser to the service in a
   // new tab (which is where the service says "check your inbox"), so it
   // works with any of them and needs nothing of this page but the address.
+  //
+  // With nowhere to send to it is a placeholder. On the live page that is a
+  // box nobody can type in - an address must never be taken and dropped -
+  // and the Discord button beside it stays the way to hear. In a preview it
+  // can be tried, and says that nothing was sent.
   function email() {
     const cfg = has.email ? P.email : STAND_IN.email;
-    let n = 0;
+    let n = 0, live = false;
     for (const form of document.querySelectorAll('form[data-geedo-part="email"]')) {
       // once he can be bought, the button is the thing: the box is for the wait before
-      const shown = !onSale && (has.email || preview), fake = shown && !has.email;
+      const shown = !onSale && (has.email || standIns), fake = shown && !has.email;
       form.hidden = !shown;
       form.classList.toggle('is-stand-in', fake);
       if (!shown) continue;
       const input = form.querySelector('input[type="email"]'), note = form.querySelector('.signup-note');
+      const send = form.querySelector('button');
       const id = 'geedo-email-' + (++n);
       input.id = id; input.name = cfg.field || 'email';
       const label = form.querySelector('label'); if (label) label.htmlFor = id;
-      if (note) note.textContent = cfg.note || '';
+      const dead = fake && !preview;      // a placeholder on the live page
+      input.disabled = dead; if (send) send.disabled = dead;
+      if (note) note.textContent = dead ? 'The email box goes here. It is not switched on yet.' : cfg.note || '';
+      if (dead) continue;
+      live = true;
       if (!fake) { form.action = cfg.action; form.method = 'post'; form.target = '_blank'; }
       form.addEventListener('submit', e => {
         if (fake) e.preventDefault();
@@ -173,10 +193,9 @@ window.GeedoProduct = {
       }
       for (const s of form.parentElement.querySelectorAll('[data-geedo-soon].soon')) s.hidden = true;
     }
-    // words elsewhere on the page that say how to hear: the box when there is one, the Discord when there is not
-    const box = !!document.querySelector('form[data-geedo-part="email"]:not([hidden])');
-    for (const n of document.querySelectorAll('[data-geedo-email-on]')) n.hidden = !box;
-    for (const n of document.querySelectorAll('[data-geedo-email-off]')) n.hidden = box;
+    // words elsewhere on the page that say how to hear: the box when there is one that works, the Discord when there is not
+    for (const n of document.querySelectorAll('[data-geedo-email-on]')) n.hidden = !live;
+    for (const n of document.querySelectorAll('[data-geedo-email-off]')) n.hidden = live;
   }
 
   function real() {
@@ -184,7 +203,7 @@ window.GeedoProduct = {
     for (const box of document.querySelectorAll('[data-geedo-part="video"]')) {
       const fake = part(box, has.video);
       if (box.hidden) continue;
-      if (fake) { box.replaceChildren(standIn('wide', 'Your video: about fifteen seconds of the real Geedo. Tap him, he perks up.')); continue; }
+      if (fake) { box.replaceChildren(standIn('wide', 'Video: about fifteen seconds of the real Geedo. Tap him, he perks up.')); continue; }
       const v = el('video');
       v.src = P.video.src; if (P.video.poster) v.poster = P.video.poster;
       v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'metadata';
@@ -250,7 +269,9 @@ window.GeedoProduct = {
     if (!preview || document.querySelector('.preview-bar')) return;
     document.documentElement.classList.add('preview');
     const b = el('div', 'preview-bar');
-    b.append(el('b', '', 'Preview'), el('span', '', ' - the striped parts are placeholders. Visitors do not see them until assets/product.js is filled in. '));
+    b.append(el('b', '', 'Preview'), el('span', '', P.placeholders !== false
+      ? ' - looking ahead. The striped parts are placeholders, until assets/product.js is filled in. '
+      : ' - the striped parts are placeholders. Visitors do not see them until assets/product.js is filled in. '));
     const other = el('a', '', mode === 'sale' ? 'See it before he is on sale' : 'See it once he is on sale');
     other.href = location.pathname + (mode === 'sale' ? '?preview' : '?preview=sale');
     b.append(other);

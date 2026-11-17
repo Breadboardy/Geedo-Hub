@@ -14,12 +14,14 @@ over the air, and it is where people share what they drew for him.
 Everything that sells him and is not settled yet - the price, where he is
 bought, the email box, real photos and a video, what is in his box, where
 he ships, what people who have one say - is in one file,
-[`assets/product.js`](assets/product.js). A line left empty is a part of
-the page that is simply not there: nothing made up is ever shown. To see
-where each part goes, with a labelled placeholder standing in for it, put
-`?preview` on the end of the address:
-[home](https://breadboardy.github.io/Geedo-Hub/?preview),
-[Buy](https://breadboardy.github.io/Geedo-Hub/buy.html?preview), and
+[`assets/product.js`](assets/product.js). While a line there is empty, its
+part of the page is a striped box labelled "Placeholder" that says what goes
+there; fill the line in and the real thing takes its place. A placeholder
+never pretends: the price reads "Price to be announced", there is no
+invented review, and the email box cannot be typed in until it has somewhere
+to send to. Set `placeholders: false` in that file and an empty part is left
+off the page instead. To look ahead at the page once he can be bought, put
+`?preview=sale` on the end of the address:
 [Buy, once he is on sale](https://breadboardy.github.io/Geedo-Hub/buy.html?preview=sale).
 Real photos and the video go in `assets/real/`.
 

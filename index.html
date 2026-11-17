@@ -21,7 +21,10 @@
   /* the hero: him, on black, with his real screen playing */
   .hero{background:radial-gradient(64% 50% at 50% 62%,#1c1c1c 0%,#0b0b0b 46%,#000 76%);color:#fff;text-align:center;
         margin-top:-61px;padding:calc(61px + clamp(52px,7.5vw,104px)) 0 clamp(20px,3vw,44px);overflow:hidden}
-  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(28px,3vw,40px)}
+  /* who he is, in a breath, under the headline */
+  .hero-sub{max-width:44ch;margin:clamp(16px,1.8vw,24px) auto 0;font-size:clamp(16.5px,1.5vw,20px);line-height:1.5;
+            letter-spacing:-.01em;color:rgba(255,255,255,.72);text-wrap:balance}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(24px,2.6vw,34px)}
   .product{position:relative;width:min(540px,90vw);margin:clamp(20px,3vw,36px) auto 0}
   .product img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none}
   /* his screen: a 128 x 64 canvas, its corners moved onto the glass's by the script */
@@ -32,11 +35,12 @@
   .glass .screen{border:0;border-radius:0}
 
   /* how the top arrives: the headline rises out of a mask, a line at a time,
-     the buttons follow, and he comes forward out of the dark */
+     the words and then the buttons follow, and he comes forward out of the dark */
   .hero .rv-line{overflow:hidden;padding-bottom:.18em;margin-bottom:-.18em}
   .hero .rv-in{animation:rv-rise 1.4s var(--cine) .05s both}
   .hero .rv-line+.rv-line .rv-in{animation-delay:.17s}
-  .hero .hero-cta{animation:rv-up 1.1s var(--cine) .55s both}
+  .hero .hero-sub{animation:rv-up 1.1s var(--cine) .42s both}
+  .hero .hero-cta{animation:rv-up 1.1s var(--cine) .62s both}
   .hero .product{animation:rv-arrive 2s var(--cine) .25s both}
   /* and how it leaves, as the page is scrolled: the words lift and fade,
      and he drifts and grows a little, slower than the page (--p is how far
@@ -91,6 +95,7 @@
 <header class="hero dark">
   <div class="wrap">
     <h1 class="display"><span class="rv-line"><span class="rv-in">A little robot</span></span><span class="rv-line"><span class="rv-in">with a face.</span></span></h1>
+    <p class="hero-sub">Geedo lives on your desk and has a life of his own. He naps, sips coffee, watches the stars, and perks up when you tap him.</p>
     <div class="hero-cta">
       <a class="btn primary" href="buy.html">Buy Geedo</a>
       <a class="btn" href="browse.html">See what he does</a>

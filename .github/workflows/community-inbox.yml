@@ -1,0 +1,85 @@
+name: Community inbox
+
+# Publishing from the Studio with a Geedo account. The drawing waits on the
+# Hub's server (the address in assets/hub.json); this goes and collects what
+# is waiting, checks each one the way the robot would, and files it as a
+# review issue with a preview - the same issue, the same preview and the same
+# `approved` label as a drawing handed in by hand.
+#
+# The server cannot reach into this repository: it has no token for it. All
+# the going is from here, with the GEEDO_HUB_KEY secret, to the one address
+# this repository names. So nothing changes about who decides: a person adds
+# the `approved` label, and only then does "Community animations" publish.
+#
+# With no address in assets/hub.json, or no GEEDO_HUB_KEY secret, this does
+# nothing and says so.
+
+on:
+  # The timer: every quarter of an hour. It is left off until there is a
+  # server to ask, so the Actions page is not filled with runs that do
+  # nothing. When the address goes into assets/hub.json, take the "# " off
+  # the two lines below in the same commit. (GitHub stops a timer in a
+  # repository nobody has pushed to for 60 days; "Run workflow" on this
+  # workflow's page collects straight away, timer or no timer.)
+  # schedule:
+  #   - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write      # the previews branch
+  issues: write
+
+concurrency:
+  group: community-animations
+  cancel-in-progress: false
+
+jobs:
+  inbox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Is there a server to ask?
+        id: hub
+        env:
+          GEEDO_HUB_KEY: ${{ secrets.GEEDO_HUB_KEY }}
+        run: python3 .github/scripts/hub_inbox.py ready
+
+      - name: Collect what is waiting, check it, file it for a look
+        if: steps.hub.outputs.ready == 'true'
+        id: file
+        env:
+          GEEDO_HUB_KEY: ${{ secrets.GEEDO_HUB_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/hub_inbox.py file
+
+      # The previews live on an orphan branch, never on main: main is the Hub
+      # every robot reads, and nothing goes there before it is approved.
+      - name: Keep the previews on the previews branch
+        if: steps.file.outputs.previews == 'true'
+        id: previews
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          git config --global user.name  "geedo-bot"
+          git config --global user.email "geedo-bot@users.noreply.github.com"
+          url="https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git"
+          if git clone --quiet --depth 1 --branch previews "$url" previews 2>/dev/null; then
+            cd previews
+          else
+            mkdir previews && cd previews && git init -q -b previews && git remote add origin "$url"
+            printf 'Preview pictures of community submissions, one per issue. Not part of the Hub.\n' > README.md
+          fi
+          cp ../inbox_out/*.gif .
+          git add -A
+          git commit -q -m "previews from the inbox" || true
+          git push -q origin previews
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Say what the check found
+        if: always() && steps.file.outputs.filed != '' && steps.file.outputs.filed != '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PREVIEWS_PUSHED: ${{ steps.previews.outputs.pushed == 'true' }}
+        run: python3 .github/scripts/hub_inbox.py comment

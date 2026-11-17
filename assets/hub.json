@@ -1,0 +1,4 @@
+{
+  "api": "",
+  "note": "The address of the Hub's server: Geedo accounts and the Studio's Publish button. While it is empty the Studio shows no accounts and keeps the save-and-hand-in steps. Put the server's https address here to switch them on."
+}

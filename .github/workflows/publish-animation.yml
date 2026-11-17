@@ -1,21 +1,28 @@
 name: Community animations
 
-# A submission is an issue opened from the "Publish an animation" form; the
-# form gives it the `submission` label. Two jobs:
+# A submission is an issue with the `submission` label. It gets there one of
+# two ways: a maker opens it from the "Publish an animation" form, or a maker
+# presses Publish in the Studio with a Geedo account and "Community inbox"
+# files it. Three jobs:
 #
-#   check    on open (and on edit): download the file, run the robot's
-#            checks, draw a preview, and comment. Nothing is published.
-#   publish  when a person adds the `approved` label - and only a person
-#            with triage rights on this repo can add a label. The animation
-#            is packed, listed with the maker's name and the date, signed,
-#            and pushed. Every Geedo picks it up at its next check.
+#   check     on open (and on edit): get the drawing, run the robot's
+#             checks, draw a preview, and comment. Nothing is published.
+#             (Issues the inbox files are checked by the inbox as it files
+#             them; this runs for them only if somebody edits one.)
+#   publish   when a person adds the `approved` label - and only a person
+#             with triage rights on this repo can add a label. The animation
+#             is packed, listed with the maker's name and the date, signed,
+#             and pushed. Every Geedo picks it up at its next check. If it
+#             came from the Studio, its maker is told there.
+#   declined  when a person closes one without publishing it: if it came
+#             from the Studio, its maker is told there, with why.
 #
 # So nothing reaches a robot without a human having looked at the preview
-# and pressed one button. That is the whole point of the two jobs.
+# and pressed one button. That is the whole point.
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [opened, edited, labeled, closed]
 
 permissions:
   contents: write
@@ -43,6 +50,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           REPO_OWNER: ${{ github.repository_owner }}
+          GEEDO_HUB_KEY: ${{ secrets.GEEDO_HUB_KEY }}
         run: python3 .github/scripts/process_publish_issue.py check
 
       # The preview lives on an orphan branch, never on main: main is the
@@ -108,6 +116,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           REPO_OWNER: ${{ github.repository_owner }}
+          GEEDO_HUB_KEY: ${{ secrets.GEEDO_HUB_KEY }}
         run: python3 .github/scripts/process_publish_issue.py publish
 
       # Robots refuse a list the Hub did not sign, and a download whose bytes
@@ -131,6 +140,17 @@ jobs:
             git commit -m "community: ${{ steps.publish.outputs.anim_id }} (#${{ github.event.issue.number }})"
             git push
           fi
+
+      # A drawing sent from the Studio: its maker sees "Published" there, with
+      # a link to its page. (A failure here must not undo a publish that worked.)
+      - name: Tell its maker
+        if: steps.publish.outputs.ok == 'true' && steps.publish.outputs.hub_id != ''
+        continue-on-error: true
+        env:
+          GEEDO_HUB_KEY: ${{ secrets.GEEDO_HUB_KEY }}
+          HUB_ID: ${{ steps.publish.outputs.hub_id }}
+          ANIM: ${{ steps.publish.outputs.anim_id }}
+        run: python3 .github/scripts/hub_inbox.py result "$HUB_ID" published "$ANIM"
 
       - name: Say so and close
         if: steps.publish.outputs.ok == 'true'
@@ -171,3 +191,21 @@ jobs:
                 issue_number: context.issue.number, name: 'approved'
               });
             } catch (e) {}
+
+  # Closed by a person without being published. (The publish job closes an
+  # issue itself, as the workflow, and that does not come back through here.)
+  declined:
+    if: |
+      github.event.action == 'closed' &&
+      contains(github.event.issue.labels.*.name, 'submission')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tell its maker, if it came from the Studio
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GEEDO_HUB_KEY: ${{ secrets.GEEDO_HUB_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/hub_inbox.py declined

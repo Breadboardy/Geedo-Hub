@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """A community animation, from a GitHub issue to the Hub - in two steps.
 
-  check    Runs when a submission is opened or edited. Downloads the
-           .geedo.json the maker attached, checks it the way the robot
-           would, draws a GIF of it, and writes a report for the comment.
-           Nothing is published.
+  check    Runs when a submission is opened or edited. Gets the drawing,
+           checks it the way the robot would, draws a GIF of it, and writes
+           a report for the comment. Nothing is published.
   publish  Runs when a person adds the `approved` label. Does the checks
            again, packs the animation into the robot's format, adds it to
            the manifest with the maker's name and the date, and leaves the
@@ -16,13 +15,28 @@ at every animation before it goes out - the bot's job is to make that look
 easy (a picture, the numbers, a clear yes/no on the technical rules), not to
 skip it.
 
+A drawing reaches an issue one of two ways:
+
+  by hand        the maker saved a .geedo.json in the Studio and dragged it
+                 into the "Publish an animation" form, with a GitHub account.
+  from the Hub's server
+                 the maker pressed Publish in the Studio, signed in with a
+                 Geedo account. hub_inbox.py collected it and filed the issue,
+                 which carries a marker - the drawing's id on the server and
+                 the fingerprint of its bytes - instead of a file. The bytes
+                 are fetched from the server named in assets/hub.json (the
+                 repository's own file, never anything typed into an issue)
+                 and must match that fingerprint, so what is published is
+                 what was looked at.
+
 Outputs, via GITHUB_OUTPUT:
   ok=true|false      the technical checks passed
   report=<markdown>  the comment body (multi-line)
   anim_id=<id>       (publish) what it was published as
+  hub_id=<id>        the drawing's id on the Hub's server, if it came from there
   preview=true       (check) preview.gif was written next to this script's cwd
 """
-import os, re, sys, json, urllib.request, subprocess, pathlib, datetime
+import os, re, sys, json, base64, hashlib, urllib.request, urllib.error, urllib.parse, subprocess, pathlib, datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gda, gif
@@ -30,6 +44,7 @@ import gda, gif
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EXAMPLES = ROOT / 'animations' / 'examples'
 MANIFEST = ROOT / 'animations' / 'manifest.json'
+HUB_FILE = ROOT / 'assets' / 'hub.json'
 
 MAX_FRAMES = 96          # the format holds 255, but his shelf is small
 MAX_PACKED = 32 * 1024   # bytes, after packing - a full scene is 6 to 13 KB
@@ -93,7 +108,12 @@ def parse(raw):
         data = json.loads(raw.decode('utf-8'))
     except Exception as e:
         raise Refused(f"the file is not a Studio file (not valid JSON: {e})")
-    frames = data.get('frames')
+    return vet(data)
+
+
+def vet(data):
+    """The shape of a drawing, whichever way it arrived."""
+    frames = data.get('frames') if isinstance(data, dict) else None
     if not isinstance(frames, list) or not frames:
         raise Refused("the file has no frames in it")
     if len(frames) > MAX_FRAMES:
@@ -109,6 +129,128 @@ def parse(raw):
     if not isinstance(fps, int) or not 1 <= fps <= MAX_FPS:
         raise Refused(f"{fps!r} frames per second - Geedo plays 1 to {MAX_FPS}")
     return data
+
+
+# ---- a drawing that came through the Hub's server -----------------------------
+# The marker hub_inbox.py leaves in the issue it files: the drawing's id on
+# the server, and the SHA-256 of its bytes as they were when it was checked.
+HUB_MARK = re.compile(r'<!--\s*geedo-hub:\s*([0-9a-f]{32})\s+([0-9a-f]{64})\s*-->')
+
+
+def hub_api():
+    """Where the Hub's server is: assets/hub.json, in this repository. Empty
+    when there is none. (GEEDO_HUB_API is for the tests, which run a server on
+    the same computer; the workflows never set it.)"""
+    api = os.environ.get('GEEDO_HUB_API') or ''
+    if not api:
+        try:
+            with open(HUB_FILE) as f:
+                api = json.load(f).get('api') or ''
+        except Exception:
+            api = ''
+        if not re.fullmatch(r'https://[A-Za-z0-9.-]+(?::\d+)?(?:/[A-Za-z0-9._~/-]*)?', api.strip()):
+            return ''
+    return api.strip().rstrip('/')
+
+
+class HubSaid(Exception):
+    """The server answered, with a no."""
+    def __init__(self, status, error):
+        super().__init__(f"{status} {error}")
+        self.status, self.error = status, error
+
+
+def hub_call(path, payload=None, key=True):
+    """One request to the Hub's server. With `key`, as the Hub's workflow -
+    and the key goes to the address in assets/hub.json and nowhere else."""
+    api = hub_api()
+    if not api:
+        raise Refused("this drawing came through a Geedo account, and the Hub does not say where its "
+                      "server is (`assets/hub.json`)")
+    headers = {'User-Agent': 'geedo-bot', 'Content-Type': 'application/json'}
+    if key:
+        secret = os.environ.get('GEEDO_HUB_KEY', '')
+        if not secret:
+            raise Refused("this drawing came through a Geedo account, and the Hub has no key for its "
+                          "server (the `GEEDO_HUB_KEY` secret)")
+        headers['Authorization'] = 'Bearer ' + secret
+    req = urllib.request.Request(api + path, headers=headers, method='GET' if payload is None else 'POST',
+                                 data=None if payload is None else json.dumps(payload).encode())
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read(MAX_DOWNLOAD))
+    except urllib.error.HTTPError as e:
+        try:
+            said = json.loads(e.read() or b'{}').get('error') or ''
+        except Exception:
+            said = ''
+        raise HubSaid(e.code, said)
+
+
+def unpage(page):
+    """The robot's page frame -> the Studio's list of 8192 pixels."""
+    px = [0] * (128 * 64)
+    for p in range(8):
+        for x in range(128):
+            b = page[p * 128 + x]
+            for bit in range(8):
+                if b >> bit & 1:
+                    px[(p * 8 + bit) * 128 + x] = 1
+    return px
+
+
+def from_hub(sid, sha):
+    """The drawing `sid` from the Hub's server, as the Studio would have saved
+    it, with who sent it. Its bytes must be the ones the marker names."""
+    try:
+        sub = hub_call('/admin/file?id=' + urllib.parse.quote(sid))
+    except HubSaid as e:
+        if e.status == 410:
+            raise Refused("its maker took this one back, so there is nothing to publish - close the issue")
+        if e.status == 404:
+            raise Refused("the Hub's server does not know this drawing")
+        raise Refused(f"the Hub's server would not hand the drawing over ({e})")
+    try:
+        blob = base64.b64decode(sub.get('bin') or '', validate=True)
+    except Exception:
+        raise Refused("the Hub's server sent something that is not a drawing")
+    if hashlib.sha256(blob).hexdigest() != sha:
+        raise Refused("the drawing on the Hub's server is not the one that was checked when this was "
+                      "handed in, so it will not be published")
+    try:
+        a = gda.decode(blob)
+    except ValueError as e:
+        raise Refused(f"the drawing is not a file Geedo can play ({e})")
+    if a['fmt'] != 2:
+        raise Refused("the drawing is not in the robot's packed format")
+    maker, mkey = str(sub.get('maker') or '').strip(), str(sub.get('maker_key') or '')
+    if not maker or len(maker) > 20 or not re.fullmatch(r'[a-z0-9_]{3,20}', mkey):
+        raise Refused("the Hub's server sent a maker name the Hub does not accept")
+    data = vet({'name': str(sub.get('name') or '').strip()[:40] or 'anim',
+                'fps': a['fps'], 'loop': a['loop'], 'pp': a['pp'],
+                'frames': [{'pixels': unpage(f), 'dur': int(d)} for f, d in zip(a['frames'], a['durs'])]})
+    if sub.get('remix_of'):
+        data['remix_of'] = str(sub['remix_of'])
+    return data, {'id': sid, 'maker': maker, 'maker_key': mkey}
+
+
+def md(text):
+    """Somebody's words, safe to put in a comment: no markdown of theirs
+    takes effect and no @name of theirs sends anybody a notification."""
+    return re.sub(r'([\\`*_\[\]()!#<>|~])', r'\\\1', str(text)).replace('@', '@\u200b')
+
+
+def account_holds(maker):
+    """True if `maker` is the name of a Geedo account (so a hand-filed
+    submission using it wants a second look). False if not, or if there is
+    no server to ask, or it did not answer."""
+    if not hub_api():
+        return False
+    try:
+        r = hub_call('/maker?name=' + urllib.parse.quote(maker), key=False)
+        return r.get('why') == 'taken'
+    except Exception:
+        return False
 
 
 def pages(data):
@@ -159,12 +301,18 @@ def main():
     number = os.environ.get('ISSUE_NUMBER', '')
 
     lines = []
+    hub = None                      # who sent it, if it came through the Hub's server
     try:
-        url = attachment_url(body)
-        if not url:
-            raise Refused("there is no `.geedo.json` file in the issue - in Studio press **Publish**, "
-                          "save the file, then drag it into the issue's text box and press Update comment")
-        data = parse(download(url))
+        mark = HUB_MARK.search(body)
+        if mark:
+            data, hub = from_hub(mark.group(1), mark.group(2))
+            out(hub_id=hub['id'])
+        else:
+            url = attachment_url(body)
+            if not url:
+                raise Refused("there is no `.geedo.json` file in the issue - in Studio press **Publish**, "
+                              "save the file, then drag it into the issue's text box and press Update comment")
+            data = parse(download(url))
 
         frames = pages(data)
         durs = [int(f.get('dur', 1)) for f in data['frames']]
@@ -181,33 +329,49 @@ def main():
                           "flashes a second can hurt people, and Geedo refuses to play it - slow "
                           "the flashing down or make the changing part smaller")
 
-        # The name: the form's field first, then what the Studio saved, then
-        # the title. The maker: the form's field, or the GitHub name.
-        raw_name = field(body, 'Name') or data.get('name') or re.sub(r'^publish:\s*', '', title, flags=re.I) or 'anim'
-        raw_name = raw_name.strip()[:40]
-        # The repository's owner IS the Geedo team: what they hand in is one of
-        # his own, under the maker name "Geedo", unless the form says otherwise.
-        is_owner = bool(author and owner and author.lower() == owner.lower())
-        maker = (field(body, 'Maker name') or ('Geedo' if is_owner else author) or 'someone').strip()[:32]
-        maker = re.sub(r'[^\w .\-]', '', maker).strip() or (author or 'someone')
-        aid = safe_id(raw_name)
-        if aid.startswith('animations_boot_') or aid.startswith('animations_'):
-            aid = 'user_' + aid
-        if not is_owner:
-            aid = 'user_' + safe_id(author or 'someone') + '_' + aid
+        if hub:
+            # From a Geedo account: the name is the one the maker typed in the
+            # Studio, and the maker is the account - whatever the issue says.
+            raw_name = data['name']
+            maker, is_owner = hub['maker'], False
+            aid = 'user_' + hub['maker_key'] + '_' + safe_id(raw_name)
+        else:
+            # The name: the form's field first, then what the Studio saved, then
+            # the title. The maker: the form's field, or the GitHub name.
+            raw_name = field(body, 'Name') or data.get('name') or re.sub(r'^publish:\s*', '', title, flags=re.I) or 'anim'
+            raw_name = raw_name.strip()[:40]
+            # The repository's owner IS the Geedo team: what they hand in is one of
+            # his own, under the maker name "Geedo", unless the form says otherwise.
+            is_owner = bool(author and owner and author.lower() == owner.lower())
+            maker = (field(body, 'Maker name') or ('Geedo' if is_owner else author) or 'someone').strip()[:32]
+            maker = re.sub(r'[^\w .\-]', '', maker).strip() or (author or 'someone')
+            aid = safe_id(raw_name)
+            if aid.startswith('animations_boot_') or aid.startswith('animations_'):
+                aid = 'user_' + aid
+            if not is_owner:
+                aid = 'user_' + safe_id(author or 'someone') + '_' + aid
         with open(MANIFEST) as f:
             manifest = json.load(f)
-        exists = any(a['id'] == aid for a in manifest['animations'])
+        there = next((a for a in manifest['animations'] if a['id'] == aid), None)
+        exists = there is not None
+        if hub and there and (there.get('author') or '') != maker:
+            raise Refused(f"`{aid}` is already an animation by {md(there.get('author') or 'somebody else')}, "
+                          "so this one needs another name")
         remix_of = data.get('remix_of') or ''
         remix_of = safe_id(remix_of)[:40] if remix_of else ''
 
         lines.append("**Looks good.** It plays the way Geedo would play it:")
         lines.append("")
-        lines.append(f"- **{raw_name}** by **{maker}** · {len(frames)} frame{'s' if len(frames) != 1 else ''} at {fps} fps"
+        lines.append(f"- **{md(raw_name)}** by **{md(maker)}** · {len(frames)} frame{'s' if len(frames) != 1 else ''} at {fps} fps"
                      f"{' · loops' if loop else ' · plays once'}{' · ping-pong' if pp else ''}")
         lines.append(f"- {len(blob):,} bytes packed · busiest second has {worst} big flash{'es' if worst != 1 else ''} (limit {FLASH_MAX_PER_S})")
         if remix_of:
             lines.append(f"- a remix of `{remix_of}`")
+        if hub:
+            lines.append("- sent from the Studio, signed in as that maker")
+        elif not is_owner and account_holds(maker):
+            lines.append(f"- ⚠ **“{md(maker)}” is the name of a Geedo account, and this did not come from that "
+                         "account.** Ask for another maker name unless you know it is the same person.")
         lines.append(f"- will be published as `{aid}`" + (" — **that id already exists and would be replaced**" if exists else ""))
 
         if mode == 'check':

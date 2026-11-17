@@ -16,6 +16,7 @@
      a soft stage. It fills the window and does not scroll. */
   html,body{height:100%}
   body{overflow:hidden}
+  [hidden]{display:none!important}
   .app{flex:1;min-height:0;display:grid;grid-template-rows:48px minmax(0,1fr) 142px;font-size:13px;
        user-select:none;-webkit-user-select:none}
 
@@ -36,11 +37,11 @@
   .app button.primary[disabled]:hover,.modal button.primary[disabled]:hover{background:var(--ink);border-color:var(--ink)}
 
   /* things to type in and tick */
-  .app input[type=number],.app input[type=text],.modal input[type=text],.app select,.modal select{
+  .app input[type=number],.app input[type=text],.modal input[type=text],.modal input[type=password],.app select,.modal select{
     font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text);background:var(--bg);
     border:1px solid var(--line-bright);border-radius:10px;padding:6px 10px;min-width:0;transition:border-color .15s,box-shadow .15s}
   .app input[type=number]{width:64px}
-  .app input:focus,.modal input[type=text]:focus,.app select:focus,.modal select:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(10,10,10,.08)}
+  .app input:focus,.modal input[type=text]:focus,.modal input[type=password]:focus,.app select:focus,.modal select:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(10,10,10,.08)}
   .app input::placeholder,.modal input::placeholder{color:var(--dim)}
   .app input[type=range],.app input[type=checkbox],.modal input[type=range],.modal input[type=checkbox]{accent-color:var(--ink)}
   .app input[type=checkbox],.modal .row input[type=checkbox]{width:16px;height:16px;margin:0;flex:none}
@@ -162,6 +163,81 @@
          box-shadow:0 10px 30px rgba(0,0,0,.35)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+  /* ---- the Hub in the editor: an account, Publish, and the community ---- */
+  .app button.who{display:inline-flex;align-items:center;gap:8px;padding:3px 13px 3px 3px;max-width:190px}
+  .app button.who span{overflow:hidden;text-overflow:ellipsis}
+  .app button.who .avatar{width:26px;height:26px;font-size:12.5px}
+  @media (max-width:1180px){.pill{display:none}}
+  /* a sheet's close button, and words that are a button */
+  .modal .x{position:absolute;top:18px;right:18px;width:36px;height:36px;padding:0;display:grid;place-items:center;font-size:13px}
+  .modal{position:relative}
+  .modal button.link{border:0;background:none;padding:0;border-radius:0;font-size:inherit;font-weight:500;color:var(--text);
+                     text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-bright)}
+  .modal button.link:hover{text-decoration-color:var(--ink)}
+  .modal button.link:active{transform:none}
+  .modal button.danger{color:var(--bad)}
+  .modal button.primary.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+  .modal button.primary.danger:hover{background:#8f1c13;border-color:#8f1c13}
+  /* a form: a label over each box */
+  .form{display:grid;gap:14px;margin-top:4px}
+  .form label.f{display:grid;gap:6px;font-size:13px;font-weight:500;color:var(--mute)}
+  .modal .form input[type=text],.modal .form input[type=password]{width:100%;font-size:15px;padding:12px 14px;border-radius:12px;font-weight:500;color:var(--text);
+        background:var(--bg);border:1px solid var(--line-bright);font-family:var(--sans);transition:border-color .15s,box-shadow .15s}
+  .modal .form input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(10,10,10,.08)}
+  .form .hint{font-size:13px;font-weight:400;color:var(--mute);min-height:19px}
+  .form .hint.ok{color:var(--good)}.form .hint.no{color:var(--bad)}
+  .form .modal-actions{margin-top:4px;align-items:center}
+  .form .modal-actions .grow{flex:1}
+  .modal .also{display:flex;flex-wrap:wrap;gap:6px 18px;margin:18px 0 0;font-size:14px;color:var(--mute)}
+  .code{font:700 clamp(17px,2.6vw,22px)/1.3 var(--mono);letter-spacing:.04em;background:var(--bg-soft);border-radius:16px;padding:18px 14px;text-align:center;
+        user-select:all;-webkit-user-select:all;margin:4px 0 12px}
+  /* who you are, and what became of what you sent */
+  .me{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-right:44px}
+  .me .avatar{width:48px;height:48px;font-size:20px}
+  .me h2{margin:0}
+  .modal h3.sub{font-size:13px;font-weight:600;color:var(--mute);letter-spacing:0;margin:0 0 8px}
+  .mine{display:grid;gap:8px}
+  .mine .it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
+  .mine .it b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mine .it .when{font-size:12.5px;color:var(--mute)}
+  .mine .it .more{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13.5px;margin-top:6px}
+  .mine .it .why{grid-column:1/-1;font-size:13.5px;line-height:1.5;color:var(--text);border-left:2px solid var(--line-bright);padding:2px 0 2px 12px;margin-top:8px;
+                 user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
+  .st{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid var(--line-bright);color:var(--mute);white-space:nowrap}
+  .st.published{background:var(--ink);border-color:var(--ink);color:#fff}
+  .st.declined{color:var(--bad);border-color:#ecc7c2}
+  .nothing{padding:22px 16px;text-align:center;color:var(--mute);font-size:14.5px;line-height:1.5;background:var(--bg-soft);border-radius:14px}
+  .modal .row .by{flex:1;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+  .modal .row .by .avatar{width:24px;height:24px;font-size:11.5px}
+  /* the community: everything on the Hub, playing, and one of them up close */
+  .modal.community{width:980px;padding:0;height:min(720px,90vh);max-height:90vh;overflow:hidden;display:grid;grid-template-rows:auto auto minmax(0,1fr)}
+  .c-head{display:flex;align-items:center;gap:14px;padding:24px 70px 14px 26px}
+  .c-head h2{margin:0;flex:1}
+  .modal .c-head input{width:230px;font-size:14px;padding:9px 13px;border-radius:999px}
+  .c-tabs{display:flex;gap:6px;padding:0 26px 16px;border-bottom:1px solid var(--line)}
+  .modal .c-tabs button{color:var(--mute);font-weight:500}
+  .modal .c-tabs button:hover{color:var(--text)}
+  .modal .c-tabs button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .c-body{display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0}
+  .c-grid{overflow-y:auto;padding:20px 26px 26px;display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:18px 14px;align-content:start}
+  .modal .c-card{display:block;text-align:left;padding:0;border:0;border-radius:0;background:none;white-space:normal;font-weight:400;min-width:0}
+  .modal .c-card:active{transform:none}
+  .c-card .screen{border-color:#000;border-radius:10px;aspect-ratio:2/1;outline:2px solid transparent;outline-offset:2px;transition:outline-color .15s}
+  .c-card:hover .screen{outline-color:var(--line-bright)}
+  .c-card.sel .screen{outline-color:var(--ink)}
+  .c-card b{display:block;margin-top:9px;font-size:13.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .c-card span{display:block;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .c-grid .nothing{grid-column:1/-1}
+  .c-detail{border-left:1px solid var(--line);padding:20px 22px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+  .c-detail .screen{border-radius:12px;border-color:#000;aspect-ratio:2/1;margin-bottom:10px}
+  .c-detail .screen canvas{width:100%!important}
+  .c-detail h3{font-size:22px;letter-spacing:-.035em;line-height:1.1;overflow-wrap:anywhere}
+  .c-detail .who2{font-size:14px;color:var(--mute)}
+  .c-detail .facts2{font-size:13px;color:var(--mute);margin-bottom:12px}
+  .c-detail .go{display:grid;gap:8px;margin-top:auto}
+  .modal .c-detail .go button{padding:11px 16px;font-size:14px;justify-content:center}
+  .c-detail .go a{font-size:13.5px;text-align:center;margin-top:4px}
+
   /* on a phone: the site's page, saying what the Studio needs */
   .tiny,.tiny-foot{display:none}
   @media (max-width:900px){
@@ -208,6 +284,7 @@
       <button id="btnOpen" class="ghost">Open</button>
       <button id="btnSave" class="ghost">Save</button>
       <button id="btnImport" class="ghost">Import image</button>
+      <button id="btnCommunity" class="ghost">Community</button>
     </div>
     <div class="spacer"></div>
     <span class="pill" id="statusPill">1 frame · 8 fps</span>
@@ -215,6 +292,7 @@
       <button id="btnExport" class="ghost">Export</button>
       <button id="btnSend">Try on Geedo</button>
       <button id="btnPublish" class="primary">Publish</button>
+      <button id="btnAccount" class="ghost" hidden>Sign in</button>
     </div>
   </div>
 
@@ -441,22 +519,165 @@
 
 <div class="modal-bg" id="modalPub">
   <div class="modal">
-    <h2>Publish to the Hub</h2>
-    <p>A person looks at every animation before it goes out to the robots, so publishing is two steps: save the file, then hand it in. It takes a minute, and you are told either way.</p>
-    <div class="row"><label for="pubName">Name</label><input type="text" id="pubName" maxlength="40" placeholder="what it's called on the Hub"></div>
-    <div class="row"><label for="pubMaker">Maker name</label><input type="text" id="pubMaker" maxlength="32" placeholder="the name shown next to it"></div>
-    <div id="pubCheck" class="note"></div>
-    <label class="chk"><input type="checkbox" class="rule"> I drew this myself. It's not a character from a game, a film or a show.</label>
-    <label class="chk"><input type="checkbox" class="rule"> It's kind. Nothing rude, mean or scary; kids watch these screens.</label>
-    <label class="chk"><input type="checkbox" class="rule"> I know a person looks at it first and might say no.</label>
-    <div class="step" id="pubStep1"><span class="n">1</span><div><h3>Save the file</h3>
-      <p>Your animation as a <code>.geedo.json</code> file, ready to hand in.</p>
-      <button id="pubSaveBtn" onclick="pubSave()" class="primary">Save the file</button></div></div>
-    <div class="step" id="pubStep2"><span class="n">2</span><div><h3>Hand it in on GitHub</h3>
-      <p>Opens the submission form with the name filled in. Drop the file you just saved into the box and press <b>Submit</b>. The bot posts a preview within a minute; a person answers usually within a day.</p>
-      <button id="pubGoBtn" onclick="pubGo()" class="primary" disabled>Open the form</button></div></div>
-    <p style="margin-top:14px">No GitHub account? Post the file in <b>#animations</b> on the <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a> and it gets handed in for you. <a href="../make.html#rules" target="_blank">The rules</a>.</p>
-    <div class="modal-actions"><button onclick="closeModal('modalPub')" class="ghost">Close</button></div>
+    <!-- with a server: nobody is signed in yet -->
+    <div id="pubNeed" hidden>
+      <h2>Publish to the Hub</h2>
+      <p>To publish you need a Geedo account. It is a maker name and a password, and that is all of it: no email. It takes a minute.</p>
+      <div class="modal-actions" style="justify-content:flex-start">
+        <button class="primary" id="pubMake">Make an account</button>
+        <button id="pubSignin">Sign in</button>
+        <span style="flex:1"></span>
+        <button class="ghost" onclick="closeModal('modalPub')">Close</button>
+      </div>
+      <p class="also"><button type="button" class="link" id="pubByHand">Hand it in on GitHub instead</button></p>
+    </div>
+
+    <!-- the sheet itself: sent with an account, or saved and handed in by hand -->
+    <div id="pubForm">
+      <h2>Publish to the Hub</h2>
+      <p id="pubIntro">A person looks at every animation before it goes out to the robots, so publishing is two steps: save the file, then hand it in. It takes a minute, and you are told either way.</p>
+      <div class="row"><label for="pubName">Name</label><input type="text" id="pubName" maxlength="40" placeholder="what it's called on the Hub"></div>
+      <div class="row" id="pubMakerRow"><label for="pubMaker">Maker name</label><input type="text" id="pubMaker" maxlength="32" placeholder="the name shown next to it"></div>
+      <div class="row" id="pubByRow" hidden><label>Maker</label><span class="by" id="pubBy"></span></div>
+      <div id="pubCheck" class="note"></div>
+      <label class="chk"><input type="checkbox" class="rule"> I drew this myself. It's not a character from a game, a film or a show.</label>
+      <label class="chk"><input type="checkbox" class="rule"> It's kind. Nothing rude, mean or scary; kids watch these screens.</label>
+      <label class="chk"><input type="checkbox" class="rule"> I know a person looks at it first and might say no.</label>
+      <div id="pubHand">
+        <div class="step" id="pubStep1"><span class="n">1</span><div><h3>Save the file</h3>
+          <p>Your animation as a <code>.geedo.json</code> file, ready to hand in.</p>
+          <button id="pubSaveBtn" onclick="pubSave()" class="primary">Save the file</button></div></div>
+        <div class="step" id="pubStep2"><span class="n">2</span><div><h3>Hand it in on GitHub</h3>
+          <p>Opens the submission form with the name filled in. Drop the file you just saved into the box and press <b>Submit</b>. The bot posts a preview within a minute; a person answers usually within a day.</p>
+          <button id="pubGoBtn" onclick="pubGo()" class="primary" disabled>Open the form</button></div></div>
+        <p style="margin-top:14px">No GitHub account? Post the file in <b>#animations</b> on the <a href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Discord</a> and it gets handed in for you. <a href="../make.html#rules" target="_blank">The rules</a>.</p>
+      </div>
+      <div id="pubErr" class="note bad" hidden></div>
+      <div class="modal-actions">
+        <button onclick="closeModal('modalPub')" class="ghost">Close</button>
+        <button id="pubSend" class="primary" hidden>Publish</button>
+      </div>
+    </div>
+
+    <!-- sent -->
+    <div id="pubDone" hidden>
+      <h2>Sent for a look.</h2>
+      <p>It is waiting for a person to look at it, which usually takes a day. If it is a yes, every Geedo picks it up by itself, with your name on it. Either way you will see what was said under <b>My animations</b>.</p>
+      <div class="modal-actions">
+        <button class="ghost" onclick="closeModal('modalPub')">Close</button>
+        <button class="primary" id="pubSeeMine">My animations</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A Geedo account: a maker name and a password. No email, so the recovery
+     code shown at sign-up is the way back in. -->
+<div class="modal-bg" id="modalAccount">
+  <div class="modal">
+    <button class="x ghost" type="button" id="accClose" aria-label="Close">✕</button>
+
+    <div data-view="signin">
+      <h2>Sign in</h2>
+      <form class="form" id="fSignin" autocomplete="on">
+        <label class="f">Maker name<input type="text" name="maker" autocomplete="username" maxlength="20" required></label>
+        <label class="f">Password<input type="password" name="password" autocomplete="current-password" maxlength="200" required></label>
+        <div class="note bad err" hidden></div>
+        <div class="modal-actions"><span class="grow"></span><button type="submit" class="primary">Sign in</button></div>
+      </form>
+      <p class="also"><button type="button" class="link" data-go="signup">Make an account</button><button type="button" class="link" data-go="forgot">Forgot your password?</button></p>
+    </div>
+
+    <div data-view="signup" hidden>
+      <h2>Make a Geedo account</h2>
+      <p>A maker name and a password. That is all of it: no email, and please not your real name.</p>
+      <form class="form" id="fSignup" autocomplete="on">
+        <label class="f">Maker name<input type="text" name="maker" autocomplete="username" maxlength="20" required>
+          <span class="hint" id="suName">3 to 20 letters or numbers. It is shown next to what you publish.</span></label>
+        <label class="f">Password<input type="password" name="password" autocomplete="new-password" maxlength="200" required>
+          <span class="hint" id="suPass">At least 8 characters.</span></label>
+        <label class="f">Password, again<input type="password" name="again" autocomplete="new-password" maxlength="200" required></label>
+        <div class="note bad err" hidden></div>
+        <div class="modal-actions"><span class="grow"></span><button type="submit" class="primary">Make my account</button></div>
+      </form>
+      <p class="also"><button type="button" class="link" data-go="signin">I already have one</button></p>
+    </div>
+
+    <div data-view="code" hidden>
+      <h2>Keep this code.</h2>
+      <p>There is no email on your account, so this code is the only way back in if you forget your password. Write it down, or ask a grown-up to keep it somewhere safe. <b>It is shown once.</b></p>
+      <div class="code" id="accCode"></div>
+      <div class="modal-actions" style="justify-content:flex-start;margin-top:0"><button type="button" id="accCopy">Copy it</button></div>
+      <label class="chk" style="margin-top:14px"><input type="checkbox" id="accKept"> I have written it down.</label>
+      <div class="modal-actions"><button type="button" class="primary" id="accCodeDone" disabled>Done</button></div>
+    </div>
+
+    <div data-view="forgot" hidden>
+      <h2>Forgot your password?</h2>
+      <p>Your recovery code and a new password. Signing in this way gives you a new code, and signs you out everywhere else.</p>
+      <form class="form" id="fForgot" autocomplete="off">
+        <label class="f">Maker name<input type="text" name="maker" autocomplete="username" maxlength="20" required></label>
+        <label class="f">Recovery code<input type="text" name="code" autocomplete="off" maxlength="40" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX" required></label>
+        <label class="f">New password<input type="password" name="password" autocomplete="new-password" maxlength="200" required>
+          <span class="hint">At least 8 characters.</span></label>
+        <label class="f">New password, again<input type="password" name="again" autocomplete="new-password" maxlength="200" required></label>
+        <div class="note bad err" hidden></div>
+        <div class="modal-actions"><span class="grow"></span><button type="submit" class="primary">Set the new password</button></div>
+      </form>
+      <p class="also"><span>No code? An account cannot be opened without it, but you can make a new one under another name.</span></p>
+      <p class="also" style="margin-top:8px"><button type="button" class="link" data-go="signin">Back to signing in</button></p>
+    </div>
+
+    <div data-view="home" hidden>
+      <div class="me"><i class="avatar" id="meAvatar"></i><h2 id="meName"></h2></div>
+      <h3 class="sub">My animations</h3>
+      <div class="mine" id="mineList"></div>
+      <div class="modal-actions" style="justify-content:space-between;align-items:center">
+        <span class="also" style="margin:0"><button type="button" class="link" data-go="password">Change password</button><button type="button" class="link" data-go="remove">Delete account</button></span>
+        <button type="button" id="accOut">Sign out</button>
+      </div>
+    </div>
+
+    <div data-view="password" hidden>
+      <h2>Change password</h2>
+      <form class="form" id="fPassword" autocomplete="off">
+        <label class="f">The password you have now<input type="password" name="password" autocomplete="current-password" maxlength="200" required></label>
+        <label class="f">New password<input type="password" name="next" autocomplete="new-password" maxlength="200" required>
+          <span class="hint">At least 8 characters. Other devices are signed out.</span></label>
+        <label class="f">New password, again<input type="password" name="again" autocomplete="new-password" maxlength="200" required></label>
+        <div class="note bad err" hidden></div>
+        <div class="modal-actions"><button type="button" class="ghost" data-go="home">Back</button><span class="grow"></span><button type="submit" class="primary">Change it</button></div>
+      </form>
+    </div>
+
+    <div data-view="remove" hidden>
+      <h2>Delete your account</h2>
+      <p>Your account goes, and so does anything still waiting for a look. Animations that are already published stay on the Hub and on the robots, with your maker name beside them.</p>
+      <form class="form" id="fRemove" autocomplete="off">
+        <label class="f">Your password, to be sure it is you<input type="password" name="password" autocomplete="current-password" maxlength="200" required></label>
+        <div class="note bad err" hidden></div>
+        <div class="modal-actions"><button type="button" class="ghost" data-go="home">Back</button><span class="grow"></span><button type="submit" class="primary danger">Delete my account</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- The community, in the editor: everything on the Hub, playing; pick one to
+     see it up close, and open it to make it yours. -->
+<div class="modal-bg" id="modalCommunity">
+  <div class="modal community">
+    <button class="x ghost" type="button" onclick="closeModal('modalCommunity')" aria-label="Close">✕</button>
+    <div class="c-head"><h2>Community</h2><input type="text" id="cSearch" placeholder="Search" aria-label="Search the animations" autocomplete="off"></div>
+    <div class="c-tabs" id="cTabs">
+      <button type="button" data-tab="all" aria-pressed="true">Everything</button>
+      <button type="button" data-tab="makers" aria-pressed="false">From makers</button>
+      <button type="button" data-tab="geedo" aria-pressed="false">Geedo's own</button>
+      <button type="button" data-tab="mine" aria-pressed="false" hidden>Mine</button>
+    </div>
+    <div class="c-body">
+      <div class="c-grid" id="cGrid"></div>
+      <aside class="c-detail" id="cDetail" aria-live="polite"></aside>
+    </div>
   </div>
 </div>
 
@@ -466,6 +687,7 @@
 
 <script src="../assets/geedo.js"></script>
 <script src="../assets/geedolink.js"></script>
+<script src="../assets/hub.js"></script>
 <script>
 const W=128,H=64; let ZOOM=8;
 const canvas=document.getElementById('canvas'),onion=document.getElementById('onion'),preview=document.getElementById('preview');
@@ -836,20 +1058,30 @@ function flashWorst(){
   return worst;
 }
 
-/* -------- publishing, for real --------
-   The Hub is a public repository and every animation on it went through a
-   person. So Publish here does two honest things: saves the file, and opens
-   the submission form with the name filled in. The bot checks it and posts a
-   preview; a person approves it; the robots do the rest. */
-let pubSaved=false;
+/* -------- publishing --------
+   Every animation on the Hub went through a person, and that does not change.
+   What changes is how it gets to them:
+
+   with a Geedo account   (the Hub has a server: assets/hub.json names it)
+       Publish sends the drawing, in the robot's own format, straight to the
+       Hub. It waits in a queue; a person looks; My animations says what
+       became of it.
+   by hand                (no server - or the maker would rather)
+       Publish saves the file and opens the submission form on GitHub with
+       the name filled in, as it always has.
+
+   Either way the drawing is checked here first, by the robot's own rules, so
+   nobody finds out from the reviewer that it flashes too fast. */
+const Hub=window.GeedoHub,$=id=>document.getElementById(id);
+let pubSaved=false,pubByHand=false,pubMode='hand';
 function pubReport(){
-  const bin=encodeGda2(),worst=flashWorst(),fps=parseInt(document.getElementById('fps').value)||8;
+  const bin=encodeGda2(),worst=flashWorst(),fps=parseInt($('fps').value)||8;
   const bad=[];
   if(frames.length>96)bad.push(frames.length+' frames is more than Geedo has room for (96 at most)');
   if(bin.length>32*1024)bad.push('packed it is '+(bin.length/1024).toFixed(1)+' KB; the limit is 32 KB');
   if(worst>3)bad.push('it flashes '+worst+' times in one second; the limit is 3, and Geedo refuses more');
   if(fps<1||fps>30)bad.push('Geedo plays 1 to 30 frames a second');
-  const el=document.getElementById('pubCheck');
+  const el=$('pubCheck');
   if(bad.length){el.className='note bad';el.textContent='Not yet: '+bad.join('; ')+'.'}
   else{el.className='note ok';el.textContent=frames.length+' frame'+(frames.length===1?'':'s')+' at '+fps+' fps, '+(bin.length/1024).toFixed(1)+' KB packed, '+worst+' big flash'+(worst===1?'':'es')+' in the busiest second. The robot would play it.'}
   return !bad.length;
@@ -857,23 +1089,38 @@ function pubReport(){
 function pubUpdate(){
   const ok=pubReport();
   const rules=[...document.querySelectorAll('#modalPub .rule')].every(c=>c.checked);
-  const name=document.getElementById('pubName').value.trim();
-  document.getElementById('pubSaveBtn').disabled=!(ok&&name);
-  document.getElementById('pubGoBtn').disabled=!(ok&&name&&rules&&pubSaved);
-  document.getElementById('pubStep1').classList.toggle('done',pubSaved);
+  const name=$('pubName').value.trim();
+  $('pubSaveBtn').disabled=!(ok&&name);
+  $('pubGoBtn').disabled=!(ok&&name&&rules&&pubSaved);
+  $('pubStep1').classList.toggle('done',pubSaved);
+  $('pubSend').disabled=!(ok&&name&&rules);
+}
+// which face the sheet wears: 'hand', 'need' (an account is needed), 'go' (signed in) or 'done'
+function pubShow(mode){
+  pubMode=mode;
+  const me=Hub.who();
+  $('pubNeed').hidden=mode!=='need';$('pubForm').hidden=mode!=='hand'&&mode!=='go';$('pubDone').hidden=mode!=='done';
+  $('pubHand').hidden=mode!=='hand';$('pubMakerRow').hidden=mode!=='hand';$('pubByRow').hidden=mode!=='go';$('pubSend').hidden=mode!=='go';
+  $('pubErr').hidden=true;
+  $('pubIntro').textContent=mode==='go'
+    ?'A person looks at every animation before it goes out to the robots. Yours waits for that look, and you are told either way.'
+    :'A person looks at every animation before it goes out to the robots, so publishing is two steps: save the file, then hand it in. It takes a minute, and you are told either way.';
+  if(mode==='go'&&me){const by=$('pubBy'),i=document.createElement('i');by.textContent='';i.className='avatar';i.textContent=me.name.charAt(0);by.append(i,me.name)}
+  if(mode==='hand'||mode==='go')pubUpdate();
 }
 function openPublish(){
   pubSaved=false;
-  const pn=document.getElementById('pubName');if(!pn.value)pn.value=document.getElementById('projName').value||'';
-  openModal('modalPub');pubUpdate();
+  const pn=$('pubName');if(!pn.value)pn.value=$('projName').value||'';
+  pubShow(!Hub.on()||pubByHand?'hand':Hub.who()?'go':'need');
+  openModal('modalPub');
 }
 function pubSave(){
-  const name=document.getElementById('pubName').value.trim();if(!name)return;
-  document.getElementById('projName').value=name;
+  const name=$('pubName').value.trim();if(!name)return;
+  $('projName').value=name;
   saveProject();pubSaved=true;pubUpdate();
 }
 function pubGo(){
-  const name=document.getElementById('pubName').value.trim(),maker=document.getElementById('pubMaker').value.trim();
+  const name=$('pubName').value.trim(),maker=$('pubMaker').value.trim();
   const u=new URL('https://github.com/Breadboardy/Geedo-Hub/issues/new');
   u.searchParams.set('template','publish-animation.yml');
   u.searchParams.set('title','Publish: '+name);
@@ -881,28 +1128,246 @@ function pubGo(){
   if(maker)u.searchParams.set('maker',maker);
   window.open(u.toString(),'_blank','noopener');
 }
-['pubName','pubMaker'].forEach(id=>document.getElementById(id).addEventListener('input',pubUpdate));
+async function pubSend(){
+  const name=$('pubName').value.trim(),btn=$('pubSend'),err=$('pubErr');
+  err.hidden=true;btn.disabled=true;btn.textContent='Sending…';
+  try{
+    await Hub.publish({name,bytes:encodeGda2(),remix_of:REMIX_OF});
+    $('projName').value=name;pubShow('done');
+  }catch(e){
+    if(e.code==='sign-in'){pubShow('need');return}
+    err.textContent=Hub.say(e);err.hidden=false;
+  }finally{btn.textContent='Publish';pubUpdate()}
+}
+['pubName','pubMaker'].forEach(id=>$(id).addEventListener('input',pubUpdate));
 document.querySelectorAll('#modalPub .rule').forEach(c=>c.addEventListener('change',pubUpdate));
+$('pubSend').onclick=pubSend;
+$('pubByHand').onclick=()=>{pubByHand=true;pubShow('hand')};
+$('pubMake').onclick=()=>{closeModal('modalPub');openAccount('signup',openPublish)};
+$('pubSignin').onclick=()=>{closeModal('modalPub');openAccount('signin',openPublish)};
+$('pubSeeMine').onclick=()=>{closeModal('modalPub');openAccount('home')};
+
+/* -------- a Geedo account --------
+   A maker name and a password: no email, nothing about who the maker is. So
+   there is no "send me a link" either - signing up shows a recovery code,
+   once, and that is the way back in. The password never leaves this device
+   (assets/hub.js stretches it here and sends the key that comes out). */
+let accThen=null;                                   // where to go once somebody is signed in
+function drawWho(){
+  const b=$('btnAccount'),me=Hub.on()?Hub.who():null;
+  b.hidden=!Hub.on();b.textContent='';
+  if(me){const i=document.createElement('i'),s=document.createElement('span');i.className='avatar';i.textContent=me.name.charAt(0);s.textContent=me.name;b.append(i,s);b.className='who';b.title='Your account and your animations'}
+  else{b.textContent='Sign in';b.className='ghost';b.title=''}
+  const mine=document.querySelector('#cTabs [data-tab=mine]');mine.hidden=!me;
+  if(!me&&cTab==='mine')communityTab('all');
+}
+function accView(view){
+  for(const d of document.querySelectorAll('#modalAccount [data-view]'))d.hidden=d.dataset.view!==view;
+  for(const n of document.querySelectorAll('#modalAccount .err'))n.hidden=true;
+  // the recovery code is shown once: the sheet stays until it has been kept
+  $('modalAccount').toggleAttribute('data-stay',view==='code');$('accClose').hidden=view==='code';
+  const me=Hub.who();
+  if(view==='home'&&me){$('meName').textContent=me.name;$('meAvatar').textContent=me.name.charAt(0);loadMine()}
+  const first=document.querySelector(`#modalAccount [data-view="${view}"] input`);
+  if(first)setTimeout(()=>first.focus(),30);
+}
+function openAccount(view,then){
+  accThen=then||null;
+  accView(view||(Hub.who()?'home':'signin'));
+  openModal('modalAccount');
+}
+function accDone(){                                 // signed in, and any code has been kept
+  const then=accThen;accThen=null;
+  if(then){closeModal('modalAccount');then()}else accView('home');
+}
+function accShowCode(code){
+  $('accCode').textContent=code;$('accKept').checked=false;$('accCodeDone').disabled=true;$('accCopy').textContent='Copy it';
+  accView('code');
+}
+// one form: its button waits while the server is asked, and what goes wrong is said under it
+function accForm(id,job){
+  $(id).addEventListener('submit',async e=>{
+    e.preventDefault();
+    const f=e.target,btn=f.querySelector('button[type=submit]'),err=f.querySelector('.err'),was=btn.textContent;
+    err.hidden=true;btn.disabled=true;btn.textContent='One moment…';
+    try{await job(f.elements,f)}
+    catch(x){err.textContent=x&&x.plain?x.message:Hub.say(x);err.hidden=false}
+    finally{btn.disabled=false;btn.textContent=was}
+  });
+}
+const plain=msg=>{const e=new Error(msg);e.plain=true;return e};
+function twoPasswords(a,b){
+  if(a.length<8)throw plain('A password needs at least 8 characters.');
+  if(a!==b)throw plain('The two passwords are not the same. Type them again.');
+}
+accForm('fSignin',async(el,f)=>{await Hub.login(el.maker.value,el.password.value);f.reset();accDone()});
+accForm('fSignup',async(el,f)=>{
+  if(!Hub.goodName(el.maker.value))throw plain('A maker name is 3 to 20 letters or numbers. Spaces, - and _ are fine in the middle.');
+  twoPasswords(el.password.value,el.again.value);
+  const made=await Hub.signup(el.maker.value,el.password.value);
+  f.reset();accShowCode(made.recovery);
+});
+accForm('fForgot',async(el,f)=>{
+  twoPasswords(el.password.value,el.again.value);
+  let made;
+  try{made=await Hub.reset(el.maker.value,el.code.value,el.password.value)}
+  catch(x){throw x.code==='wrong'?plain('That name and recovery code do not match.'):x}
+  f.reset();accShowCode(made.recovery);
+});
+accForm('fPassword',async(el,f)=>{
+  twoPasswords(el.next.value,el.again.value);
+  try{await Hub.password(el.password.value,el.next.value)}
+  catch(x){throw x.code==='wrong'?plain('That is not the password you have now.'):x}
+  f.reset();accView('home');toast('Password changed');
+});
+accForm('fRemove',async(el,f)=>{
+  if(!confirm('Delete your Geedo account? This cannot be undone.'))return;
+  try{await Hub.remove(el.password.value)}
+  catch(x){throw x.code==='wrong'?plain('That is not your password.'):x}
+  f.reset();closeModal('modalAccount');toast('Your account is deleted');
+});
+// is the name free? asked a moment after the typing stops
+let nameTimer=0,nameAsk=0;
+$('fSignup').elements.maker.addEventListener('input',e=>{
+  const hint=$('suName'),v=e.target.value;clearTimeout(nameTimer);const mine=++nameAsk;
+  const set=(text,cls)=>{hint.textContent=text;hint.className='hint'+(cls?' '+cls:'')};
+  if(!v.trim()){set('3 to 20 letters or numbers. It is shown next to what you publish.');return}
+  if(!Hub.goodName(v)){set('3 to 20 letters or numbers. Spaces, - and _ are fine in the middle.','no');return}
+  set('Looking…');
+  nameTimer=setTimeout(async()=>{
+    try{const r=await Hub.free(v);if(mine!==nameAsk)return;
+      set(r.free?'That name is free.':r.why==='taken'?'Somebody already has that name.':'That name cannot be used. Try another.',r.free?'ok':'no')}
+    catch(x){if(mine===nameAsk)set('3 to 20 letters or numbers.')}
+  },350);
+});
+$('fSignup').elements.password.addEventListener('input',e=>{const n=e.target.value.length,h=$('suPass');h.textContent=n>=8?'Good.':'At least 8 characters.';h.className='hint'+(n>=8?' ok':'')});
+for(const b of document.querySelectorAll('#modalAccount [data-go]'))b.onclick=()=>accView(b.dataset.go);
+$('accClose').onclick=()=>closeModal('modalAccount');
+$('accKept').onchange=e=>{$('accCodeDone').disabled=!e.target.checked};
+$('accCodeDone').onclick=()=>{$('accCode').textContent='';accDone()};
+$('accCopy').onclick=async()=>{try{await navigator.clipboard.writeText($('accCode').textContent);$('accCopy').textContent='Copied'}catch(e){$('accCopy').textContent='Select it and copy'}};
+$('accOut').onclick=async()=>{await Hub.logout();closeModal('modalAccount');toast('Signed out')};
+$('btnAccount').onclick=()=>openAccount();
+
+// My animations: what was sent, and what became of each
+const STATE={waiting:'Waiting for a look',published:'Published',declined:'Not this time',withdrawn:'Taken back'};
+async function loadMine(){
+  const box=$('mineList'),say=text=>{const d=document.createElement('div');d.className='nothing';d.textContent=text;box.replaceChildren(d)};
+  say('Looking…');
+  let items;
+  try{items=await Hub.mine()}catch(e){if(e.code==='sign-in'||e.code==='banned'){accView('signin');return}say(Hub.say(e));return}
+  if(!items.length){say('Nothing yet. Draw him something and press Publish.');return}
+  box.replaceChildren(...items.map(it=>{
+    const row=document.createElement('div'),left=document.createElement('div'),name=document.createElement('b'),when=document.createElement('span'),st=document.createElement('span');
+    row.className='it';name.textContent=it.name;when.className='when';
+    when.textContent=`${it.frames} frame${it.frames===1?'':'s'} · ${Geedo.ago(new Date(it.at).toISOString())}`;
+    st.className='st '+it.state;st.textContent=STATE[it.state]||it.state;
+    left.append(name,when);row.append(left,st);
+    if(it.state==='declined'&&it.note){const why=document.createElement('div');why.className='why';why.textContent=it.note;row.append(why)}
+    const more=document.createElement('div');more.className='more';
+    if(it.state==='published'&&it.anim){const a=document.createElement('a');a.href=Geedo.ROOT+'animation.html?id='+encodeURIComponent(it.anim);a.target='_blank';a.rel='noopener';a.textContent='See its page';more.append(a)}
+    if(it.state==='waiting'){const b=document.createElement('button');b.type='button';b.className='link';b.textContent='Take it back';
+      b.onclick=async()=>{if(!confirm(`Take “${it.name}” back? Nobody will look at it.`))return;try{await Hub.withdraw(it.id)}catch(e){toast(Hub.say(e))}loadMine()};more.append(b)}
+    if(more.children.length)row.append(more);
+    return row;
+  }));
+}
+
+/* -------- the community, in the editor --------
+   Everything on the Hub, playing the same files the robots play, without
+   leaving the drawing. Pick one to see it up close; open it and it is on the
+   canvas, to make yours. Reads the Hub's own lists (no server needed). */
+let cCards=null,cTab='all',cSel=null,cBig=null;
+const cEmpty=text=>{const d=document.createElement('div');d.className='nothing';d.textContent=text;return d};
+async function openCommunity(){
+  openModal('modalCommunity');
+  if(cCards)return communityFilter();
+  const grid=$('cGrid');grid.replaceChildren(cEmpty('Fetching what is on the Hub…'));
+  let anims;
+  try{anims=Geedo.newest((await Geedo.all()).anims)}catch(e){grid.replaceChildren(cEmpty('Could not reach the Hub. Check the internet and open this again.'));return}
+  cCards=anims.map(a=>{
+    const el=document.createElement('button'),holder=document.createElement('div'),name=document.createElement('b'),by=document.createElement('span');
+    el.type='button';el.className='c-card';holder.className='screen blank';name.textContent=Geedo.pretty(a.name||a.id);by.textContent=Geedo.official(a)?'Geedo':'by '+a.by;
+    el.append(holder,name,by);el.onclick=()=>communityPick(a,el);
+    Geedo.loadBin(a.src).then(anim=>{const s=new Geedo.Screen(anim,{scale:1});s.el.querySelector('canvas').style.width='100%';el.replaceChild(s.el,holder)}).catch(()=>holder.classList.remove('blank'));
+    return{a,el};
+  });
+  grid.replaceChildren(...cCards.map(c=>c.el));
+  communityFilter();
+}
+function communityTab(tab){
+  cTab=tab;
+  for(const b of document.querySelectorAll('#cTabs button'))b.setAttribute('aria-pressed',String(b.dataset.tab===tab));
+  if(cCards)communityFilter();
+}
+function communityFilter(){
+  const q=$('cSearch').value.trim().toLowerCase(),me=Hub.who(),grid=$('cGrid');
+  let shown=[];
+  for(const c of cCards){
+    const a=c.a,inTab=cTab==='all'||(cTab==='makers'&&!Geedo.official(a))||(cTab==='geedo'&&Geedo.official(a))||(cTab==='mine'&&me&&a.by===me.name);
+    const on=inTab&&(!q||(Geedo.pretty(a.name||a.id)+' '+a.by).toLowerCase().includes(q));
+    c.el.hidden=!on;if(on)shown.push(c);
+  }
+  const old=grid.querySelector('.nothing');if(old)old.remove();
+  if(!shown.length){
+    grid.append(cEmpty(q?'Nothing on the Hub matches that.':cTab==='makers'?'Nobody has published one yet. Draw him something and yours is the first.'
+                      :cTab==='mine'?'Nothing of yours is on the Hub yet. Once a person has looked at one, it is here.':'Nothing here yet.'));
+    communityPick(null);return;
+  }
+  if(!cSel||!shown.some(c=>c.a===cSel))communityPick(shown[0].a,shown[0].el);
+}
+function communityPick(a,el){
+  cSel=a;
+  for(const c of cCards||[])c.el.classList.toggle('sel',c.a===a);
+  if(cBig){cBig.destroy();cBig=null}
+  const d=$('cDetail');d.replaceChildren();
+  if(!a)return;
+  const holder=document.createElement('div'),title=document.createElement('h3'),who=document.createElement('div'),facts=document.createElement('div'),go=document.createElement('div');
+  holder.className='screen blank';title.textContent=Geedo.pretty(a.name||a.id);who.className='who2';facts.className='facts2';go.className='go';
+  if(Geedo.official(a))who.textContent='One of Geedo’s own';
+  else{const b=document.createElement('button');b.type='button';b.className='link';b.textContent=a.by;b.title='Everything by '+a.by;
+       b.onclick=()=>{$('cSearch').value=a.by;communityTab('all')};who.append('by ',b)}
+  const when=a.pack?Geedo.pretty(a.packName):Geedo.ago(a.published_at);
+  facts.textContent=`${a.frames||'?'} frame${a.frames===1?'':'s'}`+(when?' · '+when:'');
+  const open=document.createElement('button'),page=document.createElement('a');
+  open.type='button';open.className='primary';open.textContent='Open it to remix';
+  open.onclick=async()=>{open.disabled=true;const ok=await openAnim(a.src,a.id);open.disabled=false;if(ok)closeModal('modalCommunity')};
+  page.href=Geedo.ROOT+a.href;page.target='_blank';page.rel='noopener';page.textContent='Its page on the Hub';
+  go.append(open,page);d.append(holder,title,who,facts,go);
+  Geedo.loadBin(a.src).then(anim=>{
+    if(cSel!==a)return;
+    cBig=new Geedo.Screen(anim,{scale:2});d.replaceChild(cBig.el,holder);
+    facts.textContent=`${anim.frames.length} frame${anim.frames.length===1?'':'s'} at ${anim.fps} a second`+(when?' · '+when:'');
+  }).catch(()=>holder.classList.remove('blank'));
+}
+let cTimer=0;
+$('cSearch').addEventListener('input',()=>{clearTimeout(cTimer);cTimer=setTimeout(()=>cCards&&communityFilter(),120)});
+for(const b of document.querySelectorAll('#cTabs button'))b.onclick=()=>communityTab(b.dataset.tab);
+$('btnCommunity').onclick=openCommunity;
 
 /* -------- opening a Hub animation to remix --------
-   animation.html links here with ?open=<file under animations/>. The bytes
-   are the robot's own file, decoded by the site's decoder; what lands on the
-   canvas is exactly what the robot shows. The project remembers what it
-   started from, so the Hub can say so. */
+   From the Community sheet, or from animation.html, which links here with
+   ?open=<file under animations/>. The bytes are the robot's own file, decoded
+   by the site's decoder; what lands on the canvas is exactly what the robot
+   shows. The project remembers what it started from, so the Hub can say so. */
 let REMIX_OF='';
-async function openFromHub(){
-  const want=new URLSearchParams(location.search).get('open');
-  if(!want||!/^(bin|packs\/[a-z0-9_-]+\/bin)\/[A-Za-z0-9_.-]+\.bin$/.test(want))return;
+async function openAnim(file,id){
+  const drawn=frames.length>1||frames[0].pixels.some(v=>v);
+  if(drawn&&!confirm('Open it here? The drawing you have now is replaced - save it first if you want to keep it.'))return false;
   try{
-    const r=await fetch('../animations/'+want);if(!r.ok)throw new Error(r.status);
-    const a=window.Geedo.unpack(new Uint8Array(await r.arrayBuffer()));
-    const id=want.replace(/^.*\//,'').replace(/\.bin$/,'');
+    const a=await Geedo.loadBin(file);
     frames=a.frames.map(f=>({pixels:new Uint8Array(f.pixels),dur:f.dur||1}));cur=0;undoStack=[];redoStack=[];
-    document.getElementById('fps').value=Math.min(30,a.fps||8);
-    document.getElementById('chkLoop').checked=!!a.loop;document.getElementById('chkPP').checked=!!a.pingpong;
-    document.getElementById('projName').value=id+'_remix';REMIX_OF=id;
-    buildFrameList();renderAll();toast('Opened '+id+' from the Hub. Make it yours.');
-  }catch(e){toast('Could not open that one from the Hub')}
+    $('fps').value=Math.min(30,a.fps||8);
+    $('chkLoop').checked=!!a.loop;$('chkPP').checked=!!a.pingpong;
+    $('projName').value=id+'_remix';$('pubName').value='';REMIX_OF=id;
+    if(playing)stop();
+    buildFrameList();renderAll();document.getElementById('curFrame').textContent=1;toast('Opened '+id+' from the Hub. Make it yours.');
+    return true;
+  }catch(e){toast('Could not open that one from the Hub');return false}
+}
+function openFromHub(){
+  const want=new URLSearchParams(location.search).get('open');
+  if(want&&/^(bin|packs\/[a-z0-9_-]+\/bin)\/[A-Za-z0-9_.-]+\.bin$/.test(want))openAnim(want,want.replace(/^.*\//,'').replace(/\.bin$/,''));
 }
 
 let toastTimer=null;
@@ -945,7 +1410,13 @@ function fitZoom(){
 }
 window.addEventListener('resize',()=>{if(!zoomChosen)setZoom(fitZoom())});
 
+// a sheet closes on Escape, or on a press outside it - unless it is one that has to be answered
+function closeTop(){const top=[...document.querySelectorAll('.modal-bg.open')].pop();if(top&&!top.hasAttribute('data-stay'))top.classList.remove('open')}
+for(const bg of document.querySelectorAll('.modal-bg'))bg.addEventListener('mousedown',e=>{if(e.target===bg)closeTop()});
+
 window.addEventListener('keydown',(e)=>{
+  // with a sheet open the keys belong to it: no tools, no playing, and Escape closes it
+  if(document.querySelector('.modal-bg.open')){if(e.key==='Escape'){closeTop();e.preventDefault()}return}
   if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
   if(e.ctrlKey&&e.key==='z'){doUndo();e.preventDefault();return}
   if(e.ctrlKey&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){doRedo();e.preventDefault();return}
@@ -960,6 +1431,8 @@ window.addEventListener('keydown',(e)=>{
 });
 
 buildFrameList();buildStamps();setZoom(fitZoom());setupDropZone();renderAll();openFromHub();
+// the Hub's server, if there is one: the account button appears, and follows who is signed in (in this tab or another)
+Hub.ready.then(()=>{drawWho();Hub.changed(drawWho);if(Hub.who())Hub.check().then(drawWho)});
 </script>
 </body>
 </html>

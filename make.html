@@ -83,7 +83,7 @@
         <h3>Remix anything.</h3>
         <a class="btn primary" href="browse.html">Pick one to remix</a>
       </div>
-      <div class="box b dark">
+      <div class="box b dark" id="how-in">
         <h3>No GitHub account?</h3>
         <a class="btn primary" href="https://discord.gg/Tp6urXEMQd" target="_blank" rel="noopener">Join the Discord</a>
       </div>
@@ -119,7 +119,16 @@
 </footer>
 
 <script src="assets/geedo.js"></script>
+<script src="assets/hub.js"></script>
 <script>
+// With Geedo accounts switched on (assets/hub.json), a maker needs no GitHub
+// account and no Discord to publish: the box that says how says that instead.
+GeedoHub.ready.then(() => {
+  if (!GeedoHub.on()) return;
+  const box = document.getElementById('how-in'), a = box.querySelector('a');
+  box.querySelector('h3').textContent = 'All it takes is a Geedo account.';
+  a.textContent = 'Make one in the Studio'; a.href = 'studio/index.html'; a.removeAttribute('target'); a.removeAttribute('rel');
+});
 (async () => {
   const G = window.Geedo;
   let all;

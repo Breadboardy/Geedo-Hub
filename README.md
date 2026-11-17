@@ -37,4 +37,24 @@ Real photos and the video go in `assets/real/`.
    maker's name and the date, signs the manifest and pushes.
 4. Every Geedo picks it up at its next check, within the minute.
 
+### Publishing with a Geedo account
+
+The Studio can also send a drawing straight in, for a maker signed in with a
+Geedo account (a maker name and a password; no email). That needs a small
+server, because these pages are files and cannot take anything in. Its
+address goes in [`assets/hub.json`](assets/hub.json). **While that is empty
+there are no accounts, and step 1 above is how it works.**
+
+With an address there, step 1 becomes "press Publish", and the rest is the
+same: the "Community inbox" workflow collects what is waiting on the server
+(every quarter of an hour, once its timer is switched on in the workflow
+file; or when it is run by hand), checks it and files the same review issue; a
+person adds `approved`; and the maker sees what became of it in the Studio,
+under My animations. The server cannot publish anything and has no access to
+this repository. The workflow reaches it with the `GEEDO_HUB_KEY` secret.
+
+The Studio's **Community** button shows everything on the Hub inside the
+editor, to watch and to open for a remix. It reads the lists on this site
+and needs no server.
+
 The hardware design and firmware source are not public.

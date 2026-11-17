@@ -174,11 +174,15 @@ class Screen {
 
 /* ---- data ---------------------------------------------------------------- */
 const HUB = location.pathname.replace(/\/[^/]*$/, '');
+/* Where the Hub's files are, from wherever this page is. This script lives in
+   <the Hub>/assets/, so the Hub is the folder above it - which is how the
+   Studio, one folder down, reads the same lists and plays the same files. */
+const ROOT = document.currentScript && document.currentScript.src ? new URL('..', document.currentScript.src).href : '';
 const cache = new Map();
 
 async function loadBin(file){
   if (cache.has(file)) return cache.get(file);
-  const p = fetch(`animations/${file}`)
+  const p = fetch(`${ROOT}animations/${file}`)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(b => unpack(new Uint8Array(b)));
   cache.set(file, p);
@@ -188,8 +192,8 @@ async function loadBin(file){
 /* manifest.json is the source of truth: it is what the robots read, so the
    site cannot drift from what is actually shipping. (index.json is an older,
    partial copy of the same idea and is deliberately not used.) */
-const manifest = () => fetch('animations/manifest.json').then(r => r.json());
-const firmware = () => fetch('firmware/manifest.json').then(r => r.json()).catch(() => null);
+const manifest = () => fetch(ROOT + 'animations/manifest.json').then(r => r.json());
+const firmware = () => fetch(ROOT + 'firmware/manifest.json').then(r => r.json()).catch(() => null);
 
 /* Names in the manifest were typed at different times by different tools, so
    they arrive as "Chill_Work", "helloo", "failed_to_connect". Raw identifiers
@@ -223,7 +227,7 @@ function all(){
     const packs = [];
     for (const id of m.packs || []){
       try {
-        const r = await fetch(`animations/packs/${id}/manifest.json`);
+        const r = await fetch(`${ROOT}animations/packs/${id}/manifest.json`);
         if (!r.ok) throw new Error(r.status);
         const pm = await r.json();
         pm.id = pm.id || id;
@@ -438,7 +442,7 @@ function motion(){
 }
 try { motion(); } catch (e) { document.documentElement.classList.remove('motion'); }
 
-window.Geedo = { W, H, unpack, unpackGda1, Screen, loadBin, manifest, firmware, pretty, HUB,
+window.Geedo = { W, H, unpack, unpackGda1, Screen, loadBin, manifest, firmware, pretty, HUB, ROOT,
                  all, isSystem, newest, ago, datestr, isNew, kb, param, makers, makerHref, initial, card, bigScreen,
                  OFFICIAL, official };
 })();

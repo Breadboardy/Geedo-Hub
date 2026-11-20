@@ -442,8 +442,8 @@ no password needed!</div></div></div>
         <p>Asleep, he dims, shuts his eyes and stirs now and then; a tap wakes him, and on battery he switches himself off after three hours. Off, he waits for a tap or a cable, and lasts for months.</p>
         <div class="row"><button class="btn sm" id="sleep">Send him to sleep</button><button class="btn sm" id="wake">Wake him</button><button class="btn sm ghost" id="off">Switch off</button></div>
         <span id="sleep-say" style="font-size:13.5px;color:var(--mute)"></span>
-        <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">His button</div><b>Tap to pet him, hold to switch him off</b>
-          <span>A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.</span></div></div>
+        <div class="opt" style="margin-top:14px;padding-bottom:0"><div class="g"><div class="k">His button</div><b id="btn-head">Tap to pet him, hold to switch him off</b>
+          <span id="btn-say">A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.</span></div></div>
       </article>
 
     </div>
@@ -624,6 +624,11 @@ async function refresh() {
   $('face-say').textContent = fw() < 37 ? 'Choosing a face for the whole library needs firmware v37.' : '';
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
   for (const id of ['sleep', 'wake']) { $(id).disabled = fw() < 37; $(id).title = fw() < 37 ? 'needs firmware v37' : ''; }
+  // His button. From v47 his face gives under a press, a pet can be as slow as you like, and he asks about switching off after two seconds, not one.
+  $('btn-head').textContent = fw() >= 47 ? 'Press to pet him, hold to switch him off' : 'Tap to pet him, hold to switch him off';
+  $('btn-say').textContent = fw() >= 47
+    ? 'Pat him or press on him: his face squashes under your finger and springs back when you let go, and he remembers it. Keep your finger there a second and he melts. Hold it two seconds, until he asks, and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Pet him for about ten seconds and he sings his song.'
+    : 'A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.';
   spin.sleep(info.state === 'asleep');
   const v42 = fw() >= 42, need = v42 ? '' : 'needs firmware v42';
   if (info.bright) $('bright').value = info.bright;

@@ -321,7 +321,7 @@ html.locked,html.locked body{overflow:hidden}
    [ GEEDO-Setup ]
 no password needed!</div></div></div>
       <div class="step"><div><h3>Join GEEDO-Setup on your phone</h3><p>No password. A page opens by itself: pick your home network, type its password, save. If nothing pops up, browse to <b>192.168.4.1</b>.</p></div></div>
-      <div class="step"><div><h3>That's it</h3><p>He connects, fetches his scenes and comes alive. Changed your WiFi? Hold his button five seconds and he starts over.</p></div></div>
+      <div class="step"><div><h3>That's it</h3><p>He connects, fetches his scenes and comes alive. Changed your WiFi? Find him here, by cable or Bluetooth, and give him the new one under WiFi.</p></div></div>
     </div>
   </section>
 
@@ -624,9 +624,11 @@ async function refresh() {
   $('face-say').textContent = fw() < 37 ? 'Choosing a face for the whole library needs firmware v37.' : '';
   const sw = $('sound'); sw.setAttribute('aria-checked', String(info.sound !== 'off')); sw.disabled = fw() < 37; sw.title = fw() < 37 ? 'needs firmware v37' : '';
   for (const id of ['sleep', 'wake']) { $(id).disabled = fw() < 37; $(id).title = fw() < 37 ? 'needs firmware v37' : ''; }
-  // His button. From v47 his face gives under a press, a pet can be as slow as you like, and he asks about switching off after two seconds, not one.
-  $('btn-head').textContent = fw() >= 47 ? 'Press to pet him, hold to switch him off' : 'Tap to pet him, hold to switch him off';
-  $('btn-say').textContent = fw() >= 47
+  // His button. From v47 his face gives under a press and a pet can be as slow as you like. From v48 off is a ten-second hold, counted down, and nothing on the button forgets his WiFi.
+  $('btn-head').textContent = fw() >= 48 ? 'Press to pet him, hold ten seconds to switch him off' : fw() >= 47 ? 'Press to pet him, hold to switch him off' : 'Tap to pet him, hold to switch him off';
+  $('btn-say').textContent = fw() >= 48
+    ? 'Pat him or press on him: his face squashes under your finger and springs back when you let go, and he remembers it. Keep your finger there a second and he melts. Hold it ten seconds and he switches off: his screen counts the last three down, and letting go there keeps him on. A tap wakes him. His button never touches his WiFi: change that under WiFi, here. Keep patting him for about ten seconds and he sings his song.'
+    : fw() >= 47
     ? 'Pat him or press on him: his face squashes under your finger and springs back when you let go, and he remembers it. Keep your finger there a second and he melts. Hold it two seconds, until he asks, and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Pet him for about ten seconds and he sings his song.'
     : 'A tap cheers him up a little, and he remembers it. Hold it a second or two and let go: he switches off, and a tap wakes him. Hold it five seconds and he forgets his WiFi and asks to be set up again. Ten pets in a row and he sings his song.';
   spin.sleep(info.state === 'asleep');

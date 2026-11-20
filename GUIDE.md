@@ -36,28 +36,51 @@ and on again to reopen it.
 
 ## The button
 
-The button on the outside of Geedo does two things:
+The button on the outside of Geedo is how you pet him, and how you switch
+him off.
+
+*From firmware v48 it works like this. On older firmware it is a little
+different — see **Older firmware** at the end of this section. The My Geedo
+page on the Hub shows which firmware he has.*
 
 | Do this | What happens |
 |---|---|
-| **Tap** | Pet him |
-| **Hold 5 seconds** | Erase saved WiFi and start setup again |
+| **Tap, pat or press** | Pet him |
+| **Hold 10 seconds** | Switch him off. Tap him to wake him up |
 
-**Petting.** Tap him and he reacts straight away — a happy face, and he
-cheers up a little. Keep tapping and he gets more and more wound up until
-he's positively giddy. He remembers: a Geedo who gets petted every day wears
-a different set of faces than one who's been left alone on a shelf.
+**Petting.** Press on him and his face squashes under your finger, then
+springs back when you let go. Keep your finger there a second and he melts,
+eyes shut in a smile. He cheers up a little each time, and keeps getting
+more wound up until he's positively giddy. He remembers: a Geedo who gets
+petted every day wears a different set of faces than one who's been left
+alone on a shelf.
 
-**Secret:** pet him ten times in a row and he sings his theme song.
+**Secret:** keep patting him for about ten seconds — lots of pats, not one
+long hold — and he sings his theme song.
 
 He drifts back to ordinary contentment if you ignore him for a few days, but
 that's as far down as it goes. **Geedo never sulks at you** and never guilts
 you into picking him up. He keeps his mood through a power cut and through
 updates.
 
-When you hold it, a countdown appears (`erasing WiFi in 3`). **Let go and
-nothing happens** — it only wipes the WiFi if you hold the whole way through.
-Use this if you change your WiFi password, move house, or give Geedo away.
+**Switching him off.** Hold the button for ten seconds. For the last three
+the screen counts down (`SWITCHING OFF in 3`). **Let go and he stays on** —
+he only switches off if you hold the whole way through. At the end it says
+`NIGHT NIGHT — let go of my button`: let go, and he goes dark. A tap wakes
+him up, and so does plugging him in, if he wasn't plugged in when you
+switched him off. Nothing is lost while he's off: his mood, his packs and
+his animations are all still there.
+
+**Changing his WiFi.** New password, new router, new house: open the My
+Geedo page on the Hub with him on a USB cable (or over Bluetooth, from an
+Android phone or a computer), and give him the new network under WiFi. The
+button doesn't touch his WiFi.
+
+**Older firmware.** Before v48 a shorter hold switched him off — a second or
+two, letting go when the screen said `SWITCH OFF?` — and holding for 5
+seconds erased his WiFi and started setup again, behind a countdown
+(`erasing WiFi in 3`; let go and nothing happened). Before v47 his face
+didn't squash: a tap got you a happy face.
 
 There are two more buttons inside the case: **RESET** (restarts him, same as
 switching off and on) and **BOOT** (only needed for factory recovery). You
@@ -76,8 +99,13 @@ should never need either.
 | `Fetch FAILED` / `check HUB` | He reached WiFi but not the Hub — see troubleshooting |
 | `No WiFi` / `and no cache` | Can't connect and has nothing saved to play |
 | `No animations` / `retrying...` | Connected, but the animation list came back empty |
-| `KEEP HOLDING` | You're holding the button — keep going to erase WiFi, or let go |
-| `WIFI ERASED` | WiFi wiped, restarting into setup |
+| `SWITCHING OFF` / `in 3` | You're holding the button — keep going to switch him off, or let go and he stays on |
+| `NIGHT NIGHT` / `let go of my button` | He's about to switch off, and is waiting for your finger to lift |
+| `NIGHT NIGHT` / `tap me to wake up` | Off. Tap the button to wake him |
+| `cannot switch off` / `is my button stuck?` | The button never came back up — something is holding it down |
+| `SWITCH OFF?` | *Before v48.* Let go now and he switches off |
+| `KEEP HOLDING` | *Before v48.* You're holding the button — keep going to erase WiFi, or let go |
+| `WIFI ERASED` | *Before v48.* WiFi wiped, restarting into setup |
 
 ---
 
@@ -195,7 +223,10 @@ you're on a network with a login page (school, café, hotel) — those block him
 He needs a normal home network. He'll keep retrying on his own.
 
 **He connected before but not any more (you changed your WiFi password)**
-Hold the button for 5 seconds. He'll erase the old WiFi and reopen setup.
+Give him the new one from the My Geedo page on the Hub, with him on a USB
+cable or over Bluetooth: under WiFi, pick the network and type its password.
+On firmware before v48 you can also hold the button for 5 seconds: he erases
+the old WiFi and reopens setup.
 
 **Screen is blank / frozen**
 Press RESET inside the case, or switch him off and on. If the screen stays
@@ -221,8 +252,10 @@ support exactly where it broke:
 | `C...` | The downloaded file failed verification |
 
 **Nothing above helped**
-Hold the button 5 seconds to reset WiFi and set him up fresh. That clears most
-problems without losing his downloaded animations.
+Switch him off and on again: hold the button ten seconds, let go at `NIGHT
+NIGHT`, and tap him awake. If it's his WiFi, give it to him again from the
+My Geedo page. (Before v48: hold the button 5 seconds to reset WiFi and set
+him up fresh.) None of this loses his downloaded animations.
 
 ---
 

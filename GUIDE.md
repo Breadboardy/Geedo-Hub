@@ -36,16 +36,17 @@ and on again to reopen it.
 
 ## The button
 
-The button on the outside of Geedo is how you pet him, and how you switch
-him off.
+The button on the outside of Geedo is how you pet him, how you play with
+him, and how you switch him off.
 
-*From firmware v48 it works like this. On older firmware it is a little
-different — see **Older firmware** at the end of this section. The My Geedo
-page on the Hub shows which firmware he has.*
+*From firmware v48 it works like this, and the game came with v49. On older
+firmware it is a little different — see **Older firmware** at the end of
+this section. The My Geedo page on the Hub shows which firmware he has.*
 
 | Do this | What happens |
 |---|---|
 | **Tap, pat or press** | Pet him |
+| **Pet him five times, then click when he asks `PLAY?`** | Play Desk Dash (firmware v49) |
 | **Hold 10 seconds** | Switch him off. Tap him to wake him up |
 
 **Petting.** Press on him and his face squashes under your finger, then
@@ -62,6 +63,26 @@ He drifts back to ordinary contentment if you ignore him for a few days, but
 that's as far down as it goes. **Geedo never sulks at you** and never guilts
 you into picking him up. He keeps his mood through a power cut and through
 updates.
+
+**Playing** (firmware v49). Pet him for about five seconds — quick taps only
+count once a second — then take your hand away. He pulls a face, and then
+his screen says `PLAY?` `click = yes` for four seconds. Click once and you're
+playing **Desk Dash**: you're a doodled stickman running along a desk.
+
+| | |
+|---|---|
+| **Click** | Jump |
+| **Click again in the air** | Flip |
+
+Jump the things on the desk. The tall pencil cup is too tall to jump — it
+needs a flip. Flips score points, flips over something score double, and
+flip after flip builds a multiplier up to x5 (one plain jump puts it back to
+x1). When he crashes you see your score and his best: click for another go,
+or leave him six seconds and he's himself again. He keeps his record.
+
+Didn't mean to say yes? Let him crash and leave the score alone. If you
+don't click on `PLAY?` it just goes away. Holding the button ten seconds
+still switches him off, in a game like anywhere else.
 
 **Switching him off.** Hold the button for ten seconds. For the last three
 the screen counts down (`SWITCHING OFF in 3`). **Let go and he stays on** —
@@ -99,6 +120,9 @@ should never need either.
 | `Fetch FAILED` / `check HUB` | He reached WiFi but not the Hub — see troubleshooting |
 | `No WiFi` / `and no cache` | Can't connect and has nothing saved to play |
 | `No animations` / `retrying...` | Connected, but the animation list came back empty |
+| `PLAY?` / `click = yes` | You petted him five times and he wants a game. Click once to play Desk Dash; do nothing and it goes away *(v49)* |
+| `DESK DASH` / `click: jump` / `click again: flip` | A game is starting |
+| `SCORE 120` / `BEST 340` / `click: again` | The run is over. Click for another, or leave him and he goes back to being himself |
 | `SWITCHING OFF` / `in 3` | You're holding the button — keep going to switch him off, or let go and he stays on |
 | `NIGHT NIGHT` / `let go of my button` | He's about to switch off, and is waiting for your finger to lift |
 | `NIGHT NIGHT` / `tap me to wake up` | Off. Tap the button to wake him |

@@ -39,8 +39,8 @@ and on again to reopen it.
 The button on the outside of Geedo is how you pet him, how you play with
 him, and how you switch him off.
 
-*From firmware v48 it works like this, and the game came with v49. On older
-firmware it is a little different — see **Older firmware** at the end of
+*From firmware v48 it works like this; the game came with v49 and its trick
+shots with v50. On older firmware it is a little different — see **Older firmware** at the end of
 this section. The My Geedo page on the Hub shows which firmware he has.*
 
 | Do this | What happens |
@@ -79,6 +79,16 @@ needs a flip. Flips score points, flips over something score double, and
 flip after flip builds a multiplier up to x5 (one plain jump puts it back to
 x1). When he crashes you see your score and his best: click for another go,
 or leave him six seconds and he's himself again. He keeps his record.
+
+**Trick shots** (firmware v50). **Click when he sparkles.** A little star
+flashes beside him at the top of every jump: click right then and the flip
+is `PERFECT!` — double points. Do that, and the star flashes again as he
+comes round: click again and he flips a second time. That's a
+`TRICKSHOT!` — four times the points, the whole screen stops for it, and
+his voice goes up. It's three taps in time — jump, tap, tap — about a third
+of a second apart. Jump at the very last moment and it's `CLOSE!` as well;
+all three at once is `NO WAY!`, eight times. You can't get one wrong: a
+click when he isn't sparkling just does what it always did.
 
 Didn't mean to say yes? Let him crash and leave the score alone. If you
 don't click on `PLAY?` it just goes away. Holding the button ten seconds
@@ -123,6 +133,7 @@ should never need either.
 | `PLAY?` / `click = yes` | You petted him five times and he wants a game. Click once to play Desk Dash; do nothing and it goes away *(v49)* |
 | `DESK DASH` / `click: jump` / `click again: flip` | A game is starting |
 | `SCORE 120` / `BEST 340` / `click: again` | The run is over. Click for another, or leave him and he goes back to being himself |
+| `PERFECT!` `DOUBLE!` `TRICKSHOT!` `NO WAY!` across the top, in a game | You hit a trick shot *(v50)* |
 | `SWITCHING OFF` / `in 3` | You're holding the button — keep going to switch him off, or let go and he stays on |
 | `NIGHT NIGHT` / `let go of my button` | He's about to switch off, and is waiting for your finger to lift |
 | `NIGHT NIGHT` / `tap me to wake up` | Off. Tap the button to wake him |
